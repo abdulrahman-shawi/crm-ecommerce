@@ -882,7 +882,6 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                     {/* تفاصيل العميل والمستلم والعنوان */}
                     <div className="grid grid-cols-1 gap-8 mb-12">
                         <div className="p-6 bg-blue-50/50 dark:bg-blue-900/10 rounded-[2rem] border border-blue-100/50">
-                            <h3 className="text-blue-600 font-black text-sm mb-3 uppercase tracking-wider">العميل المحاسب</h3>
                             <p className="text-xl font-black text-slate-900 dark:text-white">{data.customer?.name}</p>
                             <p className="text-sm font-bold text-slate-500 mt-2">طريقة الدفع: {data.paymentMethod}</p>
                         </div>

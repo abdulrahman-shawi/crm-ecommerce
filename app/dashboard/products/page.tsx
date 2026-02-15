@@ -190,7 +190,7 @@ const ProductLayout = () => {
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold">إدارة المنتجات</h1>
-                {(user && (user.acountType === "ADMIN" || user.permission?.addProducts === true ))
+                {(user && (user.accountType === "ADMIN" || user.permission?.addProducts === true ))
                 && (
                     <Button onClick={() => setIsOpen(true)}>إضافة منتج جديد</Button>
                 )

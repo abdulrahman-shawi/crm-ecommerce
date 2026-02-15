@@ -105,6 +105,24 @@
   --tw-ring-color: #3b82f6;
 }
 
+/* نصوص الحقول في الوضعين (بدون التأثير على PhoneInput) */
+input:not(.PhoneInputInput),
+textarea,
+select {
+  color: #0f172a;
+}
+
+.dark input:not(.PhoneInputInput),
+.dark textarea,
+.dark select {
+  color: #e2e8f0;
+}
+
+.dark input:not(.PhoneInputInput)::placeholder,
+.dark textarea::placeholder {
+  color: #94a3b8;
+}
+
 @layer utilities {
   /* إخفاء شريط التمرير لمتصفحات Chrome و Safari و Edge */
   .no-scrollbar::-webkit-scrollbar {
