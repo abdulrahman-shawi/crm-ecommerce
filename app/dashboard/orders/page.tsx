@@ -3,6 +3,7 @@ import { DataTable } from '@/components/shared/DataTable';
 import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { hasPermission, isAdmin } from '@/lib/utils';
 import { getCustomer } from '@/server/customer';
 import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, updateStaus } from '@/server/order';
 import { getProduct } from '@/server/product';
@@ -160,9 +161,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         return orders.filter((order: any) => {
             // 1. إذا كان أدمن، يرى كل الطلبات
-            const isAdmin = user.accountType === "ADMIN" || user.permission?.viewOrders;
+            const isAdminUser = isAdmin(user) || hasPermission(user, "viewOrders");
 
-            if (isAdmin) return orders;
+            if (isAdminUser) return orders;
 
             // 2. إذا كان موظف، يرى فقط الطلبات التي قام بإنشائها هو
             // ملاحظة: تأكد أن الحقل في الـ Schema هو userId
@@ -304,7 +305,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     };
 
     const tableActions: any[] = [
-        (user && (user.accountType === "ADMIN" || user.permission?.viewOrders === true)) && {
+        (user && hasPermission(user, "viewOrders")) && {
             label: "عرض تقارير الطلب",
             icon: <BarChart2 size={14} />,
             onClick: (data: any) => {
@@ -316,7 +317,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 setisOpenorder(true);
             }
         },
-        (user && (user.accountType === "ADMIN" || user.permission?.editOrders)) && {
+        (user && hasPermission(user, "editOrders")) && {
             label: "تعديل",
             icon: <Mail size={14} />,
             onClick: (data: any) => {
@@ -379,7 +380,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 setIsOpen(true);
             }
         },
-        (user && (user.accountType === "ADMIN" || user.permission?.deleteOrders)) && {
+        (user && hasPermission(user, "deleteOrders")) && {
             label: "حذف",
             icon: <Trash size={14} />,
             variant: "danger",

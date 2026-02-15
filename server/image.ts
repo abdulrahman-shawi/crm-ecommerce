@@ -48,6 +48,20 @@ export async function saveProductWithFiles(formData: FormData) {
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const quantity = (formData.get('quantity') as string) || null;
+
+        const existingByName = await prisma.product.findFirst({
+            where: {
+                name: {
+                    equals: name.trim(),
+                    mode: 'insensitive',
+                }
+            },
+            select: { id: true }
+        });
+
+        if (existingByName) {
+            return { success: false, error: "اسم المنتج موجود بالفعل" };
+        }
         
         // جلب الملفات والتأكد أنها من نوع File فعلاً
         const allEntries = formData.getAll('files');
@@ -97,6 +111,21 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+
+        const existingByName = await prisma.product.findFirst({
+            where: {
+                name: {
+                    equals: name.trim(),
+                    mode: 'insensitive',
+                },
+                NOT: { id: productId }
+            },
+            select: { id: true }
+        });
+
+        if (existingByName) {
+            return { success: false, error: "اسم المنتج موجود بالفعل" };
+        }
 
         // 1. جلب الملفات الجديدة من الـ FormData
         const allEntries = formData.getAll('files');

@@ -1,6 +1,7 @@
 // src/actions/analytics.ts
 "use server"
 import { prisma } from "@/lib/prisma";
+import { hasPermission, isAdmin } from "@/lib/utils";
 
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string) {
@@ -12,7 +13,7 @@ export async function GetSalesByStatusAction(userId: string) {
 
     if (!user) return { success: false, error: "User not found" };
 
-    const canViewAll = user.accountType === "ADMIN" || user.permission?.viewOrders === true;
+    const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const whereClause = canViewAll ? {} : { userId: userId };
 
     const orders = await prisma.order.findMany({
@@ -95,7 +96,7 @@ export async function GetSalesTimelineAction(userId: string) {
 
     if (!user) return { success: false, error: "User not found" };
 
-    const canViewAll = user.accountType === "ADMIN" || user.permission?.viewOrders === true;
+    const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const whereClause = canViewAll ? {} : { userId: userId };
 
     const orders = await prisma.order.findMany({
@@ -217,7 +218,7 @@ export async function GetSalesByCity(userId: string) {
       include: { permission: true }
     });
     
-    const canViewAll = user?.accountType === "ADMIN" || user?.permission?.viewOrders === true;
+    const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
     const whereClause = canViewAll ? {} : { userId: userId };
 
     const citySales = await prisma.order.groupBy({
@@ -246,7 +247,7 @@ export async function GetCustomerInteractions(userId: string) {
 
     if (!user) return { success: false, error: "User not found" };
 
-    const canViewAll = user.accountType === "ADMIN" || user.permission?.viewAnalytics === true;
+    const canViewAll = isAdmin(user) || Boolean(user.permission?.viewAnalytics);
 
     // 1. فلترة العملاء
     const whereClause = canViewAll 

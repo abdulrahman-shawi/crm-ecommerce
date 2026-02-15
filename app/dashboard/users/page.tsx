@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
+import { hasPermission } from '@/lib/utils';
 import { permission } from 'process';
 
 const userSchema = z.object({
@@ -107,7 +108,7 @@ const UserManagement: React.FunctionComponent = () => {
 
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
-    (user && (user.accountType === "ADMIN" || user.permission?.editEmployees)) &&
+    (user && hasPermission(user, "editEmployees")) &&
     {
       label: "تعديل",
       icon: <Mail size={14} />,
@@ -125,7 +126,7 @@ const UserManagement: React.FunctionComponent = () => {
         setIsOpen(true);
       }
     },
-    (user && (user.accountType === "ADMIN" || user.permission?.deleteEmployees)) &&
+    (user && hasPermission(user, "deleteEmployees")) &&
     {
       label: "حذف",
       icon: <Plus className="rotate-45" size={14} />,
@@ -157,7 +158,7 @@ const UserManagement: React.FunctionComponent = () => {
     <div className="p-4" dir="rtl">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة المستخدمين</h1>
-        {user && (user.accountType === "ADMIN" || user.permission?.addEmployees) && (
+        {user && hasPermission(user, "addEmployees") && (
           <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white px-6">
           إضافة مستخدم جديد
         </Button>

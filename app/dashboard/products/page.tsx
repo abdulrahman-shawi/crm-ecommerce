@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FormInput } from '@/components/ui/form-input';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
+import { hasPermission } from '@/lib/utils';
 import { getallcategory } from '@/server/category';
 import { deleteProduct, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct } from '@/server/product';
@@ -62,6 +63,17 @@ const ProductLayout = () => {
     };
 
     const onSubmit = async (data: z.infer<typeof productschama>) => {
+        const normalizedName = data.name.trim().toLowerCase();
+        const duplicate = products.some((product) => {
+            if (editId && product.id === editId) return false;
+            return String(product.name || "").trim().toLowerCase() === normalizedName;
+        });
+
+        if (duplicate) {
+            toast.error("اسم المنتج موجود بالفعل");
+            return;
+        }
+
         const loadingToast = toast.loading(editId ? 'جاري تحديث المنتج...' : 'جاري اضافة المنتج...');
         try {
             if (editId) {
@@ -142,7 +154,7 @@ const ProductLayout = () => {
     }
 
     const tableActions: any[] = [
-        (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true) ) &&
+        (user && hasPermission(user, "editProducts")) &&
         {
             label: "تعديل",
             icon: <Mail size={14} />,
@@ -162,7 +174,7 @@ const ProductLayout = () => {
                 setIsOpen(true);
             }
         },
-        (user && (user.accountType === "ADMIN" || user.permission?.deleteProducts === true)) &&
+        (user && hasPermission(user, "deleteProducts")) &&
         {
             label: "حذف",
             icon: <Plus className="rotate-45" size={14} />,
@@ -190,7 +202,7 @@ const ProductLayout = () => {
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold">إدارة المنتجات</h1>
-                {(user && (user.acountType === "ADMIN" || user.permission?.addProducts === true ))
+                {(user && hasPermission(user, "addProducts"))
                 && (
                     <Button onClick={() => setIsOpen(true)}>إضافة منتج جديد</Button>
                 )
@@ -240,9 +252,20 @@ const ProductLayout = () => {
 
                                 <div className="mt-auto flex items-center justify-between">
                                     <div>
-                                        <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                            {product.price} <span className="text-xs font-normal">$</span>
-                                        </p>
+                                        {product.discount > 0 ? (
+                                            <div className="flex flex-col">
+                                                <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                                                    {Number(product.price) - Number(product.discount)} <span className="text-xs font-normal">$</span>
+                                                </p>
+                                                <span className="text-xs text-slate-400 line-through">
+                                                    {product.price} $
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                                                {product.price} <span className="text-xs font-normal">$</span>
+                                            </p>
+                                        )}
                                     </div>
                                     <Button
                                         variant="outline"
@@ -293,10 +316,10 @@ const ProductLayout = () => {
                             </div>
 
                             <div className="text-3xl font-bold text-blue-600">
-                                {selectedProduct.price} ريال
+                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} ريال
                                 {selectedProduct.discount > 0 && (
                                     <span className="text-sm text-slate-400 line-through mr-3 font-normal">
-                                        {Number(selectedProduct.price) + Number(selectedProduct.discount)} ريال
+                                        {selectedProduct.price} ريال
                                     </span>
                                 )}
                             </div>
@@ -330,7 +353,7 @@ const ProductLayout = () => {
                 currentPage={page}
                 onPageChange={(newPage) => setPage(newPage)}
                     actions={
-                        (user && (user.accountType === "Admin" || user.permission.editProducts || user.permission.deleteProducts)) &&
+                        (user && (hasPermission(user, "editProducts") || hasPermission(user, "deleteProducts"))) &&
                         tableActions
                     }
                     columns={[
@@ -356,7 +379,20 @@ const ProductLayout = () => {
                         },
                         {
                             header: "السعر",
-                            accessor: (row: any) => `${row.price} $`
+                            accessor: (row: any) => (
+                                row.discount > 0 ? (
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-slate-800 dark:text-slate-100">
+                                            {Number(row.price) - Number(row.discount)} $
+                                        </span>
+                                        <span className="text-xs text-slate-400 line-through">
+                                            {row.price} $
+                                        </span>
+                                    </div>
+                                ) : (
+                                    `${row.price} $`
+                                )
+                            )
                         },
                         {
                             header: "الخصم",

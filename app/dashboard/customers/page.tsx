@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { AppModal } from "@/components/ui/app-modal";
 import { AssignUsers, createCustomerAction, createmessage, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
 import { useAuth } from "@/context/AuthContext";
+import { hasPermission, isAdmin } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { CheckSquare, Download, Eye, MapPin, MessageCircle, Pencil, Phone, Plus, Save, Send, ShoppingBag, Trash2, Upload, UserPlus, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -291,7 +292,7 @@ const citiesList = React.useMemo(() =>
       const allCustomers = res.data;
       console.log(allCustomers)
       // 1. تحديث القائمة العامة (كما كنت تفعل)
-      if (user?.accountType === "ADMIN") {
+      if (isAdmin(user)) {
         setCustomers(allCustomers);
       } else {
         const filtered = allCustomers.filter((c) => c.users?.some((u) => u.id === user?.id));
@@ -479,7 +480,7 @@ const citiesList = React.useMemo(() =>
     XLSX.writeFile(workbook, `Customers_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
-  const canImport = user && (user.accountType === "ADMIN" || user.permission?.addCustomers);
+  const canImport = user && hasPermission(user, "addCustomers");
 
   const handleImportClick = () => {
     if (!canImport) {
@@ -591,7 +592,7 @@ const citiesList = React.useMemo(() =>
       <div className="flex justify-between items-center mb-8 bg-white dark:bg-slate-900 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-white">نظام إدارة العملاء</h1>
         <div className="flex items-center gap-3">
-          {user && (user.accountType === "ADMIN" || user.permission?.addCustomers) && (
+          {user && hasPermission(user, "addCustomers") && (
             <Button onClick={() => setIsOpen(true)}><Plus size={20} /></Button>
           )}
         <div className="flex justify-between items-center">
@@ -693,7 +694,7 @@ const citiesList = React.useMemo(() =>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filterCustomer
               .filter((customer) => {
-                if (user.accountType === "ADMIN") return true;
+                if (isAdmin(user)) return true;
                 return customer.users.some((u: any) => u.id === user?.id);
               })
               .map((customer) => (
@@ -717,7 +718,7 @@ const citiesList = React.useMemo(() =>
                   </div>
                   {/* أزرار الحذف والتعديل - تظهر عند الحوام (Hover) */}
                   <div className="absolute top-4 left-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {user && (user.accountType === "ADMIN" || user.permission?.editCustomers) && (
+                    {user && hasPermission(user, "editCustomers") && (
                       <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -735,7 +736,7 @@ const citiesList = React.useMemo(() =>
                       <Pencil size={16} />
                     </button>
                     )  }
-                      {user && (user.accountType === "ADMIN" || user.permission?.deleteCustomers) && (
+                      {user && hasPermission(user, "deleteCustomers") && (
                         <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -815,7 +816,7 @@ const citiesList = React.useMemo(() =>
                   <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       {/* أيقونة الطلبات */}
-                      {user && (user.accountType === "ADMIN" || user.permission?.addOrders) && (
+                      {user && hasPermission(user, "addOrders") && (
                         <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -831,7 +832,7 @@ const citiesList = React.useMemo(() =>
 
                       {/* أيقونة تعيين موظف (للأدمن فقط) */}
 
-                      {user && (user.accountType === "ADMIN" || user.permission?.viewOrders) && (
+                      {user && hasPermission(user, "viewOrders") && (
                         <button
                         className="p-2 text-slate-400 hover:text-green-500 hover:bg-blue-50 rounded-xl transition-all"
                         title="اظهار الفواتير"
@@ -842,7 +843,7 @@ const citiesList = React.useMemo(() =>
                         }}><Eye size={20} />
                         </button>
                       )}
-                      {user.accountType === "ADMIN" && (
+                      {user && isAdmin(user) && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();

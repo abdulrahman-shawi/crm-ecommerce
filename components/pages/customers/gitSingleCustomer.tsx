@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
+import { hasPermission } from "@/lib/utils";
 import { createmessage, updateCustomer } from "@/server/customer";
 import { MapPin, Phone, Send } from "lucide-react";
 import React from "react";
@@ -14,7 +15,7 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
   });
   const scrollRef = React.useRef<any>(null);
   const { user } = useAuth()
-  const canEdit = user?.accountType === "ADMIN" || user?.permission?.editCustomers;
+  const canEdit = hasPermission(user, "editCustomers");
 
   const sourceOptions = [
     { label: "whatsApp", value: "whatsApp" },

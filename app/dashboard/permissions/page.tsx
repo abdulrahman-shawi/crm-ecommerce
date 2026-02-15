@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
+import { hasPermission } from '@/lib/utils';
 
 export default function PermissionsPage() {
     const [roles, setRoles] = useState<any[]>([]);
@@ -124,7 +125,7 @@ export default function PermissionsPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Sidebar: Roles List */}
-                    {user && (user.accountType === "ADMIN" || user.permission?.addPermissions === true) && (
+                    {user && hasPermission(user, "addPermissions") && (
                         <div className="lg:col-span-4 space-y-4">
 
                             <div className="max-h-[700px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
@@ -142,7 +143,7 @@ export default function PermissionsPage() {
                                         </h4>
                                         <h6 className="text-slate-500 text-sm mt-1">{role?.users?.length || 0} مستخدمين مرتبطين</h6>
 
-                                        {user && (user.accountType === "ADMIN" || user.permission?.deletePermissions === true) && (
+                                        {user && hasPermission(user, "deletePermissions") && (
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); handleDelete(role.id); }}
                                                 className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 rounded-full"
@@ -161,7 +162,7 @@ export default function PermissionsPage() {
                         </div>
                     )}
                     {/* Main: Permissions Grid */}
-                    {user && (user.accountType === "ADMIN" || user.permission?.editPermissions === true) && (
+                    {user && hasPermission(user, "editPermissions") && (
                         <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl border dark:border-slate-800 flex flex-col h-[780px]">
                             {selectedRole ? (
                                 <>

@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
+import { hasAnyPermission, isAdmin } from "@/lib/utils";
 import { 
   Home, BarChart2, Users, Settings, ChevronRight, ChevronLeft, 
   Receipt, Box, FileText, PieChart, ShieldCheck, HelpCircle, LogOut, 
@@ -32,63 +33,33 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
     {
       group: "الأقسام الرئيسية",
       items : [
-        (user && (
-    user.accountType === "ADMIN" || 
-    user.permission?.viewCategories === true || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editCategories === true ||
-    user.permission?.addCategories === true || 
-    user.permission?.deleteCategories === true)) &&
-  { icon: Receipt, label: "الأقسام", href: "/dashboard/categories" },
-  (user && (
-    user.accountType === "ADMIN" || 
-    user.permission?.deleteProducts === true || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editProducts === true ||
-    user.permission?.addProducts === true || 
-    user.permission?.viewProducts === true
-  )) &&
-  { icon: Box, label: "المخزن والمنتجات", href: "/dashboard/products" },
-  (user && (
-    user.accountType === "ADMIN" || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editCustomers === true ||
-    user.permission?.deleteCustomers === true || 
-    user.permission?.addCustomers === true)) &&
-  { icon: Users, label: "السجلات", href: "/dashboard/customers" },
+        (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
+        { icon: Receipt, label: "الأقسام", href: "/dashboard/categories" },
+        (user && hasAnyPermission(user, ["viewProducts", "addProducts", "editProducts", "deleteProducts"])) &&
+        { icon: Box, label: "المخزن والمنتجات", href: "/dashboard/products" },
+        (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&
+        { icon: Users, label: "السجلات", href: "/dashboard/customers" },
   { icon: FileText, label: "المصاريف الثابتة", href: "/dashboard/fixed-expenses" },
   
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
-  (user && (
-    user.accountType === "ADMIN" || 
-    user.permission?.viewOrders === true || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editOrders === true ||
-    user.permission?.addOrders === true || 
-    user.permission?.deleteOrders === true
-  )) && { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
+  (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
+  { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
 
 ].filter(Boolean) // هذا السطر هو الأهم: يقوم بحذف أي قيمة false من المصفوفة
     },
     {
       group: "المستخدمين و الأدوار",
       items: [
-        (user && (
-    user.accountType === "ADMIN" || 
-    user.permission?.viewEmployees === true || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editEmployees === true ||
-    user.permission?.deleteEmployees === true || 
-    user.permission?.addEmployees === true)) &&
+          (user && hasAnyPermission(user, ["viewEmployees", "addEmployees", "editEmployees", "deleteEmployees"])) &&
        { icon: Users, label: "المستخدمين", href: "/dashboard/users" },
-       (user && (
-    user.accountType === "ADMIN" || 
-    user.permission?.viewPermissions === true || // تأكد من اسم الحقل viewOrders كما في الـ Schema
-    user.permission?.editPermissions === true ||
-    user.permission?.addPermissions === true || 
-    user.permission?.deletePermissions === true)) &&
+         (user && hasAnyPermission(user, ["viewPermissions", "addPermissions", "editPermissions", "deletePermissions"])) &&
        { icon: RollerCoasterIcon, label: "الأدوار", href: "/dashboard/permissions" },
       ].filter(Boolean),
     },
     {
       group: "إعدادات النظام",
       items: [
-        (user && user.accountType ==="ADMIN") &&
+        (user && isAdmin(user)) &&
         { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
       ].filter(Boolean)
     },

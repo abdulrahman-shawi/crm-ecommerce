@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 // تأكد من استيراد FormInput من المكان الصحيح في مكوناتك وليس من lucide-react
 import { FormInput } from '@/components/ui/form-input';
 import { useAuth } from '@/context/AuthContext';
+import { hasPermission } from '@/lib/utils';
 import { createcategory, deletecategory, getallcategory, updatecategory } from '@/server/category';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, Trash2 } from 'lucide-react';
@@ -100,7 +101,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
             <div className="flex justify-between items-center mb-6">
                 <div className="text-xl font-bold">إدارة الفئات</div>
                 {
-                    user && (user.accountType === "ADMIN" || user.permission?.addCategories === true) && (
+                    user && hasPermission(user, "addCategories") && (
                         <Button
                             onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-6"
@@ -132,7 +133,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                 </div>
 
                                 <div className="flex gap-2">
-                                    {user && (user.accountType === "ADMIN" || user.permission?.editCategories === true) && (
+                                    {user && hasPermission(user, "editCategories") && (
                                         <button
                                         onClick={() => handleEdit(cat)}
                                         className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-blue-600 hover:bg-blue-600 hover:text-white transition-all"
@@ -140,7 +141,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                         <Edit size={16} />
                                     </button>
                                     )}
-                                    {user && (user.accountType === "ADMIN" || user.permission?.deleteCategories === true) && (
+                                    {user && hasPermission(user, "deleteCategories") && (
                                         <button
                                         onClick={() => handledelete(cat)}
                                         className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all"

@@ -17,8 +17,37 @@ export interface Permission {
   editOrders: boolean;
   deleteOrders: boolean;
 
+  viewCustomers: boolean;
+  addCustomers: boolean;
+  editCustomers: boolean;
+  deleteCustomers: boolean;
+
+  viewEmployees: boolean;
+  addEmployees: boolean;
+  editEmployees: boolean;
+  deleteEmployees: boolean;
+
+  viewExpenses: boolean;
+  addExpenses: boolean;
+  editExpenses: boolean;
+  deleteExpenses: boolean;
+
+  viewAnalytics: boolean;
+
+  viewCategories: boolean;
+  addCategories: boolean;
+  editCategories: boolean;
+  deleteCategories: boolean;
+
+  viewPermissions: boolean;
+  addPermissions: boolean;
+  editPermissions: boolean;
+  deletePermissions: boolean;
+
   users?: User[]; // optional to avoid circular reference issues
 }
+
+export type PermissionKey = Exclude<keyof Permission, "id" | "roleName" | "users">;
 
 export interface User {
   id: string;
