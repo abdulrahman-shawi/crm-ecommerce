@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { FormInput } from '@/components/ui/form-input';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
-import { hasPermission } from '@/lib/utils';
 import { getallcategory } from '@/server/category';
 import { deleteProduct, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct } from '@/server/product';
@@ -63,17 +62,6 @@ const ProductLayout = () => {
     };
 
     const onSubmit = async (data: z.infer<typeof productschama>) => {
-        const normalizedName = data.name.trim().toLowerCase();
-        const duplicate = products.some((product) => {
-            if (editId && product.id === editId) return false;
-            return String(product.name || "").trim().toLowerCase() === normalizedName;
-        });
-
-        if (duplicate) {
-            toast.error("اسم المنتج موجود بالفعل");
-            return;
-        }
-
         const loadingToast = toast.loading(editId ? 'جاري تحديث المنتج...' : 'جاري اضافة المنتج...');
         try {
             if (editId) {
@@ -154,7 +142,7 @@ const ProductLayout = () => {
     }
 
     const tableActions: any[] = [
-        (user && hasPermission(user, "editProducts")) &&
+        (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true) ) &&
         {
             label: "تعديل",
             icon: <Mail size={14} />,
@@ -174,7 +162,7 @@ const ProductLayout = () => {
                 setIsOpen(true);
             }
         },
-        (user && hasPermission(user, "deleteProducts")) &&
+        (user && (user.accountType === "ADMIN" || user.permission?.deleteProducts === true)) &&
         {
             label: "حذف",
             icon: <Plus className="rotate-45" size={14} />,
@@ -202,7 +190,7 @@ const ProductLayout = () => {
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold">إدارة المنتجات</h1>
-                {(user && hasPermission(user, "addProducts"))
+                {(user && (user.acountType === "ADMIN" || user.permission?.addProducts === true ))
                 && (
                     <Button onClick={() => setIsOpen(true)}>إضافة منتج جديد</Button>
                 )
@@ -247,7 +235,11 @@ const ProductLayout = () => {
                                 </div>
 
                                 <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 h-10">
-                                    {product.description}
+                                    {product.description ? product.description : "لا يوجد وصف لهذا المنتج."}
+                                </p>
+
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold">
+                                    المخزون: {product.quantity || 0}
                                 </p>
 
                                 <div className="mt-auto flex items-center justify-between">
@@ -316,10 +308,10 @@ const ProductLayout = () => {
                             </div>
 
                             <div className="text-3xl font-bold text-blue-600">
-                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} $
+                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} ريال
                                 {selectedProduct.discount > 0 && (
                                     <span className="text-sm text-slate-400 line-through mr-3 font-normal">
-                                        {selectedProduct.price} $
+                                        {selectedProduct.price} ريال
                                     </span>
                                 )}
                             </div>
@@ -352,10 +344,7 @@ const ProductLayout = () => {
                 pageSize={PAGE_SIZE}
                 currentPage={page}
                 onPageChange={(newPage) => setPage(newPage)}
-                    actions={
-                        (user && (hasPermission(user, "editProducts") || hasPermission(user, "deleteProducts"))) &&
-                        tableActions
-                    }
+                    actions={tableActions}
                     columns={[
                         {
                             header: "المنتج",

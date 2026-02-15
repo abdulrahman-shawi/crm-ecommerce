@@ -34,6 +34,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
     const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
     const [overallDiscount, setOverallDiscount] = React.useState(0);
+    const [statusFilter, setStatusFilter] = React.useState("الكل");
 
     // بيانات العميل والمبالغ
     const [customerId, setCustomerId] = React.useState("");
@@ -49,8 +50,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     // تفاصيل الشحن
     const [deliveryMethod, setDeliveryMethod] = React.useState("توصيل الى المنزل");
-    const [shippingCompany, setShippingCompany] = React.useState("");
-    const [trackingCode, setTrackingCode] = React.useState("");
     const [googleMapsLink, setGoogleMapsLink] = React.useState("");
 
     const [page, setPage] = React.useState(1);
@@ -63,6 +62,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const subTotal = items.reduce((sum, i) => sum + i.total, 0);
     const grandTotal = subTotal - overallDiscount;
 
+    const getEffectivePrice = (price: number, discount: number) => {
+        return Math.max(0, Number(price || 0) - Number(discount || 0));
+    };
+
 
     const updateItem = (index: number, field: string, value: any, products: any[]) => {
         const newItems = [...items];
@@ -74,13 +77,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             item.name = product?.name || "";
             item.modelNumber = product?.modelNumber || "";
             item.price = product?.price || 0;
+            item.discount = product?.discount || 0;
             setSearchQueries({ ...searchQueries, [index]: item.name });
             setShowDropdown({ ...showDropdown, [index]: false });
         } else {
             (item as any)[field] = value;
         }
 
-        item.total = item.price * item.quantity - item.discount;
+        item.total = getEffectivePrice(item.price, item.discount) * item.quantity;
         setItems(newItems);
     };
 
@@ -171,9 +175,48 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         });
     }, [orders, user]);
 
+    const statusOptions = [
+        "الكل",
+        "طلب جديد",
+        "تم استلام الطلب",
+        "تم ارسال الطلب",
+        "تم تسليم الطلب",
+        "فشل التسليم مرتجع",
+        "تم الغاء الطلب",
+        "معلق / نقص معلومات",
+    ];
+
+    const statusCardColors: Record<string, string> = {
+        "الكل": "bg-slate-900 text-white border-slate-900",
+        "طلب جديد": "bg-sky-100 text-sky-800 border-sky-200",
+        "تم استلام الطلب": "bg-blue-100 text-blue-800 border-blue-200",
+        "تم ارسال الطلب": "bg-amber-100 text-amber-800 border-amber-200",
+        "تم تسليم الطلب": "bg-emerald-100 text-emerald-800 border-emerald-200",
+        "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700",
+        "تم الغاء الطلب": "bg-rose-100 text-rose-700 border-rose-200",
+        "معلق / نقص معلومات": "bg-gray-100 text-gray-700 border-gray-200",
+    };
+
+    const statusCounts = React.useMemo(() => {
+        const counts: Record<string, number> = { الكل: filterOrder.length };
+        for (const status of statusOptions) {
+            if (status === "الكل") continue;
+            counts[status] = filterOrder.filter((order: any) => order.status === status).length;
+        }
+        return counts;
+    }, [filterOrder]);
+
+    const visibleOrders = React.useMemo(() => {
+        if (statusFilter === "الكل") return filterOrder;
+        return filterOrder.filter((order: any) => order.status === statusFilter);
+    }, [filterOrder, statusFilter]);
+
     // 1. تأكد من وجود حالة للتحميل في المكون الخاص بك
     // const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    React.useEffect(() => {
+        setPage(1);
+    }, [statusFilter]);
     const handleSubmit = async () => {
         // التحقق الأولي
         if (!customerId) {
@@ -203,8 +246,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             municipality,
             fullAddress,
             googleMapsLink,
-            shippingCompany,
-            trackingCode,
             deliveryMethod,
             deliveryNotes,
             paymentMethod,
@@ -285,8 +326,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         // إعادة تفاصيل الشحن والملاحظات
         setDeliveryMethod("توصيل الى المنزل");
-        setShippingCompany("");
-        setTrackingCode("");
         setGoogleMapsLink("");
         setDeliveryNotes("");
         setAdditionalNotes("");
@@ -339,8 +378,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
                 // 4. تعيين بيانات الشحن
                 setDeliveryMethod(data.deliveryMethod || "توصيل الى المنزل");
-                setShippingCompany(data.shippingCompany || "");
-                setTrackingCode(data.trackingCode || "");
                 setGoogleMapsLink(data.googleMapsLink || "");
                 setDeliveryNotes(data.deliveryNotes || "");
                 setAdditionalNotes(data.additionalNotes || "");
@@ -360,7 +397,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         quantity: item.quantity,
                         discount: item.discount || 0,
                         note: item.note || "",
-                        total: (item.price * item.quantity) - (item.discount || 0),
+                        total: getEffectivePrice(item.price, item.discount || 0) * item.quantity,
                         modelNumber: item.product?.modelNumber || ""
                     }));
                     setItems(formattedItems);
@@ -434,9 +471,24 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <Download size={20} />
                 </button>
             </div>
-            <DataTable data={filterOrder}
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3 mb-6">
+                {statusOptions.map((status) => (
+                    <button
+                        key={status}
+                        onClick={() => setStatusFilter(status)}
+                        className={`p-3 rounded-2xl border text-right transition-all ${statusFilter === status
+                            ? `${statusCardColors[status]} shadow-md`
+                            : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-blue-400"}
+                        `}
+                    >
+                        <p className="text-[10px] font-bold uppercase">{status}</p>
+                        <p className="text-lg font-black">{statusCounts[status] ?? 0}</p>
+                    </button>
+                ))}
+            </div>
+            <DataTable data={visibleOrders}
                 actindir={true}
-                totalCount={filterOrder.length} // لنفترض وجود 150 عميل في الداتا بيز
+                totalCount={visibleOrders.length} // لنفترض وجود 150 عميل في الداتا بيز
                 pageSize={PAGE_SIZE}
                 currentPage={page}
                 onPageChange={(newPage) => setPage(newPage)}
@@ -448,8 +500,20 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     {
                         header: "العميل",
                         accessor: (e: any) => (
-                            <div onClick={() => showordercustomer(e.customer?.id)} className="cursor-pointer flex flex-col">
-                                <span className="font-bold">{e.customer?.name}</span>
+                            <div className="flex flex-col">
+                                <button
+                                    onClick={() => {
+                                        const rawPhone = e.customer?.phone?.[0] || "";
+                                        const phoneNumber = rawPhone.replace(/\D/g, "");
+                                        const countryCode = (e.customer?.countryCode || "").replace(/\D/g, "");
+                                        if (phoneNumber) {
+                                            window.open(`https://wa.me/${countryCode}${phoneNumber}`, "_blank");
+                                        }
+                                    }}
+                                    className="text-right font-bold text-blue-600 hover:text-blue-700"
+                                >
+                                    {e.customer?.name}
+                                </button>
                             </div>
                         )
                     },
@@ -580,7 +644,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                                                 {product.modelNumber}
                                                             </span>
                                                         </div>
-                                                        <div className="text-blue-500 text-xs mt-1"> $ {product.price}</div>
+                                                        <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(product.price, product.discount)}</div>
                                                     </div>
                                                 ))}
                                             </motion.div>
@@ -593,11 +657,11 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                 </div>
                                 <div className="md:col-span-1 text-center">
                                     <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                                    <div className="p-3 text-sm font-bold"> ${item.price}</div>
+                                    <div className="p-3 text-sm font-bold"> ${getEffectivePrice(item.price, item.discount)}</div>
                                 </div>
                                 <div className="md:col-span-1">
                                     <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
-                                    <input type="number" value={item.discount} onChange={(e) => updateItem(index, "discount", e.target.value, products)} className="w-full bg-red-50 dark:bg-red-900/10 p-3 rounded-xl text-center font-bold text-red-600 outline-none text-sm border border-red-100 dark:border-red-900/20" />
+                                    <input type="number" value={item.discount} onChange={(e) => updateItem(index, "discount", Number(e.target.value) || 0, products)} className="w-full bg-red-50 dark:bg-red-900/10 p-3 rounded-xl text-center font-bold text-red-600 outline-none text-sm border border-red-100 dark:border-red-900/20" />
                                 </div>
                                 <div className="md:col-span-4">
                                     <label className="text-[10px] font-bold text-slate-400 mb-1">ملاحظات المنتج</label>
@@ -732,14 +796,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">شركة الشحن</label>
-                                <input type="text" value={shippingCompany} onChange={(e) => setShippingCompany(e.target.value)} placeholder="اسم الشركة..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">كود التتبع (Tracking)</label>
-                                <input type="text" value={trackingCode} onChange={(e) => setTrackingCode(e.target.value)} placeholder="رقم الشحنة..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
-                            </div>
-                            <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">رابط الخريطة</label>
                                 <input type="text" value={googleMapsLink} onChange={(e) => setGoogleMapsLink(e.target.value)} placeholder="رابط الخريطة" className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
                             </div>
@@ -766,6 +822,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
 function ViewOrder({ data, products }: { data: any, products: any }) {
     const componentRef = React.useRef<HTMLDivElement>(null);
+
+    const getEffectivePrice = (price: number, discount: number) => {
+        return Math.max(0, Number(price || 0) - Number(discount || 0));
+    };
 
     const handlePrint = useReactToPrint({
         contentRef: componentRef,
@@ -868,8 +928,8 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                                             <p className="font-black text-slate-800 dark:text-slate-100">{getProductName(item.productId)}</p>
                                         </td>
                                         <td className="px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
-                                        <td className="px-8 py-2 text-center font-bold text-slate-600">{Number(item.price).toLocaleString()} $</td>
-                                        <td className="px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(item.price * item.quantity).toLocaleString()} $</td>
+                                        <td className="px-8 py-2 text-center font-bold text-slate-600">{getEffectivePrice(item.price, item.discount || 0).toLocaleString()} $</td>
+                                        <td className="px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} $</td>
                                     </tr>
                                 ))}
                             </tbody>

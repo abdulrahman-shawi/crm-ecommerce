@@ -40,6 +40,10 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
   };
 
+  const getEffectivePrice = (price: number, discount: number) => {
+    return Math.max(0, Number(price || 0) - Number(discount || 0));
+  };
+
   const updateItem = (index: number, field: string, value: any, products: any[]) => {
     const newItems = [...items];
     const item = newItems[index];
@@ -57,13 +61,14 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       item.name = product?.name || "";
       item.modelNumber = product?.modelNumber || "";
       item.price = product?.price || 0;
+      item.discount = product?.discount || 0;
       setSearchQueries({ ...searchQueries, [index]: item.name });
       setShowDropdown({ ...showDropdown, [index]: false });
     } else {
       (item as any)[field] = value;
     }
 
-    item.total = item.price * item.quantity - item.discount;
+    item.total = getEffectivePrice(item.price, item.discount) * item.quantity;
     setItems(newItems);
   };
 
@@ -303,7 +308,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                                 {product.modelNumber}
                               </span>
                             </div>
-                            <div className="text-blue-500 text-xs mt-1"> $ {product.price}</div>
+                            <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(product.price, product.discount)}</div>
                           </div>
                         ))}
                       </motion.div>
@@ -316,7 +321,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 </div>
                 <div className="md:col-span-1 text-center">
                   <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                  <div className="p-3 text-sm font-bold"> ${item.price}</div>
+                  <div className="p-3 text-sm font-bold"> ${getEffectivePrice(item.price, item.discount)}</div>
                 </div>
                 <div className="md:col-span-1">
                   <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
