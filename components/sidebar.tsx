@@ -20,7 +20,21 @@ type MenuItem = {
 
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
   const pathname = usePathname();
-  const {user} = useAuth()
+  const {user, loading} = useAuth()
+  if (loading || !user) {
+    return (
+      <aside className={`
+        fixed md:sticky top-0 right-0 h-screen z-[70]
+        bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-l border-slate-200 dark:border-slate-800
+        ${isCollapsed 
+          ? "w-[280px] translate-x-full md:translate-x-0 md:w-[88px]" 
+          : "w-[280px] translate-x-0"}
+      `}>
+        <div className="h-20 flex items-center px-6 border-b border-slate-100 dark:border-slate-900" />
+      </aside>
+    );
+  }
+
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = [
     {

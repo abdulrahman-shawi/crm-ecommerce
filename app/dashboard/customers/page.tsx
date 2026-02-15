@@ -668,7 +668,7 @@ const citiesList = React.useMemo(() =>
           <div className="flex bg-slate-100 w-full justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
             {[
               { id: 'الكل', label: 'الكل' },
-              { id: 'فرصة جديدة', label: 'فرصة جديدو' },
+              { id: 'فرصة جديدة', label: 'فرصة جديدة' },
               { id: 'جاري المتابعة', label: 'جاري المتابعة' },
               { id: 'تم البيع', label: 'تم البيع' },
               { id: 'غير مهتم / ملغي', label: 'غير مهتم / ملغي' },
