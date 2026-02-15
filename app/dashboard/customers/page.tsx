@@ -6,13 +6,12 @@ import * as XLSX from 'xlsx';
 import { DynamicForm } from "@/components/shared/dynamic-form";
 import { FormInput } from "@/components/ui/form-input";
 import PhoneInput from 'react-phone-number-input'
-import { FormSelect } from "@/components/ui/select-form";
 import { Button } from "@/components/ui/button";
 import { AppModal } from "@/components/ui/app-modal";
 import { AssignUsers, createCustomerAction, createmessage, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
-import { Download, Eye, MapPin, MessageCircle, Pencil, Phone, Plus, Save, Send, ShoppingBag, Trash2, XCircle } from "lucide-react";
+import { CheckSquare, Download, Eye, MapPin, MessageCircle, Pencil, Phone, Plus, Save, Send, ShoppingBag, Trash2, Upload, UserPlus, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getProduct } from "@/server/product";
 import { createOrder } from "@/server/order";
@@ -32,13 +31,6 @@ const STATUS_OPTIONS = [
   { label: "غير مهتم / ملغي", value: "غير مهتم / ملغي" },
 ];
 
-const ratingOptions = [
-  { label: "1", value: 1 },
-  { label: "2", value: 2 },
-  { label: "3", value: 3 },
-  { label: "4", value: 4 },
-  { label: "5", value: 5 },
-];
 
 const countryOptions = [
   { label: "أفغانستان (+93)", value: "+93-AF" },
@@ -52,27 +44,6 @@ const countryOptions = [
   { label: "روسيا (+7)", value: "+7-RU" },
 ];
 
-const source = [
-  { label: "whatsApp", value: "whatsApp" },
-  { label: "Facebook", value: "Facebook" },
-  { label: "instgram", value: "instgram" },
-  { label: "احالة", value: "احالة" },
-  { label: "زيارة شخصية", value: "زيارة شخصية" },
-  { label: "معرض", value: "معرض" },
-  { label: "مختلطة", value: "مختلطة" },
-];
-
-const genderOptions = [
-  { label: "ذكر", value: "ذكر" },
-  { label: "أنثى", value: "أنثى" }, 
-];
-
-const ageOptions = [
-  { label: "18-25", value: "18-25" },
-  { label: "26-35", value: "26-35" },
-  { label: "36-45", value: "36-45" },
-  { label: "46+", value: "46+" },
-];
 
 /* ===================== Schema (التحقق المرن) ===================== */
 // نصيحة خبير: استخدم .or(z.literal("")) لضمان أن الحقول الفارغة لا تكسر شرط الـ min
@@ -86,13 +57,7 @@ const customerSchema = z.object({
   countryCode: z.string().optional().or(z.literal("")),
   country: z.string().optional().or(z.literal("")),
   city: z.string().optional().or(z.literal("")),
-  age: z.string().optional().or(z.literal("")),
-  gender: z.string().optional().default("ذكر"),
-  source: z.string().optional().default("whatsApp"),
-  rating: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)),
-    z.number().optional()
-  ),
+  
 });
 
 type CustomerFormValues = z.infer<typeof customerSchema>;
@@ -143,10 +108,12 @@ const CustomrLayout: React.FC = () => {
   const [search, setSearch] = React.useState("")
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
+  const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
 
   const [dateFilter, setDateFilter] = React.useState('الكل');
   const [alluser, setUsers] = React.useState<any[]>([])
   const [selectedCustomers, setSelectedCustomers] = React.useState<any[]>([]);
+  const importInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const [selectedCountryCode, setSelectedCountryCode] = React.useState(formdata?.countryCode || "");
 
@@ -177,6 +144,86 @@ const citiesList = React.useMemo(() =>
 
     return matchesSearch && matchesStatus;
   });
+
+  const allFilteredIds = React.useMemo(
+    () => filterCustomer.map((customer) => customer.id),
+    [filterCustomer]
+  );
+
+  const areAllSelected = allFilteredIds.length > 0 && allFilteredIds.every((id) => selectedCustomers.includes(id));
+
+  const toggleSelectAll = () => {
+    setSelectedCustomers(areAllSelected ? [] : allFilteredIds);
+  };
+
+  const handleBulkAssignUsers = async (_: string, userIds: string[]) => {
+    if (selectedCustomers.length === 0) {
+      toast.error("لا يوجد عملاء محددين");
+      return;
+    }
+
+    const loading = toast.loading("جار ربط الموظفين بالعملاء المحددين");
+    try {
+      const results = await Promise.all(
+        selectedCustomers.map((customerId) =>
+          AssignUsers(customerId, userIds)
+            .then(() => ({ success: true }))
+            .catch(() => ({ success: false }))
+        )
+      );
+
+      const failedCount = results.filter((r) => !r.success).length;
+      if (failedCount > 0) {
+        toast.error(`تعذر ربط ${failedCount} عميل`);
+      } else {
+        toast.success("تم ربط الموظفين بنجاح");
+      }
+
+      getData();
+      setSelectedCustomers([]);
+      setIsBulkAssignOpen(false);
+    } finally {
+      toast.dismiss(loading);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedCustomers.length === 0) {
+      toast.error("لا يوجد عملاء محددين");
+      return;
+    }
+
+    const confirmDelete = window.confirm("هل أنت متأكد من حذف العملاء المحددين؟");
+    if (!confirmDelete) {
+      return;
+    }
+
+    const loading = toast.loading("جار حذف العملاء");
+    try {
+      const results = await Promise.all(
+        selectedCustomers.map((customerId) =>
+          deleteCustomer({ id: customerId })
+            .then((res) => ({ success: res.success }))
+            .catch(() => ({ success: false }))
+        )
+      );
+
+      const successCount = results.filter((r) => r.success).length;
+      const failedCount = results.filter((r) => !r.success).length;
+
+      if (successCount > 0) {
+        toast.success(`تم حذف ${successCount} عميل`);
+      }
+      if (failedCount > 0) {
+        toast.error(`تعذر حذف ${failedCount} عميل`);
+      }
+
+      getData();
+      setSelectedCustomers([]);
+    } finally {
+      toast.dismiss(loading);
+    }
+  };
 
   const toggleSelect = (id: any) => {
     setSelectedCustomers((prev: any) =>
@@ -384,7 +431,6 @@ const citiesList = React.useMemo(() =>
         toast.dismiss(loading)
       }
     }
-    console.log(`${data.source ? data.source : "whatsApp"}`)
   };
 
   const getSingleCustomer = async (data: any) => {
@@ -433,6 +479,91 @@ const citiesList = React.useMemo(() =>
     XLSX.writeFile(workbook, `Customers_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
+  const canImport = user && (user.accountType === "ADMIN" || user.permission?.addCustomers);
+
+  const handleImportClick = () => {
+    if (!canImport) {
+      toast.error("ليس لديك صلاحية الاستيراد");
+      return;
+    }
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!canImport) {
+      toast.error("ليس لديك صلاحية الاستيراد");
+      return;
+    }
+
+    if (!user?.id) {
+      toast.error("يجب تسجيل الدخول أولاً");
+      return;
+    }
+
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    event.target.value = "";
+
+    const loading = toast.loading("جار استيراد البيانات");
+    try {
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as any[];
+
+      let successCount = 0;
+      let failedCount = 0;
+
+      for (const row of rows) {
+        const name = String(row["اسم العميل"] || "").trim();
+        const phoneRaw = String(row["رقم الهاتف"] || "").trim();
+        const country = String(row["الدولة"] || "").trim();
+
+        if (!name || !phoneRaw) {
+          failedCount += 1;
+          continue;
+        }
+
+        const phoneArray = phoneRaw
+          .split(/\s*-\s*|,|\n/)
+          .map((num) => num.trim())
+          .filter((num) => num.length > 0);
+
+        const payload = {
+          name,
+          phone: phoneArray,
+          country,
+          countryCode: "",
+          city: "",
+        };
+
+        const res = await createCustomerAction(payload, user.id as string);
+        if (res.success) {
+          successCount += 1;
+        } else {
+          failedCount += 1;
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(`تم استيراد ${successCount} عميل`);
+      }
+      if (failedCount > 0) {
+        toast.error(`تعذر استيراد ${failedCount} عميل`);
+      }
+
+      await getData();
+    } catch (error) {
+      toast.error("فشل استيراد الملف");
+    } finally {
+      toast.dismiss(loading);
+    }
+  };
+
   const handleAssignUsers = async (customerId: string, userIds: string[]) => {
     const loading = toast.loading("جار ربط الموظفين بالعميل")
     try {
@@ -466,6 +597,33 @@ const citiesList = React.useMemo(() =>
         <div className="flex justify-between items-center">
 
           <div className="flex gap-2">
+            <Button onClick={toggleSelectAll} variant="outline">
+              <CheckSquare size={20} />
+            </Button>
+            {selectedCustomers.length > 0 && (
+              <>
+                <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
+                  <UserPlus size={20} />
+                </Button>
+                <Button onClick={handleBulkDelete} variant="secondary">
+                  <Trash2 size={20} />
+                </Button>
+              </>
+            )}
+            {canImport && (
+              <>
+                <input
+                  ref={importInputRef}
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleImportFile}
+                  className="hidden"
+                />
+                <Button onClick={handleImportClick} variant="outline">
+                  <Upload size={20} />
+                </Button>
+              </>
+            )}
             {/* زر التصدير الذكي */}
             <Button onClick={handleExportAction}><Download size={20} /></Button>
             {/* <button
@@ -787,62 +945,6 @@ const citiesList = React.useMemo(() =>
             </select>
           </div>
 
-          {/* مصدر العميل */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">مصدر العميل</label>
-            <select
-              {...register("source")}
-              className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">اختر المصدر</option>
-              {source.map((s) => (
-                <option key={s.value} value={s.value}>{s.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* الجنس */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">الجنس</label>
-            <select
-              {...register("gender")}
-              className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">اختر الجنس</option>
-              {genderOptions.map((g) => (
-                <option key={g.value} value={g.value}>{g.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* العمر */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">العمر</label>
-            <select
-              {...register("age")}
-              className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">اختر العمر</option>
-              {ageOptions.map((a) => (
-                <option key={a.value} value={a.value}>{a.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* التقييم */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">تقييم العميل</label>
-            <select
-              {...register("rating")}
-              className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">اختر التقييم</option>
-              {ratingOptions.map((r) => (
-                <option key={r.value} value={r.value}>{r.label}</option>
-              ))}
-            </select>
-          </div>
-
                   {/* قسم أرقام الهواتف الديناميكي */}
                   <div className="col-span-1 md:col-span-2 space-y-4">
                     <label className="block text-sm font-medium text-gray-700 dark:text-slate-200">
@@ -928,6 +1030,13 @@ const citiesList = React.useMemo(() =>
 
       <AppModal isOpen={OpenAssignModal} onClose={() => setOpenAssignModal(false)} title="ربط المستخدمين بالعميل" >
         <AssignUserModal customer={customer} allUsers={alluser} onSave={handleAssignUsers} />
+      </AppModal>
+      <AppModal isOpen={isBulkAssignOpen} onClose={() => setIsBulkAssignOpen(false)} title="ربط المستخدمين بالعملاء المحددين" >
+        <AssignUserModal
+          customer={{ id: "bulk", name: `مجموعة (${selectedCustomers.length})`, users: [] }}
+          allUsers={alluser}
+          onSave={handleBulkAssignUsers}
+        />
       </AppModal>
       <AppModal size='lg' isOpen={isOpenordercustomer} onClose={() => setisOpenordercustomer(false)} title='طلبات العميل'>
         <ViewOrderCustomer orders={customerorder} />

@@ -155,6 +155,10 @@ export async function updateCustomer(data:any , customer:any) {
         phone: data.phone, // مصفوفة مثل ["05xxxx"]
         countryCode: data.countryCode,
         country: data.country,
+        age: data.age,
+        gender: data.gender,
+        source: data.source,
+        rating: data.rating,
     }
   })
 

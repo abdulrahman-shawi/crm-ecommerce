@@ -1,13 +1,59 @@
 import { useAuth } from "@/context/AuthContext";
-import { createmessage } from "@/server/customer";
+import { createmessage, updateCustomer } from "@/server/customer";
 import { MapPin, Phone, Send } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 
 export default function GetCustomerSingle({ data, getdatas }: { data: any, getdatas: any }) {
   const [msg, setMsg] = React.useState("")
+  const [localFields, setLocalFields] = React.useState({
+    age: "",
+    gender: "",
+    rating: "",
+    source: "",
+  });
   const scrollRef = React.useRef<any>(null);
   const { user } = useAuth()
+  const canEdit = user?.accountType === "ADMIN" || user?.permission?.editCustomers;
+
+  const sourceOptions = [
+    { label: "whatsApp", value: "whatsApp" },
+    { label: "Facebook", value: "Facebook" },
+    { label: "instgram", value: "instgram" },
+    { label: "احالة", value: "احالة" },
+    { label: "زيارة شخصية", value: "زيارة شخصية" },
+    { label: "معرض", value: "معرض" },
+    { label: "مختلطة", value: "مختلطة" },
+  ];
+
+  const genderOptions = [
+    { label: "ذكر", value: "ذكر" },
+    { label: "أنثى", value: "أنثى" },
+  ];
+
+  const ageOptions = [
+    { label: "18-25", value: "18-25" },
+    { label: "26-35", value: "26-35" },
+    { label: "36-45", value: "36-45" },
+    { label: "46+", value: "46+" },
+  ];
+
+  const ratingOptions = [
+    { label: "1", value: "1" },
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+    { label: "4", value: "4" },
+    { label: "5", value: "5" },
+  ];
+
+  React.useEffect(() => {
+    setLocalFields({
+      age: data.age || "",
+      gender: data.gender || "",
+      rating: data.rating ? String(data.rating) : "",
+      source: data.source || "",
+    });
+  }, [data]);
 
   // التمرير التلقائي عند وصول رسالة جديدة
   React.useEffect(() => {
@@ -29,6 +75,28 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     }
   };
 
+  const handleFieldChange = async (field: "age" | "gender" | "rating" | "source", value: string) => {
+    if (!canEdit) {
+      toast.error("ليس لديك صلاحية التعديل");
+      return;
+    }
+
+    setLocalFields((prev) => ({ ...prev, [field]: value }));
+
+    const payload: any = { [field]: value || undefined };
+    if (field === "rating") {
+      payload.rating = value ? Number(value) : undefined;
+    }
+
+    const res = await updateCustomer(payload, data.id);
+    if (res.success) {
+      await getdatas();
+      toast.success("تم تحديث البيانات");
+    } else {
+      toast.error("حدث خطأ أثناء التحديث");
+    }
+  };
+
   return (
     <div className="text-slate-800 dark:text-slate-50">
       {/* الهيدر - يبقى كما هو */}
@@ -40,11 +108,63 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
           <div>
             <h3 className="text-xl font-bold text-white">{data.name}</h3>
             <div className="border border-slate-500 mt-2 mb-4"></div>
-            <div className="grid grid-cols-2 md:grid-cols-4 mb-2">
-              <h3 className="text-xs font-bold text-slate-500">العمر: {data.age ? data.age : "غير محدد"}</h3>
-            <h3 className="text-xs font-bold text-slate-500">الجنس: {data.gender ? data.gender : "غير محدد"}</h3>
-            <h3 className="text-xs font-bold text-slate-500">التقييم: {data.rating ? data.rating : "غير محدد"}</h3>
-            <h3 className="text-xs font-bold text-slate-500">مصدر العميل: {data.source ? data.source : "غير محدد"}</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-500">العمر</label>
+                <select
+                  value={localFields.age}
+                  onChange={(e) => handleFieldChange("age", e.target.value)}
+                  disabled={!canEdit}
+                  className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+                >
+                  <option value="">غير محدد</option>
+                  {ageOptions.map((a) => (
+                    <option key={a.value} value={a.value}>{a.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-500">الجنس</label>
+                <select
+                  value={localFields.gender}
+                  onChange={(e) => handleFieldChange("gender", e.target.value)}
+                  disabled={!canEdit}
+                  className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+                >
+                  <option value="">غير محدد</option>
+                  {genderOptions.map((g) => (
+                    <option key={g.value} value={g.value}>{g.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-500">التقييم</label>
+                <select
+                  value={localFields.rating}
+                  onChange={(e) => handleFieldChange("rating", e.target.value)}
+                  disabled={!canEdit}
+                  className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+                >
+                  <option value="">غير محدد</option>
+                  {ratingOptions.map((r) => (
+                    <option key={r.value} value={r.value}>{r.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-500">مصدر العميل</label>
+                <select
+                  value={localFields.source}
+                  onChange={(e) => handleFieldChange("source", e.target.value)}
+                  disabled={!canEdit}
+                  className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+                >
+                  <option value="">غير محدد</option>
+                  {sourceOptions.map((s) => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <p className="text-xs text-slate-500">تم الانشاء في: {new Date(data.createdAt).toLocaleDateString('ar-EG')}</p>
           </div>
