@@ -316,10 +316,10 @@ const ProductLayout = () => {
                             </div>
 
                             <div className="text-3xl font-bold text-blue-600">
-                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} ريال
+                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} $
                                 {selectedProduct.discount > 0 && (
                                     <span className="text-sm text-slate-400 line-through mr-3 font-normal">
-                                        {selectedProduct.price} ريال
+                                        {selectedProduct.price} $
                                     </span>
                                 )}
                             </div>
