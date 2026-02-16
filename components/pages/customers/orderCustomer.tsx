@@ -17,8 +17,98 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   // بيانات المستلم والعنوان
   const [receiverName, setReceiverName] = React.useState("");
   const [receiverPhone, setReceiverPhone] = React.useState<(string | undefined)[]>([""]);
-  const [country, setCountry] = React.useState("سوريا"); // افتراضي حسب الصورة
+  const [country, setCountry] = React.useState("");
   const [city, setCity] = React.useState("");
+    const countries = [
+      "سوريا",
+      "لبنان",
+      "العراق",
+      "تركيا",
+      "ليبيا",
+    ];
+
+    const citiesByCountry: Record<string, string[]> = {
+      "سوريا": [
+        "دمشق",
+        "حلب",
+        "حمص",
+        "حماة",
+        "اللاذقية",
+        "طرطوس",
+        "إدلب",
+        "درعا",
+        "السويداء",
+        "القنيطرة",
+        "دير الزور",
+        "الرقة",
+        "الحسكة",
+      ],
+      "لبنان": [
+        "بيروت",
+        "طرابلس",
+        "صيدا",
+        "صور",
+        "زحلة",
+        "بعلبك",
+        "جونية",
+        "جبيل",
+        "البترون",
+        "النبطية",
+      ],
+      "العراق": [
+        "بغداد",
+        "البصرة",
+        "الموصل",
+        "أربيل",
+        "النجف",
+        "كربلاء",
+        "كركوك",
+        "السليمانية",
+        "دهوك",
+        "الرمادي",
+        "الفلوجة",
+        "سامراء",
+        "الحلة",
+        "الديوانية",
+        "الناصرية",
+        "الكوت",
+        "العمارة",
+      ],
+      "تركيا": [
+        "إسطنبول",
+        "أنقرة",
+        "إزمير",
+        "بورصة",
+        "أنطاليا",
+        "أضنة",
+        "غازي عنتاب",
+        "قونية",
+        "مرسين",
+        "قيصري",
+        "أسكي شهير",
+        "طرابزون",
+        "سامسون",
+        "ديار بكر",
+        "شانلي أورفا",
+        "فان",
+      ],
+      "ليبيا": [
+        "طرابلس",
+        "بنغازي",
+        "مصراتة",
+        "الزاوية",
+        "سبها",
+        "سرت",
+        "طبرق",
+        "درنة",
+        "زليتن",
+        "أجدابيا",
+        "البيضاء",
+        "غريان",
+        "الكفرة",
+        "مرزق",
+      ],
+    };
   const [municipality, setMunicipality] = React.useState("");
   const [fullAddress, setFullAddress] = React.useState("");
   const [status, setStatus] = React.useState("طلب جديد");
@@ -102,7 +192,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     // إعادة بيانات المستلم والعنوان
     setReceiverName("");
     setReceiverPhone([""]);
-    setCountry("ليبيا");
+    setCountry("");
     setCity("");
     setMunicipality("");
     setFullAddress("");
@@ -448,16 +538,33 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">الدولة</label>
-                <select value={country} onChange={(e) => setCountry(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all">
+                <select
+                  value={country}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setCity("");
+                  }}
+                  className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
+                >
                   <option value="">اختر الدولة</option>
-                  <option value="تركيا">تركيا</option>
-                  <option value="سوريا">سوريا</option>
-                  <option value="العراق">العراق</option>
+                  {countries.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">المدينة / المنطقة</label>
-                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  disabled={!country}
+                  className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold disabled:opacity-50"
+                >
+                  <option value="">اختر المدينة</option>
+                  {(citiesByCountry[country] || []).map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">البلدية</label>

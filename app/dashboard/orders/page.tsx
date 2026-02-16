@@ -531,13 +531,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         accessor: (c: any) => {
                             // تعريف الألوان بناءً على طلبك
                             const statusColors: Record<string, string> = {
-                                "طلب جديد": "bg-sky-100 text-sky-700 border-sky-200",
-                                "تم استلام الطلب": "bg-blue-100 text-blue-700 border-blue-200", // أزرق
-                                "تم ارسال الطلب": "bg-yellow-100 text-yellow-700 border-yellow-200", // أصفر
-                                "تم تسليم الطلب": "bg-green-100 text-green-700 border-green-200", // أخضر
-                                "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700", // أحمر غامق
-                                "تم الغاء الطلب": "bg-red-100 text-red-700 border-red-200", // أحمر فاتح
-                                "معلق / نقص معلومات": "bg-gray-100 text-gray-700 border-gray-200", // رمادي
+                                "طلب جديد": "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800",
+                                "تم استلام الطلب": "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800", // أزرق
+                                "تم ارسال الطلب": "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800", // أصفر
+                                "تم تسليم الطلب": "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800", // أخضر
+                                "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700 dark:bg-red-900/40 dark:text-red-200 dark:border-red-800", // أحمر غامق
+                                "تم الغاء الطلب": "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800", // أحمر فاتح
+                                "معلق / نقص معلومات": "bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700", // رمادي
                             };
 
                             // دالة لجلب اللون الحالي بناءً على القيمة
