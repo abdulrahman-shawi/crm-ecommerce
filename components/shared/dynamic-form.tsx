@@ -25,8 +25,16 @@ export function DynamicForm<T extends z.ZodType<any>>({
 }: DynamicFormProps<T>) {
   const methods = useForm<z.infer<T>>({
     resolver: zodResolver(schema as any),
-    values: defaultValues,
+    defaultValues,
   });
+
+  React.useEffect(() => {
+    if (defaultValues) {
+      methods.reset(defaultValues);
+    } else {
+      methods.reset();
+    }
+  }, [defaultValues, methods]);
 
   return (
     <form onSubmit={methods.handleSubmit(onSubmit as any)} className="space-y-4">

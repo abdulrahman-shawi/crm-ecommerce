@@ -173,8 +173,8 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
       </div>
 
       <div className="p-6 space-y-6">
-        {/* معلومات الهاتف والدولة */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* معلومات الهاتف والدولة والمدينة */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
             <Phone size={18} className="text-blue-500" />
             <div>
@@ -189,6 +189,13 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
             <div>
               <p className="text-[10px] text-slate-500 font-bold uppercase">الدولة</p>
               <p className="text-sm font-bold dark:text-white truncate">{data.country || "غير محدد"}</p>
+            </div>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
+            <MapPin size={18} className="text-emerald-500" />
+            <div>
+              <p className="text-[10px] text-slate-500 font-bold uppercase">المدينة</p>
+              <p className="text-sm font-bold dark:text-white truncate">{data.city || "غير محدد"}</p>
             </div>
           </div>
         </div>

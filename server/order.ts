@@ -2,6 +2,10 @@
 
 import { prisma } from "@/lib/prisma"
 
+const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم التسليم", "مدفوعة"]);
+
+const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
+
 export async function getOrders() {
     const order = await prisma.order.findMany({
         orderBy:{id:"desc"},
@@ -102,6 +106,13 @@ export async function createOrder(data: any, items: any[], user: any) {
                 });
             }
 
+            if (isSoldOrderStatus(data.status)) {
+                await tx.customer.update({
+                    where: { id: data.customerId },
+                    data: { status: "تم البيع" }
+                });
+            }
+
             return newOrder;
         });
 
@@ -167,6 +178,13 @@ export async function updateOrder(data: any, id: any, items: any) {
                     }
                 }
             });
+
+            if (isSoldOrderStatus(data.status)) {
+                await tx.customer.update({
+                    where: { id: data.customerId },
+                    data: { status: "تم البيع" }
+                });
+            }
 
             // ج - خصم المخزون الجديد
             for (const newItem of items) {
@@ -247,7 +265,19 @@ export async function updateStaus(status:any , id:any){
         where:{id:id},
         data:{
             status:status
+        },
+        select: {
+            id: true,
+            customerId: true,
+            status: true
         }
     })
+
+    if (isSoldOrderStatus(updatestutas.status)) {
+        await prisma.customer.update({
+            where: { id: updatestutas.customerId },
+            data: { status: "تم البيع" }
+        });
+    }
     return {success :true , data:updatestutas}
 }

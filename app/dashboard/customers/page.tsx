@@ -21,7 +21,6 @@ import ViewOrderCustomer from "@/components/pages/customers/viewOrder";
 import AssignUserModal from "@/components/pages/customers/assignuser";
 import GetCustomerSingle from "@/components/pages/customers/gitSingleCustomer";
 import OrderCustomer from "@/components/pages/customers/orderCustomer";
-import { Country, City } from 'country-state-city';
 
 /* ===================== Constants ===================== */
 
@@ -33,19 +32,6 @@ const STATUS_OPTIONS = [
 ];
 
 
-const countryOptions = [
-  { label: "أفغانستان (+93)", value: "+93-AF" },
-  { label: "ألبانيا (+355)", value: "+355-AL" },
-  { label: "الجزائر (+213)", value: "+213-DZ" },
-  // ...
-  { label: "كندا (+1)", value: "+1-CA" },
-  { label: "الولايات المتحدة (+1)", value: "+1-US" },
-  // ...
-  { label: "كازاخستان (+7)", value: "+7-KZ" },
-  { label: "روسيا (+7)", value: "+7-RU" },
-];
-
-
 /* ===================== Schema (التحقق المرن) ===================== */
 // نصيحة خبير: استخدم .or(z.literal("")) لضمان أن الحقول الفارغة لا تكسر شرط الـ min
 const customerSchema = z.object({
@@ -54,11 +40,7 @@ const customerSchema = z.object({
   phone: z.preprocess(
     (val) => (typeof val === "string" && val !== "" ? [val] : val),
     z.array(z.string()).optional().default([])
-  ),
-  countryCode: z.string().optional().or(z.literal("")),
-  country: z.string().optional().or(z.literal("")),
-  city: z.string().optional().or(z.literal("")),
-  
+  )
 });
 
 type CustomerFormValues = z.infer<typeof customerSchema>;
@@ -116,16 +98,6 @@ const CustomrLayout: React.FC = () => {
   const [selectedCustomers, setSelectedCustomers] = React.useState<any[]>([]);
   const importInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  const [selectedCountryCode, setSelectedCountryCode] = React.useState(formdata?.countryCode || "");
-
-// جلب القوائم
-const countriesList = React.useMemo(() => 
-  Country.getAllCountries().map(c => ({ label: `${c.name} ${c.flag}`, value: c.isoCode })), 
-[]);
-
-const citiesList = React.useMemo(() => 
-  selectedCountryCode ? (City.getCitiesOfCountry(selectedCountryCode) || []).map(c => ({ label: c.name, value: c.name })) : [], 
-[selectedCountryCode]);
   // دالة للتعامل مع الاختيار
 
   const filterCustomer = customers.filter((e: any) => {
@@ -402,15 +374,12 @@ const citiesList = React.useMemo(() =>
       }
     } else {
       try {
-        // 1. استلام القيمة والتأكد من تحويلها لنص أولاً للمعالجة
-        // نستخدم String() لضمان تحويل أي نوع قادم إلى نص بأمان
-        const rawInput = String(data.phone || "");
-
-        // 2. تقسيم النص بناءً على المسافات أو الفواصل
-        const phoneArray = rawInput
-          .split(/[,\s\n]+/)
-          .map(num => num.trim())
-          .filter(num => num.length > 0);
+        const phoneArray = Array.isArray(data.phone)
+          ? data.phone.filter((num) => String(num || "").trim().length > 0)
+          : String(data.phone || "")
+              .split(/[,\s\n]+/)
+              .map(num => num.trim())
+              .filter(num => num.length > 0);
 
         const formattedData = {
           ...data,
@@ -593,7 +562,7 @@ const citiesList = React.useMemo(() =>
         <h1 className="text-2xl font-bold text-slate-800 dark:text-white">نظام إدارة العملاء</h1>
         <div className="flex items-center gap-3">
           {user && hasPermission(user, "addCustomers") && (
-            <Button onClick={() => setIsOpen(true)}><Plus size={20} /></Button>
+            <Button onClick={() => { setFormdata({ name: "", phone: [""] }); setEditId(null); setIsOpen(true); }}><Plus size={20} /></Button>
           )}
         <div className="flex justify-between items-center">
 
@@ -725,9 +694,7 @@ const citiesList = React.useMemo(() =>
                         setEditId(customer.id)
                         setFormdata({
                           name: customer.name,
-                          phone: customer.phone ? customer.phone.join(' ') : '',
-                          countryCode: customer.countryCode,
-                          country: customer.country
+                          phone: customer.phone ? customer.phone.join(' ') : ''
                         })
                         setIsOpen(true)
                       }}
@@ -888,8 +855,8 @@ const citiesList = React.useMemo(() =>
       </div>
 
       <AppModal size="lg" isOpen={isOpen} onClose={() => setIsOpen(false)} title="إضافة ملف عميل شامل">
-        <DynamicForm schema={customerSchema} onSubmit={onSubmit} defaultValues={formdata}>
-          {({ register, control, formState: { errors }, setValue }) => {
+        <DynamicForm schema={customerSchema} onSubmit={onSubmit} defaultValues={formdata ?? { name: "", phone: [""] }}>
+          {({ register, control, formState: { errors } }) => {
             // إعداد المصفوفة الديناميكية للحقول
             const { fields, append, remove } = useFieldArray({
               control,
@@ -907,44 +874,6 @@ const citiesList = React.useMemo(() =>
                     {...register("name")}
                     error={errors.name?.message?.toString()}
                   />
-
-                  {/* الدولة */}
-                  <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">الدولة</label>
-            <select
-              {...register("countryCode")}
-              className="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => {
-                const code = e.target.value;
-                setSelectedCountryCode(code);
-                // تحديث اسم الدولة النصي أيضاً إذا كنت تحتاجه في الـ Schema
-                const countryName = countriesList.find(c => c.value === code)?.label || "";
-                setValue("country", countryName);
-                setValue("city", ""); // تصفير المدينة عند تغيير الدولة
-              }}
-            >
-              <option value="">اختر الدولة</option>
-              {countriesList.map((c) => (
-                <option key={c.value} value={c.value}>{c.label}</option>
-              ))}
-            </select>
-            {errors.countryCode && <p className="text-xs text-red-500">{errors.countryCode.message?.toString()}</p>}
-          </div>
-
-          {/* اختيار المدينة (يظهر فقط إذا تم اختيار دولة) */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-100">المدينة</label>
-            <select
-              {...register("city")}
-              disabled={!selectedCountryCode}
-              className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              <option value="">اختر المدينة</option>
-              {citiesList.map((city) => (
-                <option key={city.value} value={city.value}>{city.label}</option>
-              ))}
-            </select>
-          </div>
 
                   {/* قسم أرقام الهواتف الديناميكي */}
                   <div className="col-span-1 md:col-span-2 space-y-4">
