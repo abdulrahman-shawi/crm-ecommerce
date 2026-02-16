@@ -187,6 +187,13 @@ exports.Prisma.ProductScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.UserTargetProductScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  requiredQty: 'requiredQty'
+};
+
 exports.Prisma.ProductImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
@@ -280,6 +287,7 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
+  UserTargetProduct: 'UserTargetProduct',
   ProductImage: 'ProductImage',
   Customer: 'Customer',
   Message: 'Message',

@@ -11,7 +11,7 @@ import {
     GetSalesByStatusAction,
     GetSalesTimelineAction,
     GetTopCustomers,
-    GetTopSellingUsers
+    GetTopSellingUsersByPermission
 } from '@/server/analytics';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
 import { u } from 'framer-motion/client';
@@ -68,12 +68,12 @@ const AnalyticPage: React.FC = () => {
                     GetSalesByStatusAction(user.id),
                     GetCustomerInteractions(user.id),
                     GetSalesByCity(user.id),
-                    GetTopCustomers(),
+                    GetTopCustomers(user.id),
                     GetBestSellingProducts(),
                     GetLowStockProducts(),
-                    GetTopSellingUsers(),
+                    GetTopSellingUsersByPermission(user.id),
                     GetSalesTimelineAction(user.id),
-                    GetCustomerAcquisitionMonth() // طلب إضافي لبيانات التفاعل الزم
+                    GetCustomerAcquisitionMonth(user.id) // طلب إضافي لبيانات التفاعل الزم
                 ]);
 
                 setResult(resStatus as any);
@@ -154,6 +154,20 @@ const AnalyticPage: React.FC = () => {
     name: user.name,
     sales: user.totalSold
 })) || [];
+
+    const showSalesTimeline = loading || timelineData.length > 0;
+    const showStatusChart = loading || chartData.length > 0;
+    const showCustomerInteractions = loading || (msg.data?.length || 0) > 0;
+    const showInteractionChart = loading || interactionData.length > 0;
+    const showCustomerGrowth = loading || (msgTimeline.data?.length || 0) > 0;
+    const showSalesByCountry = loading || (country.data?.length || 0) > 0;
+    const showSalesGeo = loading || cityData.length > 0;
+    const showTopCustomersCards = loading || (topCustomer.data?.length || 0) > 0;
+    const showTopCustomersChart = loading || topCustData.length > 0;
+    const showTopProducts = loading || (topSale.data?.length || 0) > 0;
+    const showLowStock = loading || (lowStock.data?.length || 0) > 0;
+    const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
+    const showTopUsersChart = loading || topUsersData.length > 0;
     return (
         <div className="p-8 relative">
 
@@ -291,193 +305,475 @@ const AnalyticPage: React.FC = () => {
 
 
             {/* جدول السجل الزمني الشهري */}
-            <DynamicCard
-                isLoading={loading}
-                variant="glass"
-                className="mt-6"
-            >
-                <DynamicCard.Header
-                    title="السجل الزمني للمبيعات"
-                    description="تحليل أداء الحالات شهرياً"
-                    icon={<Package size={20} />}
-                />
-                <DynamicCard.Content>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-right border-collapse">
-                            <thead>
-                                <tr className="bg-slate-100/50 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-400">
-                                    <th className="p-4 rounded-r-lg">الشهر</th>
-                                    <th className="p-4">تفاصيل الحالات (عدد الطلبات | المبالغ)</th>
-                                    <th className="p-4 rounded-l-lg text-left">إجمالي الشهر</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {/* ملاحظة: افترضنا أننا خزنّا نتيجة الـ Action الجديد في متغير اسمه timelineData */}
-                                {timelineData?.map((month: any, idx: number) => {
-                                    const monthTotal = (Object.values(month.statuses || {}) as any[]).reduce((sum: number, status: any) => {
-                                        return sum + (Number(status.amount) || 0);
-                                    }, 0);
-
-                                    return (
-                                        <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                                            <td className="p-4 font-bold text-sm text-slate-700 dark:text-slate-200 w-32">
-                                                {month.label}
-                                            </td>
-                                            <td className="p-4">
-                                                <div className="flex flex-wrap gap-2">
-                                                    {Object.entries(month.statuses || {}).map(([status, details]: any) => (
-                                                        <div key={status} className="flex flex-col border border-slate-200 dark:border-slate-700 p-2 rounded bg-white dark:bg-slate-900 min-w-[120px]">
-                                                            <span className="text-[10px] text-slate-500 font-bold">{status}</span>
-                                                            <div className="flex justify-between items-center mt-1">
-                                                                <span className="text-xs text-blue-600">{details.count} طلب</span>
-                                                                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{details.amount.toLocaleString()}$</span>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </td>
-                                            <td className="p-4 text-left font-black text-green-600 dark:text-green-400 text-lg">
-                                                {monthTotal.toLocaleString()}$
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </DynamicCard.Content>
-            </DynamicCard>
-            {/* باقي الكروت (تفاعلات العملاء، الدول، إلخ) تظل كما هي مع تحسينات بسيطة */}
-
-            <DynamicCard isLoading={loading} variant="glass" className="mt-6">
-                <DynamicCard.Header title="المنحنى البياني لحالات الطلبات" icon={<Package size={20} />} />
-                <DynamicCard.Content className="h-[400px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                            data={chartData}
-                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                            <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="#94a3b8" />
-                            <YAxis
-                                tick={{ fontSize: 12 }}
-                                stroke="#94a3b8"
-                                tickFormatter={(value) => `$${value.toLocaleString()}`} // تنسيق العملة
-                            />
-                            <Tooltip
-                                formatter={(value: number | undefined) => `${value?.toLocaleString() || 0}$`} // تنسيق القيم في الـ Tooltip
-                                contentStyle={{ borderRadius: '10px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                                labelStyle={{ color: '#333' }}
-                            />
-                            <Legend
-                                verticalAlign="top"
-                                height={36}
-                                iconType="circle"
-                                wrapperStyle={{ paddingTop: '10px' }}
-                            />
-
-                            {/* توليد خطوط لكل حالة بشكل ديناميكي */}
-                            {allStatuses.map((status, index) => (
-                                <Line
-                                    key={status}
-                                    type="monotone"
-                                    dataKey={status} // هنا اسم الحالة هو الـ key
-                                    stroke={statusColors[index % statusColors.length]} // لتغيير الألوان
-                                    strokeWidth={2}
-                                    dot={false} // لا تظهر النقاط لتسهيل القراءة
-                                    activeDot={{ r: 6 }}
-                                />
-                            ))}
-                        </LineChart>
-                    </ResponsiveContainer>
-                </DynamicCard.Content>
-            </DynamicCard>
-
-            <DynamicCard
-                isLoading={loading}
-                isError={!msg.success}
-                isEmpty={!loading && msg.success && msg.data?.length === 0}
-                variant="glass"
-                className='mt-6'
-            >
-                <DynamicCard.Header
-                    title="تفاعلات العملاء"
-                    description="أكثر العملاء تواصلاً بناءً على عدد الرسائل المسجلة"
-                    icon={<TrendingUp size={20} />}
-                />
-                <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {msg.data?.map((item: any) => (
-                        <div key={item.name} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
-                            <div className="flex flex-col justify-center overflow-hidden">
-                                <span className="font-semibold text-slate-700 dark:text-slate-200 truncate">{item.name}</span>
-                                <span className="text-xs text-slate-500 uppercase tracking-tighter">عميل نشط</span>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-purple-600 dark:text-purple-400 font-bold text-xl block">
-                                    {item._count.message || 0}
-                                </span>
-                                <span className="text-[9px] text-slate-400 uppercase">رسالة</span>
-                            </div>
-                        </div>
-                    ))}
-                </DynamicCard.Content>
-            </DynamicCard>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {showSalesTimeline && (
                 <DynamicCard
                     isLoading={loading}
-                    isError={!msg.success}
-                    isEmpty={!loading && interactionData.length === 0}
                     variant="glass"
                     className="mt-6"
                 >
                     <DynamicCard.Header
-                        title="أكثر العملاء تفاعلاً"
-                        description="ترتيب العملاء بناءً على حجم المراسلات والتفاعلات"
-                        icon={<TrendingUp size={20} className="text-purple-500" />}
+                        title="السجل الزمني للمبيعات"
+                        description="تحليل أداء الحالات شهرياً"
+                        icon={<Package size={20} />}
                     />
-                    <DynamicCard.Content className="h-[450px] w-full pt-4">
+                    <DynamicCard.Content>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-right border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-100/50 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-400">
+                                        <th className="p-4 rounded-r-lg">الشهر</th>
+                                        <th className="p-4">تفاصيل الحالات (عدد الطلبات | المبالغ)</th>
+                                        <th className="p-4 rounded-l-lg text-left">إجمالي الشهر</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                    {/* ملاحظة: افترضنا أننا خزنّا نتيجة الـ Action الجديد في متغير اسمه timelineData */}
+                                    {timelineData?.map((month: any, idx: number) => {
+                                        const monthTotal = (Object.values(month.statuses || {}) as any[]).reduce((sum: number, status: any) => {
+                                            return sum + (Number(status.amount) || 0);
+                                        }, 0);
+
+                                        return (
+                                            <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                                                <td className="p-4 font-bold text-sm text-slate-700 dark:text-slate-200 w-32">
+                                                    {month.label}
+                                                </td>
+                                                <td className="p-4">
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {Object.entries(month.statuses || {}).map(([status, details]: any) => (
+                                                            <div key={status} className="flex flex-col border border-slate-200 dark:border-slate-700 p-2 rounded bg-white dark:bg-slate-900 min-w-[120px]">
+                                                                <span className="text-[10px] text-slate-500 font-bold">{status}</span>
+                                                                <div className="flex justify-between items-center mt-1">
+                                                                    <span className="text-xs text-blue-600">{details.count} طلب</span>
+                                                                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{details.amount.toLocaleString()}$</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 text-left font-black text-green-600 dark:text-green-400 text-lg">
+                                                    {monthTotal.toLocaleString()}$
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </DynamicCard.Content>
+                </DynamicCard>
+            )}
+            {/* باقي الكروت (تفاعلات العملاء، الدول، إلخ) تظل كما هي مع تحسينات بسيطة */}
+
+            {showStatusChart && (
+                <DynamicCard isLoading={loading} variant="glass" className="mt-6">
+                    <DynamicCard.Header title="المنحنى البياني لحالات الطلبات" icon={<Package size={20} />} />
+                    <DynamicCard.Content className="h-[400px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart
-                                layout="vertical"
-                                data={interactionData} // استخدام البيانات المعالجة
-                                margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                            <LineChart
+                                data={chartData}
+                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                             >
-                                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
-                                <XAxis type="number" hide />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="#94a3b8" />
                                 <YAxis
-                                    dataKey="name"
-                                    type="category"
-                                    // التعديل هنا: استخدمنا مصفوفة ألوان متدرجة أو لوناً يناسب الخلفية الداكنة
-                                    tick={{
-                                        fontSize: 12,
-                                        fill: '#94a3b8', // لون رمادي مزرق هادئ يناسب الـ Dark Mode
-                                        fontWeight: 500
-                                    }}
-                                    width={120} // زيادة العرض قليلاً لضمان عدم قطع الأسماء الطويلة
-                                    axisLine={false}
-                                    tickLine={false}
+                                    tick={{ fontSize: 12 }}
+                                    stroke="#94a3b8"
+                                    tickFormatter={(value) => `$${value.toLocaleString()}`} // تنسيق العملة
                                 />
                                 <Tooltip
-                                    cursor={{ fill: 'transparent' }}
+                                    formatter={(value: number | undefined) => `${value?.toLocaleString() || 0}$`} // تنسيق القيم في الـ Tooltip
+                                    contentStyle={{ borderRadius: '10px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                                    labelStyle={{ color: '#333' }}
+                                />
+                                <Legend
+                                    verticalAlign="top"
+                                    height={36}
+                                    iconType="circle"
+                                    wrapperStyle={{ paddingTop: '10px' }}
+                                />
+
+                                {/* توليد خطوط لكل حالة بشكل ديناميكي */}
+                                {allStatuses.map((status, index) => (
+                                    <Line
+                                        key={status}
+                                        type="monotone"
+                                        dataKey={status} // هنا اسم الحالة هو الـ key
+                                        stroke={statusColors[index % statusColors.length]} // لتغيير الألوان
+                                        strokeWidth={2}
+                                        dot={false} // لا تظهر النقاط لتسهيل القراءة
+                                        activeDot={{ r: 6 }}
+                                    />
+                                ))}
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </DynamicCard.Content>
+                </DynamicCard>
+            )}
+
+            {showCustomerInteractions && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!msg.success}
+                    isEmpty={!loading && msg.success && msg.data?.length === 0}
+                    variant="glass"
+                    className='mt-6'
+                >
+                    <DynamicCard.Header
+                        title="تفاعلات العملاء"
+                        description="أكثر العملاء تواصلاً بناءً على عدد الرسائل المسجلة"
+                        icon={<TrendingUp size={20} />}
+                    />
+                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {msg.data?.map((item: any) => (
+                            <div key={item.name} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
+                                <div className="flex flex-col justify-center overflow-hidden">
+                                    <span className="font-semibold text-slate-700 dark:text-slate-200 truncate">{item.name}</span>
+                                    <span className="text-xs text-slate-500 uppercase tracking-tighter">عميل نشط</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-purple-600 dark:text-purple-400 font-bold text-xl block">
+                                        {item._count.message || 0}
+                                    </span>
+                                    <span className="text-[9px] text-slate-400 uppercase">رسالة</span>
+                                </div>
+                            </div>
+                        ))}
+                    </DynamicCard.Content>
+                </DynamicCard>
+            )}
+
+            {(showInteractionChart || showCustomerGrowth) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {showInteractionChart && (
+                        <DynamicCard
+                            isLoading={loading}
+                            isError={!msg.success}
+                            isEmpty={!loading && interactionData.length === 0}
+                            variant="glass"
+                            className="mt-6"
+                        >
+                            <DynamicCard.Header
+                                title="أكثر العملاء تفاعلاً"
+                                description="ترتيب العملاء بناءً على حجم المراسلات والتفاعلات"
+                                icon={<TrendingUp size={20} className="text-purple-500" />}
+                            />
+                            <DynamicCard.Content className="h-[450px] w-full pt-4">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart
+                                        layout="vertical"
+                                        data={interactionData} // استخدام البيانات المعالجة
+                                        margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
+                                        <XAxis type="number" hide />
+                                        <YAxis
+                                            dataKey="name"
+                                            type="category"
+                                            // التعديل هنا: استخدمنا مصفوفة ألوان متدرجة أو لوناً يناسب الخلفية الداكنة
+                                            tick={{
+                                                fontSize: 12,
+                                                fill: '#94a3b8', // لون رمادي مزرق هادئ يناسب الـ Dark Mode
+                                                fontWeight: 500
+                                            }}
+                                            width={120} // زيادة العرض قليلاً لضمان عدم قطع الأسماء الطويلة
+                                            axisLine={false}
+                                            tickLine={false}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: 'transparent' }}
+                                            contentStyle={{
+                                                borderRadius: '12px',
+                                                border: 'none',
+                                                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                                                direction: 'rtl'
+                                            }}
+                                            // تصحيح التنسيق هنا أيضاً
+                                            formatter={(value: number | undefined) => [`${value} رسالة`, "التفاعلات"]}
+                                        />
+                                        <Bar
+                                            dataKey="count" // تغيير المفتاح ليتطابق مع المعالجة
+                                            radius={[0, 4, 4, 0]}
+                                            barSize={25}
+                                        >
+                                            {interactionData.map((entry: any, index: number) => (
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={index === 0 ? '#7c3aed' : '#a78bfa'}
+                                                />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </DynamicCard.Content>
+                        </DynamicCard>
+                    )}
+                    {showCustomerGrowth && (
+                        <DynamicCard isLoading={loading} variant="glass" className="mt-6">
+                            <DynamicCard.Header
+                                title="نمو قاعدة العملاء"
+                                description="عدد العملاء الجدد المسجلين خلال آخر 30 يوم"
+                                icon={<Users size={20} className="text-blue-500" />}
+                            />
+                            <DynamicCard.Content className="h-[350px] w-full pt-6">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={msgTimeline.data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                        <XAxis
+                                            dataKey="date"
+                                            tick={{ fontSize: 11, fill: '#64748b' }}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            dy={10}
+                                        />
+                                        <YAxis
+                                            tick={{ fontSize: 11, fill: '#64748b' }}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            allowDecimals={false}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: '#f8fafc' }}
+                                            contentStyle={{
+                                                borderRadius: '12px',
+                                                border: 'none',
+                                                boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+                                                direction: 'rtl'
+                                            }}
+                                            formatter={(value: number | undefined) => {
+                                                return [`${value} عميل جديد`, "العدد"];
+                                            }}
+                                        />
+                                        <Bar
+                                            dataKey="العملاء الجدد"
+                                            fill="#3b82f6"
+                                            radius={[6, 6, 0, 0]}
+                                            barSize={40}
+                                        >
+                                            {/* إضافة تأثير لوني بسيط عند التمرير */}
+                                            {msgTimeline.data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} className="hover:opacity-80 transition-opacity cursor-pointer" />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </DynamicCard.Content>
+                        </DynamicCard>
+                    )}
+                </div>
+            )}
+
+
+            {showSalesByCountry && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!country.success}
+                    isEmpty={!loading && country.success && country.data?.length === 0}
+                    variant="glass"
+                    className='mt-6'
+                >
+                    <DynamicCard.Header
+                        title="المبيعات حسب الدول"
+                        description="توزيع جغرافي للمبيعات"
+                        icon={<TrendingUp size={20} />}
+                    />
+                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {country.data?.map((item: any) => (
+                            <div key={item.country} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
+                                <div className="flex flex-col justify-center">
+                                    <span className="font-semibold text-slate-700 dark:text-slate-200">{item.country || "غير محدد"}</span>
+                                    <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
+                                </div>
+                                <span className="text-green-600 dark:text-green-400 font-bold text-lg">
+                                    {item._sum?.finalAmount?.toLocaleString() || 0}$
+                                </span>
+                            </div>
+                        ))}
+                    </DynamicCard.Content>
+                </DynamicCard>
+            )}
+
+            {showSalesGeo && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!country.success}
+                    isEmpty={!loading && cityData.length === 0}
+                    variant="glass"
+                    className="mt-6"
+                >
+                    <DynamicCard.Header
+                        title="توزيع المبيعات جغرافياً"
+                        description="تحليل المبيعات بناءً على المدن أو الدول"
+                        icon={<MapPin size={20} className="text-cyan-500" />}
+                    />
+                    <DynamicCard.Content className="h-[350px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={cityData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={70} // جعلها بشكل Donut
+                                    outerRadius={100}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                    stroke="none"
+                                >
+                                    {cityData.map((entry: any, index: number) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip
                                     contentStyle={{
+                                        backgroundColor: '#0f172a',
                                         borderRadius: '12px',
-                                        border: 'none',
-                                        boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                                        border: '1px solid #1e293b',
+                                        direction: 'rtl',
+                                        color: '#fff'
+                                    }}
+                                    itemStyle={{ color: '#fff' }}
+                                    formatter={(value: number | undefined) => {
+                                        const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
+                                        return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
+                                    }}
+                                />
+                                <Legend
+                                    verticalAlign="bottom"
+                                    height={36}
+                                    formatter={(value) => <span className="text-slate-300 text-xs">{value}</span>}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </DynamicCard.Content>
+                    <DynamicCard.Footer>
+                        <div className="flex justify-around text-center py-2">
+                            {cityData.slice(0, 3).map((item: any, idx: number) => (
+                                <div key={idx}>
+                                    <p className="text-[10px] text-slate-400">{item.name}</p>
+                                    <p className="text-xs font-bold text-slate-200">{item.count} طلب</p>
+                                </div>
+                            ))}
+                        </div>
+                    </DynamicCard.Footer>
+                </DynamicCard>
+            )}
+
+            {showTopCustomersCards && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!topCustomer.success}
+                    isEmpty={!loading && topCustomer.success && topCustomer.data?.length === 0}
+                    variant="glass"
+                    className='mt-3'
+                >
+                    <DynamicCard.Header
+                        title="أفضل العملاء"
+                        description="أكثر 10 عملاء شراءً بناءً على عدد الطلبات الإجمالي"
+                        icon={<Users size={20} />} // تغيير الأيقونة لتناسب العملاء
+                    />
+
+                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {topCustomer.data?.map((item: any) => (
+                            <div
+                                key={item.id}
+                                className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
+                            >
+                                <div className="flex flex-col justify-center overflow-hidden">
+                                    <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={item.name}>
+                                        {item.name}
+                                    </span>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                                        {item._count?.orders || 0} طلبات منفذة
+                                    </span>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">
+                                            {/* يمكنك إضافة إجمالي مبالغ العميل هنا إذا قمت بتعديل الـ Action */}
+                                            VIP
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 uppercase">تصنيف العميل</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </DynamicCard.Content>
+
+                    <DynamicCard.Footer>
+                        <div className="flex flex-col justify-start w-full">
+                            <div className="flex justify-between w-full items-center">
+                                <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                                    إجمالي طلبات كبار العملاء:
+                                </span>
+                                <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                                    {topCustomer.data?.reduce((sum: number, item: any) => sum + (item._count?.orders || 0), 0)} طلب
+                                </span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-500 italic">
+                                * يتم تحديث هذه القائمة بناءً على نشاط الطلبات الأخير
+                            </p>
+                        </div>
+                    </DynamicCard.Footer>
+                </DynamicCard>
+            )}
+
+            {/* باقي الكروت (أفضل العملاء، المنتجات، المخزون) تستمر بنفس النمط... */}
+
+            {showTopCustomersChart && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!topCustomer.success}
+                    isEmpty={!loading && topCustData.length === 0}
+                    variant="glass"
+                    className="mt-6"
+                >
+                    <DynamicCard.Header
+                        title="أفضل 10 عملاء"
+                        description="ترتيب العملاء الأكثر طلباً للمنتجات"
+                        icon={<Award size={20} className="text-yellow-500" />}
+                    />
+                    <DynamicCard.Content className="h-[350px] w-full pt-6">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={topCustData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                                {/* شبكة خلفية ناعمة تناسب الثيم الداكن */}
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                                <XAxis
+                                    dataKey="name"
+                                    tick={{ fontSize: 10, fill: '#94a3b8' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    interval={0} // لضمان ظهور جميع أسماء العملاء
+                                />
+                                <YAxis
+                                    tick={{ fontSize: 11, fill: '#94a3b8' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    allowDecimals={false}
+                                />
+                                <Tooltip
+                                    cursor={{ fill: '#1e293b', opacity: 0.4 }}
+                                    contentStyle={{
+                                        backgroundColor: '#0f172a',
+                                        borderRadius: '12px',
+                                        border: '1px solid #1e293b',
                                         direction: 'rtl'
                                     }}
-                                    // تصحيح التنسيق هنا أيضاً
-                                    formatter={(value: number | undefined) => [`${value} رسالة`, "التفاعلات"]}
+                                    itemStyle={{ color: '#f8fafc' }}
+                                    formatter={(value: number | undefined) => {
+                                        const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
+                                        return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
+                                    }}
                                 />
                                 <Bar
-                                    dataKey="count" // تغيير المفتاح ليتطابق مع المعالجة
-                                    radius={[0, 4, 4, 0]}
-                                    barSize={25}
+                                    dataKey="عدد الطلبات"
+                                    radius={[6, 6, 0, 0]}
+                                    barSize={35}
                                 >
-                                    {interactionData.map((entry: any, index: number) => (
+                                    {topCustData.map((entry: any, index: number) => (
                                         <Cell
                                             key={`cell-${index}`}
-                                            fill={index === 0 ? '#7c3aed' : '#a78bfa'}
+                                            // تدرج لوني: الذهبي للمركز الأول، والبرتقالي للبقية
+                                            fill={index === 0 ? '#f59e0b' : '#fb923c'}
                                         />
                                     ))}
                                 </Bar>
@@ -485,430 +781,178 @@ const AnalyticPage: React.FC = () => {
                         </ResponsiveContainer>
                     </DynamicCard.Content>
                 </DynamicCard>
-                <DynamicCard isLoading={loading} variant="glass" className="mt-6">
+            )}
+            {(showTopProducts || showLowStock) && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    {/* المنتجات الأكثر مبيعاً */}
+                    {showTopProducts && (
+                        <DynamicCard isLoading={loading} isError={!topSale.success} variant="glass">
+                            <DynamicCard.Header title="المنتجات الأكثر مبيعاً" icon={<TrendingUp className="text-emerald-500" />} />
+                            <DynamicCard.Content className="space-y-4">
+                                {topSale.data?.map((product: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center p-3 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
+                                            <span className="text-sm font-medium">{product.name}</span>
+                                        </div>
+                                        <span className="text-sm font-bold text-emerald-600">{product.totalSold} قطعة</span>
+                                    </div>
+                                ))}
+                            </DynamicCard.Content>
+                        </DynamicCard>
+                    )}
+
+                    {/* مخزون منخفض */}
+                    {showLowStock && (
+                        <DynamicCard isLoading={loading} isError={!lowStock.success} variant="glass">
+                            <DynamicCard.Header title="تنبيه المخزون" icon={<TrendingDown className="text-red-500" />} />
+                            <DynamicCard.Content className="space-y-4">
+                                {lowStock.data?.map((product: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center p-3 bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+                                        <span className="text-sm font-medium">{product.name}</span>
+                                        <span className="text-sm font-bold text-red-600">{product.stock} متوفر</span>
+                                    </div>
+                                ))}
+                            </DynamicCard.Content>
+                        </DynamicCard>
+                    )}
+                </div>
+            )}
+            {showTopSellingUsers && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!topSellingUsers.success}
+                    isEmpty={!loading && topSellingUsers.success && topSellingUsers.data?.length === 0}
+                    variant="glass"
+                    className="mt-3"
+                >
                     <DynamicCard.Header
-                        title="نمو قاعدة العملاء"
-                        description="عدد العملاء الجدد المسجلين خلال آخر 30 يوم"
-                        icon={<Users size={20} className="text-blue-500" />}
+                        title="المستخدمين الأكثر مبيعاً"
+                        description="المستخدمين الذين حققوا أعلى مبيعات"
+                        icon={<Award size={20} className="text-green-500" />}
                     />
-                    <DynamicCard.Content className="h-[350px] w-full pt-6">
+
+                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {topSellingUsers.data?.map((user: any, index: number) => (
+                            <div
+                                key={index}
+                                className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
+                            >
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                    {/* إضافة رتبة بسيطة لإضفاء مظهر احترافي */}
+                                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 text-xs font-bold">
+                                        {index + 1}
+                                    </div>
+                                    <div className="flex flex-col overflow-hidden">
+                                        <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={user.name}>
+                                            {user.name}
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 uppercase">موظف مبيعات</span>
+                                    </div>
+                                </div>
+
+                                <div className="text-right flex-shrink-0">
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-red-600 dark:text-red-400 font-bold text-lg">
+                                            {user.totalSold?.toLocaleString() || 0}
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">طلب مكتمل</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </DynamicCard.Content>
+
+                    <DynamicCard.Footer>
+                        <div className="flex justify-between items-center w-full">
+                            <span className="text-xs text-slate-500 dark:text-slate-400 italic">
+                                * يتم تحديث هذه القائمة بناءً على أداء المبيعات الأخير لكل مستخدم
+                            </span>
+                            <div className="flex items-center gap-1 text-emerald-500 font-semibold text-sm">
+                                <span>إجمالي: </span>
+                                {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalSold || 0), 0)}
+                            </div>
+                        </div>
+                    </DynamicCard.Footer>
+                </DynamicCard>
+            )}
+            {showTopUsersChart && (
+                <DynamicCard
+                    isLoading={loading}
+                    isError={!topSellingUsers.success}
+                    isEmpty={!loading && topUsersData.length === 0}
+                    variant="glass"
+                    className="mt-6"
+                >
+                    <DynamicCard.Header
+                        title="نجوم المبيعات"
+                        description="أكثر 5 موظفين إتماماً للطلبات"
+                        icon={<Trophy size={20} className="text-amber-400" />}
+                    />
+                    <DynamicCard.Content className="h-[300px] w-full pt-4">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={msgTimeline.data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                <XAxis
-                                    dataKey="date"
-                                    tick={{ fontSize: 11, fill: '#64748b' }}
+                            <BarChart
+                                data={topUsersData}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                                <XAxis 
+                                    dataKey="name" 
+                                    tick={{ fontSize: 12, fill: '#cbd5e1' }}
                                     axisLine={false}
                                     tickLine={false}
-                                    dy={10}
                                 />
-                                <YAxis
-                                    tick={{ fontSize: 11, fill: '#64748b' }}
+                                <YAxis 
+                                    tick={{ fontSize: 12, fill: '#94a3b8' }}
                                     axisLine={false}
                                     tickLine={false}
                                     allowDecimals={false}
                                 />
                                 <Tooltip
-                                    cursor={{ fill: '#f8fafc' }}
+                                    cursor={{ fill: '#1e293b', opacity: 0.4 }}
                                     contentStyle={{
+                                        backgroundColor: '#0f172a',
                                         borderRadius: '12px',
-                                        border: 'none',
-                                        boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+                                        border: '1px solid #1e293b',
                                         direction: 'rtl'
                                     }}
+                                    itemStyle={{ color: '#fff' }}
                                     formatter={(value: number | undefined) => {
-                                        return [`${value} عميل جديد`, "العدد"];
+                                        const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
+                                        return [`${amount.toLocaleString()} طلب مكتمل`, "الإنجاز"];
                                     }}
                                 />
-                                <Bar
-                                    dataKey="العملاء الجدد"
-                                    fill="#3b82f6"
-                                    radius={[6, 6, 0, 0]}
-                                    barSize={40}
+                                <Bar 
+                                    dataKey="sales" 
+                                    radius={[10, 10, 0, 0]} 
+                                    barSize={45}
                                 >
-                                    {/* إضافة تأثير لوني بسيط عند التمرير */}
-                                    {msgTimeline.data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} className="hover:opacity-80 transition-opacity cursor-pointer" />
+                                    {topUsersData.map((entry: any, index: number) => (
+                                        <Cell 
+                                            key={`cell-${index}`} 
+                                            // تدرج لوني يعبر عن التميز
+                                            fill={index === 0 ? '#10b981' : index === 1 ? '#3b82f6' : '#6366f1'} 
+                                        />
                                     ))}
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
                     </DynamicCard.Content>
+                    <DynamicCard.Footer>
+                        <div className="flex justify-center gap-4 text-[11px] text-slate-400 font-medium">
+                            <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 rounded-full bg-[#10b981]" /> الأول
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 rounded-full bg-[#3b82f6]" /> الثاني
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 rounded-full bg-[#6366f1]" /> البقية
+                            </div>
+                        </div>
+                    </DynamicCard.Footer>
                 </DynamicCard>
-            </div>
-
-
-            <DynamicCard
-                isLoading={loading}
-                isError={!country.success}
-                isEmpty={!loading && country.success && country.data?.length === 0}
-                variant="glass"
-                className='mt-6'
-            >
-                <DynamicCard.Header
-                    title="المبيعات حسب الدول"
-                    description="توزيع جغرافي للمبيعات"
-                    icon={<TrendingUp size={20} />}
-                />
-                <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {country.data?.map((item: any) => (
-                        <div key={item.country} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
-                            <div className="flex flex-col justify-center">
-                                <span className="font-semibold text-slate-700 dark:text-slate-200">{item.country || "غير محدد"}</span>
-                                <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
-                            </div>
-                            <span className="text-green-600 dark:text-green-400 font-bold text-lg">
-                                {item._sum?.finalAmount?.toLocaleString() || 0}$
-                            </span>
-                        </div>
-                    ))}
-                </DynamicCard.Content>
-            </DynamicCard>
-
-            <DynamicCard
-                isLoading={loading}
-                isError={!country.success}
-                isEmpty={!loading && cityData.length === 0}
-                variant="glass"
-                className="mt-6"
-            >
-                <DynamicCard.Header
-                    title="توزيع المبيعات جغرافياً"
-                    description="تحليل المبيعات بناءً على المدن أو الدول"
-                    icon={<MapPin size={20} className="text-cyan-500" />}
-                />
-                <DynamicCard.Content className="h-[350px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie
-                                data={cityData}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={70} // جعلها بشكل Donut
-                                outerRadius={100}
-                                paddingAngle={5}
-                                dataKey="value"
-                                stroke="none"
-                            >
-                                {cityData.map((entry: any, index: number) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: '#0f172a',
-                                    borderRadius: '12px',
-                                    border: '1px solid #1e293b',
-                                    direction: 'rtl',
-                                    color: '#fff'
-                                }}
-                                itemStyle={{ color: '#fff' }}
-                                formatter={(value: number | undefined) => {
-                                    const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
-                                    return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
-                                }}
-                            />
-                            <Legend
-                                verticalAlign="bottom"
-                                height={36}
-                                formatter={(value) => <span className="text-slate-300 text-xs">{value}</span>}
-                            />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </DynamicCard.Content>
-                <DynamicCard.Footer>
-                    <div className="flex justify-around text-center py-2">
-                        {cityData.slice(0, 3).map((item: any, idx: number) => (
-                            <div key={idx}>
-                                <p className="text-[10px] text-slate-400">{item.name}</p>
-                                <p className="text-xs font-bold text-slate-200">{item.count} طلب</p>
-                            </div>
-                        ))}
-                    </div>
-                </DynamicCard.Footer>
-            </DynamicCard>
-
-            <DynamicCard
-                isLoading={loading}
-                isError={!topCustomer.success}
-                isEmpty={!loading && topCustomer.success && topCustomer.data?.length === 0}
-                variant="glass"
-                className='mt-3'
-            >
-                <DynamicCard.Header
-                    title="أفضل العملاء"
-                    description="أكثر 10 عملاء شراءً بناءً على عدد الطلبات الإجمالي"
-                    icon={<Users size={20} />} // تغيير الأيقونة لتناسب العملاء
-                />
-
-                <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {topCustomer.data?.map((item: any) => (
-                        <div
-                            key={item.id}
-                            className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
-                        >
-                            <div className="flex flex-col justify-center overflow-hidden">
-                                <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={item.name}>
-                                    {item.name}
-                                </span>
-                                <span className="text-xs text-slate-500 dark:text-slate-400">
-                                    {item._count?.orders || 0} طلبات منفذة
-                                </span>
-                            </div>
-                            <div className="text-right flex-shrink-0">
-                                <div className="flex flex-col items-end">
-                                    <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">
-                                        {/* يمكنك إضافة إجمالي مبالغ العميل هنا إذا قمت بتعديل الـ Action */}
-                                        VIP
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 uppercase">تصنيف العميل</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </DynamicCard.Content>
-
-                <DynamicCard.Footer>
-                    <div className="flex flex-col justify-start w-full">
-                        <div className="flex justify-between w-full items-center">
-                            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                                إجمالي طلبات كبار العملاء:
-                            </span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                {topCustomer.data?.reduce((sum: number, item: any) => sum + (item._count?.orders || 0), 0)} طلب
-                            </span>
-                        </div>
-                        <p className="text-[10px] text-slate-400 dark:text-slate-500 italic">
-                            * يتم تحديث هذه القائمة بناءً على نشاط الطلبات الأخير
-                        </p>
-                    </div>
-                </DynamicCard.Footer>
-            </DynamicCard>
-
-            {/* باقي الكروت (أفضل العملاء، المنتجات، المخزون) تستمر بنفس النمط... */}
-
-            <DynamicCard
-                isLoading={loading}
-                isError={!topCustomer.success}
-                isEmpty={!loading && topCustData.length === 0}
-                variant="glass"
-                className="mt-6"
-            >
-                <DynamicCard.Header
-                    title="أفضل 10 عملاء"
-                    description="ترتيب العملاء الأكثر طلباً للمنتجات"
-                    icon={<Award size={20} className="text-yellow-500" />}
-                />
-                <DynamicCard.Content className="h-[350px] w-full pt-6">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={topCustData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                            {/* شبكة خلفية ناعمة تناسب الثيم الداكن */}
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
-                            <XAxis
-                                dataKey="name"
-                                tick={{ fontSize: 10, fill: '#94a3b8' }}
-                                axisLine={false}
-                                tickLine={false}
-                                interval={0} // لضمان ظهور جميع أسماء العملاء
-                            />
-                            <YAxis
-                                tick={{ fontSize: 11, fill: '#94a3b8' }}
-                                axisLine={false}
-                                tickLine={false}
-                                allowDecimals={false}
-                            />
-                            <Tooltip
-                                cursor={{ fill: '#1e293b', opacity: 0.4 }}
-                                contentStyle={{
-                                    backgroundColor: '#0f172a',
-                                    borderRadius: '12px',
-                                    border: '1px solid #1e293b',
-                                    direction: 'rtl'
-                                }}
-                                itemStyle={{ color: '#f8fafc' }}
-                                formatter={(value: number | undefined) => {
-                                    const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
-                                    return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
-                                }}
-                            />
-                            <Bar
-                                dataKey="عدد الطلبات"
-                                radius={[6, 6, 0, 0]}
-                                barSize={35}
-                            >
-                                {topCustData.map((entry: any, index: number) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        // تدرج لوني: الذهبي للمركز الأول، والبرتقالي للبقية
-                                        fill={index === 0 ? '#f59e0b' : '#fb923c'}
-                                    />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </DynamicCard.Content>
-            </DynamicCard>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                {/* المنتجات الأكثر مبيعاً */}
-                <DynamicCard isLoading={loading} isError={!topSale.success} variant="glass">
-                    <DynamicCard.Header title="المنتجات الأكثر مبيعاً" icon={<TrendingUp className="text-emerald-500" />} />
-                    <DynamicCard.Content className="space-y-4">
-                        {topSale.data?.map((product: any, idx: number) => (
-                            <div key={idx} className="flex justify-between items-center p-3 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
-                                    <span className="text-sm font-medium">{product.name}</span>
-                                </div>
-                                <span className="text-sm font-bold text-emerald-600">{product.totalSold} قطعة</span>
-                            </div>
-                        ))}
-                    </DynamicCard.Content>
-                </DynamicCard>
-
-                {/* مخزون منخفض */}
-                <DynamicCard isLoading={loading} isError={!lowStock.success} variant="glass">
-                    <DynamicCard.Header title="تنبيه المخزون" icon={<TrendingDown className="text-red-500" />} />
-                    <DynamicCard.Content className="space-y-4">
-                        {lowStock.data?.map((product: any, idx: number) => (
-                            <div key={idx} className="flex justify-between items-center p-3 bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
-                                <span className="text-sm font-medium">{product.name}</span>
-                                <span className="text-sm font-bold text-red-600">{product.stock} متوفر</span>
-                            </div>
-                        ))}
-                    </DynamicCard.Content>
-                </DynamicCard>
-            </div>
-            <DynamicCard
-                isLoading={loading}
-                isError={!topSellingUsers.success}
-                isEmpty={!loading && topSellingUsers.success && topSellingUsers.data?.length === 0}
-                variant="glass"
-                className="mt-3"
-            >
-                <DynamicCard.Header
-                    title="المستخدمين الأكثر مبيعاً"
-                    description="المستخدمين الذين حققوا أعلى مبيعات"
-                    icon={<Award size={20} className="text-green-500" />}
-                />
-
-                <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {topSellingUsers.data?.map((user: any, index: number) => (
-                        <div
-                            key={index}
-                            className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
-                        >
-                            <div className="flex items-center gap-3 overflow-hidden">
-                                {/* إضافة رتبة بسيطة لإضفاء مظهر احترافي */}
-                                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 text-xs font-bold">
-                                    {index + 1}
-                                </div>
-                                <div className="flex flex-col overflow-hidden">
-                                    <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={user.name}>
-                                        {user.name}
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 uppercase">موظف مبيعات</span>
-                                </div>
-                            </div>
-
-                            <div className="text-right flex-shrink-0">
-                                <div className="flex flex-col items-end">
-                                    <span className="text-red-600 dark:text-red-400 font-bold text-lg">
-                                        {user.totalSold?.toLocaleString() || 0}
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">طلب مكتمل</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </DynamicCard.Content>
-
-                <DynamicCard.Footer>
-                    <div className="flex justify-between items-center w-full">
-                        <span className="text-xs text-slate-500 dark:text-slate-400 italic">
-                            * يتم تحديث هذه القائمة بناءً على أداء المبيعات الأخير لكل مستخدم
-                        </span>
-                        <div className="flex items-center gap-1 text-emerald-500 font-semibold text-sm">
-                            <span>إجمالي: </span>
-                            {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalSold || 0), 0)}
-                        </div>
-                    </div>
-                </DynamicCard.Footer>
-            </DynamicCard>
-            <DynamicCard
-    isLoading={loading}
-    isError={!topSellingUsers.success}
-    isEmpty={!loading && topUsersData.length === 0}
-    variant="glass"
-    className="mt-6"
->
-    <DynamicCard.Header
-        title="نجوم المبيعات"
-        description="أكثر 5 موظفين إتماماً للطلبات"
-        icon={<Trophy size={20} className="text-amber-400" />}
-    />
-    <DynamicCard.Content className="h-[300px] w-full pt-4">
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-                data={topUsersData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
-                <XAxis 
-                    dataKey="name" 
-                    tick={{ fontSize: 12, fill: '#cbd5e1' }}
-                    axisLine={false}
-                    tickLine={false}
-                />
-                <YAxis 
-                    tick={{ fontSize: 12, fill: '#94a3b8' }}
-                    axisLine={false}
-                    tickLine={false}
-                    allowDecimals={false}
-                />
-                <Tooltip
-                    cursor={{ fill: '#1e293b', opacity: 0.4 }}
-                    contentStyle={{
-                        backgroundColor: '#0f172a',
-                        borderRadius: '12px',
-                        border: '1px solid #1e293b',
-                        direction: 'rtl'
-                    }}
-                    itemStyle={{ color: '#fff' }}
-                    formatter={(value: number | undefined) => {
-                        const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
-                        return [`${amount.toLocaleString()} طلب مكتمل`, "الإنجاز"];
-                    }}
-                />
-                <Bar 
-                    dataKey="sales" 
-                    radius={[10, 10, 0, 0]} 
-                    barSize={45}
-                >
-                    {topUsersData.map((entry: any, index: number) => (
-                        <Cell 
-                            key={`cell-${index}`} 
-                            // تدرج لوني يعبر عن التميز
-                            fill={index === 0 ? '#10b981' : index === 1 ? '#3b82f6' : '#6366f1'} 
-                        />
-                    ))}
-                </Bar>
-            </BarChart>
-        </ResponsiveContainer>
-    </DynamicCard.Content>
-    <DynamicCard.Footer>
-        <div className="flex justify-center gap-4 text-[11px] text-slate-400 font-medium">
-             <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-[#10b981]" /> الأول
-             </div>
-             <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-[#3b82f6]" /> الثاني
-             </div>
-             <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-[#6366f1]" /> البقية
-             </div>
-        </div>
-    </DynamicCard.Footer>
-</DynamicCard>
+            )}
         </div>
     );
 };

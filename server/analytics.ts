@@ -145,26 +145,53 @@ export async function GetSalesTimelineAction(userId: string) {
 }
 
 // server/analytics.ts
-export async function GetCustomerAcquisition() {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+export async function GetCustomerAcquisition(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
 
-  const newCustomers = await prisma.customer.groupBy({
-    by: ['createdAt'],
-    _count: { id: true },
-    where: {
-      createdAt: { gte: thirtyDaysAgo }
-    },
-    orderBy: { createdAt: 'asc' }
-  });
-  
-  return { success: true, data: newCustomers };
+    if (!user) return { success: false, error: "User not found" };
+
+    const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
+    const customerWhere = canViewCustomers ? {} : { users: { some: { id: userId } } };
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const newCustomers = await prisma.customer.groupBy({
+      by: ['createdAt'],
+      _count: { id: true },
+      where: {
+        createdAt: { gte: thirtyDaysAgo },
+        ...customerWhere
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+    
+    return { success: true, data: newCustomers };
+  } catch (error) {
+    console.error("Error in GetCustomerAcquisition:", error);
+    return { success: false, data: [] };
+  }
 }
 
-export async function GetCustomerAcquisitionMonth() {
+export async function GetCustomerAcquisitionMonth(userId: string) {
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found" };
+
+    const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
+    const customerWhere = canViewCustomers ? {} : { users: { some: { id: userId } } };
+
     // جلب جميع العملاء (أو يمكنك تحديد فترة زمنية أطول مثل آخر سنة)
     const customers = await prisma.customer.findMany({
+      where: customerWhere,
       select: { createdAt: true },
       orderBy: { createdAt: 'asc' }
     });
@@ -198,17 +225,33 @@ export async function GetCustomerAcquisitionMonth() {
   }
 }
 
-export async function GetTopCustomers() {
-  const topCustomers = await prisma.customer.findMany({
-    take: 10, // أعلى 5 عملاء
-    include: {
-      _count: { select: { orders: true } }, // عدد الطلبات
-    },
-    orderBy: {
-      orders: { _count: 'desc' }
-    }
-  });
-  return { success: true, data: topCustomers };
+export async function GetTopCustomers(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found" };
+
+    const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
+    const customerWhere = canViewCustomers ? {} : { users: { some: { id: userId } } };
+
+    const topCustomers = await prisma.customer.findMany({
+      take: 10, // أعلى 5 عملاء
+      where: customerWhere,
+      include: {
+        _count: { select: { orders: true } }, // عدد الطلبات
+      },
+      orderBy: {
+        orders: { _count: 'desc' }
+      }
+    });
+    return { success: true, data: topCustomers };
+  } catch (error) {
+    console.error("Error in GetTopCustomers:", error);
+    return { success: false, data: [] };
+  }
 }
 
 export async function GetSalesByCity(userId: string) {
@@ -247,16 +290,15 @@ export async function GetCustomerInteractions(userId: string) {
 
     if (!user) return { success: false, error: "User not found" };
 
-    const canViewAll = isAdmin(user) || Boolean(user.permission?.viewAnalytics);
+    const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
 
     // 1. فلترة العملاء
-    const whereClause = canViewAll 
-      ? {} 
+    const whereClause = canViewCustomers
+      ? {}
       : { users: { some: { id: userId } } };
 
     // 2. فلترة الرسائل داخل العد (للإحصاء الدقيق)
-    // إذا كان الموظف عادياً، نعد رسائله فقط مع هذا العميل
-    const messageFilter = canViewAll ? {} : { userId: userId };
+    const messageFilter = canViewCustomers ? {} : { userId: userId };
 
     const interactions = await prisma.customer.findMany({
       where: whereClause,
@@ -337,6 +379,21 @@ export async function GetLowStockProducts() {
 // المستخدمين الأكثر مبيعا
 
 export async function GetTopSellingUsers() {
+  return { success: true, data: [] };
+}
+
+export async function GetTopSellingUsersByPermission(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found" };
+
+    const canViewEmployees = isAdmin(user) || Boolean(user.permission?.viewEmployees);
+    if (!canViewEmployees) return { success: true, data: [] };
+
   // 1. جلب أعلى المستخدمين مبيعاً (كأرقام معرفات فقط)
   const topUsersGrouped = await prisma.order.groupBy({
     by: ['userId'],
@@ -368,4 +425,58 @@ export async function GetTopSellingUsers() {
   });
 
   return { success: true, data: finalData };
+  } catch (error) {
+    console.error("Error in GetTopSellingUsersByPermission:", error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function GetUserTargetProgress(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        targetProducts: {
+          include: { product: { select: { id: true, name: true } } }
+        }
+      }
+    });
+
+    if (!user) return { success: false, error: "User not found" };
+
+    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم"];
+
+    const soldByProduct = await prisma.orderItem.groupBy({
+      by: ["productId"],
+      where: {
+        order: {
+          userId,
+          status: { in: statusWhitelist }
+        }
+      },
+      _sum: { quantity: true }
+    });
+
+    const soldMap = new Map<number, number>(
+      soldByProduct.map((item) => [item.productId, item._sum.quantity || 0])
+    );
+
+    const data = user.targetProducts.map((target) => {
+      const soldQty = soldMap.get(target.productId) || 0;
+      const remaining = Math.max(target.requiredQty - soldQty, 0);
+      return {
+        productId: target.productId,
+        productName: target.product?.name || "",
+        requiredQty: target.requiredQty,
+        soldQty,
+        remaining,
+        reached: soldQty >= target.requiredQty
+      };
+    });
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error in GetUserTargetProgress:", error);
+    return { success: false, error: "Internal Server Error" };
+  }
 }

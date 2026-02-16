@@ -5,7 +5,10 @@ export async function GET(req :NextRequest) {
     try {
     const users = await prisma.user.findMany({
       include: {
-        permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم    
+        permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
+        targetProducts: {
+          include: { product: true }
+        }
         },
     });
     return new Response(JSON.stringify({ success: true, data: users }), { status: 200 });

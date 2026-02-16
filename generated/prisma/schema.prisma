@@ -8,20 +8,21 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(uuid())
-  username     String
-  email        String      @unique
-  phone        String?
-  jobTitle     String?
-  accountType  AccountType @default(STAFF)
-  password     String
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  permissionId String?
-  orders       Order[]
-  permission   Permission? @relation(fields: [permissionId], references: [id])
-  customers    Customer[]  @relation("CustomerToUser")
-  message      Message[]
+  id             String              @id @default(uuid())
+  username       String
+  email          String              @unique
+  phone          String?
+  jobTitle       String?
+  accountType    AccountType         @default(STAFF)
+  password       String
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  permissionId   String?
+  orders         Order[]
+  permission     Permission?         @relation(fields: [permissionId], references: [id])
+  customers      Customer[]          @relation("CustomerToUser")
+  message        Message[]
+  targetProducts UserTargetProduct[]
 }
 
 model Permission {
@@ -89,17 +90,29 @@ model Category {
 }
 
 model Product {
-  id          Int            @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   name        String
   price       Float
-  discount    Float?         @default(0)
+  discount    Float?              @default(0)
   description String?
   quantity    String?
   categoryId  Int?
-  createdAt   DateTime       @default(now())
+  createdAt   DateTime            @default(now())
   orderItems  OrderItem[]
-  category    Category?      @relation(fields: [categoryId], references: [id])
+  category    Category?           @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
+  userTargets UserTargetProduct[]
+}
+
+model UserTargetProduct {
+  id          String  @id @default(uuid())
+  userId      String
+  productId   Int
+  requiredQty Int
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
 }
 
 model ProductImage {

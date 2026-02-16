@@ -6,13 +6,13 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { createuser, deleteuser, getalluser, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { deleteuser, setUserTargetProduct, updateUserTargetProductQty, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
 import { hasPermission } from '@/lib/utils';
-import { permission } from 'process';
+import { getProduct } from '@/server/product';
 
 const userSchema = z.object({
   username: z.string().min(3, "اسم المستخدم مطلوب"),
@@ -30,6 +30,12 @@ const UserManagement: React.FunctionComponent = () => {
   const [roles, setRoles] = React.useState<any[]>([]);
   const [users, setUsers] = React.useState<any[]>([]);
   const [formData, setFormData] = React.useState<any>(null);
+  const [products, setProducts] = React.useState<any[]>([]);
+  const [isTargetOpen, setIsTargetOpen] = React.useState(false);
+  const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
+  const [targetUser, setTargetUser] = React.useState<any>(null);
+  const [targetProductId, setTargetProductId] = React.useState<string>("");
+  const [targetQty, setTargetQty] = React.useState<number>(1);
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -54,6 +60,9 @@ const UserManagement: React.FunctionComponent = () => {
   }
 
   React.useEffect(() => { getRoul(); getAlluser(); }, []);
+  React.useEffect(() => {
+    getProduct().then(setProducts).catch(console.error);
+  }, []);
 
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
@@ -62,6 +71,52 @@ const UserManagement: React.FunctionComponent = () => {
     setIsOpen(false);
     setEditId(null);
     setFormData(null);
+  };
+
+  const openTargetModal = (mode: "assign" | "edit", data: any) => {
+    setTargetMode(mode);
+    setTargetUser(data);
+    if (mode === "edit" && data?.targetProducts?.length > 0) {
+      const firstTarget = data.targetProducts[0];
+      setTargetProductId(String(firstTarget.productId));
+      setTargetQty(firstTarget.requiredQty || 1);
+    } else {
+      setTargetProductId("");
+      setTargetQty(1);
+    }
+    setIsTargetOpen(true);
+  };
+
+  const handleSaveTarget = async () => {
+    if (!targetUser?.id) return;
+    if (!targetProductId) {
+      toast.error("يرجى اختيار المنتج");
+      return;
+    }
+    if (!targetQty || targetQty <= 0) {
+      toast.error("يرجى إدخال كمية صحيحة");
+      return;
+    }
+
+    const loadingToast = toast.loading("جاري حفظ التاركت...");
+    try {
+      const productId = Number(targetProductId);
+      const res = targetMode === "assign"
+        ? await setUserTargetProduct(targetUser.id, productId, targetQty)
+        : await updateUserTargetProductQty(targetUser.id, productId, targetQty);
+
+      if (res.success) {
+        toast.success("تم حفظ التاركت بنجاح");
+        setIsTargetOpen(false);
+        getAlluser();
+      } else {
+        toast.error(res.error || "فشل حفظ التاركت");
+      }
+    } catch (error) {
+      toast.error("فشل حفظ التاركت");
+    } finally {
+      toast.dismiss(loadingToast);
+    }
   };
 
   const onSubmit = async (data: z.infer<typeof userSchema>) => {
@@ -177,6 +232,25 @@ const UserManagement: React.FunctionComponent = () => {
           { header: "المسمى الوظيفي", accessor: "jobTitle" },
           { header: "نوع الحساب", accessor: "accountType" },
           { header: "مجموعة الصلاحيات", accessor: (row: any) => row.permission?.roleName || "غير محدد" },
+          { 
+            header: "التاركت", 
+            accessor: (row: any) => (
+              <div className="flex items-center gap-2">
+                <button
+                  className="px-2 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200"
+                  onClick={() => openTargetModal("assign", row)}
+                >
+                  تعيين المنتج
+                </button>
+                <button
+                  className="px-2 py-1 text-xs font-bold bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200"
+                  onClick={() => openTargetModal("edit", row)}
+                >
+                  تعديل التاركت
+                </button>
+              </div>
+            )
+          },
         ]
       } />
 
@@ -223,6 +297,62 @@ const UserManagement: React.FunctionComponent = () => {
               </div>
             )}
           </DynamicForm>
+        </div>
+      </AppModal>
+
+      <AppModal
+        title={targetMode === "assign" ? "تعيين منتج للتاركت" : "تعديل التاركت"}
+        isOpen={isTargetOpen}
+        onClose={() => setIsTargetOpen(false)}
+      >
+        <div className="p-4">
+          {targetMode === "edit" && (!targetUser?.targetProducts || targetUser.targetProducts.length === 0) ? (
+            <div className="text-sm text-slate-500">لا يوجد منتجات مرتبطة بتاركت لهذا المستخدم.</div>
+          ) : (
+            <div className="grid gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">المنتج</label>
+                <select
+                  className={selectClasses}
+                  value={targetProductId}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setTargetProductId(value);
+                    if (targetMode === "edit") {
+                      const selected = targetUser?.targetProducts?.find((t: any) => String(t.productId) === value);
+                      if (selected) setTargetQty(selected.requiredQty || 1);
+                    }
+                  }}
+                >
+                  <option value="">اختر المنتج...</option>
+                  {(targetMode === "assign" ? products : (targetUser?.targetProducts || []))
+                    .map((item: any) => {
+                      const product = targetMode === "assign" ? item : item.product;
+                      return (
+                        <option key={product.id} value={product.id}>{product.name}</option>
+                      );
+                    })}
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">الكمية المطلوبة</label>
+                <input
+                  type="number"
+                  min={1}
+                  className={selectClasses}
+                  value={targetQty}
+                  onChange={(e) => setTargetQty(Number(e.target.value))}
+                />
+              </div>
+
+              <div className="flex items-center gap-2 justify-end">
+                <Button onClick={handleSaveTarget} className="bg-blue-600 hover:bg-blue-700 text-white">
+                  حفظ
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </AppModal>
     </div>

@@ -8,7 +8,10 @@ import bcrypt from "bcryptjs"; //
 export async function getalluser() {
   const user = await prisma.user.findMany({
     include:{
-      permission:true
+      permission:true,
+      targetProducts: {
+        include: { product: true }
+      }
     }
   });
   return user;
@@ -125,4 +128,31 @@ export async function deleteuser(id: string) {
   } catch (error) {
     return { success: false, error: "فشل في حذف المستخدم" };
   } 
+}
+
+export async function setUserTargetProduct(userId: string, productId: number, requiredQty: number) {
+  try {
+    const target = await prisma.userTargetProduct.upsert({
+      where: { userId_productId: { userId, productId } },
+      update: { requiredQty },
+      create: { userId, productId, requiredQty }
+    });
+    return { success: true, data: target };
+  } catch (error) {
+    console.error("Set User Target Error:", error);
+    return { success: false, error: "فشل في تعيين التاركت" };
+  }
+}
+
+export async function updateUserTargetProductQty(userId: string, productId: number, requiredQty: number) {
+  try {
+    const target = await prisma.userTargetProduct.update({
+      where: { userId_productId: { userId, productId } },
+      data: { requiredQty }
+    });
+    return { success: true, data: target };
+  } catch (error) {
+    console.error("Update User Target Error:", error);
+    return { success: false, error: "فشل في تحديث التاركت" };
+  }
 }
