@@ -744,11 +744,11 @@ const CustomrLayout: React.FC = () => {
                           className={`
       appearance-none outline-none cursor-pointer
       px-4 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
-      ${customer.status === "فرصة جديدة" ? 'bg-blue-100 text-blue-600 border-rose-200' :
-                              customer.status === "جاري المتابعة" ? 'bg-green-100 text-green-600 border-green-200' :
-                                customer.status === "تم البيع" ? 'bg-yellow-100 text-yellow-600 border-green-200' :
-                                  customer.status === "غير مهتم / ملغي" ? 'bg-red-100 text-red-500 border-slate-200' :
-                                    'bg-amber-100 text-amber-600 border-amber-200'
+      ${customer.status === "فرصة جديدة" ? 'bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800' :
+                              customer.status === "جاري المتابعة" ? 'bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800' :
+                                customer.status === "تم البيع" ? 'bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800' :
+                                  customer.status === "غير مهتم / ملغي" ? 'bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800' :
+                                    'bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800'
                             }
     `}
                         >

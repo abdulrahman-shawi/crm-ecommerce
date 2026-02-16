@@ -48,6 +48,9 @@ export async function createOrder(data: any, items: any[], user: any) {
 
         // استخدام Transaction لضمان سلامة البيانات
         const result = await prisma.$transaction(async (tx) => {
+            const existingOrdersCount = await tx.order.count({
+                where: { customerId: data.customerId }
+            });
             
             // 1. إنشاء الطلب
             const newOrder = await tx.order.create({
@@ -106,7 +109,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                 });
             }
 
-            if (isSoldOrderStatus(data.status)) {
+            if (existingOrdersCount === 0 || isSoldOrderStatus(data.status)) {
                 await tx.customer.update({
                     where: { id: data.customerId },
                     data: { status: "تم البيع" }

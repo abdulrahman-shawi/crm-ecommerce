@@ -12,6 +12,8 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     gender: "",
     rating: "",
     source: "",
+    country: "",
+    city: "",
   });
   const scrollRef = React.useRef<any>(null);
   const { user } = useAuth()
@@ -47,12 +49,105 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     { label: "5", value: "5" },
   ];
 
+  const countries = [
+    "سوريا",
+    "لبنان",
+    "العراق",
+    "تركيا",
+    "ليبيا",
+  ];
+
+  const citiesByCountry: Record<string, string[]> = {
+    "سوريا": [
+      "دمشق",
+      "حلب",
+      "حمص",
+      "حماة",
+      "اللاذقية",
+      "طرطوس",
+      "إدلب",
+      "درعا",
+      "السويداء",
+      "القنيطرة",
+      "دير الزور",
+      "الرقة",
+      "الحسكة",
+    ],
+    "لبنان": [
+      "بيروت",
+      "طرابلس",
+      "صيدا",
+      "صور",
+      "زحلة",
+      "بعلبك",
+      "جونية",
+      "جبيل",
+      "البترون",
+      "النبطية",
+    ],
+    "العراق": [
+      "بغداد",
+      "البصرة",
+      "الموصل",
+      "أربيل",
+      "النجف",
+      "كربلاء",
+      "كركوك",
+      "السليمانية",
+      "دهوك",
+      "الرمادي",
+      "الفلوجة",
+      "سامراء",
+      "الحلة",
+      "الديوانية",
+      "الناصرية",
+      "الكوت",
+      "العمارة",
+    ],
+    "تركيا": [
+      "إسطنبول",
+      "أنقرة",
+      "إزمير",
+      "بورصة",
+      "أنطاليا",
+      "أضنة",
+      "غازي عنتاب",
+      "قونية",
+      "مرسين",
+      "قيصري",
+      "أسكي شهير",
+      "طرابزون",
+      "سامسون",
+      "ديار بكر",
+      "شانلي أورفا",
+      "فان",
+    ],
+    "ليبيا": [
+      "طرابلس",
+      "بنغازي",
+      "مصراتة",
+      "الزاوية",
+      "سبها",
+      "سرت",
+      "طبرق",
+      "درنة",
+      "زليتن",
+      "أجدابيا",
+      "البيضاء",
+      "غريان",
+      "الكفرة",
+      "مرزق",
+    ],
+  };
+
   React.useEffect(() => {
     setLocalFields({
       age: data.age || "",
       gender: data.gender || "",
       rating: data.rating ? String(data.rating) : "",
       source: data.source || "",
+      country: data.country || "",
+      city: data.city || "",
     });
   }, [data]);
 
@@ -76,7 +171,7 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     }
   };
 
-  const handleFieldChange = async (field: "age" | "gender" | "rating" | "source", value: string) => {
+  const handleFieldChange = async (field: "age" | "gender" | "rating" | "source" | "country" | "city", value: string) => {
     if (!canEdit) {
       toast.error("ليس لديك صلاحية التعديل");
       return;
@@ -87,6 +182,9 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     const payload: any = { [field]: value || undefined };
     if (field === "rating") {
       payload.rating = value ? Number(value) : undefined;
+    }
+    if (field === "country") {
+      payload.city = "";
     }
 
     const res = await updateCustomer(payload, data.id);
@@ -188,14 +286,34 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
             <MapPin size={18} className="text-red-500" />
             <div>
               <p className="text-[10px] text-slate-500 font-bold uppercase">الدولة</p>
-              <p className="text-sm font-bold dark:text-white truncate">{data.country || "غير محدد"}</p>
+              <select
+                value={localFields.country}
+                onChange={(e) => handleFieldChange("country", e.target.value)}
+                disabled={!canEdit}
+                className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+              >
+                <option value="">غير محدد</option>
+                {countries.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
             <MapPin size={18} className="text-emerald-500" />
             <div>
               <p className="text-[10px] text-slate-500 font-bold uppercase">المدينة</p>
-              <p className="text-sm font-bold dark:text-white truncate">{data.city || "غير محدد"}</p>
+              <select
+                value={localFields.city}
+                onChange={(e) => handleFieldChange("city", e.target.value)}
+                disabled={!canEdit || !localFields.country}
+                className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
+              >
+                <option value="">غير محدد</option>
+                {(citiesByCountry[localFields.country] || []).map((city) => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
