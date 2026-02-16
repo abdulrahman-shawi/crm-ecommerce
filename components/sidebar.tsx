@@ -20,23 +20,9 @@ type MenuItem = {
 
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
   const pathname = usePathname();
-  const {user, loading} = useAuth()
-  if (loading || !user) {
-    return (
-      <aside className={`
-        fixed md:sticky top-0 right-0 h-screen z-[70]
-        bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-l border-slate-200 dark:border-slate-800
-        ${isCollapsed 
-          ? "w-[280px] translate-x-full md:translate-x-0 md:w-[88px]" 
-          : "w-[280px] translate-x-0"}
-      `}>
-        <div className="h-20 flex items-center px-6 border-b border-slate-100 dark:border-slate-900" />
-      </aside>
-    );
-  }
-
+  const {user} = useAuth()
   // تنظيم الروابط في مجموعات لسهولة القراءة
-  const menuGroups = [
+  const menuGroups = user ? [
     {
       group: "الرئيسية",
       items: [
@@ -77,7 +63,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
       ].filter(Boolean)
     },
-  ].filter(group => group.items.length > 0);
+  ].filter(group => group.items.length > 0) : [];
 
   const handleLogout = async () => {
     try {
@@ -115,8 +101,9 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         {/* الشعار - Logo Section */}
         <div className="h-20 flex items-center px-6 mb-4 border-b border-slate-100 dark:border-slate-900">
           <div className="flex items-center gap-3 min-w-max">
-            <div className="h-11 w-11 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30 shrink-0">
-              <img src="/icons.jpg" alt="Logo" className="w-7 h-7 object-contain brightness-0 invert" />
+            <div className="h-11 w-28 bg-gradient-to-br rounded-xl flex items-center justify-center shrink-0">
+              <img src="/skynova-dark.png" alt="Logo" className="w-28 h-7 object-contain brightness-0 invert dark:block" />
+              {/* <img src="/3-removebg-preview.png" alt="Logo" className="w-28 h-7 object-contain brightness-0 invert" /> */}
             </div>
             <div className={`transition-all duration-300 ${isCollapsed ? "md:opacity-0 md:translate-x-4" : "opacity-100"}`}>
               <h1 className="font-black text-lg tracking-tight text-slate-800 dark:text-white">Skynova</h1>
@@ -126,47 +113,49 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         </div>
 
         {/* القائمة - Navigation Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 space-y-8 custom-scrollbar no-scrollbar">
-          {menuGroups.map((group, idx) => (
-            <div key={idx} className="space-y-2">
-              <p className={`px-4 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[2px] transition-opacity duration-300 ${isCollapsed ? "md:opacity-0" : "opacity-100"}`}>
-                {group.group}
-              </p>
-              
-              <div className="space-y-1">
-                {group.items.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => window.innerWidth < 768 && setIsCollapsed(true)}
-                      className={`
-                        relative flex items-center gap-4 h-12 px-4 rounded-xl transition-all duration-300 group
-                        ${isActive 
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
-                          : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}
-                      `}
-                    >
-                      <item.icon size={22} className={`shrink-0 ${isActive ? "animate-pulse" : "group-hover:scale-110 transition-transform"}`} />
-                      
-                      <span className={`font-bold text-sm whitespace-nowrap transition-all duration-300 ${isCollapsed ? "md:opacity-0 md:translate-x-10" : "opacity-100"}`}>
-                        {item.label}
-                      </span>
-
-                      {/* Tooltip في حالة التصغير (Desktop) */}
-                      {isCollapsed && (
-                        <div className="hidden md:block absolute right-full mr-6 px-3 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all pointer-events-none shadow-2xl">
+        {user && (
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 space-y-8 custom-scrollbar no-scrollbar">
+            {menuGroups.map((group, idx) => (
+              <div key={idx} className="space-y-2">
+                <p className={`px-4 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[2px] transition-opacity duration-300 ${isCollapsed ? "md:opacity-0" : "opacity-100"}`}>
+                  {group.group}
+                </p>
+                
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => window.innerWidth < 768 && setIsCollapsed(true)}
+                        className={`
+                          relative flex items-center gap-4 h-12 px-4 rounded-xl transition-all duration-300 group
+                          ${isActive 
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
+                            : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}
+                        `}
+                      >
+                        <item.icon size={22} className={`shrink-0 ${isActive ? "animate-pulse" : "group-hover:scale-110 transition-transform"}`} />
+                        
+                        <span className={`font-bold text-sm whitespace-nowrap transition-all duration-300 ${isCollapsed ? "md:opacity-0 md:translate-x-10" : "opacity-100"}`}>
                           {item.label}
-                        </div>
-                      )}
-                    </Link>
-                  );
-                })}
+                        </span>
+
+                        {/* Tooltip في حالة التصغير (Desktop) */}
+                        {isCollapsed && (
+                          <div className="hidden md:block absolute right-full mr-6 px-3 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all pointer-events-none shadow-2xl">
+                            {item.label}
+                          </div>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* الجزء السفلي - Footer Section */}
         <div className="p-4 mt-auto">
