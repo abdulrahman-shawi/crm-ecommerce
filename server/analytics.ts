@@ -433,44 +433,65 @@ export async function GetTopSellingUsersByPermission(userId: string) {
 
 export async function GetUserTargetProgress(userId: string) {
   try {
-    const user = await prisma.user.findUnique({
+    const currentUser = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
-        targets: {
+      include: { permission: true }
+    });
+
+    if (!currentUser) return { success: false, error: "User not found" };
+
+    const canViewAll = isAdmin(currentUser);
+    const targets = canViewAll
+      ? await prisma.userTarget.findMany({
+          include: {
+            user: { select: { id: true, username: true } },
+            products: {
+              include: { product: { select: { id: true, name: true } } }
+            }
+          }
+        })
+      : await prisma.userTarget.findMany({
+          where: { userId },
           include: {
             products: {
               include: { product: { select: { id: true, name: true } } }
             }
           }
-        }
-      }
-    });
+        });
 
-    if (!user) return { success: false, error: "User not found" };
+    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
-    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم"];
-
-    const soldByProduct = await prisma.orderItem.groupBy({
-      by: ["productId"],
+    const orderItems = await prisma.orderItem.findMany({
       where: {
         order: {
-          userId,
+          ...(canViewAll ? {} : { userId }),
           status: { in: statusWhitelist }
         }
       },
-      _sum: { quantity: true }
+      select: {
+        productId: true,
+        quantity: true,
+        order: { select: { userId: true } }
+      }
     });
 
-    const soldMap = new Map<number, number>(
-      soldByProduct.map((item) => [item.productId, item._sum.quantity || 0])
-    );
+    const soldMap = new Map<string, number>();
+    for (const item of orderItems) {
+      const key = `${item.order.userId}:${item.productId}`;
+      soldMap.set(key, (soldMap.get(key) || 0) + item.quantity);
+    }
 
-    const data = user.targets.flatMap((target) =>
-      target.products.map((item) => {
-        const soldQty = soldMap.get(item.productId) || 0;
+    const data = targets.flatMap((target: any) =>
+      target.products.map((item: any) => {
+        const targetUserId = canViewAll ? target.user?.id : currentUser.id;
+        const key = `${targetUserId}:${item.productId}`;
+        const soldQty = soldMap.get(key) || 0;
         const remaining = Math.max(item.requiredQty - soldQty, 0);
         return {
           targetId: target.id,
+          targetCreatedAt: target.createdAt,
+          userId: targetUserId,
+          userName: canViewAll ? target.user?.username || "" : currentUser.username || "",
           productId: item.productId,
           productName: item.product?.name || "",
           requiredQty: item.requiredQty,
