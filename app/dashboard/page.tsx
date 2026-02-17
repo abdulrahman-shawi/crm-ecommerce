@@ -10,14 +10,18 @@ const DashboardPage: React.FunctionComponent = () => {
   const [targetProgress, setTargetProgress] = React.useState<{
     success: boolean;
     data: Array<{
+      targetId: string;
       userId?: string;
       userName?: string;
       targetCreatedAt?: string | Date;
+      salesTargetValue?: number;
+      salesRewardValue?: number;
       productId: number;
       productName: string;
       requiredQty: number;
       rewardValue?: number;
       soldQty: number;
+      soldAmount?: number;
       remaining: number;
       reached: boolean;
     }>;
@@ -80,6 +84,33 @@ const DashboardPage: React.FunctionComponent = () => {
     return targetProgress.data.filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
   }, [selectedMonth, targetProgress.data]);
 
+  const valueTargets = React.useMemo(() => {
+    const map = new Map<string, {
+      targetId: string;
+      userId: string;
+      userName: string;
+      salesTargetValue: number;
+      salesRewardValue: number;
+      soldAmount: number;
+    }>();
+
+    filteredTargets.forEach((item) => {
+      const key = item.targetId;
+      const current = map.get(key) || {
+        targetId: key,
+        userId: item.userId || "me",
+        userName: item.userName || "-",
+        salesTargetValue: item.salesTargetValue ?? 0,
+        salesRewardValue: item.salesRewardValue ?? 0,
+        soldAmount: 0,
+      };
+      current.soldAmount += item.soldAmount || 0;
+      map.set(key, current);
+    });
+
+    return Array.from(map.values());
+  }, [filteredTargets]);
+
   React.useEffect(() => {
     const fetchTargetProgress = async () => {
       if (!user?.id) return;
@@ -133,6 +164,52 @@ const DashboardPage: React.FunctionComponent = () => {
                 باقي {getDaysLeftInMonth(selectedMonth)} يوم لنهاية الشهر
               </span>
             </div>
+
+            {valueTargets.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">تاركت قيمة المبيعات</h3>
+                <table className="w-full text-right text-sm">
+                  <thead className="text-xs uppercase text-slate-500 border-b border-slate-200 dark:border-slate-800">
+                    <tr>
+                      {user?.accountType === "ADMIN" && <th className="py-3 px-2">الموظف</th>}
+                      <th className="py-3 px-2">قيمة المبيعات المستهدفة</th>
+                      <th className="py-3 px-2">قيمة المبيعات المحققة</th>
+                      <th className="py-3 px-2">المتبقي</th>
+                      <th className="py-3 px-2">المكافأة</th>
+                      <th className="py-3 px-2">الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {valueTargets.map((row) => {
+                      const remaining = Math.max(row.salesTargetValue - row.soldAmount, 0);
+                      const reached = row.soldAmount >= row.salesTargetValue && row.salesTargetValue > 0;
+                      return (
+                        <tr key={row.targetId}>
+                          {user?.accountType === "ADMIN" && (
+                            <td className="py-3 px-2 font-semibold text-slate-700 dark:text-slate-200">
+                              {row.userName}
+                            </td>
+                          )}
+                          <td className="py-3 px-2">{row.salesTargetValue}</td>
+                          <td className="py-3 px-2">{row.soldAmount.toFixed(2)}</td>
+                          <td className="py-3 px-2">{remaining.toFixed(2)}</td>
+                          <td className="py-3 px-2">{row.salesRewardValue}</td>
+                          <td className="py-3 px-2">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-bold ${reached
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"}`}
+                            >
+                              {reached ? "تم الوصول" : "لم يكتمل"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
             <table className="w-full text-right text-sm">
               <thead className="text-xs uppercase text-slate-500 border-b border-slate-200 dark:border-slate-800">
                 <tr>

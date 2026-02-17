@@ -471,25 +471,36 @@ export async function GetUserTargetProgress(userId: string) {
       select: {
         productId: true,
         quantity: true,
+        price: true,
+        discount: true,
         order: { select: { userId: true } }
       }
     });
 
-    const soldMap = new Map<string, number>();
+    const soldMap = new Map<string, { quantity: number; amount: number }>();
     for (const item of orderItems) {
       const key = `${item.order.userId}:${item.productId}`;
-      soldMap.set(key, (soldMap.get(key) || 0) + item.quantity);
+      const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
+      const lineAmount = netPrice * item.quantity;
+      const current = soldMap.get(key) || { quantity: 0, amount: 0 };
+      soldMap.set(key, {
+        quantity: current.quantity + item.quantity,
+        amount: current.amount + lineAmount,
+      });
     }
 
     const data = targets.flatMap((target: any) =>
       target.products.map((item: any) => {
         const targetUserId = canViewAll ? target.user?.id : currentUser.id;
         const key = `${targetUserId}:${item.productId}`;
-        const soldQty = soldMap.get(key) || 0;
+        const soldInfo = soldMap.get(key) || { quantity: 0, amount: 0 };
+        const soldQty = soldInfo.quantity;
         const remaining = Math.max(item.requiredQty - soldQty, 0);
         return {
           targetId: target.id,
           targetCreatedAt: target.createdAt,
+          salesTargetValue: target.salesTargetValue ?? 0,
+          salesRewardValue: target.salesRewardValue ?? 0,
           userId: targetUserId,
           userName: canViewAll ? target.user?.username || "" : currentUser.username || "",
           productId: item.productId,
@@ -497,6 +508,7 @@ export async function GetUserTargetProgress(userId: string) {
           requiredQty: item.requiredQty,
           rewardValue: item.rewardValue,
           soldQty,
+          soldAmount: soldInfo.amount,
           remaining,
           reached: soldQty >= item.requiredQty
         };

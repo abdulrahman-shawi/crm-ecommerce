@@ -35,6 +35,8 @@ const UserManagement: React.FunctionComponent = () => {
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
   const [targetUser, setTargetUser] = React.useState<any>(null);
   const [editTargetId, setEditTargetId] = React.useState<string | null>(null);
+  const [salesTargetValue, setSalesTargetValue] = React.useState<number>(0);
+  const [salesRewardValue, setSalesRewardValue] = React.useState<number>(0);
   const [targetItems, setTargetItems] = React.useState<Array<{
     productId: string;
     requiredQty: number;
@@ -90,8 +92,12 @@ const UserManagement: React.FunctionComponent = () => {
             rewardValue: item.rewardValue ?? 0,
           }))
         : [{ productId: "", requiredQty: 1, rewardValue: 0 }];
+      setSalesTargetValue(currentTarget.salesTargetValue ?? 0);
+      setSalesRewardValue(currentTarget.salesRewardValue ?? 0);
       setTargetItems(items);
     } else {
+      setSalesTargetValue(0);
+      setSalesRewardValue(0);
       setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
     setIsTargetOpen(true);
@@ -140,6 +146,8 @@ const UserManagement: React.FunctionComponent = () => {
     try {
       const payload = {
         userId: targetUser.id,
+        salesTargetValue,
+        salesRewardValue,
         products: targetItems.map((item) => ({
           productId: Number(item.productId),
           requiredQty: item.requiredQty,
@@ -150,6 +158,8 @@ const UserManagement: React.FunctionComponent = () => {
       const res = targetMode === "assign" || !editTargetId
         ? await createUserTarget(payload)
         : await updateUserTarget(editTargetId, {
+            salesTargetValue: payload.salesTargetValue,
+            salesRewardValue: payload.salesRewardValue,
             products: payload.products,
           });
 
@@ -359,6 +369,28 @@ const UserManagement: React.FunctionComponent = () => {
             <div className="text-sm text-slate-500">لا يوجد منتجات مرتبطة بتاركت لهذا المستخدم.</div>
           ) : (
             <div className="grid gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold dark:text-slate-300">قيمة المبيعات المستهدفة</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className={selectClasses}
+                    value={salesTargetValue}
+                    onChange={(e) => setSalesTargetValue(Number(e.target.value))}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold dark:text-slate-300">مكافأة قيمة المبيعات</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className={selectClasses}
+                    value={salesRewardValue}
+                    onChange={(e) => setSalesRewardValue(Number(e.target.value))}
+                  />
+                </div>
+              </div>
 
               <div className="flex items-center justify-between">
                 <div className="text-sm font-semibold dark:text-slate-300">المنتجات المستهدفة</div>

@@ -7104,13 +7104,27 @@ export namespace Prisma {
 
   export type AggregateUserTarget = {
     _count: UserTargetCountAggregateOutputType | null
+    _avg: UserTargetAvgAggregateOutputType | null
+    _sum: UserTargetSumAggregateOutputType | null
     _min: UserTargetMinAggregateOutputType | null
     _max: UserTargetMaxAggregateOutputType | null
+  }
+
+  export type UserTargetAvgAggregateOutputType = {
+    salesTargetValue: number | null
+    salesRewardValue: number | null
+  }
+
+  export type UserTargetSumAggregateOutputType = {
+    salesTargetValue: number | null
+    salesRewardValue: number | null
   }
 
   export type UserTargetMinAggregateOutputType = {
     id: string | null
     userId: string | null
+    salesTargetValue: number | null
+    salesRewardValue: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7118,6 +7132,8 @@ export namespace Prisma {
   export type UserTargetMaxAggregateOutputType = {
     id: string | null
     userId: string | null
+    salesTargetValue: number | null
+    salesRewardValue: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7125,15 +7141,29 @@ export namespace Prisma {
   export type UserTargetCountAggregateOutputType = {
     id: number
     userId: number
+    salesTargetValue: number
+    salesRewardValue: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type UserTargetAvgAggregateInputType = {
+    salesTargetValue?: true
+    salesRewardValue?: true
+  }
+
+  export type UserTargetSumAggregateInputType = {
+    salesTargetValue?: true
+    salesRewardValue?: true
+  }
+
   export type UserTargetMinAggregateInputType = {
     id?: true
     userId?: true
+    salesTargetValue?: true
+    salesRewardValue?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7141,6 +7171,8 @@ export namespace Prisma {
   export type UserTargetMaxAggregateInputType = {
     id?: true
     userId?: true
+    salesTargetValue?: true
+    salesRewardValue?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7148,6 +7180,8 @@ export namespace Prisma {
   export type UserTargetCountAggregateInputType = {
     id?: true
     userId?: true
+    salesTargetValue?: true
+    salesRewardValue?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7191,6 +7225,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserTargetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserTargetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserTargetMinAggregateInputType
@@ -7221,6 +7267,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserTargetCountAggregateInputType | true
+    _avg?: UserTargetAvgAggregateInputType
+    _sum?: UserTargetSumAggregateInputType
     _min?: UserTargetMinAggregateInputType
     _max?: UserTargetMaxAggregateInputType
   }
@@ -7228,9 +7276,13 @@ export namespace Prisma {
   export type UserTargetGroupByOutputType = {
     id: string
     userId: string
+    salesTargetValue: number
+    salesRewardValue: number
     createdAt: Date
     updatedAt: Date
     _count: UserTargetCountAggregateOutputType | null
+    _avg: UserTargetAvgAggregateOutputType | null
+    _sum: UserTargetSumAggregateOutputType | null
     _min: UserTargetMinAggregateOutputType | null
     _max: UserTargetMaxAggregateOutputType | null
   }
@@ -7252,6 +7304,8 @@ export namespace Prisma {
   export type UserTargetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    salesTargetValue?: boolean
+    salesRewardValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7262,6 +7316,8 @@ export namespace Prisma {
   export type UserTargetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    salesTargetValue?: boolean
+    salesRewardValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7270,6 +7326,8 @@ export namespace Prisma {
   export type UserTargetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    salesTargetValue?: boolean
+    salesRewardValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7278,11 +7336,13 @@ export namespace Prisma {
   export type UserTargetSelectScalar = {
     id?: boolean
     userId?: boolean
+    salesTargetValue?: boolean
+    salesRewardValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["userTarget"]>
+  export type UserTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "salesTargetValue" | "salesRewardValue" | "createdAt" | "updatedAt", ExtArgs["result"]["userTarget"]>
   export type UserTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     products?: boolean | UserTarget$productsArgs<ExtArgs>
@@ -7304,6 +7364,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
+      salesTargetValue: number
+      salesRewardValue: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["userTarget"]>
@@ -7733,6 +7795,8 @@ export namespace Prisma {
   interface UserTargetFieldRefs {
     readonly id: FieldRef<"UserTarget", 'String'>
     readonly userId: FieldRef<"UserTarget", 'String'>
+    readonly salesTargetValue: FieldRef<"UserTarget", 'Int'>
+    readonly salesRewardValue: FieldRef<"UserTarget", 'Int'>
     readonly createdAt: FieldRef<"UserTarget", 'DateTime'>
     readonly updatedAt: FieldRef<"UserTarget", 'DateTime'>
   }
@@ -15336,6 +15400,8 @@ export namespace Prisma {
   export const UserTargetScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    salesTargetValue: 'salesTargetValue',
+    salesRewardValue: 'salesRewardValue',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15972,6 +16038,8 @@ export namespace Prisma {
     NOT?: UserTargetWhereInput | UserTargetWhereInput[]
     id?: StringFilter<"UserTarget"> | string
     userId?: StringFilter<"UserTarget"> | string
+    salesTargetValue?: IntFilter<"UserTarget"> | number
+    salesRewardValue?: IntFilter<"UserTarget"> | number
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -15981,6 +16049,8 @@ export namespace Prisma {
   export type UserTargetOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -15993,6 +16063,8 @@ export namespace Prisma {
     OR?: UserTargetWhereInput[]
     NOT?: UserTargetWhereInput | UserTargetWhereInput[]
     userId?: StringFilter<"UserTarget"> | string
+    salesTargetValue?: IntFilter<"UserTarget"> | number
+    salesRewardValue?: IntFilter<"UserTarget"> | number
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -16002,11 +16074,15 @@ export namespace Prisma {
   export type UserTargetOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserTargetCountOrderByAggregateInput
+    _avg?: UserTargetAvgOrderByAggregateInput
     _max?: UserTargetMaxOrderByAggregateInput
     _min?: UserTargetMinOrderByAggregateInput
+    _sum?: UserTargetSumOrderByAggregateInput
   }
 
   export type UserTargetScalarWhereWithAggregatesInput = {
@@ -16015,6 +16091,8 @@ export namespace Prisma {
     NOT?: UserTargetScalarWhereWithAggregatesInput | UserTargetScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"UserTarget"> | string
     userId?: StringWithAggregatesFilter<"UserTarget"> | string
+    salesTargetValue?: IntWithAggregatesFilter<"UserTarget"> | number
+    salesRewardValue?: IntWithAggregatesFilter<"UserTarget"> | number
     createdAt?: DateTimeWithAggregatesFilter<"UserTarget"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"UserTarget"> | Date | string
   }
@@ -17020,6 +17098,8 @@ export namespace Prisma {
 
   export type UserTargetCreateInput = {
     id?: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTargetsInput
@@ -17029,6 +17109,8 @@ export namespace Prisma {
   export type UserTargetUncheckedCreateInput = {
     id?: string
     userId: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: TargetProductUncheckedCreateNestedManyWithoutTargetInput
@@ -17036,6 +17118,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTargetsNestedInput
@@ -17045,6 +17129,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: TargetProductUncheckedUpdateManyWithoutTargetNestedInput
@@ -17053,12 +17139,16 @@ export namespace Prisma {
   export type UserTargetCreateManyInput = {
     id?: string
     userId: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserTargetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17066,6 +17156,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18165,13 +18257,22 @@ export namespace Prisma {
   export type UserTargetCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserTargetAvgOrderByAggregateInput = {
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
   }
 
   export type UserTargetMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18179,8 +18280,15 @@ export namespace Prisma {
   export type UserTargetMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserTargetSumOrderByAggregateInput = {
+    salesTargetValue?: SortOrder
+    salesRewardValue?: SortOrder
   }
 
   export type UserTargetScalarRelationFilter = {
@@ -19769,6 +19877,8 @@ export namespace Prisma {
 
   export type UserTargetCreateWithoutUserInput = {
     id?: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: TargetProductCreateNestedManyWithoutTargetInput
@@ -19776,6 +19886,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedCreateWithoutUserInput = {
     id?: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: TargetProductUncheckedCreateNestedManyWithoutTargetInput
@@ -20009,6 +20121,8 @@ export namespace Prisma {
     NOT?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
     id?: StringFilter<"UserTarget"> | string
     userId?: StringFilter<"UserTarget"> | string
+    salesTargetValue?: IntFilter<"UserTarget"> | number
+    salesRewardValue?: IntFilter<"UserTarget"> | number
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
   }
@@ -20459,6 +20573,8 @@ export namespace Prisma {
 
   export type UserTargetCreateWithoutProductsInput = {
     id?: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTargetsInput
@@ -20467,6 +20583,8 @@ export namespace Prisma {
   export type UserTargetUncheckedCreateWithoutProductsInput = {
     id?: string
     userId: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20519,6 +20637,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTargetsNestedInput
@@ -20527,6 +20647,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21409,6 +21531,8 @@ export namespace Prisma {
 
   export type UserTargetCreateManyUserInput = {
     id?: string
+    salesTargetValue?: number
+    salesRewardValue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21570,6 +21694,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: TargetProductUpdateManyWithoutTargetNestedInput
@@ -21577,6 +21703,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: TargetProductUncheckedUpdateManyWithoutTargetNestedInput
@@ -21584,6 +21712,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    salesTargetValue?: IntFieldUpdateOperationsInput | number
+    salesRewardValue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

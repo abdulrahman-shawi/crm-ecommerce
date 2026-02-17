@@ -190,6 +190,8 @@ exports.Prisma.ProductScalarFieldEnum = {
 exports.Prisma.UserTargetScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  salesTargetValue: 'salesTargetValue',
+  salesRewardValue: 'salesRewardValue',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

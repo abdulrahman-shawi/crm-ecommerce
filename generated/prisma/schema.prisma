@@ -105,12 +105,14 @@ model Product {
 }
 
 model UserTarget {
-  id        String          @id @default(uuid())
-  userId    String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products  TargetProduct[]
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id               String          @id @default(uuid())
+  userId           String
+  salesTargetValue Int             @default(0)
+  salesRewardValue Int             @default(0)
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products         TargetProduct[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 model TargetProduct {
