@@ -149,11 +149,17 @@ type UserTargetInput = {
 
 export async function createUserTarget(payload: UserTargetInput) {
   try {
+    await prisma.userTarget.updateMany({
+      where: { userId: payload.userId, isActive: true },
+      data: { isActive: false, endedAt: new Date() }
+    });
+
     const target = await prisma.userTarget.create({
       data: {
         userId: payload.userId,
         salesTargetValue: payload.salesTargetValue,
         salesRewardValue: payload.salesRewardValue,
+        isActive: true,
         products: {
           create: payload.products.map((item) => ({
             productId: item.productId,

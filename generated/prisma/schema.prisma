@@ -107,8 +107,10 @@ model Product {
 model UserTarget {
   id               String          @id @default(uuid())
   userId           String
-  salesTargetValue Int             @default(0)
-  salesRewardValue Int             @default(0)
+  salesTargetValue Int
+  salesRewardValue Int
+  isActive         Boolean         @default(true)
+  endedAt          DateTime?
   user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   products         TargetProduct[]
   createdAt        DateTime        @default(now())
@@ -136,23 +138,23 @@ model ProductImage {
 }
 
 model Customer {
-  id          String    @id @default(uuid())
-  name        String    @unique
-  phone       String[]
-  countryCode String?
-  country     String?
-  status      String?
-  phonestatus String?
-  gender      String?
-  age         String?
-  source      String?
-  city        String?
-  rating      Int?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  orders      Order[]
-  users       User[]    @relation("CustomerToUser")
-  message     Message[]
+  id               String    @id @default(uuid())
+  name             String    @unique
+  phone            String[]
+  countryCode      String?
+  salesTargetValue Int
+  salesRewardValue Int
+  phonestatus      String?
+  gender           String?
+  age              String?
+  source           String?
+  city             String?
+  rating           Int?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  orders           Order[]
+  users            User[]    @relation("CustomerToUser")
+  message          Message[]
 }
 
 model Message {

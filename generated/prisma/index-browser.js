@@ -192,6 +192,8 @@ exports.Prisma.UserTargetScalarFieldEnum = {
   userId: 'userId',
   salesTargetValue: 'salesTargetValue',
   salesRewardValue: 'salesRewardValue',
+  isActive: 'isActive',
+  endedAt: 'endedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -216,8 +218,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   countryCode: 'countryCode',
-  country: 'country',
-  status: 'status',
+  salesTargetValue: 'salesTargetValue',
+  salesRewardValue: 'salesRewardValue',
   phonestatus: 'phonestatus',
   gender: 'gender',
   age: 'age',
