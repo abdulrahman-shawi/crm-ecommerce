@@ -9,8 +9,12 @@ export async function getalluser() {
   const user = await prisma.user.findMany({
     include:{
       permission:true,
-      targetProducts: {
-        include: { product: true }
+      targets: {
+        include: {
+          products: {
+            include: { product: true }
+          }
+        }
       }
     }
   });
@@ -130,25 +134,52 @@ export async function deleteuser(id: string) {
   } 
 }
 
-export async function setUserTargetProduct(userId: string, productId: number, requiredQty: number) {
+type TargetProductInput = {
+  productId: number;
+  requiredQty: number;
+  rewardValue: number;
+};
+
+type UserTargetInput = {
+  userId: string;
+  products: TargetProductInput[];
+};
+
+export async function createUserTarget(payload: UserTargetInput) {
   try {
-    const target = await prisma.userTargetProduct.upsert({
-      where: { userId_productId: { userId, productId } },
-      update: { requiredQty },
-      create: { userId, productId, requiredQty }
+    const target = await prisma.userTarget.create({
+      data: {
+        userId: payload.userId,
+        products: {
+          create: payload.products.map((item) => ({
+            productId: item.productId,
+            requiredQty: item.requiredQty,
+            rewardValue: item.rewardValue,
+          }))
+        }
+      }
     });
     return { success: true, data: target };
   } catch (error) {
-    console.error("Set User Target Error:", error);
+    console.error("Create User Target Error:", error);
     return { success: false, error: "فشل في تعيين التاركت" };
   }
 }
 
-export async function updateUserTargetProductQty(userId: string, productId: number, requiredQty: number) {
+export async function updateUserTarget(targetId: string, payload: Omit<UserTargetInput, "userId">) {
   try {
-    const target = await prisma.userTargetProduct.update({
-      where: { userId_productId: { userId, productId } },
-      data: { requiredQty }
+    const target = await prisma.userTarget.update({
+      where: { id: targetId },
+      data: {
+        products: {
+          deleteMany: {},
+          create: payload.products.map((item) => ({
+            productId: item.productId,
+            requiredQty: item.requiredQty,
+            rewardValue: item.rewardValue,
+          }))
+        }
+      }
     });
     return { success: true, data: target };
   } catch (error) {

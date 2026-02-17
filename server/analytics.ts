@@ -436,8 +436,12 @@ export async function GetUserTargetProgress(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        targetProducts: {
-          include: { product: { select: { id: true, name: true } } }
+        targets: {
+          include: {
+            products: {
+              include: { product: { select: { id: true, name: true } } }
+            }
+          }
         }
       }
     });
@@ -461,18 +465,22 @@ export async function GetUserTargetProgress(userId: string) {
       soldByProduct.map((item) => [item.productId, item._sum.quantity || 0])
     );
 
-    const data = user.targetProducts.map((target) => {
-      const soldQty = soldMap.get(target.productId) || 0;
-      const remaining = Math.max(target.requiredQty - soldQty, 0);
-      return {
-        productId: target.productId,
-        productName: target.product?.name || "",
-        requiredQty: target.requiredQty,
-        soldQty,
-        remaining,
-        reached: soldQty >= target.requiredQty
-      };
-    });
+    const data = user.targets.flatMap((target) =>
+      target.products.map((item) => {
+        const soldQty = soldMap.get(item.productId) || 0;
+        const remaining = Math.max(item.requiredQty - soldQty, 0);
+        return {
+          targetId: target.id,
+          productId: item.productId,
+          productName: item.product?.name || "",
+          requiredQty: item.requiredQty,
+          rewardValue: item.rewardValue,
+          soldQty,
+          remaining,
+          reached: soldQty >= item.requiredQty
+        };
+      })
+    );
 
     return { success: true, data };
   } catch (error) {

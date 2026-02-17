@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { deleteuser, setUserTargetProduct, updateUserTargetProductQty, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { createUserTarget, deleteuser, updateUserTarget, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
@@ -34,8 +34,12 @@ const UserManagement: React.FunctionComponent = () => {
   const [isTargetOpen, setIsTargetOpen] = React.useState(false);
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
   const [targetUser, setTargetUser] = React.useState<any>(null);
-  const [targetProductId, setTargetProductId] = React.useState<string>("");
-  const [targetQty, setTargetQty] = React.useState<number>(1);
+  const [editTargetId, setEditTargetId] = React.useState<string | null>(null);
+  const [targetItems, setTargetItems] = React.useState<Array<{
+    productId: string;
+    requiredQty: number;
+    rewardValue: number;
+  }>>([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -76,34 +80,78 @@ const UserManagement: React.FunctionComponent = () => {
   const openTargetModal = (mode: "assign" | "edit", data: any) => {
     setTargetMode(mode);
     setTargetUser(data);
-    if (mode === "edit" && data?.targetProducts?.length > 0) {
-      const firstTarget = data.targetProducts[0];
-      setTargetProductId(String(firstTarget.productId));
-      setTargetQty(firstTarget.requiredQty || 1);
+    const currentTarget = mode === "edit" ? data?.targets?.[0] : null;
+    setEditTargetId(currentTarget?.id || null);
+    if (currentTarget) {
+      const items = Array.isArray(currentTarget.products) && currentTarget.products.length > 0
+        ? currentTarget.products.map((item: any) => ({
+            productId: String(item.productId),
+            requiredQty: item.requiredQty ?? 1,
+            rewardValue: item.rewardValue ?? 0,
+          }))
+        : [{ productId: "", requiredQty: 1, rewardValue: 0 }];
+      setTargetItems(items);
     } else {
-      setTargetProductId("");
-      setTargetQty(1);
+      setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
     setIsTargetOpen(true);
   };
 
+  const updateTargetItem = (index: number, patch: Partial<typeof targetItems[number]>) => {
+    setTargetItems((prev) => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)));
+  };
+
+  const addTargetItem = () => {
+    setTargetItems((prev) => [
+      ...prev,
+      { productId: "", requiredQty: 1, rewardValue: 0 }
+    ]);
+  };
+
+  const removeTargetItem = (index: number) => {
+    setTargetItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSaveTarget = async () => {
     if (!targetUser?.id) return;
-    if (!targetProductId) {
-      toast.error("يرجى اختيار المنتج");
+    if (targetItems.length === 0) {
+      toast.error("يرجى إضافة منتج واحد على الأقل");
       return;
     }
-    if (!targetQty || targetQty <= 0) {
-      toast.error("يرجى إدخال كمية صحيحة");
-      return;
+
+    const seenProducts = new Set<string>();
+    for (const item of targetItems) {
+      if (!item.productId) {
+        toast.error("يرجى اختيار المنتج");
+        return;
+      }
+      if (seenProducts.has(item.productId)) {
+        toast.error("لا يمكن تكرار نفس المنتج في التاركت");
+        return;
+      }
+      seenProducts.add(item.productId);
+      if (!item.requiredQty || item.requiredQty <= 0) {
+        toast.error("يرجى إدخال كمية صحيحة");
+        return;
+      }
     }
 
     const loadingToast = toast.loading("جاري حفظ التاركت...");
     try {
-      const productId = Number(targetProductId);
-      const res = targetMode === "assign"
-        ? await setUserTargetProduct(targetUser.id, productId, targetQty)
-        : await updateUserTargetProductQty(targetUser.id, productId, targetQty);
+      const payload = {
+        userId: targetUser.id,
+        products: targetItems.map((item) => ({
+          productId: Number(item.productId),
+          requiredQty: item.requiredQty,
+          rewardValue: item.rewardValue,
+        }))
+      };
+
+      const res = targetMode === "assign" || !editTargetId
+        ? await createUserTarget(payload)
+        : await updateUserTarget(editTargetId, {
+            products: payload.products,
+          });
 
       if (res.success) {
         toast.success("تم حفظ التاركت بنجاح");
@@ -303,48 +351,73 @@ const UserManagement: React.FunctionComponent = () => {
       <AppModal
         title={targetMode === "assign" ? "تعيين منتج للتاركت" : "تعديل التاركت"}
         isOpen={isTargetOpen}
+        size='xl'
         onClose={() => setIsTargetOpen(false)}
       >
         <div className="p-4">
-          {targetMode === "edit" && (!targetUser?.targetProducts || targetUser.targetProducts.length === 0) ? (
+          {targetMode === "edit" && (!targetUser?.targets || targetUser.targets.length === 0) ? (
             <div className="text-sm text-slate-500">لا يوجد منتجات مرتبطة بتاركت لهذا المستخدم.</div>
           ) : (
             <div className="grid gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold dark:text-slate-300">المنتج</label>
-                <select
-                  className={selectClasses}
-                  value={targetProductId}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setTargetProductId(value);
-                    if (targetMode === "edit") {
-                      const selected = targetUser?.targetProducts?.find((t: any) => String(t.productId) === value);
-                      if (selected) setTargetQty(selected.requiredQty || 1);
-                    }
-                  }}
-                >
-                  <option value="">اختر المنتج...</option>
-                  {(targetMode === "assign" ? products : (targetUser?.targetProducts || []))
-                    .map((item: any) => {
-                      const product = targetMode === "assign" ? item : item.product;
-                      return (
-                        <option key={product.id} value={product.id}>{product.name}</option>
-                      );
-                    })}
-                </select>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold dark:text-slate-300">المنتجات المستهدفة</div>
+                <Button onClick={addTargetItem} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  إضافة منتج
+                </Button>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold dark:text-slate-300">الكمية المطلوبة</label>
-                <input
-                  type="number"
-                  min={1}
-                  className={selectClasses}
-                  value={targetQty}
-                  onChange={(e) => setTargetQty(Number(e.target.value))}
-                />
-              </div>
+              {targetItems.map((item, index) => (
+                <div key={`${item.productId}-${index}`} className="grid gap-3 rounded-lg border border-slate-200 p-3 dark:border-slate-700 sm:grid-cols-4">
+                  <div className="flex flex-col gap-2 sm:col-span-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">المنتج</label>
+                    <select
+                      className={selectClasses}
+                      value={item.productId}
+                      onChange={(e) => updateTargetItem(index, { productId: e.target.value })}
+                    >
+                      <option value="">اختر المنتج...</option>
+                      {products.map((product: any) => (
+                        <option key={product.id} value={product.id}>{product.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">الكمية</label>
+                    <input
+                      type="number"
+                      min={1}
+                      className={selectClasses}
+                      value={item.requiredQty}
+                      onChange={(e) => updateTargetItem(index, { requiredQty: Number(e.target.value) })}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">مكافأة المنتج</label>
+                    <input
+                      type="number"
+                      min={0}
+                      className={selectClasses}
+                      value={item.rewardValue}
+                      onChange={(e) => updateTargetItem(index, { rewardValue: Number(e.target.value) })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-end sm:col-span-4">
+                    {targetItems.length > 1 && (
+                      <Button
+                        variant="danger"
+                        onClick={() => removeTargetItem(index)}
+                        className="bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        حذف
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
 
               <div className="flex items-center gap-2 justify-end">
                 <Button onClick={handleSaveTarget} className="bg-blue-600 hover:bg-blue-700 text-white">

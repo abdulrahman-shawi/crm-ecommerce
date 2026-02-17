@@ -6,8 +6,12 @@ export async function GET(req :NextRequest) {
     const users = await prisma.user.findMany({
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
-        targetProducts: {
-          include: { product: true }
+        targets: {
+          include: {
+            products: {
+              include: { product: true }
+            }
+          }
         }
         },
     });
