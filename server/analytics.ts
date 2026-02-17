@@ -473,28 +473,33 @@ export async function GetUserTargetProgress(userId: string) {
         quantity: true,
         price: true,
         discount: true,
-        order: { select: { userId: true } }
+        order: { select: { userId: true, createdAt: true } }
       }
     });
 
-    const soldMap = new Map<string, { quantity: number; amount: number }>();
+    const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     for (const item of orderItems) {
       const key = `${item.order.userId}:${item.productId}`;
       const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
       const lineAmount = netPrice * item.quantity;
-      const current = soldMap.get(key) || { quantity: 0, amount: 0 };
-      soldMap.set(key, {
-        quantity: current.quantity + item.quantity,
-        amount: current.amount + lineAmount,
-      });
+      const list = soldMap.get(key) || [];
+      list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
+      soldMap.set(key, list);
     }
 
     const data = targets.flatMap((target: any) =>
       target.products.map((item: any) => {
         const targetUserId = canViewAll ? target.user?.id : currentUser.id;
         const key = `${targetUserId}:${item.productId}`;
-        const soldInfo = soldMap.get(key) || { quantity: 0, amount: 0 };
-        const soldQty = soldInfo.quantity;
+        const windowStart = target.createdAt;
+        const windowEnd = target.endedAt || new Date();
+        const soldItems = soldMap.get(key) || [];
+        const soldQty = soldItems
+          .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
+          .reduce((sum, sold) => sum + sold.quantity, 0);
+        const soldAmount = soldItems
+          .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
+          .reduce((sum, sold) => sum + sold.amount, 0);
         const remaining = Math.max(item.requiredQty - soldQty, 0);
         return {
           targetId: target.id,
@@ -508,7 +513,7 @@ export async function GetUserTargetProgress(userId: string) {
           requiredQty: item.requiredQty,
           rewardValue: item.rewardValue,
           soldQty,
-          soldAmount: soldInfo.amount,
+          soldAmount,
           remaining,
           reached: soldQty >= item.requiredQty
         };
