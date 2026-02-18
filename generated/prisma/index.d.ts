@@ -17364,8 +17364,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -17386,8 +17386,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -17452,8 +17452,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -19993,8 +19993,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -20014,8 +20014,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21134,8 +21134,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21155,8 +21155,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21314,8 +21314,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21335,8 +21335,8 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: number
+    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
