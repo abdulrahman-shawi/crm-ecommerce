@@ -1,5 +1,5 @@
 import "server-only";
-import { schedule } from "node-cron";
+import cron from "node-cron";
 import { prisma } from "@/lib/prisma";
 
 declare global {
@@ -10,7 +10,7 @@ declare global {
 if (!global.__monthlyTargetCronStarted) {
   global.__monthlyTargetCronStarted = true;
 
-  schedule(
+  cron.schedule(
     "0 0 1 * *",
     async () => {
       try {
