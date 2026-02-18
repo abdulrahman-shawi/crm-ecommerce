@@ -38,8 +38,24 @@ const customerSchema = z.object({
   name: z.string().min(3, "الاسم يجب أن يكون 3 حروف على الأقل"),
   // هنا نتأكد أننا نستقبل نصاً من الفورم ثم نحوله لمصفوفة
   phone: z.preprocess(
-    (val) => (typeof val === "string" && val !== "" ? [val] : val),
-    z.array(z.string()).optional().default([])
+    (val) => {
+      if (Array.isArray(val)) {
+        return val.filter((item) => String(item || "").trim().length > 0);
+      }
+      if (typeof val === "string") {
+        const trimmed = val.trim();
+        return trimmed.length > 0 ? [trimmed] : [];
+      }
+      return [];
+    },
+    z
+      .array(
+        z.string().refine(
+          (value) => value.replace(/\D/g, "").length >= 10,
+          "رقم الهاتف يجب أن يكون 10 أرقام أو أكثر"
+        )
+      )
+      .min(1, "يجب إدخال رقم هاتف واحد على الأقل")
   )
 });
 
@@ -924,7 +940,11 @@ const CustomrLayout: React.FC = () => {
                           )}
                         </div>
 
-                        {/* عرض خطأ التحقق لكل حقل مستقل */}
+                        {(errors.phone as any)?.[index] && (
+                          <p className="text-xs text-red-500">
+                            {(errors.phone as any)[index]?.message as string}
+                          </p>
+                        )}
 
                       </div>
                     ))}
@@ -940,6 +960,11 @@ const CustomrLayout: React.FC = () => {
                       </div>
                       إضافة رقم هاتف آخر
                     </button>
+                    {((errors.phone as any)?.message || (errors.phone as any)?.root?.message) && (
+                      <p className="text-xs text-red-500">
+                        {((errors.phone as any)?.message || (errors.phone as any)?.root?.message) as string}
+                      </p>
+                    )}
                   </div>
 
                 </div>
