@@ -574,7 +574,7 @@ const CustomrLayout: React.FC = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-8 bg-white dark:bg-slate-900 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
+      <div className="flex justify-between flex-wrap gap-3 items-center mb-8 bg-white dark:bg-slate-900 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-white">نظام إدارة العملاء</h1>
         <div className="flex items-center gap-3">
           {user && hasPermission(user, "addCustomers") && (
