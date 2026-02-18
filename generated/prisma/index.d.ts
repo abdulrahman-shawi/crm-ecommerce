@@ -10467,14 +10467,10 @@ export namespace Prisma {
   }
 
   export type CustomerAvgAggregateOutputType = {
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     rating: number | null
   }
 
   export type CustomerSumAggregateOutputType = {
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     rating: number | null
   }
 
@@ -10482,8 +10478,6 @@ export namespace Prisma {
     id: string | null
     name: string | null
     countryCode: string | null
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     phonestatus: string | null
     country: string | null
     gender: string | null
@@ -10500,8 +10494,6 @@ export namespace Prisma {
     id: string | null
     name: string | null
     countryCode: string | null
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     phonestatus: string | null
     country: string | null
     gender: string | null
@@ -10519,8 +10511,6 @@ export namespace Prisma {
     name: number
     phone: number
     countryCode: number
-    salesTargetValue: number
-    salesRewardValue: number
     phonestatus: number
     country: number
     gender: number
@@ -10536,14 +10526,10 @@ export namespace Prisma {
 
 
   export type CustomerAvgAggregateInputType = {
-    salesTargetValue?: true
-    salesRewardValue?: true
     rating?: true
   }
 
   export type CustomerSumAggregateInputType = {
-    salesTargetValue?: true
-    salesRewardValue?: true
     rating?: true
   }
 
@@ -10551,8 +10537,6 @@ export namespace Prisma {
     id?: true
     name?: true
     countryCode?: true
-    salesTargetValue?: true
-    salesRewardValue?: true
     phonestatus?: true
     country?: true
     gender?: true
@@ -10569,8 +10553,6 @@ export namespace Prisma {
     id?: true
     name?: true
     countryCode?: true
-    salesTargetValue?: true
-    salesRewardValue?: true
     phonestatus?: true
     country?: true
     gender?: true
@@ -10588,8 +10570,6 @@ export namespace Prisma {
     name?: true
     phone?: true
     countryCode?: true
-    salesTargetValue?: true
-    salesRewardValue?: true
     phonestatus?: true
     country?: true
     gender?: true
@@ -10694,8 +10674,6 @@ export namespace Prisma {
     name: string
     phone: string[]
     countryCode: string | null
-    salesTargetValue: number
-    salesRewardValue: number
     phonestatus: string | null
     country: string | null
     gender: string | null
@@ -10732,8 +10710,6 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     countryCode?: boolean
-    salesTargetValue?: boolean
-    salesRewardValue?: boolean
     phonestatus?: boolean
     country?: boolean
     gender?: boolean
@@ -10755,8 +10731,6 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     countryCode?: boolean
-    salesTargetValue?: boolean
-    salesRewardValue?: boolean
     phonestatus?: boolean
     country?: boolean
     gender?: boolean
@@ -10774,8 +10748,6 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     countryCode?: boolean
-    salesTargetValue?: boolean
-    salesRewardValue?: boolean
     phonestatus?: boolean
     country?: boolean
     gender?: boolean
@@ -10793,8 +10765,6 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     countryCode?: boolean
-    salesTargetValue?: boolean
-    salesRewardValue?: boolean
     phonestatus?: boolean
     country?: boolean
     gender?: boolean
@@ -10807,7 +10777,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "salesTargetValue" | "salesRewardValue" | "phonestatus" | "country" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "phonestatus" | "country" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
@@ -10829,8 +10799,6 @@ export namespace Prisma {
       name: string
       phone: string[]
       countryCode: string | null
-      salesTargetValue: number
-      salesRewardValue: number
       phonestatus: string | null
       country: string | null
       gender: string | null
@@ -11271,8 +11239,6 @@ export namespace Prisma {
     readonly name: FieldRef<"Customer", 'String'>
     readonly phone: FieldRef<"Customer", 'String[]'>
     readonly countryCode: FieldRef<"Customer", 'String'>
-    readonly salesTargetValue: FieldRef<"Customer", 'Int'>
-    readonly salesRewardValue: FieldRef<"Customer", 'Int'>
     readonly phonestatus: FieldRef<"Customer", 'String'>
     readonly country: FieldRef<"Customer", 'String'>
     readonly gender: FieldRef<"Customer", 'String'>
@@ -15497,8 +15463,6 @@ export namespace Prisma {
     name: 'name',
     phone: 'phone',
     countryCode: 'countryCode',
-    salesTargetValue: 'salesTargetValue',
-    salesRewardValue: 'salesRewardValue',
     phonestatus: 'phonestatus',
     country: 'country',
     gender: 'gender',
@@ -16292,8 +16256,6 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
-    salesTargetValue?: IntFilter<"Customer"> | number
-    salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
     country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
@@ -16314,8 +16276,6 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     countryCode?: SortOrderInput | SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     phonestatus?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
@@ -16339,8 +16299,6 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
-    salesTargetValue?: IntFilter<"Customer"> | number
-    salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
     country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
@@ -16361,8 +16319,6 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     countryCode?: SortOrderInput | SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     phonestatus?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
@@ -16388,8 +16344,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Customer"> | string
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableWithAggregatesFilter<"Customer"> | string | null
-    salesTargetValue?: IntWithAggregatesFilter<"Customer"> | number
-    salesRewardValue?: IntWithAggregatesFilter<"Customer"> | number
     phonestatus?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     country?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     gender?: StringNullableWithAggregatesFilter<"Customer"> | string | null
@@ -17364,8 +17318,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -17386,8 +17338,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -17408,8 +17358,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17430,8 +17378,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17452,8 +17398,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -17471,8 +17415,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17490,8 +17432,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18529,8 +18469,6 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     countryCode?: SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     phonestatus?: SortOrder
     country?: SortOrder
     gender?: SortOrder
@@ -18544,8 +18482,6 @@ export namespace Prisma {
   }
 
   export type CustomerAvgOrderByAggregateInput = {
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     rating?: SortOrder
   }
 
@@ -18553,8 +18489,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     countryCode?: SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     phonestatus?: SortOrder
     country?: SortOrder
     gender?: SortOrder
@@ -18571,8 +18505,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     countryCode?: SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     phonestatus?: SortOrder
     country?: SortOrder
     gender?: SortOrder
@@ -18586,8 +18518,6 @@ export namespace Prisma {
   }
 
   export type CustomerSumOrderByAggregateInput = {
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     rating?: SortOrder
   }
 
@@ -19993,8 +19923,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -20014,8 +19942,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -20249,8 +20175,6 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
-    salesTargetValue?: IntFilter<"Customer"> | number
-    salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
     country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
@@ -21134,8 +21058,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21155,8 +21077,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21229,8 +21149,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21250,8 +21168,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21314,8 +21230,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21335,8 +21249,6 @@ export namespace Prisma {
     name: string
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
-    salesTargetValue?: number
-    salesRewardValue?: number
     phonestatus?: string | null
     country?: string | null
     gender?: string | null
@@ -21434,8 +21346,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21455,8 +21365,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21838,8 +21746,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21859,8 +21765,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21880,8 +21784,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null

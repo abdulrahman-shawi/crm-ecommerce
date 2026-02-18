@@ -1,0 +1,3 @@
+-- This migration is empty as Customer doesn't have salesTargetValue/salesRewardValue columns
+-- Those columns are in UserTarget table
+-- Keeping this file for migration history consistency

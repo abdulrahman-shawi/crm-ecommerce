@@ -142,8 +142,6 @@ model Customer {
   name            String     @unique
   phone           String[]
   countryCode     String?
-  salesTargetValue Int        @default(0)
-  salesRewardValue Int        @default(0)
   phonestatus     String?
   country         String?
   gender          String?
