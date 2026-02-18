@@ -147,6 +147,44 @@ type UserTargetInput = {
   products: TargetProductInput[];
 };
 
+const toNumber = (value: unknown): number | null => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const cleaned = value.replace(/[{}\"]/g, "").trim();
+    if (cleaned.length === 0) {
+      return null;
+    }
+    const parsed = Number(cleaned);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+};
+
+const toNumberArray = (value: unknown): number[] => {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => toNumber(item))
+      .filter((item): item is number => item !== null);
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+      const inner = trimmed.slice(1, -1).trim();
+      if (inner.length === 0) {
+        return [];
+      }
+      return inner
+        .split(",")
+        .map((item) => toNumber(item))
+        .filter((item): item is number => item !== null);
+    }
+  }
+  const single = toNumber(value);
+  return single === null ? [] : [single];
+};
+
 export async function createUserTarget(payload: UserTargetInput) {
   try {
     await prisma.userTarget.updateMany({
@@ -157,15 +195,21 @@ export async function createUserTarget(payload: UserTargetInput) {
     const target = await prisma.userTarget.create({
       data: {
         userId: payload.userId,
-        salesTargetValue: payload.salesTargetValue,
-        salesRewardValue: payload.salesRewardValue,
+        salesTargetValue: toNumberArray(payload.salesTargetValue),
+        salesRewardValue: toNumberArray(payload.salesRewardValue),
         isActive: true,
         products: {
-          create: payload.products.map((item) => ({
-            product: { connect: { id: item.productId } },
-            requiredQty: [item.requiredQty],
-            rewardValue: [item.rewardValue],
-          }))
+          create: payload.products.map((item) => {
+            const productId = toNumber(item.productId);
+            if (productId === null) {
+              throw new Error("Invalid productId in target products");
+            }
+            return {
+              product: { connect: { id: productId } },
+              requiredQty: toNumberArray(item.requiredQty),
+              rewardValue: toNumberArray(item.rewardValue),
+            };
+          })
         }
       }
     });
@@ -181,15 +225,21 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
     const target = await prisma.userTarget.update({
       where: { id: targetId },
       data: {
-        salesTargetValue: payload.salesTargetValue,
-        salesRewardValue: payload.salesRewardValue,
+        salesTargetValue: toNumberArray(payload.salesTargetValue),
+        salesRewardValue: toNumberArray(payload.salesRewardValue),
         products: {
           deleteMany: {},
-          create: payload.products.map((item) => ({
-            product: { connect: { id: item.productId } },
-            requiredQty: [item.requiredQty],
-            rewardValue: [item.rewardValue],
-          }))
+          create: payload.products.map((item) => {
+            const productId = toNumber(item.productId);
+            if (productId === null) {
+              throw new Error("Invalid productId in target products");
+            }
+            return {
+              product: { connect: { id: productId } },
+              requiredQty: toNumberArray(item.requiredQty),
+              rewardValue: toNumberArray(item.rewardValue),
+            };
+          })
         }
       }
     });

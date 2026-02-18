@@ -92,8 +92,8 @@ const DashboardPage: React.FunctionComponent = () => {
       targetId: string;
       userId: string;
       userName: string;
-      salesTargetValue: number;
-      salesRewardValue: number;
+      salesTargetValue: number[];
+      salesRewardValue: number[];
       soldAmount: number;
     }>();
 
@@ -103,15 +103,31 @@ const DashboardPage: React.FunctionComponent = () => {
         targetId: key,
         userId: item.userId || "me",
         userName: item.userName || "-",
-        salesTargetValue: sumNumbers(item.salesTargetValue),
-        salesRewardValue: sumNumbers(item.salesRewardValue),
+        salesTargetValue: Array.isArray(item.salesTargetValue) ? item.salesTargetValue : [],
+        salesRewardValue: Array.isArray(item.salesRewardValue) ? item.salesRewardValue : [],
         soldAmount: 0,
       };
       current.soldAmount += item.soldAmount || 0;
+      if (!current.salesTargetValue.length && Array.isArray(item.salesTargetValue)) {
+        current.salesTargetValue = item.salesTargetValue;
+      }
+      if (!current.salesRewardValue.length && Array.isArray(item.salesRewardValue)) {
+        current.salesRewardValue = item.salesRewardValue;
+      }
       map.set(key, current);
     });
 
-    return Array.from(map.values());
+    return Array.from(map.values()).flatMap((row) => {
+      const rewards = row.salesRewardValue.length ? row.salesRewardValue : [0];
+      const targets = row.salesTargetValue.length ? row.salesTargetValue : [0];
+      const rowCount = Math.max(rewards.length, targets.length);
+      return Array.from({ length: rowCount }).map((_, index) => ({
+        ...row,
+        rewardValue: rewards[index] ?? 0,
+        targetValue: targets[index] ?? 0,
+        rewardIndex: index,
+      }));
+    });
   }, [filteredTargets]);
 
   React.useEffect(() => {
@@ -184,19 +200,19 @@ const DashboardPage: React.FunctionComponent = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {valueTargets.map((row) => {
-                      const remaining = Math.max(row.salesTargetValue - row.soldAmount, 0);
-                      const reached = row.soldAmount >= row.salesTargetValue && row.salesTargetValue > 0;
+                      const remaining = Math.max(row.targetValue - row.soldAmount, 0);
+                      const reached = row.soldAmount >= row.targetValue && row.targetValue > 0;
                       return (
-                        <tr key={row.targetId}>
+                        <tr key={`${row.targetId}-${row.rewardIndex}`}>
                           {user?.accountType === "ADMIN" && (
                             <td className="py-3 px-2 font-semibold text-slate-700 dark:text-slate-200">
                               {row.userName}
                             </td>
                           )}
-                          <td className="py-3 px-2">{row.salesTargetValue}</td>
+                          <td className="py-3 px-2">{row.targetValue}</td>
                           <td className="py-3 px-2">{row.soldAmount.toFixed(2)}</td>
                           <td className="py-3 px-2">{remaining.toFixed(2)}</td>
-                          <td className="py-3 px-2">{row.salesRewardValue}</td>
+                          <td className="py-3 px-2">{row.rewardValue}</td>
                           <td className="py-3 px-2">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-bold ${reached
