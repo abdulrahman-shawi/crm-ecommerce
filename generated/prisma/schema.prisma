@@ -145,6 +145,7 @@ model Customer {
   salesTargetValue Int
   salesRewardValue Int
   phonestatus      String?
+  country          String?
   gender           String?
   age              String?
   source           String?

@@ -10485,6 +10485,7 @@ export namespace Prisma {
     salesTargetValue: number | null
     salesRewardValue: number | null
     phonestatus: string | null
+    country: string | null
     gender: string | null
     age: string | null
     source: string | null
@@ -10502,6 +10503,7 @@ export namespace Prisma {
     salesTargetValue: number | null
     salesRewardValue: number | null
     phonestatus: string | null
+    country: string | null
     gender: string | null
     age: string | null
     source: string | null
@@ -10520,6 +10522,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus: number
+    country: number
     gender: number
     age: number
     source: number
@@ -10551,6 +10554,7 @@ export namespace Prisma {
     salesTargetValue?: true
     salesRewardValue?: true
     phonestatus?: true
+    country?: true
     gender?: true
     age?: true
     source?: true
@@ -10568,6 +10572,7 @@ export namespace Prisma {
     salesTargetValue?: true
     salesRewardValue?: true
     phonestatus?: true
+    country?: true
     gender?: true
     age?: true
     source?: true
@@ -10586,6 +10591,7 @@ export namespace Prisma {
     salesTargetValue?: true
     salesRewardValue?: true
     phonestatus?: true
+    country?: true
     gender?: true
     age?: true
     source?: true
@@ -10691,6 +10697,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus: string | null
+    country: string | null
     gender: string | null
     age: string | null
     source: string | null
@@ -10728,6 +10735,7 @@ export namespace Prisma {
     salesTargetValue?: boolean
     salesRewardValue?: boolean
     phonestatus?: boolean
+    country?: boolean
     gender?: boolean
     age?: boolean
     source?: boolean
@@ -10750,6 +10758,7 @@ export namespace Prisma {
     salesTargetValue?: boolean
     salesRewardValue?: boolean
     phonestatus?: boolean
+    country?: boolean
     gender?: boolean
     age?: boolean
     source?: boolean
@@ -10768,6 +10777,7 @@ export namespace Prisma {
     salesTargetValue?: boolean
     salesRewardValue?: boolean
     phonestatus?: boolean
+    country?: boolean
     gender?: boolean
     age?: boolean
     source?: boolean
@@ -10786,6 +10796,7 @@ export namespace Prisma {
     salesTargetValue?: boolean
     salesRewardValue?: boolean
     phonestatus?: boolean
+    country?: boolean
     gender?: boolean
     age?: boolean
     source?: boolean
@@ -10796,7 +10807,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "salesTargetValue" | "salesRewardValue" | "phonestatus" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "salesTargetValue" | "salesRewardValue" | "phonestatus" | "country" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
@@ -10821,6 +10832,7 @@ export namespace Prisma {
       salesTargetValue: number
       salesRewardValue: number
       phonestatus: string | null
+      country: string | null
       gender: string | null
       age: string | null
       source: string | null
@@ -11262,6 +11274,7 @@ export namespace Prisma {
     readonly salesTargetValue: FieldRef<"Customer", 'Int'>
     readonly salesRewardValue: FieldRef<"Customer", 'Int'>
     readonly phonestatus: FieldRef<"Customer", 'String'>
+    readonly country: FieldRef<"Customer", 'String'>
     readonly gender: FieldRef<"Customer", 'String'>
     readonly age: FieldRef<"Customer", 'String'>
     readonly source: FieldRef<"Customer", 'String'>
@@ -15487,6 +15500,7 @@ export namespace Prisma {
     salesTargetValue: 'salesTargetValue',
     salesRewardValue: 'salesRewardValue',
     phonestatus: 'phonestatus',
+    country: 'country',
     gender: 'gender',
     age: 'age',
     source: 'source',
@@ -16281,6 +16295,7 @@ export namespace Prisma {
     salesTargetValue?: IntFilter<"Customer"> | number
     salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
+    country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
     age?: StringNullableFilter<"Customer"> | string | null
     source?: StringNullableFilter<"Customer"> | string | null
@@ -16302,6 +16317,7 @@ export namespace Prisma {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
     phonestatus?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     age?: SortOrderInput | SortOrder
     source?: SortOrderInput | SortOrder
@@ -16326,6 +16342,7 @@ export namespace Prisma {
     salesTargetValue?: IntFilter<"Customer"> | number
     salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
+    country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
     age?: StringNullableFilter<"Customer"> | string | null
     source?: StringNullableFilter<"Customer"> | string | null
@@ -16347,6 +16364,7 @@ export namespace Prisma {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
     phonestatus?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     age?: SortOrderInput | SortOrder
     source?: SortOrderInput | SortOrder
@@ -16373,6 +16391,7 @@ export namespace Prisma {
     salesTargetValue?: IntWithAggregatesFilter<"Customer"> | number
     salesRewardValue?: IntWithAggregatesFilter<"Customer"> | number
     phonestatus?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    country?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     gender?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     age?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     source?: StringNullableWithAggregatesFilter<"Customer"> | string | null
@@ -17348,6 +17367,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -17369,6 +17389,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -17390,6 +17411,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17411,6 +17433,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17432,6 +17455,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -17450,6 +17474,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17468,6 +17493,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18506,6 +18532,7 @@ export namespace Prisma {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
     phonestatus?: SortOrder
+    country?: SortOrder
     gender?: SortOrder
     age?: SortOrder
     source?: SortOrder
@@ -18529,6 +18556,7 @@ export namespace Prisma {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
     phonestatus?: SortOrder
+    country?: SortOrder
     gender?: SortOrder
     age?: SortOrder
     source?: SortOrder
@@ -18546,6 +18574,7 @@ export namespace Prisma {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
     phonestatus?: SortOrder
+    country?: SortOrder
     gender?: SortOrder
     age?: SortOrder
     source?: SortOrder
@@ -19967,6 +19996,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -19987,6 +20017,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -20221,6 +20252,7 @@ export namespace Prisma {
     salesTargetValue?: IntFilter<"Customer"> | number
     salesRewardValue?: IntFilter<"Customer"> | number
     phonestatus?: StringNullableFilter<"Customer"> | string | null
+    country?: StringNullableFilter<"Customer"> | string | null
     gender?: StringNullableFilter<"Customer"> | string | null
     age?: StringNullableFilter<"Customer"> | string | null
     source?: StringNullableFilter<"Customer"> | string | null
@@ -21105,6 +21137,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -21125,6 +21158,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -21198,6 +21232,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21218,6 +21253,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21281,6 +21317,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -21301,6 +21338,7 @@ export namespace Prisma {
     salesTargetValue: number
     salesRewardValue: number
     phonestatus?: string | null
+    country?: string | null
     gender?: string | null
     age?: string | null
     source?: string | null
@@ -21399,6 +21437,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21419,6 +21458,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21801,6 +21841,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21821,6 +21862,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21841,6 +21883,7 @@ export namespace Prisma {
     salesTargetValue?: IntFieldUpdateOperationsInput | number
     salesRewardValue?: IntFieldUpdateOperationsInput | number
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     age?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null

@@ -221,6 +221,7 @@ exports.Prisma.CustomerScalarFieldEnum = {
   salesTargetValue: 'salesTargetValue',
   salesRewardValue: 'salesRewardValue',
   phonestatus: 'phonestatus',
+  country: 'country',
   gender: 'gender',
   age: 'age',
   source: 'source',
