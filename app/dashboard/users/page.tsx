@@ -54,12 +54,18 @@ const UserManagement: React.FunctionComponent = () => {
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
-      const res = await fetch("/api/users")
-      const data = await res.json()
-      setUsers(data.data);
+      const res = await fetch("/api/users");
+      if (!res.ok) {
+        setUsers([]);
+        console.error("Users fetch failed:", res.status, res.statusText);
+        return;
+      }
+      const data = await res.json();
+      setUsers(Array.isArray(data?.data) ? data.data : []);
       console.log("Users:", res);
     } catch (error) {
-
+      setUsers([]);
+      console.error("Users fetch error:", error);
     }
   }
   const getRoul = async () => {
@@ -232,8 +238,7 @@ const UserManagement: React.FunctionComponent = () => {
 
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
-    (user && hasPermission(user, "editEmployees")) &&
-    {
+    (user && hasPermission(user, "editEmployees")) && {
       label: "تعديل",
       icon: <Mail size={14} />,
       onClick: (data: any) => {
@@ -250,8 +255,7 @@ const UserManagement: React.FunctionComponent = () => {
         setIsOpen(true);
       }
     },
-    (user && hasPermission(user, "deleteEmployees")) &&
-    {
+    (user && hasPermission(user, "deleteEmployees")) && {
       label: "حذف",
       icon: <Plus className="rotate-45" size={14} />,
       variant: "danger",
@@ -276,7 +280,7 @@ const UserManagement: React.FunctionComponent = () => {
         }
       }
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="p-4" dir="rtl">
