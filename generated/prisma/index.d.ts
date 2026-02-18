@@ -10490,6 +10490,7 @@ export namespace Prisma {
     source: string | null
     city: string | null
     rating: number | null
+    status: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10506,6 +10507,7 @@ export namespace Prisma {
     source: string | null
     city: string | null
     rating: number | null
+    status: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10523,6 +10525,7 @@ export namespace Prisma {
     source: number
     city: number
     rating: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10553,6 +10556,7 @@ export namespace Prisma {
     source?: true
     city?: true
     rating?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10569,6 +10573,7 @@ export namespace Prisma {
     source?: true
     city?: true
     rating?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10586,6 +10591,7 @@ export namespace Prisma {
     source?: true
     city?: true
     rating?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10690,6 +10696,7 @@ export namespace Prisma {
     source: string | null
     city: string | null
     rating: number | null
+    status: string | null
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
@@ -10726,6 +10733,7 @@ export namespace Prisma {
     source?: boolean
     city?: boolean
     rating?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     orders?: boolean | Customer$ordersArgs<ExtArgs>
@@ -10747,6 +10755,7 @@ export namespace Prisma {
     source?: boolean
     city?: boolean
     rating?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["customer"]>
@@ -10764,6 +10773,7 @@ export namespace Prisma {
     source?: boolean
     city?: boolean
     rating?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["customer"]>
@@ -10781,11 +10791,12 @@ export namespace Prisma {
     source?: boolean
     city?: boolean
     rating?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "salesTargetValue" | "salesRewardValue" | "phonestatus" | "gender" | "age" | "source" | "city" | "rating" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "salesTargetValue" | "salesRewardValue" | "phonestatus" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
@@ -10815,6 +10826,7 @@ export namespace Prisma {
       source: string | null
       city: string | null
       rating: number | null
+      status: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -11255,6 +11267,7 @@ export namespace Prisma {
     readonly source: FieldRef<"Customer", 'String'>
     readonly city: FieldRef<"Customer", 'String'>
     readonly rating: FieldRef<"Customer", 'Int'>
+    readonly status: FieldRef<"Customer", 'String'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -15479,6 +15492,7 @@ export namespace Prisma {
     source: 'source',
     city: 'city',
     rating: 'rating',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16272,6 +16286,7 @@ export namespace Prisma {
     source?: StringNullableFilter<"Customer"> | string | null
     city?: StringNullableFilter<"Customer"> | string | null
     rating?: IntNullableFilter<"Customer"> | number | null
+    status?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
@@ -16292,6 +16307,7 @@ export namespace Prisma {
     source?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
@@ -16315,6 +16331,7 @@ export namespace Prisma {
     source?: StringNullableFilter<"Customer"> | string | null
     city?: StringNullableFilter<"Customer"> | string | null
     rating?: IntNullableFilter<"Customer"> | number | null
+    status?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
@@ -16335,6 +16352,7 @@ export namespace Prisma {
     source?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
@@ -16360,6 +16378,7 @@ export namespace Prisma {
     source?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     city?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     rating?: IntNullableWithAggregatesFilter<"Customer"> | number | null
+    status?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -17334,6 +17353,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -17354,6 +17374,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -17374,6 +17395,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -17394,6 +17416,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -17414,6 +17437,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17431,6 +17455,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17448,6 +17473,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18485,6 +18511,7 @@ export namespace Prisma {
     source?: SortOrder
     city?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18507,6 +18534,7 @@ export namespace Prisma {
     source?: SortOrder
     city?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18523,6 +18551,7 @@ export namespace Prisma {
     source?: SortOrder
     city?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19943,6 +19972,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -19962,6 +19992,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -20195,6 +20226,7 @@ export namespace Prisma {
     source?: StringNullableFilter<"Customer"> | string | null
     city?: StringNullableFilter<"Customer"> | string | null
     rating?: IntNullableFilter<"Customer"> | number | null
+    status?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
   }
@@ -21078,6 +21110,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -21097,6 +21130,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -21169,6 +21203,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -21188,6 +21223,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -21250,6 +21286,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCustomersInput
@@ -21269,6 +21306,7 @@ export namespace Prisma {
     source?: string | null
     city?: string | null
     rating?: number | null
+    status?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCustomersInput
@@ -21366,6 +21404,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCustomersNestedInput
@@ -21385,6 +21424,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCustomersNestedInput
@@ -21766,6 +21806,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -21785,6 +21826,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -21804,6 +21846,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

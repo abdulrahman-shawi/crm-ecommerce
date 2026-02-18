@@ -150,6 +150,7 @@ model Customer {
   source           String?
   city             String?
   rating           Int?
+  status           String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   orders           Order[]

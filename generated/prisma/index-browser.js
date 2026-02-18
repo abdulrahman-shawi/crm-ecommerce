@@ -226,6 +226,7 @@ exports.Prisma.CustomerScalarFieldEnum = {
   source: 'source',
   city: 'city',
   rating: 'rating',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
