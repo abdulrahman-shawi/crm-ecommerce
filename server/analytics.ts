@@ -438,7 +438,7 @@ export async function GetUserTargetProgress(userId: string) {
       include: { permission: true }
     });
 
-    if (!currentUser) return { success: false, error: "User not found" };
+    if (!currentUser) return { success: false, data: [], error: "User not found" };
 
     const canViewAll = isAdmin(currentUser);
     const targets = canViewAll
@@ -494,13 +494,15 @@ export async function GetUserTargetProgress(userId: string) {
         const windowStart = target.createdAt;
         const windowEnd = target.endedAt || new Date();
         const soldItems = soldMap.get(key) || [];
+        const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
+        const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
         const soldQty = soldItems
           .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
           .reduce((sum, sold) => sum + sold.quantity, 0);
         const soldAmount = soldItems
           .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
           .reduce((sum, sold) => sum + sold.amount, 0);
-        const remaining = Math.max(item.requiredQty - soldQty, 0);
+        const remaining = Math.max(requiredQty - soldQty, 0);
         return {
           targetId: target.id,
           targetCreatedAt: target.createdAt,
@@ -510,12 +512,12 @@ export async function GetUserTargetProgress(userId: string) {
           userName: canViewAll ? target.user?.username || "" : currentUser.username || "",
           productId: item.productId,
           productName: item.product?.name || "",
-          requiredQty: item.requiredQty,
-          rewardValue: item.rewardValue,
+          requiredQty,
+          rewardValue,
           soldQty,
           soldAmount,
           remaining,
-          reached: soldQty >= item.requiredQty
+          reached: soldQty >= requiredQty
         };
       })
     );
@@ -523,6 +525,6 @@ export async function GetUserTargetProgress(userId: string) {
     return { success: true, data };
   } catch (error) {
     console.error("Error in GetUserTargetProgress:", error);
-    return { success: false, error: "Internal Server Error" };
+    return { success: false, data: [], error: "Internal Server Error" };
   }
 }

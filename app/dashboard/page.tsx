@@ -14,8 +14,8 @@ const DashboardPage: React.FunctionComponent = () => {
       userId?: string;
       userName?: string;
       targetCreatedAt?: string | Date;
-      salesTargetValue?: number;
-      salesRewardValue?: number;
+      salesTargetValue?: number[];
+      salesRewardValue?: number[];
       productId: number;
       productName: string;
       requiredQty: number;
@@ -27,6 +27,9 @@ const DashboardPage: React.FunctionComponent = () => {
     }>;
     error?: string;
   }>({ success: true, data: [] });
+
+  const sumNumbers = (values?: number[] | null) =>
+    Array.isArray(values) ? values.reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
 
   const [selectedMonth, setSelectedMonth] = React.useState<string>(() => {
     const now = new Date();
@@ -68,7 +71,7 @@ const DashboardPage: React.FunctionComponent = () => {
     const allowed = new Set([currentKey, previousKey]);
 
     const keys = new Map<string, string>();
-    targetProgress.data.forEach((item) => {
+    (targetProgress.data ?? []).forEach((item) => {
       const key = monthKey(item.targetCreatedAt);
       if (allowed.has(key) && !keys.has(key)) {
         keys.set(key, monthLabel(item.targetCreatedAt));
@@ -81,7 +84,7 @@ const DashboardPage: React.FunctionComponent = () => {
   }, [targetProgress.data]);
 
   const filteredTargets = React.useMemo(() => {
-    return targetProgress.data.filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
+    return (targetProgress.data ?? []).filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
   }, [selectedMonth, targetProgress.data]);
 
   const valueTargets = React.useMemo(() => {
@@ -100,8 +103,8 @@ const DashboardPage: React.FunctionComponent = () => {
         targetId: key,
         userId: item.userId || "me",
         userName: item.userName || "-",
-        salesTargetValue: item.salesTargetValue ?? 0,
-        salesRewardValue: item.salesRewardValue ?? 0,
+        salesTargetValue: sumNumbers(item.salesTargetValue),
+        salesRewardValue: sumNumbers(item.salesRewardValue),
         soldAmount: 0,
       };
       current.soldAmount += item.soldAmount || 0;
