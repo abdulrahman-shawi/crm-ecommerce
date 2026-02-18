@@ -477,7 +477,20 @@ export async function GetUserTargetProgress(userId: string) {
       }
     });
 
+    const commissionByUser = new Map<string, number>();
+    if (canViewAll) {
+      const users = await prisma.user.findMany({
+        select: { id: true, salesCommissionPercent: true }
+      });
+      for (const user of users) {
+        commissionByUser.set(user.id, Number(user.salesCommissionPercent || 0));
+      }
+    } else {
+      commissionByUser.set(currentUser.id, Number(currentUser.salesCommissionPercent || 0));
+    }
+
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
+    const totalSoldByUser = new Map<string, number>();
     for (const item of orderItems) {
       const key = `${item.order.userId}:${item.productId}`;
       const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
@@ -485,6 +498,11 @@ export async function GetUserTargetProgress(userId: string) {
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
+
+      if (item.order.userId) {
+        const total = totalSoldByUser.get(item.order.userId) || 0;
+        totalSoldByUser.set(item.order.userId, total + lineAmount);
+      }
     }
 
     const data = targets.flatMap((target: any) =>
@@ -522,7 +540,26 @@ export async function GetUserTargetProgress(userId: string) {
       })
     );
 
-    return { success: true, data };
+    const totalSalesAmount = Array.from(totalSoldByUser.values()).reduce((sum, amount) => sum + amount, 0);
+    const totalCommissionAmount = Array.from(totalSoldByUser.entries()).reduce((sum, [soldUserId, amount]) => {
+      const percent = commissionByUser.get(soldUserId) ?? 0;
+      return sum + (amount * percent) / 100;
+    }, 0);
+    const commissionPercent = totalSalesAmount > 0
+      ? Number(((totalCommissionAmount / totalSalesAmount) * 100).toFixed(2))
+      : 0;
+    const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
+
+    return {
+      success: true,
+      data,
+      summary: {
+        totalSalesAmount,
+        totalCommissionAmount,
+        commissionPercent,
+        assignedCommissionPercent
+      }
+    };
   } catch (error) {
     console.error("Error in GetUserTargetProgress:", error);
     return { success: false, data: [], error: "Internal Server Error" };

@@ -128,6 +128,7 @@ exports.Prisma.UserScalarFieldEnum = {
   jobTitle: 'jobTitle',
   accountType: 'accountType',
   password: 'password',
+  salesCommissionPercent: 'salesCommissionPercent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   permissionId: 'permissionId'

@@ -78,6 +78,7 @@ export async function createuser(data: any) {
         phone: data.phone || null,
         jobTitle: data.jobTitle,
         accountType: data.accountType,
+        salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)
         permission: {
           connect: { id: data.permissions } 
@@ -106,6 +107,7 @@ export async function updateuser(id: string, data: any) {
       phone: data.phone || null,
       jobTitle: data.jobTitle,
       accountType: data.accountType,
+      salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
       permission: {
         connect: { id: data.permissions }
       }
@@ -122,6 +124,20 @@ export async function updateuser(id: string, data: any) {
   } catch (error: any) {
     console.error("Prisma Error:", error);
     return { success: false, error: "فشل في تحديث بيانات المستخدم" };
+  }
+}
+
+export async function updateUserCommission(id: string, salesCommissionPercent: number) {
+  try {
+    const percent = Number(salesCommissionPercent) || 0;
+    const user = await prisma.user.update({
+      where: { id },
+      data: { salesCommissionPercent: percent }
+    });
+    return { success: true, data: user };
+  } catch (error: any) {
+    console.error("Prisma Error:", error);
+    return { success: false, error: "فشل في تحديث نسبة الأرباح" };
   }
 }
 

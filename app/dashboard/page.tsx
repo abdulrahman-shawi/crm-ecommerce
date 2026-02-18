@@ -25,6 +25,12 @@ const DashboardPage: React.FunctionComponent = () => {
       remaining: number;
       reached: boolean;
     }>;
+    summary?: {
+      totalSalesAmount: number;
+      totalCommissionAmount: number;
+      commissionPercent: number;
+      assignedCommissionPercent: number;
+    };
     error?: string;
   }>({ success: true, data: [] });
 
@@ -167,6 +173,32 @@ const DashboardPage: React.FunctionComponent = () => {
 
         {targetProgress.success && targetProgress.data.length > 0 && (
           <div className="overflow-x-auto">
+            <div className="mb-6 grid gap-4 sm:grid-cols-4">
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                <div className="text-xs font-semibold text-slate-500">إجمالي المبيعات</div>
+                <div className="text-xl font-bold text-slate-800 dark:text-white">
+                  {(targetProgress.summary?.totalSalesAmount ?? 0).toFixed(2)}
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                <div className="text-xs font-semibold text-slate-500">النسبة المعيّنة</div>
+                <div className="text-xl font-bold text-slate-800 dark:text-white">
+                  {(targetProgress.summary?.assignedCommissionPercent ?? 0).toFixed(2)}%
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                <div className="text-xs font-semibold text-slate-500">النسبة المحسوبة</div>
+                <div className="text-xl font-bold text-slate-800 dark:text-white">
+                  {(targetProgress.summary?.commissionPercent ?? 0).toFixed(2)}%
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                <div className="text-xs font-semibold text-slate-500">قيمة العمولة</div>
+                <div className="text-xl font-bold text-slate-800 dark:text-white">
+                  {(targetProgress.summary?.totalCommissionAmount ?? 0).toFixed(2)}
+                </div>
+              </div>
+            </div>
             <div className="mb-4 flex flex-wrap items-center gap-2">
               {monthOptions.map(([key, label]) => (
                 <button

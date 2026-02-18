@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { createUserTarget, deleteuser, updateUserTarget, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { createUserTarget, deleteuser, updateUserTarget, updateUserCommission, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
@@ -22,6 +22,7 @@ const userSchema = z.object({
   jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
   accountType: z.enum(["ADMIN", "MANAGER", "STAFF"]),
   permissions: z.string().min(1, "يرجى اختيار صلاحية"),
+  salesCommissionPercent: z.coerce.number().min(0).optional(),
 });
 
 const parseNumberList = (value: string) =>
@@ -39,6 +40,8 @@ const UserManagement: React.FunctionComponent = () => {
   const [roles, setRoles] = React.useState<any[]>([]);
   const [users, setUsers] = React.useState<any[]>([]);
   const [formData, setFormData] = React.useState<any>(null);
+  const [commissionValues, setCommissionValues] = React.useState<Record<string, number>>({});
+  const [commissionSaving, setCommissionSaving] = React.useState<Record<string, boolean>>({});
   const [products, setProducts] = React.useState<any[]>([]);
   const [isTargetOpen, setIsTargetOpen] = React.useState(false);
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
@@ -61,7 +64,15 @@ const UserManagement: React.FunctionComponent = () => {
         return;
       }
       const data = await res.json();
-      setUsers(Array.isArray(data?.data) ? data.data : []);
+      const rows = Array.isArray(data?.data) ? data.data : [];
+      setUsers(rows);
+      setCommissionValues((prev) => {
+        const next = { ...prev };
+        rows.forEach((row: any) => {
+          next[row.id] = Number(row.salesCommissionPercent) || 0;
+        });
+        return next;
+      });
       console.log("Users:", res);
     } catch (error) {
       setUsers([]);
@@ -194,6 +205,22 @@ const UserManagement: React.FunctionComponent = () => {
     }
   };
 
+  const handleCommissionChange = (userId: string, value: number) => {
+    setCommissionValues((prev) => ({ ...prev, [userId]: value }));
+  };
+
+  const handleCommissionBlur = async (userId: string) => {
+    const value = Number(commissionValues[userId]) || 0;
+    setCommissionSaving((prev) => ({ ...prev, [userId]: true }));
+    const res = await updateUserCommission(userId, value);
+    if (res?.success) {
+      toast.success(`تم تحديث نسبة الأرباح إلى ${value}%`);
+    } else {
+      toast.error(res?.error || "فشل تحديث نسبة الأرباح");
+    }
+    setCommissionSaving((prev) => ({ ...prev, [userId]: false }));
+  };
+
   const onSubmit = async (data: z.infer<typeof userSchema>) => {
   const loadingToast = toast.loading(editId ? 'جاري تحديث البيانات...' : 'جاري إنشاء الحساب...');
   try {
@@ -249,6 +276,7 @@ const UserManagement: React.FunctionComponent = () => {
           phone: data.phone,
           jobTitle: data.jobTitle,
           accountType: data.accountType,
+          salesCommissionPercent: data.salesCommissionPercent ?? 0,
           permissions: data.permission.id || "", // الربط مع ID الصلاحية
         });
         console.log("data", data);
@@ -302,8 +330,21 @@ const UserManagement: React.FunctionComponent = () => {
           { header: "الاسم", accessor: "username" },
           { header: "البريد الإلكتروني", accessor: "email" },
           { header: "رقم الهاتف", accessor: "phone" },
-          { header: "المسمى الوظيفي", accessor: "jobTitle" },
-          { header: "نوع الحساب", accessor: "accountType" },
+          {
+            header: "نسبة الأرباح على المبيعات (%)",
+            accessor: (row: any) => (
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                value={commissionValues[row.id] ?? 0}
+                onChange={(e) => handleCommissionChange(row.id, Number(e.target.value))}
+                onBlur={() => handleCommissionBlur(row.id)}
+                disabled={commissionSaving[row.id]}
+              />
+            )
+          },
           { header: "مجموعة الصلاحيات", accessor: (row: any) => row.permission?.roleName || "غير محدد" },
           { 
             header: "التاركت", 
@@ -347,6 +388,15 @@ const UserManagement: React.FunctionComponent = () => {
                 <FormInput className='text-gray-800 dark:text-white' label="رقم الهاتف" {...register("phone")} error={errors.phone?.message as string} />
                 <FormInput className='text-gray-800 dark:text-white' label="كلمة المرور" type="password" {...register("password")} placeholder={editId ? "اتركها فارغة لعدم التغيير" : ""} error={errors.password?.message as string} />
                 <FormInput className='text-gray-800 dark:text-white' label="المسمى الوظيفي" {...register("jobTitle")} error={errors.jobTitle?.message as string} />
+                <FormInput
+                  className='text-gray-800 dark:text-white'
+                  label="نسبة عمولة المبيعات (%)"
+                  type="number"
+                  step="0.01"
+                  min={0}
+                  {...register("salesCommissionPercent")}
+                  error={errors.salesCommissionPercent?.message as string}
+                />
 
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold dark:text-slate-300">نوع الحساب</label>

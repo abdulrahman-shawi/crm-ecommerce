@@ -2075,8 +2075,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    salesCommissionPercent: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    salesCommissionPercent: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2087,6 +2097,7 @@ export namespace Prisma {
     jobTitle: string | null
     accountType: $Enums.AccountType | null
     password: string | null
+    salesCommissionPercent: number | null
     createdAt: Date | null
     updatedAt: Date | null
     permissionId: string | null
@@ -2100,6 +2111,7 @@ export namespace Prisma {
     jobTitle: string | null
     accountType: $Enums.AccountType | null
     password: string | null
+    salesCommissionPercent: number | null
     createdAt: Date | null
     updatedAt: Date | null
     permissionId: string | null
@@ -2113,12 +2125,21 @@ export namespace Prisma {
     jobTitle: number
     accountType: number
     password: number
+    salesCommissionPercent: number
     createdAt: number
     updatedAt: number
     permissionId: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    salesCommissionPercent?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    salesCommissionPercent?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -2128,6 +2149,7 @@ export namespace Prisma {
     jobTitle?: true
     accountType?: true
     password?: true
+    salesCommissionPercent?: true
     createdAt?: true
     updatedAt?: true
     permissionId?: true
@@ -2141,6 +2163,7 @@ export namespace Prisma {
     jobTitle?: true
     accountType?: true
     password?: true
+    salesCommissionPercent?: true
     createdAt?: true
     updatedAt?: true
     permissionId?: true
@@ -2154,6 +2177,7 @@ export namespace Prisma {
     jobTitle?: true
     accountType?: true
     password?: true
+    salesCommissionPercent?: true
     createdAt?: true
     updatedAt?: true
     permissionId?: true
@@ -2198,6 +2222,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -2228,6 +2264,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -2240,10 +2278,13 @@ export namespace Prisma {
     jobTitle: string | null
     accountType: $Enums.AccountType
     password: string
+    salesCommissionPercent: number
     createdAt: Date
     updatedAt: Date
     permissionId: string | null
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -2270,6 +2311,7 @@ export namespace Prisma {
     jobTitle?: boolean
     accountType?: boolean
     password?: boolean
+    salesCommissionPercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     permissionId?: boolean
@@ -2289,6 +2331,7 @@ export namespace Prisma {
     jobTitle?: boolean
     accountType?: boolean
     password?: boolean
+    salesCommissionPercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     permissionId?: boolean
@@ -2303,6 +2346,7 @@ export namespace Prisma {
     jobTitle?: boolean
     accountType?: boolean
     password?: boolean
+    salesCommissionPercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     permissionId?: boolean
@@ -2317,12 +2361,13 @@ export namespace Prisma {
     jobTitle?: boolean
     accountType?: boolean
     password?: boolean
+    salesCommissionPercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     permissionId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "jobTitle" | "accountType" | "password" | "createdAt" | "updatedAt" | "permissionId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "jobTitle" | "accountType" | "password" | "salesCommissionPercent" | "createdAt" | "updatedAt" | "permissionId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | User$ordersArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
@@ -2355,6 +2400,7 @@ export namespace Prisma {
       jobTitle: string | null
       accountType: $Enums.AccountType
       password: string
+      salesCommissionPercent: number
       createdAt: Date
       updatedAt: Date
       permissionId: string | null
@@ -2793,6 +2839,7 @@ export namespace Prisma {
     readonly jobTitle: FieldRef<"User", 'String'>
     readonly accountType: FieldRef<"User", 'AccountType'>
     readonly password: FieldRef<"User", 'String'>
+    readonly salesCommissionPercent: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly permissionId: FieldRef<"User", 'String'>
@@ -15336,6 +15383,7 @@ export namespace Prisma {
     jobTitle: 'jobTitle',
     accountType: 'accountType',
     password: 'password',
+    salesCommissionPercent: 'salesCommissionPercent',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     permissionId: 'permissionId'
@@ -15573,6 +15621,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -15590,20 +15652,6 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -15635,6 +15683,7 @@ export namespace Prisma {
     jobTitle?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
+    salesCommissionPercent?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
@@ -15653,6 +15702,7 @@ export namespace Prisma {
     jobTitle?: SortOrderInput | SortOrder
     accountType?: SortOrder
     password?: SortOrder
+    salesCommissionPercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     permissionId?: SortOrderInput | SortOrder
@@ -15674,6 +15724,7 @@ export namespace Prisma {
     jobTitle?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
+    salesCommissionPercent?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
@@ -15692,12 +15743,15 @@ export namespace Prisma {
     jobTitle?: SortOrderInput | SortOrder
     accountType?: SortOrder
     password?: SortOrder
+    salesCommissionPercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     permissionId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -15711,6 +15765,7 @@ export namespace Prisma {
     jobTitle?: StringNullableWithAggregatesFilter<"User"> | string | null
     accountType?: EnumAccountTypeWithAggregatesFilter<"User"> | $Enums.AccountType
     password?: StringWithAggregatesFilter<"User"> | string
+    salesCommissionPercent?: IntWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     permissionId?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -16629,6 +16684,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -16646,6 +16702,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -16663,6 +16720,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -16680,6 +16738,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16697,6 +16756,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -16710,6 +16770,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16722,6 +16783,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17765,6 +17827,17 @@ export namespace Prisma {
     not?: NestedEnumAccountTypeFilter<$PrismaModel> | $Enums.AccountType
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -17834,9 +17907,14 @@ export namespace Prisma {
     jobTitle?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
+    salesCommissionPercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     permissionId?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    salesCommissionPercent?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -17847,6 +17925,7 @@ export namespace Prisma {
     jobTitle?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
+    salesCommissionPercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     permissionId?: SortOrder
@@ -17860,9 +17939,14 @@ export namespace Prisma {
     jobTitle?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
+    salesCommissionPercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     permissionId?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    salesCommissionPercent?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -17909,6 +17993,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAccountTypeFilter<$PrismaModel>
     _max?: NestedEnumAccountTypeFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -18062,17 +18162,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type ProductListRelationFilter = {
     every?: ProductWhereInput
     some?: ProductWhereInput
@@ -18104,22 +18193,6 @@ export namespace Prisma {
 
   export type CategorySumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -18754,6 +18827,14 @@ export namespace Prisma {
     set?: $Enums.AccountType
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -18950,14 +19031,6 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutCategoryInput | ProductUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutCategoryInput | ProductUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryNestedInput = {
@@ -19581,6 +19654,17 @@ export namespace Prisma {
     not?: NestedEnumAccountTypeFilter<$PrismaModel> | $Enums.AccountType
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -19607,17 +19691,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19658,33 +19731,6 @@ export namespace Prisma {
     _max?: NestedEnumAccountTypeFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -19710,6 +19756,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -20273,6 +20346,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -20289,6 +20363,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -20334,6 +20409,7 @@ export namespace Prisma {
     jobTitle?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
+    salesCommissionPercent?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
@@ -20597,6 +20673,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -20613,6 +20690,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -20669,6 +20747,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -20685,6 +20764,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20970,6 +21050,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -20986,6 +21067,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -21124,6 +21206,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -21140,6 +21223,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -21221,6 +21305,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -21237,6 +21322,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21296,6 +21382,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permission?: PermissionCreateNestedOneWithoutUsersInput
@@ -21312,6 +21399,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
@@ -21418,6 +21506,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permission?: PermissionUpdateOneWithoutUsersNestedInput
@@ -21434,6 +21523,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21880,6 +21970,7 @@ export namespace Prisma {
     jobTitle?: string | null
     accountType?: $Enums.AccountType
     password: string
+    salesCommissionPercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21892,6 +21983,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -21908,6 +22000,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -21924,6 +22017,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22200,6 +22294,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -22216,6 +22311,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22232,6 +22328,7 @@ export namespace Prisma {
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null

@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         phone: data.phone || null,
         jobTitle: data.jobTitle,
         accountType: data.accountType,
+        salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)
         permission: {
           connect: { id: data.permissions } 
