@@ -107,8 +107,8 @@ model Product {
 model UserTarget {
   id               String          @id @default(uuid())
   userId           String
-  salesTargetValue Int
-  salesRewardValue Int
+  salesTargetValue Int[]           @default([])
+  salesRewardValue Int[]           @default([])
   isActive         Boolean         @default(true)
   endedAt          DateTime?
   user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -121,8 +121,8 @@ model TargetProduct {
   id          String     @id @default(uuid())
   targetId    String
   productId   Int
-  requiredQty Int
-  rewardValue Int
+  requiredQty Int[]
+  rewardValue Int[]
   target      UserTarget @relation(fields: [targetId], references: [id], onDelete: Cascade)
   product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
 

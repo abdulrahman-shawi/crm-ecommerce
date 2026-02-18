@@ -504,8 +504,8 @@ export async function GetUserTargetProgress(userId: string) {
         return {
           targetId: target.id,
           targetCreatedAt: target.createdAt,
-          salesTargetValue: target.salesTargetValue ?? 0,
-          salesRewardValue: target.salesRewardValue ?? 0,
+          salesTargetValue: target.salesTargetValue ?? [],
+          salesRewardValue: target.salesRewardValue ?? [],
           userId: targetUserId,
           userName: canViewAll ? target.user?.username || "" : currentUser.username || "",
           productId: item.productId,

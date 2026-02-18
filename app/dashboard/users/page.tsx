@@ -24,6 +24,15 @@ const userSchema = z.object({
   permissions: z.string().min(1, "يرجى اختيار صلاحية"),
 });
 
+const parseNumberList = (value: string) =>
+  value
+    .split(',')
+    .map((item) => Number(item.trim()))
+    .filter((item) => Number.isFinite(item));
+
+const formatNumberList = (values?: number[] | null) =>
+  Array.isArray(values) && values.length > 0 ? values.join(', ') : '';
+
 const UserManagement: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -35,8 +44,8 @@ const UserManagement: React.FunctionComponent = () => {
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
   const [targetUser, setTargetUser] = React.useState<any>(null);
   const [editTargetId, setEditTargetId] = React.useState<string | null>(null);
-  const [salesTargetValue, setSalesTargetValue] = React.useState<number>(0);
-  const [salesRewardValue, setSalesRewardValue] = React.useState<number>(0);
+  const [salesTargetValue, setSalesTargetValue] = React.useState<string>('');
+  const [salesRewardValue, setSalesRewardValue] = React.useState<string>('');
   const [targetItems, setTargetItems] = React.useState<Array<{
     productId: string;
     requiredQty: number;
@@ -92,12 +101,12 @@ const UserManagement: React.FunctionComponent = () => {
             rewardValue: item.rewardValue ?? 0,
           }))
         : [{ productId: "", requiredQty: 1, rewardValue: 0 }];
-      setSalesTargetValue(currentTarget.salesTargetValue ?? 0);
-      setSalesRewardValue(currentTarget.salesRewardValue ?? 0);
+      setSalesTargetValue(formatNumberList(currentTarget.salesTargetValue));
+      setSalesRewardValue(formatNumberList(currentTarget.salesRewardValue));
       setTargetItems(items);
     } else {
-      setSalesTargetValue(0);
-      setSalesRewardValue(0);
+      setSalesTargetValue('');
+      setSalesRewardValue('');
       setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
     setIsTargetOpen(true);
@@ -144,10 +153,12 @@ const UserManagement: React.FunctionComponent = () => {
 
     const loadingToast = toast.loading("جاري حفظ التاركت...");
     try {
+      const salesTargetValues = parseNumberList(salesTargetValue);
+      const salesRewardValues = parseNumberList(salesRewardValue);
       const payload = {
         userId: targetUser.id,
-        salesTargetValue,
-        salesRewardValue,
+        salesTargetValue: salesTargetValues,
+        salesRewardValue: salesRewardValues,
         products: targetItems.map((item) => ({
           productId: Number(item.productId),
           requiredQty: item.requiredQty,
@@ -373,21 +384,21 @@ const UserManagement: React.FunctionComponent = () => {
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold dark:text-slate-300">قيمة المبيعات المستهدفة</label>
                   <input
-                    type="number"
-                    min={0}
+                    type="text"
+                    placeholder="مثال: 1000, 2000"
                     className={selectClasses}
                     value={salesTargetValue}
-                    onChange={(e) => setSalesTargetValue(Number(e.target.value))}
+                    onChange={(e) => setSalesTargetValue(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold dark:text-slate-300">مكافأة قيمة المبيعات</label>
                   <input
-                    type="number"
-                    min={0}
+                    type="text"
+                    placeholder="مثال: 100, 200"
                     className={selectClasses}
                     value={salesRewardValue}
-                    onChange={(e) => setSalesRewardValue(Number(e.target.value))}
+                    onChange={(e) => setSalesRewardValue(e.target.value)}
                   />
                 </div>
               </div>

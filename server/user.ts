@@ -142,8 +142,8 @@ type TargetProductInput = {
 
 type UserTargetInput = {
   userId: string;
-  salesTargetValue: number;
-  salesRewardValue: number;
+  salesTargetValue: number[];
+  salesRewardValue: number[];
   products: TargetProductInput[];
 };
 
@@ -162,9 +162,9 @@ export async function createUserTarget(payload: UserTargetInput) {
         isActive: true,
         products: {
           create: payload.products.map((item) => ({
-            productId: item.productId,
-            requiredQty: item.requiredQty,
-            rewardValue: item.rewardValue,
+            product: { connect: { id: item.productId } },
+            requiredQty: [item.requiredQty],
+            rewardValue: [item.rewardValue],
           }))
         }
       }
@@ -186,9 +186,9 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
         products: {
           deleteMany: {},
           create: payload.products.map((item) => ({
-            productId: item.productId,
-            requiredQty: item.requiredQty,
-            rewardValue: item.rewardValue,
+            product: { connect: { id: item.productId } },
+            requiredQty: [item.requiredQty],
+            rewardValue: [item.rewardValue],
           }))
         }
       }

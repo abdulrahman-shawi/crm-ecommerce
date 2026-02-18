@@ -7116,15 +7116,13 @@ export namespace Prisma {
   }
 
   export type UserTargetSumAggregateOutputType = {
-    salesTargetValue: number | null
-    salesRewardValue: number | null
+    salesTargetValue: number[]
+    salesRewardValue: number[]
   }
 
   export type UserTargetMinAggregateOutputType = {
     id: string | null
     userId: string | null
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     isActive: boolean | null
     endedAt: Date | null
     createdAt: Date | null
@@ -7134,8 +7132,6 @@ export namespace Prisma {
   export type UserTargetMaxAggregateOutputType = {
     id: string | null
     userId: string | null
-    salesTargetValue: number | null
-    salesRewardValue: number | null
     isActive: boolean | null
     endedAt: Date | null
     createdAt: Date | null
@@ -7168,8 +7164,6 @@ export namespace Prisma {
   export type UserTargetMinAggregateInputType = {
     id?: true
     userId?: true
-    salesTargetValue?: true
-    salesRewardValue?: true
     isActive?: true
     endedAt?: true
     createdAt?: true
@@ -7179,8 +7173,6 @@ export namespace Prisma {
   export type UserTargetMaxAggregateInputType = {
     id?: true
     userId?: true
-    salesTargetValue?: true
-    salesRewardValue?: true
     isActive?: true
     endedAt?: true
     createdAt?: true
@@ -7288,8 +7280,8 @@ export namespace Prisma {
   export type UserTargetGroupByOutputType = {
     id: string
     userId: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue: number[]
+    salesRewardValue: number[]
     isActive: boolean
     endedAt: Date | null
     createdAt: Date
@@ -7386,8 +7378,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      salesTargetValue: number
-      salesRewardValue: number
+      salesTargetValue: number[]
+      salesRewardValue: number[]
       isActive: boolean
       endedAt: Date | null
       createdAt: Date
@@ -7819,8 +7811,8 @@ export namespace Prisma {
   interface UserTargetFieldRefs {
     readonly id: FieldRef<"UserTarget", 'String'>
     readonly userId: FieldRef<"UserTarget", 'String'>
-    readonly salesTargetValue: FieldRef<"UserTarget", 'Int'>
-    readonly salesRewardValue: FieldRef<"UserTarget", 'Int'>
+    readonly salesTargetValue: FieldRef<"UserTarget", 'Int[]'>
+    readonly salesRewardValue: FieldRef<"UserTarget", 'Int[]'>
     readonly isActive: FieldRef<"UserTarget", 'Boolean'>
     readonly endedAt: FieldRef<"UserTarget", 'DateTime'>
     readonly createdAt: FieldRef<"UserTarget", 'DateTime'>
@@ -8283,24 +8275,20 @@ export namespace Prisma {
 
   export type TargetProductSumAggregateOutputType = {
     productId: number | null
-    requiredQty: number | null
-    rewardValue: number | null
+    requiredQty: number[]
+    rewardValue: number[]
   }
 
   export type TargetProductMinAggregateOutputType = {
     id: string | null
     targetId: string | null
     productId: number | null
-    requiredQty: number | null
-    rewardValue: number | null
   }
 
   export type TargetProductMaxAggregateOutputType = {
     id: string | null
     targetId: string | null
     productId: number | null
-    requiredQty: number | null
-    rewardValue: number | null
   }
 
   export type TargetProductCountAggregateOutputType = {
@@ -8329,16 +8317,12 @@ export namespace Prisma {
     id?: true
     targetId?: true
     productId?: true
-    requiredQty?: true
-    rewardValue?: true
   }
 
   export type TargetProductMaxAggregateInputType = {
     id?: true
     targetId?: true
     productId?: true
-    requiredQty?: true
-    rewardValue?: true
   }
 
   export type TargetProductCountAggregateInputType = {
@@ -8440,8 +8424,8 @@ export namespace Prisma {
     id: string
     targetId: string
     productId: number
-    requiredQty: number
-    rewardValue: number
+    requiredQty: number[]
+    rewardValue: number[]
     _count: TargetProductCountAggregateOutputType | null
     _avg: TargetProductAvgAggregateOutputType | null
     _sum: TargetProductSumAggregateOutputType | null
@@ -8525,8 +8509,8 @@ export namespace Prisma {
       id: string
       targetId: string
       productId: number
-      requiredQty: number
-      rewardValue: number
+      requiredQty: number[]
+      rewardValue: number[]
     }, ExtArgs["result"]["targetProduct"]>
     composites: {}
   }
@@ -8955,8 +8939,8 @@ export namespace Prisma {
     readonly id: FieldRef<"TargetProduct", 'String'>
     readonly targetId: FieldRef<"TargetProduct", 'String'>
     readonly productId: FieldRef<"TargetProduct", 'Int'>
-    readonly requiredQty: FieldRef<"TargetProduct", 'Int'>
-    readonly rewardValue: FieldRef<"TargetProduct", 'Int'>
+    readonly requiredQty: FieldRef<"TargetProduct", 'Int[]'>
+    readonly rewardValue: FieldRef<"TargetProduct", 'Int[]'>
   }
     
 
@@ -16066,8 +16050,8 @@ export namespace Prisma {
     NOT?: UserTargetWhereInput | UserTargetWhereInput[]
     id?: StringFilter<"UserTarget"> | string
     userId?: StringFilter<"UserTarget"> | string
-    salesTargetValue?: IntFilter<"UserTarget"> | number
-    salesRewardValue?: IntFilter<"UserTarget"> | number
+    salesTargetValue?: IntNullableListFilter<"UserTarget">
+    salesRewardValue?: IntNullableListFilter<"UserTarget">
     isActive?: BoolFilter<"UserTarget"> | boolean
     endedAt?: DateTimeNullableFilter<"UserTarget"> | Date | string | null
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
@@ -16095,8 +16079,8 @@ export namespace Prisma {
     OR?: UserTargetWhereInput[]
     NOT?: UserTargetWhereInput | UserTargetWhereInput[]
     userId?: StringFilter<"UserTarget"> | string
-    salesTargetValue?: IntFilter<"UserTarget"> | number
-    salesRewardValue?: IntFilter<"UserTarget"> | number
+    salesTargetValue?: IntNullableListFilter<"UserTarget">
+    salesRewardValue?: IntNullableListFilter<"UserTarget">
     isActive?: BoolFilter<"UserTarget"> | boolean
     endedAt?: DateTimeNullableFilter<"UserTarget"> | Date | string | null
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
@@ -16127,8 +16111,8 @@ export namespace Prisma {
     NOT?: UserTargetScalarWhereWithAggregatesInput | UserTargetScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"UserTarget"> | string
     userId?: StringWithAggregatesFilter<"UserTarget"> | string
-    salesTargetValue?: IntWithAggregatesFilter<"UserTarget"> | number
-    salesRewardValue?: IntWithAggregatesFilter<"UserTarget"> | number
+    salesTargetValue?: IntNullableListFilter<"UserTarget">
+    salesRewardValue?: IntNullableListFilter<"UserTarget">
     isActive?: BoolWithAggregatesFilter<"UserTarget"> | boolean
     endedAt?: DateTimeNullableWithAggregatesFilter<"UserTarget"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"UserTarget"> | Date | string
@@ -16142,8 +16126,8 @@ export namespace Prisma {
     id?: StringFilter<"TargetProduct"> | string
     targetId?: StringFilter<"TargetProduct"> | string
     productId?: IntFilter<"TargetProduct"> | number
-    requiredQty?: IntFilter<"TargetProduct"> | number
-    rewardValue?: IntFilter<"TargetProduct"> | number
+    requiredQty?: IntNullableListFilter<"TargetProduct">
+    rewardValue?: IntNullableListFilter<"TargetProduct">
     target?: XOR<UserTargetScalarRelationFilter, UserTargetWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }
@@ -16166,8 +16150,8 @@ export namespace Prisma {
     NOT?: TargetProductWhereInput | TargetProductWhereInput[]
     targetId?: StringFilter<"TargetProduct"> | string
     productId?: IntFilter<"TargetProduct"> | number
-    requiredQty?: IntFilter<"TargetProduct"> | number
-    rewardValue?: IntFilter<"TargetProduct"> | number
+    requiredQty?: IntNullableListFilter<"TargetProduct">
+    rewardValue?: IntNullableListFilter<"TargetProduct">
     target?: XOR<UserTargetScalarRelationFilter, UserTargetWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }, "id" | "targetId_productId">
@@ -16192,8 +16176,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"TargetProduct"> | string
     targetId?: StringWithAggregatesFilter<"TargetProduct"> | string
     productId?: IntWithAggregatesFilter<"TargetProduct"> | number
-    requiredQty?: IntWithAggregatesFilter<"TargetProduct"> | number
-    rewardValue?: IntWithAggregatesFilter<"TargetProduct"> | number
+    requiredQty?: IntNullableListFilter<"TargetProduct">
+    rewardValue?: IntNullableListFilter<"TargetProduct">
   }
 
   export type ProductImageWhereInput = {
@@ -17136,8 +17120,8 @@ export namespace Prisma {
 
   export type UserTargetCreateInput = {
     id?: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -17149,8 +17133,8 @@ export namespace Prisma {
   export type UserTargetUncheckedCreateInput = {
     id?: string
     userId: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -17160,8 +17144,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17173,8 +17157,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17185,8 +17169,8 @@ export namespace Prisma {
   export type UserTargetCreateManyInput = {
     id?: string
     userId: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -17195,8 +17179,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17206,8 +17190,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17216,8 +17200,8 @@ export namespace Prisma {
 
   export type TargetProductCreateInput = {
     id?: string
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
     target: UserTargetCreateNestedOneWithoutProductsInput
     product: ProductCreateNestedOneWithoutTargetProductsInput
   }
@@ -17226,14 +17210,14 @@ export namespace Prisma {
     id?: string
     targetId: string
     productId: number
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type TargetProductUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
     target?: UserTargetUpdateOneRequiredWithoutProductsNestedInput
     product?: ProductUpdateOneRequiredWithoutTargetProductsNestedInput
   }
@@ -17242,30 +17226,30 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     targetId?: StringFieldUpdateOperationsInput | string
     productId?: IntFieldUpdateOperationsInput | number
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type TargetProductCreateManyInput = {
     id?: string
     targetId: string
     productId: number
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type TargetProductUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type TargetProductUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     targetId?: StringFieldUpdateOperationsInput | string
     productId?: IntFieldUpdateOperationsInput | number
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type ProductImageCreateInput = {
@@ -18301,6 +18285,14 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type IntNullableListFilter<$PrismaModel = never> = {
+    equals?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    has?: number | IntFieldRefInput<$PrismaModel> | null
+    hasEvery?: number[] | ListIntFieldRefInput<$PrismaModel>
+    hasSome?: number[] | ListIntFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -18336,8 +18328,6 @@ export namespace Prisma {
   export type UserTargetMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     isActive?: SortOrder
     endedAt?: SortOrder
     createdAt?: SortOrder
@@ -18347,8 +18337,6 @@ export namespace Prisma {
   export type UserTargetMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    salesTargetValue?: SortOrder
-    salesRewardValue?: SortOrder
     isActive?: SortOrder
     endedAt?: SortOrder
     createdAt?: SortOrder
@@ -18407,16 +18395,12 @@ export namespace Prisma {
     id?: SortOrder
     targetId?: SortOrder
     productId?: SortOrder
-    requiredQty?: SortOrder
-    rewardValue?: SortOrder
   }
 
   export type TargetProductMinOrderByAggregateInput = {
     id?: SortOrder
     targetId?: SortOrder
     productId?: SortOrder
-    requiredQty?: SortOrder
-    rewardValue?: SortOrder
   }
 
   export type TargetProductSumOrderByAggregateInput = {
@@ -19156,6 +19140,14 @@ export namespace Prisma {
     deleteMany?: TargetProductScalarWhereInput | TargetProductScalarWhereInput[]
   }
 
+  export type UserTargetCreatesalesTargetValueInput = {
+    set: number[]
+  }
+
+  export type UserTargetCreatesalesRewardValueInput = {
+    set: number[]
+  }
+
   export type UserCreateNestedOneWithoutTargetsInput = {
     create?: XOR<UserCreateWithoutTargetsInput, UserUncheckedCreateWithoutTargetsInput>
     connectOrCreate?: UserCreateOrConnectWithoutTargetsInput
@@ -19174,6 +19166,16 @@ export namespace Prisma {
     connectOrCreate?: TargetProductCreateOrConnectWithoutTargetInput | TargetProductCreateOrConnectWithoutTargetInput[]
     createMany?: TargetProductCreateManyTargetInputEnvelope
     connect?: TargetProductWhereUniqueInput | TargetProductWhereUniqueInput[]
+  }
+
+  export type UserTargetUpdatesalesTargetValueInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type UserTargetUpdatesalesRewardValueInput = {
+    set?: number[]
+    push?: number | number[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -19216,6 +19218,14 @@ export namespace Prisma {
     deleteMany?: TargetProductScalarWhereInput | TargetProductScalarWhereInput[]
   }
 
+  export type TargetProductCreaterequiredQtyInput = {
+    set: number[]
+  }
+
+  export type TargetProductCreaterewardValueInput = {
+    set: number[]
+  }
+
   export type UserTargetCreateNestedOneWithoutProductsInput = {
     create?: XOR<UserTargetCreateWithoutProductsInput, UserTargetUncheckedCreateWithoutProductsInput>
     connectOrCreate?: UserTargetCreateOrConnectWithoutProductsInput
@@ -19226,6 +19236,16 @@ export namespace Prisma {
     create?: XOR<ProductCreateWithoutTargetProductsInput, ProductUncheckedCreateWithoutTargetProductsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutTargetProductsInput
     connect?: ProductWhereUniqueInput
+  }
+
+  export type TargetProductUpdaterequiredQtyInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type TargetProductUpdaterewardValueInput = {
+    set?: number[]
+    push?: number | number[]
   }
 
   export type UserTargetUpdateOneRequiredWithoutProductsNestedInput = {
@@ -19989,8 +20009,8 @@ export namespace Prisma {
 
   export type UserTargetCreateWithoutUserInput = {
     id?: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -20000,8 +20020,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedCreateWithoutUserInput = {
     id?: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -20237,8 +20257,8 @@ export namespace Prisma {
     NOT?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
     id?: StringFilter<"UserTarget"> | string
     userId?: StringFilter<"UserTarget"> | string
-    salesTargetValue?: IntFilter<"UserTarget"> | number
-    salesRewardValue?: IntFilter<"UserTarget"> | number
+    salesTargetValue?: IntNullableListFilter<"UserTarget">
+    salesRewardValue?: IntNullableListFilter<"UserTarget">
     isActive?: BoolFilter<"UserTarget"> | boolean
     endedAt?: DateTimeNullableFilter<"UserTarget"> | Date | string | null
     createdAt?: DateTimeFilter<"UserTarget"> | Date | string
@@ -20446,16 +20466,16 @@ export namespace Prisma {
 
   export type TargetProductCreateWithoutProductInput = {
     id?: string
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
     target: UserTargetCreateNestedOneWithoutProductsInput
   }
 
   export type TargetProductUncheckedCreateWithoutProductInput = {
     id?: string
     targetId: string
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type TargetProductCreateOrConnectWithoutProductInput = {
@@ -20565,8 +20585,8 @@ export namespace Prisma {
     id?: StringFilter<"TargetProduct"> | string
     targetId?: StringFilter<"TargetProduct"> | string
     productId?: IntFilter<"TargetProduct"> | number
-    requiredQty?: IntFilter<"TargetProduct"> | number
-    rewardValue?: IntFilter<"TargetProduct"> | number
+    requiredQty?: IntNullableListFilter<"TargetProduct">
+    rewardValue?: IntNullableListFilter<"TargetProduct">
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -20608,16 +20628,16 @@ export namespace Prisma {
 
   export type TargetProductCreateWithoutTargetInput = {
     id?: string
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
     product: ProductCreateNestedOneWithoutTargetProductsInput
   }
 
   export type TargetProductUncheckedCreateWithoutTargetInput = {
     id?: string
     productId: number
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type TargetProductCreateOrConnectWithoutTargetInput = {
@@ -20691,8 +20711,8 @@ export namespace Prisma {
 
   export type UserTargetCreateWithoutProductsInput = {
     id?: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -20703,8 +20723,8 @@ export namespace Prisma {
   export type UserTargetUncheckedCreateWithoutProductsInput = {
     id?: string
     userId: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -20759,8 +20779,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20771,8 +20791,8 @@ export namespace Prisma {
   export type UserTargetUncheckedUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21657,8 +21677,8 @@ export namespace Prisma {
 
   export type UserTargetCreateManyUserInput = {
     id?: string
-    salesTargetValue: number
-    salesRewardValue: number
+    salesTargetValue?: UserTargetCreatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetCreatesalesRewardValueInput | number[]
     isActive?: boolean
     endedAt?: Date | string | null
     createdAt?: Date | string
@@ -21822,8 +21842,8 @@ export namespace Prisma {
 
   export type UserTargetUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21833,8 +21853,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21844,8 +21864,8 @@ export namespace Prisma {
 
   export type UserTargetUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    salesTargetValue?: IntFieldUpdateOperationsInput | number
-    salesRewardValue?: IntFieldUpdateOperationsInput | number
+    salesTargetValue?: UserTargetUpdatesalesTargetValueInput | number[]
+    salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21970,8 +21990,8 @@ export namespace Prisma {
   export type TargetProductCreateManyProductInput = {
     id?: string
     targetId: string
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -22016,51 +22036,51 @@ export namespace Prisma {
 
   export type TargetProductUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
     target?: UserTargetUpdateOneRequiredWithoutProductsNestedInput
   }
 
   export type TargetProductUncheckedUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     targetId?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type TargetProductUncheckedUpdateManyWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     targetId?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type TargetProductCreateManyTargetInput = {
     id?: string
     productId: number
-    requiredQty: number
-    rewardValue: number
+    requiredQty?: TargetProductCreaterequiredQtyInput | number[]
+    rewardValue?: TargetProductCreaterewardValueInput | number[]
   }
 
   export type TargetProductUpdateWithoutTargetInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
     product?: ProductUpdateOneRequiredWithoutTargetProductsNestedInput
   }
 
   export type TargetProductUncheckedUpdateWithoutTargetInput = {
     id?: StringFieldUpdateOperationsInput | string
     productId?: IntFieldUpdateOperationsInput | number
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type TargetProductUncheckedUpdateManyWithoutTargetInput = {
     id?: StringFieldUpdateOperationsInput | string
     productId?: IntFieldUpdateOperationsInput | number
-    requiredQty?: IntFieldUpdateOperationsInput | number
-    rewardValue?: IntFieldUpdateOperationsInput | number
+    requiredQty?: TargetProductUpdaterequiredQtyInput | number[]
+    rewardValue?: TargetProductUpdaterewardValueInput | number[]
   }
 
   export type OrderCreateManyCustomerInput = {
