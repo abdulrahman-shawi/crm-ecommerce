@@ -9,11 +9,16 @@ export async function GET(req :NextRequest) {
         targets: {
           include: {
             products: {
-              include: { product: true }
-            }
-          }
-        }
-        },
+              select: {
+                id: true,
+                targetId: true,
+                productId: true,
+                product: true,
+              },
+            },
+          },
+        }, // جلب بيانات الأهداف المرتبطة بالمستخدم
+      },
     });
     return new Response(JSON.stringify({ success: true, data: users }), { status: 200 });
   } catch (error) {
