@@ -406,19 +406,7 @@ const UserManagement: React.FunctionComponent = () => {
             )
           },
           { header: "مجموعة الصلاحيات", accessor: (row: any) => row.permission?.roleName || "غير محدد" },
-          { 
-            header: "التاركت", 
-            accessor: (row: any) => (
-              <div className="flex items-center gap-2">
-                <button
-                  className="px-2 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200"
-                  onClick={() => openTargetModal("assign", row)}
-                >
-                  تعيين المنتج
-                </button>
-              </div>
-            )
-          },
+
         ]
       } />
 
