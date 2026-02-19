@@ -2,6 +2,8 @@
 "use server"
 import { prisma } from "@/lib/prisma";
 import { hasPermission, isAdmin } from "@/lib/utils";
+import { cookies } from "next/headers";
+import { decrypt } from "@/lib/auth";
 
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string) {
@@ -433,38 +435,32 @@ export async function GetTopSellingUsersByPermission(userId: string) {
 
 export async function GetUserTargetProgress(userId: string) {
   try {
+    const session = cookies().get("skynova")?.value;
+    const decoded = session ? await decrypt(session) : null;
+    const scopedUserId = decoded?.userId || userId;
+
     const currentUser = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: scopedUserId },
       include: { permission: true }
     });
 
     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
-    const canViewAll = isAdmin(currentUser);
-    const targets = canViewAll
-      ? await prisma.userTarget.findMany({
-          include: {
-            user: { select: { id: true, username: true } },
-            products: {
-              include: { product: { select: { id: true, name: true } } }
-            }
-          }
-        })
-      : await prisma.userTarget.findMany({
-          where: { userId },
-          include: {
-            products: {
-              include: { product: { select: { id: true, name: true } } }
-            }
-          }
-        });
+    const targets = await prisma.userTarget.findMany({
+      where: { userId: scopedUserId },
+      include: {
+        products: {
+          include: { product: { select: { id: true, name: true } } }
+        }
+      }
+    });
 
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
     const orderItems = await prisma.orderItem.findMany({
       where: {
         order: {
-          ...(canViewAll ? {} : { userId }),
+          userId: scopedUserId,
           status: { in: statusWhitelist }
         }
       },
@@ -478,16 +474,7 @@ export async function GetUserTargetProgress(userId: string) {
     });
 
     const commissionByUser = new Map<string, number>();
-    if (canViewAll) {
-      const users = await prisma.user.findMany({
-        select: { id: true, salesCommissionPercent: true }
-      });
-      for (const user of users) {
-        commissionByUser.set(user.id, Number(user.salesCommissionPercent || 0));
-      }
-    } else {
-      commissionByUser.set(currentUser.id, Number(currentUser.salesCommissionPercent || 0));
-    }
+    commissionByUser.set(currentUser.id, Number(currentUser.salesCommissionPercent || 0));
 
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     const totalSoldByUser = new Map<string, number>();
@@ -507,7 +494,7 @@ export async function GetUserTargetProgress(userId: string) {
 
     const data = targets.flatMap((target: any) =>
       target.products.map((item: any) => {
-        const targetUserId = canViewAll ? target.user?.id : currentUser.id;
+        const targetUserId = currentUser.id;
         const key = `${targetUserId}:${item.productId}`;
         const windowStart = target.createdAt;
         const windowEnd = target.endedAt || new Date();
@@ -527,7 +514,7 @@ export async function GetUserTargetProgress(userId: string) {
           salesTargetValue: target.salesTargetValue ?? [],
           salesRewardValue: target.salesRewardValue ?? [],
           userId: targetUserId,
-          userName: canViewAll ? target.user?.username || "" : currentUser.username || "",
+          userName: currentUser.username || "",
           productId: item.productId,
           productName: item.product?.name || "",
           requiredQty,
