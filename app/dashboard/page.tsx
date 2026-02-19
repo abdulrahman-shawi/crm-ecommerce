@@ -293,7 +293,7 @@ const DashboardPage: React.FunctionComponent = () => {
                           <td className="py-3 px-3">{row.targetValue}</td>
                           <td className="py-3 px-3">{row.soldAmount.toFixed(2)}</td>
                           <td className="py-3 px-3">{remaining.toFixed(2)}</td>
-                          <td className={`py-3 px-3 font-bold bg-emerald-50/60 dark:bg-emerald-900/20 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{row.rewardValue}</td>
+                          <td className={`py-3 px-3 font-bold bg-emerald-500 dark:bg-emerald-900 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{row.rewardValue}</td>
                           <td className="py-3 px-3">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-bold ${reached
@@ -345,7 +345,7 @@ const DashboardPage: React.FunctionComponent = () => {
                     
                     <td className="py-3 px-3">{item.soldQty}</td>
                     <td className="py-3 px-3">{item.remaining}</td>
-                    <td className={`py-3 px-3 font-bold bg-emerald-50/60 dark:bg-emerald-900/20 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{item.rewardValue ?? 0}</td>
+                    <td className={`py-3 px-3 font-bold bg-emerald-500 dark:bg-emerald-900 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{item.rewardValue ?? 0}</td>
                     <td className="py-3 px-3">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-bold ${item.reached
