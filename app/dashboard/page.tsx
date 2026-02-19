@@ -18,6 +18,7 @@ const DashboardPage: React.FunctionComponent = () => {
       userId?: string;
       userName?: string;
       targetCreatedAt?: string | Date;
+      targetEndedAt?: string | Date | null;
       salesTargetValue?: number[];
       salesRewardValue?: number[];
       productId: number;
@@ -43,6 +44,8 @@ const DashboardPage: React.FunctionComponent = () => {
     salesTargetValues: number[];
     salesRewardValues: number[];
     products: Record<number, { requiredQty: number; rewardValue: number }>;
+    startDate: string;
+    endDate: string;
     saving?: boolean;
   }>>({});
   const [products, setProducts] = React.useState<any[]>([]);
@@ -51,6 +54,8 @@ const DashboardPage: React.FunctionComponent = () => {
   const [newTargetUserId, setNewTargetUserId] = React.useState("");
   const [newSalesTargetInput, setNewSalesTargetInput] = React.useState("");
   const [newSalesRewardInput, setNewSalesRewardInput] = React.useState("");
+  const [newTargetStartDate, setNewTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [newTargetEndDate, setNewTargetEndDate] = React.useState("");
   const [newProducts, setNewProducts] = React.useState<Array<{ productId: string; requiredQty: number; rewardValue: number }>>([
     { productId: "", requiredQty: 1, rewardValue: 0 },
   ]);
@@ -130,6 +135,8 @@ const DashboardPage: React.FunctionComponent = () => {
       salesTargetValues: number[];
       salesRewardValues: number[];
       products: Record<number, { requiredQty: number; rewardValue: number }>;
+      startDate: string;
+      endDate: string;
       saving?: boolean;
     }> = {};
 
@@ -140,6 +147,8 @@ const DashboardPage: React.FunctionComponent = () => {
           salesTargetValues: Array.isArray(item.salesTargetValue) ? item.salesTargetValue : [],
           salesRewardValues: Array.isArray(item.salesRewardValue) ? item.salesRewardValue : [],
           products: {},
+          startDate: item.targetCreatedAt ? new Date(item.targetCreatedAt).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+          endDate: item.targetEndedAt ? new Date(item.targetEndedAt).toISOString().slice(0, 10) : "",
         };
       }
       if (!next[targetId].salesTargetValues.length && Array.isArray(item.salesTargetValue)) {
@@ -162,7 +171,7 @@ const DashboardPage: React.FunctionComponent = () => {
   const updateSalesValue = (targetId: string, index: number, field: "target" | "reward", value: string) => {
     const numeric = Number(value) || 0;
     setEditTargets((prev) => {
-      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {} };
+      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {}, startDate: new Date().toISOString().slice(0, 10), endDate: "" };
       const targets = [...current.salesTargetValues];
       const rewards = [...current.salesRewardValues];
       if (field === "target") {
@@ -180,13 +189,23 @@ const DashboardPage: React.FunctionComponent = () => {
   const updateProductValue = (targetId: string, productId: number, field: "requiredQty" | "rewardValue", value: string) => {
     const numeric = Number(value) || 0;
     setEditTargets((prev) => {
-      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {} };
+      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {}, startDate: new Date().toISOString().slice(0, 10), endDate: "" };
       const products = { ...current.products };
       const existing = products[productId] || { requiredQty: 0, rewardValue: 0 };
       products[productId] = { ...existing, [field]: numeric };
       return {
         ...prev,
         [targetId]: { ...current, products },
+      };
+    });
+  };
+
+  const updateTargetDate = (targetId: string, field: "startDate" | "endDate", value: string) => {
+    setEditTargets((prev) => {
+      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {}, startDate: new Date().toISOString().slice(0, 10), endDate: "" };
+      return {
+        ...prev,
+        [targetId]: { ...current, [field]: value },
       };
     });
   };
@@ -206,6 +225,8 @@ const DashboardPage: React.FunctionComponent = () => {
     const payload = {
       salesTargetValue: current.salesTargetValues,
       salesRewardValue: current.salesRewardValues,
+      startDate: current.startDate,
+      endDate: current.endDate,
       products: Object.entries(current.products).map(([productId, values]) => ({
         productId: Number(productId),
         requiredQty: values.requiredQty,
@@ -291,6 +312,8 @@ const DashboardPage: React.FunctionComponent = () => {
       userId: targetUserId,
       salesTargetValue,
       salesRewardValue,
+      startDate: newTargetStartDate,
+      endDate: newTargetEndDate,
       products: selectedProducts.map((item) => ({
         productId: Number(item.productId),
         requiredQty: Number(item.requiredQty) || 0,
@@ -302,6 +325,8 @@ const DashboardPage: React.FunctionComponent = () => {
       toast.success("تم إنشاء التاركت");
       setNewSalesTargetInput("");
       setNewSalesRewardInput("");
+      setNewTargetStartDate(new Date().toISOString().slice(0, 10));
+      setNewTargetEndDate("");
       setNewProducts([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
       const refreshed = await GetUserTargetProgress(user.id, selectedMonth);
       setTargetProgress(refreshed as any);
@@ -342,9 +367,12 @@ const DashboardPage: React.FunctionComponent = () => {
     });
 
     return Array.from(map.values()).flatMap((row) => {
-      const rewards = row.salesRewardValue.length ? row.salesRewardValue : [0];
-      const targets = row.salesTargetValue.length ? row.salesTargetValue : [0];
-      const rowCount = Math.max(rewards.length, targets.length);
+      const targets = (row.salesTargetValue || []).filter((value) => Number(value) > 0);
+      if (targets.length === 0) {
+        return [];
+      }
+      const rewards = row.salesRewardValue.length ? row.salesRewardValue : [];
+      const rowCount = targets.length;
       return Array.from({ length: rowCount }).map((_, index) => ({
         ...row,
         rewardValue: rewards[index] ?? 0,
@@ -480,7 +508,33 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
 
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">تاريخ بدء التاركت</label>
+                  <input
+                    type="date"
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={newTargetStartDate}
+                    onChange={(e) => setNewTargetStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">تاريخ نهاية التاركت</label>
+                  <input
+                    type="date"
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={newTargetEndDate}
+                    onChange={(e) => setNewTargetEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">منتجات التاركت (اختياري)</div>
+              <div className="hidden sm:grid sm:grid-cols-4 gap-2 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                <div className="sm:col-span-2">المنتج</div>
+                <div>الكمية المطلوبة</div>
+                <div>مكافأة المنتج</div>
+              </div>
               {newProducts.map((row, index) => (
                 <div key={`${row.productId}-${index}`} className="grid gap-2 sm:grid-cols-4">
                   <select

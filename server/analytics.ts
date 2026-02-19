@@ -561,6 +561,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         return {
           targetId: target.id,
           targetCreatedAt: target.createdAt,
+          targetEndedAt: target.endedAt,
           salesTargetValue: target.salesTargetValue ?? [],
           salesRewardValue: target.salesRewardValue ?? [],
           userId: targetUserId,

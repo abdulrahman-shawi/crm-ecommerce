@@ -177,6 +177,8 @@ type UserTargetInput = {
   salesTargetValue: number[];
   salesRewardValue: number[];
   products: TargetProductInput[];
+  startDate?: string;
+  endDate?: string;
 };
 
 const toNumber = (value: unknown): number | null => {
@@ -219,11 +221,15 @@ const toNumberArray = (value: unknown): number[] => {
 
 export async function createUserTarget(payload: UserTargetInput) {
   try {
+    const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
+    const endDate = payload.endDate ? new Date(payload.endDate) : null;
     const target = await prisma.userTarget.create({
       data: {
         userId: payload.userId,
         salesTargetValue: toNumberArray(payload.salesTargetValue),
         salesRewardValue: toNumberArray(payload.salesRewardValue),
+        ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
+        ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
         isActive: true,
         products: {
           create: payload.products.map((item) => {
@@ -249,11 +255,17 @@ export async function createUserTarget(payload: UserTargetInput) {
 
 export async function updateUserTarget(targetId: string, payload: Omit<UserTargetInput, "userId">) {
   try {
+    const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
+    const endDate = payload.endDate === "" ? null : payload.endDate ? new Date(payload.endDate) : undefined;
     const target = await prisma.userTarget.update({
       where: { id: targetId },
       data: {
         salesTargetValue: toNumberArray(payload.salesTargetValue),
         salesRewardValue: toNumberArray(payload.salesRewardValue),
+        ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
+        ...(endDate !== undefined
+          ? (endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : { endedAt: null })
+          : {}),
         products: {
           deleteMany: {},
           create: payload.products.map((item) => {
