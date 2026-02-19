@@ -276,3 +276,55 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
     return { success: false, error: "فشل في تحديث التاركت" };
   }
 }
+
+export async function deleteSalesTargetRow(targetId: string, rowIndex: number) {
+  try {
+    const target = await prisma.userTarget.findUnique({
+      where: { id: targetId },
+      select: { salesTargetValue: true, salesRewardValue: true }
+    });
+
+    if (!target) {
+      return { success: false, error: "التاركت غير موجود" };
+    }
+
+    const targetValues = Array.isArray(target.salesTargetValue) ? [...target.salesTargetValue] : [];
+    const rewardValues = Array.isArray(target.salesRewardValue) ? [...target.salesRewardValue] : [];
+
+    if (rowIndex < 0 || rowIndex >= Math.max(targetValues.length, rewardValues.length)) {
+      return { success: false, error: "الصف المطلوب غير صالح" };
+    }
+
+    if (rowIndex < targetValues.length) targetValues.splice(rowIndex, 1);
+    if (rowIndex < rewardValues.length) rewardValues.splice(rowIndex, 1);
+
+    const updated = await prisma.userTarget.update({
+      where: { id: targetId },
+      data: {
+        salesTargetValue: targetValues,
+        salesRewardValue: rewardValues,
+      }
+    });
+
+    return { success: true, data: updated };
+  } catch (error) {
+    console.error("Delete Sales Target Row Error:", error);
+    return { success: false, error: "فشل حذف صف تاركت المبيعات" };
+  }
+}
+
+export async function deleteProductTargetRow(targetId: string, productId: number) {
+  try {
+    await prisma.targetProduct.deleteMany({
+      where: {
+        targetId,
+        productId,
+      }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Product Target Row Error:", error);
+    return { success: false, error: "فشل حذف صف تاركت المنتج" };
+  }
+}

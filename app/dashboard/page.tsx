@@ -3,11 +3,13 @@
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { GetUserTargetProgress } from '@/server/analytics';
-import { updateUserTarget } from '@/server/user';
+import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, updateUserTarget } from '@/server/user';
+import { getProduct } from '@/server/product';
 import toast from 'react-hot-toast';
 
 const DashboardPage: React.FunctionComponent = () => {
   const { user } = useAuth();
+  const canManageTargets = user?.accountType === "ADMIN";
   const [loading, setLoading] = React.useState(false);
   const [targetProgress, setTargetProgress] = React.useState<{
     success: boolean;
@@ -43,6 +45,16 @@ const DashboardPage: React.FunctionComponent = () => {
     products: Record<number, { requiredQty: number; rewardValue: number }>;
     saving?: boolean;
   }>>({});
+  const [products, setProducts] = React.useState<any[]>([]);
+  const [usersList, setUsersList] = React.useState<any[]>([]);
+  const [showCreateTarget, setShowCreateTarget] = React.useState(false);
+  const [newTargetUserId, setNewTargetUserId] = React.useState("");
+  const [newSalesTargetInput, setNewSalesTargetInput] = React.useState("");
+  const [newSalesRewardInput, setNewSalesRewardInput] = React.useState("");
+  const [newProducts, setNewProducts] = React.useState<Array<{ productId: string; requiredQty: number; rewardValue: number }>>([
+    { productId: "", requiredQty: 1, rewardValue: 0 },
+  ]);
+  const [creatingTarget, setCreatingTarget] = React.useState(false);
 
   const sumNumbers = (values?: number[] | null) =>
     Array.isArray(values) ? values.reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
@@ -58,6 +70,12 @@ const DashboardPage: React.FunctionComponent = () => {
     if (Number.isNaN(date.getTime())) return "unknown";
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
   };
+
+  const parseNumberList = (value: string) =>
+    value
+      .split(',')
+      .map((item) => Number(item.trim()))
+      .filter((item) => Number.isFinite(item));
 
   const monthLabel = (value?: string | Date) => {
     if (!value) return "غير محدد";
@@ -174,6 +192,10 @@ const DashboardPage: React.FunctionComponent = () => {
   };
 
   const saveTarget = async (targetId: string) => {
+    if (!canManageTargets) {
+      toast.error("غير مسموح بالتعديل");
+      return;
+    }
     const current = editTargets[targetId];
     if (!current) return;
     setEditTargets((prev) => ({
@@ -204,6 +226,89 @@ const DashboardPage: React.FunctionComponent = () => {
       ...prev,
       [targetId]: { ...current, saving: false },
     }));
+  };
+
+  const handleDeleteSalesRow = async (targetId: string, rowIndex: number) => {
+    if (!canManageTargets) return;
+    const confirmed = window.confirm("هل تريد حذف هذا الصف من تاركت المبيعات؟");
+    if (!confirmed) return;
+
+    const res = await deleteSalesTargetRow(targetId, rowIndex);
+    if (res?.success) {
+      toast.success("تم حذف الصف");
+      const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
+      setTargetProgress(refreshed as any);
+    } else {
+      toast.error(res?.error || "فشل حذف الصف");
+    }
+  };
+
+  const handleDeleteProductRow = async (targetId: string, productId: number) => {
+    if (!canManageTargets) return;
+    const confirmed = window.confirm("هل تريد حذف هذا الصف من تاركت المنتجات؟");
+    if (!confirmed) return;
+
+    const res = await deleteProductTargetRow(targetId, productId);
+    if (res?.success) {
+      toast.success("تم حذف الصف");
+      const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
+      setTargetProgress(refreshed as any);
+    } else {
+      toast.error(res?.error || "فشل حذف الصف");
+    }
+  };
+
+  const addNewProductRow = () => {
+    setNewProducts((prev) => [...prev, { productId: "", requiredQty: 1, rewardValue: 0 }]);
+  };
+
+  const removeNewProductRow = (index: number) => {
+    setNewProducts((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateNewProductRow = (index: number, patch: Partial<{ productId: string; requiredQty: number; rewardValue: number }>) => {
+    setNewProducts((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  };
+
+  const handleCreateTarget = async () => {
+    if (!canManageTargets) {
+      toast.error("غير مسموح بإضافة التاركت");
+      return;
+    }
+    if (!user?.id) return;
+    const targetUserId = user.accountType === "ADMIN" ? (newTargetUserId || user.id) : user.id;
+    const salesTargetValue = parseNumberList(newSalesTargetInput);
+    const salesRewardValue = parseNumberList(newSalesRewardInput);
+    const selectedProducts = newProducts.filter((item) => Boolean(item.productId));
+
+    if (salesTargetValue.length === 0 && selectedProducts.length === 0) {
+      toast.error("أدخل تاركت المبيعات أو منتجات التاركت على الأقل");
+      return;
+    }
+
+    setCreatingTarget(true);
+    const res = await createUserTarget({
+      userId: targetUserId,
+      salesTargetValue,
+      salesRewardValue,
+      products: selectedProducts.map((item) => ({
+        productId: Number(item.productId),
+        requiredQty: Number(item.requiredQty) || 0,
+        rewardValue: Number(item.rewardValue) || 0,
+      })),
+    });
+
+    if (res?.success) {
+      toast.success("تم إنشاء التاركت");
+      setNewSalesTargetInput("");
+      setNewSalesRewardInput("");
+      setNewProducts([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
+      const refreshed = await GetUserTargetProgress(user.id, selectedMonth);
+      setTargetProgress(refreshed as any);
+    } else {
+      toast.error(res?.error || "فشل إنشاء التاركت");
+    }
+    setCreatingTarget(false);
   };
 
   const valueTargets = React.useMemo(() => {
@@ -291,6 +396,24 @@ const DashboardPage: React.FunctionComponent = () => {
     fetchTargetProgress();
   }, [user?.id, selectedMonth]);
 
+  React.useEffect(() => {
+    getProduct().then(setProducts).catch(() => setProducts([]));
+  }, []);
+
+  React.useEffect(() => {
+    if (!user || user.accountType !== "ADMIN") return;
+    fetch("/api/users")
+      .then((res) => res.json())
+      .then((payload) => {
+        const rows = Array.isArray(payload?.data) ? payload.data : [];
+        setUsersList(rows);
+        if (!newTargetUserId && user?.id) {
+          setNewTargetUserId(user.id);
+        }
+      })
+      .catch(() => setUsersList([]));
+  }, [user?.id, user?.accountType]);
+
   return (
     <div className="p-6">
       <div className="mb-6">
@@ -303,6 +426,121 @@ const DashboardPage: React.FunctionComponent = () => {
           <h2 className="text-lg font-bold text-slate-800 dark:text-white">تقدم التاركت</h2>
           {loading && <span className="text-xs text-slate-500">جاري التحميل...</span>}
         </div>
+
+        {canManageTargets && (
+        <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-200">إضافة تاركت من الداشبورد</div>
+            <button
+              className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700"
+              onClick={() => setShowCreateTarget((prev) => !prev)}
+            >
+              {showCreateTarget ? "إخفاء" : "إضافة تاركت"}
+            </button>
+          </div>
+
+          {showCreateTarget && (
+            <div className="grid gap-3">
+              {user?.accountType === "ADMIN" && (
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">الموظف</label>
+                  <select
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={newTargetUserId}
+                    onChange={(e) => setNewTargetUserId(e.target.value)}
+                  >
+                    <option value="">اختر الموظف</option>
+                    {usersList.map((row: any) => (
+                      <option key={row.id} value={row.id}>{row.username}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">تاركت المبيعات</label>
+                  <input
+                    type="text"
+                    placeholder="مثال: 100, 300"
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={newSalesTargetInput}
+                    onChange={(e) => setNewSalesTargetInput(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">مكافأة المبيعات</label>
+                  <input
+                    type="text"
+                    placeholder="مثال: 10, 20"
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={newSalesRewardInput}
+                    onChange={(e) => setNewSalesRewardInput(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">منتجات التاركت (اختياري)</div>
+              {newProducts.map((row, index) => (
+                <div key={`${row.productId}-${index}`} className="grid gap-2 sm:grid-cols-4">
+                  <select
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900 sm:col-span-2"
+                    value={row.productId}
+                    onChange={(e) => updateNewProductRow(index, { productId: e.target.value })}
+                  >
+                    <option value="">اختر المنتج...</option>
+                    {products.map((product: any) => (
+                      <option key={product.id} value={product.id}>{product.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    min={0}
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    value={row.requiredQty}
+                    onChange={(e) => updateNewProductRow(index, { requiredQty: Number(e.target.value) || 0 })}
+                    placeholder="الكمية"
+                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={0}
+                      className="w-full rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                      value={row.rewardValue}
+                      onChange={(e) => updateNewProductRow(index, { rewardValue: Number(e.target.value) || 0 })}
+                      placeholder="المكافأة"
+                    />
+                    {newProducts.length > 1 && (
+                      <button
+                        className="rounded-md bg-rose-600 px-2 py-1 text-xs font-bold text-white hover:bg-rose-700"
+                        onClick={() => removeNewProductRow(index)}
+                      >
+                        حذف
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex items-center justify-between">
+                <button
+                  className="rounded-md bg-emerald-600 px-3 py-1 text-xs font-bold text-white hover:bg-emerald-700"
+                  onClick={addNewProductRow}
+                >
+                  إضافة منتج
+                </button>
+                <button
+                  className="rounded-md bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+                  onClick={handleCreateTarget}
+                  disabled={creatingTarget}
+                >
+                  حفظ التاركت
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        )}
 
         {!loading && (!targetProgress.success || filteredTargets.length === 0) && (
           <div className="text-sm text-slate-500">لا يوجد تاركت مضاف لهذا المستخدم.</div>
@@ -383,7 +621,8 @@ const DashboardPage: React.FunctionComponent = () => {
                       <th className="py-3 px-3">المتبقي</th>
                       <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
                       <th className="py-3 px-3">الحالة</th>
-                      <th className="py-3 px-3">حفظ</th>
+                      {canManageTargets && <th className="py-3 px-3">حفظ</th>}
+                      {canManageTargets && <th className="py-3 px-3">حذف</th>}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -405,24 +644,32 @@ const DashboardPage: React.FunctionComponent = () => {
                             </td>
                           )}
                           <td className="py-3 px-3">
-                            <input
-                              type="number"
-                              min={0}
-                              className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                              value={editTargets[row.targetId]?.salesTargetValues?.[row.rewardIndex] ?? row.targetValue}
-                              onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "target", e.target.value)}
-                            />
+                            {canManageTargets ? (
+                              <input
+                                type="number"
+                                min={0}
+                                className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                                value={editTargets[row.targetId]?.salesTargetValues?.[row.rewardIndex] ?? row.targetValue}
+                                onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "target", e.target.value)}
+                              />
+                            ) : (
+                              <span>{row.targetValue}</span>
+                            )}
                           </td>
                           <td className="py-3 px-3">{row.soldAmount.toFixed(2)}</td>
                           <td className="py-3 px-3">{remaining.toFixed(2)}</td>
                           <td className="py-3 px-3">
-                            <input
-                              type="number"
-                              min={0}
-                              className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
-                              value={editTargets[row.targetId]?.salesRewardValues?.[row.rewardIndex] ?? row.rewardValue}
-                              onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "reward", e.target.value)}
-                            />
+                            {canManageTargets ? (
+                              <input
+                                type="number"
+                                min={0}
+                                className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+                                value={editTargets[row.targetId]?.salesRewardValues?.[row.rewardIndex] ?? row.rewardValue}
+                                onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "reward", e.target.value)}
+                              />
+                            ) : (
+                              <span>{row.rewardValue}</span>
+                            )}
                           </td>
                           <td className="py-3 px-3">
                             <span
@@ -433,15 +680,27 @@ const DashboardPage: React.FunctionComponent = () => {
                               {reached ? "تم الوصول" : "لم يكتمل"}
                             </span>
                           </td>
-                          <td className="py-3 px-3">
-                            <button
-                              className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
-                              onClick={() => saveTarget(row.targetId)}
-                              disabled={editTargets[row.targetId]?.saving}
-                            >
-                              حفظ
-                            </button>
-                          </td>
+                          {canManageTargets && (
+                            <td className="py-3 px-3">
+                              <button
+                                className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+                                onClick={() => saveTarget(row.targetId)}
+                                disabled={editTargets[row.targetId]?.saving}
+                              >
+                                حفظ
+                              </button>
+                            </td>
+                          )}
+                          {canManageTargets && (
+                            <td className="py-3 px-3">
+                              <button
+                                className="rounded-md bg-rose-600 px-3 py-1 text-xs font-bold text-white hover:bg-rose-700"
+                                onClick={() => handleDeleteSalesRow(row.targetId, row.rewardIndex)}
+                              >
+                                حذف
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       );
                     })}
@@ -462,7 +721,8 @@ const DashboardPage: React.FunctionComponent = () => {
                     <th className="py-3 px-3">المتبقي</th>
                     <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
                     <th className="py-3 px-3">الحالة</th>
-                    <th className="py-3 px-3">حفظ</th>
+                    {canManageTargets && <th className="py-3 px-3">حفظ</th>}
+                    {canManageTargets && <th className="py-3 px-3">حذف</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -483,25 +743,33 @@ const DashboardPage: React.FunctionComponent = () => {
                       )}
                       <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">{item.productName}</td>
                       <td className="py-3 px-3">
-                        <input
-                          type="number"
-                          min={0}
-                          className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                          value={editTargets[item.targetId]?.products?.[item.productId]?.requiredQty ?? item.requiredQty}
-                          onChange={(e) => updateProductValue(item.targetId, item.productId, "requiredQty", e.target.value)}
-                        />
+                        {canManageTargets ? (
+                          <input
+                            type="number"
+                            min={0}
+                            className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                            value={editTargets[item.targetId]?.products?.[item.productId]?.requiredQty ?? item.requiredQty}
+                            onChange={(e) => updateProductValue(item.targetId, item.productId, "requiredQty", e.target.value)}
+                          />
+                        ) : (
+                          <span>{item.requiredQty}</span>
+                        )}
                       </td>
                       
                       <td className="py-3 px-3">{item.soldQty}</td>
                       <td className="py-3 px-3">{item.remaining}</td>
                       <td className="py-3 px-3">
-                        <input
-                          type="number"
-                          min={0}
-                          className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
-                          value={editTargets[item.targetId]?.products?.[item.productId]?.rewardValue ?? item.rewardValue ?? 0}
-                          onChange={(e) => updateProductValue(item.targetId, item.productId, "rewardValue", e.target.value)}
-                        />
+                        {canManageTargets ? (
+                          <input
+                            type="number"
+                            min={0}
+                            className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+                            value={editTargets[item.targetId]?.products?.[item.productId]?.rewardValue ?? item.rewardValue ?? 0}
+                            onChange={(e) => updateProductValue(item.targetId, item.productId, "rewardValue", e.target.value)}
+                          />
+                        ) : (
+                          <span>{item.rewardValue ?? 0}</span>
+                        )}
                       </td>
                       <td className="py-3 px-3">
                         <span
@@ -512,15 +780,27 @@ const DashboardPage: React.FunctionComponent = () => {
                           {item.reached ? "تم الوصول" : "لم يكتمل"}
                         </span>
                       </td>
-                      <td className="py-3 px-3">
-                        <button
-                          className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
-                          onClick={() => saveTarget(item.targetId)}
-                          disabled={editTargets[item.targetId]?.saving}
-                        >
-                          حفظ
-                        </button>
-                      </td>
+                      {canManageTargets && (
+                        <td className="py-3 px-3">
+                          <button
+                            className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+                            onClick={() => saveTarget(item.targetId)}
+                            disabled={editTargets[item.targetId]?.saving}
+                          >
+                            حفظ
+                          </button>
+                        </td>
+                      )}
+                      {canManageTargets && (
+                        <td className="py-3 px-3">
+                          <button
+                            className="rounded-md bg-rose-600 px-3 py-1 text-xs font-bold text-white hover:bg-rose-700"
+                            onClick={() => handleDeleteProductRow(item.targetId, item.productId)}
+                          >
+                            حذف
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   )})}
                 </tbody>
