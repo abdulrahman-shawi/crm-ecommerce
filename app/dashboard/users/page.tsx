@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { createUserTarget, deleteuser, updateUserTarget, updateUserCommission, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { createUserTarget, deleteuser, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
@@ -22,7 +22,11 @@ const userSchema = z.object({
   jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
   accountType: z.enum(["ADMIN", "MANAGER", "STAFF"]),
   permissions: z.string().min(1, "يرجى اختيار صلاحية"),
-  salesCommissionPercent: z.coerce.number().min(0).optional(),
+  salesCommissionPercent: z.preprocess(
+    (value) => (typeof value === "string" ? value.replace(/[٫,]/g, ".") : value),
+    z.coerce.number().min(0).optional()
+  ),
+  wage: z.coerce.number().int().min(0).optional(),
 });
 
 const parseNumberList = (value: string) =>
@@ -40,8 +44,10 @@ const UserManagement: React.FunctionComponent = () => {
   const [roles, setRoles] = React.useState<any[]>([]);
   const [users, setUsers] = React.useState<any[]>([]);
   const [formData, setFormData] = React.useState<any>(null);
-  const [commissionValues, setCommissionValues] = React.useState<Record<string, number>>({});
+  const [commissionValues, setCommissionValues] = React.useState<Record<string, string>>({});
   const [commissionSaving, setCommissionSaving] = React.useState<Record<string, boolean>>({});
+  const [wageValues, setWageValues] = React.useState<Record<string, string>>({});
+  const [wageSaving, setWageSaving] = React.useState<Record<string, boolean>>({});
   const [products, setProducts] = React.useState<any[]>([]);
   const [isTargetOpen, setIsTargetOpen] = React.useState(false);
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
@@ -69,7 +75,16 @@ const UserManagement: React.FunctionComponent = () => {
       setCommissionValues((prev) => {
         const next = { ...prev };
         rows.forEach((row: any) => {
-          next[row.id] = Number(row.salesCommissionPercent) || 0;
+          const raw = Number(row.salesCommissionPercent) || 0;
+          next[row.id] = String(raw);
+        });
+        return next;
+      });
+      setWageValues((prev) => {
+        const next = { ...prev };
+        rows.forEach((row: any) => {
+          const raw = Number(row.wage) || 0;
+          next[row.id] = String(raw);
         });
         return next;
       });
@@ -205,20 +220,48 @@ const UserManagement: React.FunctionComponent = () => {
     }
   };
 
-  const handleCommissionChange = (userId: string, value: number) => {
-    setCommissionValues((prev) => ({ ...prev, [userId]: value }));
+  const normalizeDecimalInput = (value: string) => {
+    const normalized = value.replace(/[٫,]/g, ".").replace(/[^0-9.]/g, "");
+    const [head, ...rest] = normalized.split(".");
+    return rest.length > 0 ? `${head}.${rest.join("")}` : head;
+  };
+
+  const handleCommissionChange = (userId: string, value: string) => {
+    setCommissionValues((prev) => ({ ...prev, [userId]: normalizeDecimalInput(value) }));
   };
 
   const handleCommissionBlur = async (userId: string) => {
-    const value = Number(commissionValues[userId]) || 0;
+    const raw = commissionValues[userId] ?? "0";
+    const value = Number(normalizeDecimalInput(raw)) || 0;
     setCommissionSaving((prev) => ({ ...prev, [userId]: true }));
     const res = await updateUserCommission(userId, value);
     if (res?.success) {
       toast.success(`تم تحديث نسبة الأرباح إلى ${value}%`);
+      setCommissionValues((prev) => ({ ...prev, [userId]: String(value) }));
     } else {
       toast.error(res?.error || "فشل تحديث نسبة الأرباح");
     }
     setCommissionSaving((prev) => ({ ...prev, [userId]: false }));
+  };
+
+  const normalizeIntegerInput = (value: string) => value.replace(/[^0-9]/g, "");
+
+  const handleWageChange = (userId: string, value: string) => {
+    setWageValues((prev) => ({ ...prev, [userId]: normalizeIntegerInput(value) }));
+  };
+
+  const handleWageBlur = async (userId: string) => {
+    const raw = wageValues[userId] ?? "0";
+    const value = Number(normalizeIntegerInput(raw)) || 0;
+    setWageSaving((prev) => ({ ...prev, [userId]: true }));
+    const res = await updateUserWage(userId, value);
+    if (res?.success) {
+      toast.success(`تم تحديث الراتب إلى ${value}`);
+      setWageValues((prev) => ({ ...prev, [userId]: String(value) }));
+    } else {
+      toast.error(res?.error || "فشل تحديث الراتب");
+    }
+    setWageSaving((prev) => ({ ...prev, [userId]: false }));
   };
 
   const onSubmit = async (data: z.infer<typeof userSchema>) => {
@@ -277,6 +320,7 @@ const UserManagement: React.FunctionComponent = () => {
           jobTitle: data.jobTitle,
           accountType: data.accountType,
           salesCommissionPercent: data.salesCommissionPercent ?? 0,
+          wage: data.wage ?? 0,
           permissions: data.permission.id || "", // الربط مع ID الصلاحية
         });
         console.log("data", data);
@@ -334,14 +378,30 @@ const UserManagement: React.FunctionComponent = () => {
             header: "نسبة الأرباح على المبيعات (%)",
             accessor: (row: any) => (
               <input
-                type="number"
+                type="text"
                 min={0}
-                step="0.01"
+                inputMode="decimal"
+                pattern="[0-9]+([.,][0-9]+)?"
                 className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                value={commissionValues[row.id] ?? 0}
-                onChange={(e) => handleCommissionChange(row.id, Number(e.target.value))}
+                value={commissionValues[row.id] ?? "0"}
+                onChange={(e) => handleCommissionChange(row.id, e.target.value)}
                 onBlur={() => handleCommissionBlur(row.id)}
                 disabled={commissionSaving[row.id]}
+              />
+            )
+          },
+          {
+            header: "الراتب",
+            accessor: (row: any) => (
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]+"
+                className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                value={wageValues[row.id] ?? "0"}
+                onChange={(e) => handleWageChange(row.id, e.target.value)}
+                onBlur={() => handleWageBlur(row.id)}
+                disabled={wageSaving[row.id]}
               />
             )
           },
@@ -391,11 +451,21 @@ const UserManagement: React.FunctionComponent = () => {
                 <FormInput
                   className='text-gray-800 dark:text-white'
                   label="نسبة عمولة المبيعات (%)"
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]+([.,][0-9]+)?"
                   min={0}
                   {...register("salesCommissionPercent")}
                   error={errors.salesCommissionPercent?.message as string}
+                />
+                <FormInput
+                  className='text-gray-800 dark:text-white'
+                  label="الراتب"
+                  type="number"
+                  step="1"
+                  min={0}
+                  {...register("wage")}
+                  error={errors.wage?.message as string}
                 />
 
                 <div className="flex flex-col gap-2">

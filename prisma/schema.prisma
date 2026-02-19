@@ -15,7 +15,8 @@ model User {
   jobTitle     String?
   accountType  AccountType @default(STAFF)
   password     String
-  salesCommissionPercent Int       @default(0)
+  salesCommissionPercent Float       @default(0)
+  wage         Int       @default(0)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   permissionId String?

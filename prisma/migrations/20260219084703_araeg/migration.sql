@@ -9,7 +9,7 @@ ALTER TABLE "TargetProduct" ALTER COLUMN "requiredQty" DROP DEFAULT,
 ALTER COLUMN "rewardValue" DROP DEFAULT;
 
 -- AlterTable
-ALTER TABLE "User" ADD COLUMN     "salesCommissionPercent" DOUBLE PRECISION NOT NULL DEFAULT 0;
+ALTER TABLE "User" ADD COLUMN     "wage" INTEGER NOT NULL DEFAULT 0;
 
 -- AlterTable
-ALTER TABLE "UserTarget" DROP COLUMN IF EXISTS "salesCommissionPercent";
+ALTER TABLE "UserTarget" DROP COLUMN "salesCommissionPercent";

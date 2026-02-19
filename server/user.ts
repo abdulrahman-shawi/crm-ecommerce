@@ -79,6 +79,7 @@ export async function createuser(data: any) {
         jobTitle: data.jobTitle,
         accountType: data.accountType,
         salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
+        wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)
         permission: {
           connect: { id: data.permissions } 
@@ -108,6 +109,7 @@ export async function updateuser(id: string, data: any) {
       jobTitle: data.jobTitle,
       accountType: data.accountType,
       salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
+      wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,
       permission: {
         connect: { id: data.permissions }
       }
@@ -138,6 +140,20 @@ export async function updateUserCommission(id: string, salesCommissionPercent: n
   } catch (error: any) {
     console.error("Prisma Error:", error);
     return { success: false, error: "فشل في تحديث نسبة الأرباح" };
+  }
+}
+
+export async function updateUserWage(id: string, wage: number) {
+  try {
+    const value = Number.isFinite(Number(wage)) ? Math.trunc(Number(wage)) : 0;
+    const user = await prisma.user.update({
+      where: { id },
+      data: { wage: value }
+    });
+    return { success: true, data: user };
+  } catch (error: any) {
+    console.error("Prisma Error:", error);
+    return { success: false, error: "فشل في تحديث الراتب" };
   }
 }
 
