@@ -219,11 +219,6 @@ const toNumberArray = (value: unknown): number[] => {
 
 export async function createUserTarget(payload: UserTargetInput) {
   try {
-    await prisma.userTarget.updateMany({
-      where: { userId: payload.userId, isActive: true },
-      data: { isActive: false, endedAt: new Date() }
-    });
-
     const target = await prisma.userTarget.create({
       data: {
         userId: payload.userId,

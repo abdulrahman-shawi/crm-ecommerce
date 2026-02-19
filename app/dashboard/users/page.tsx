@@ -161,17 +161,19 @@ const UserManagement: React.FunctionComponent = () => {
 
   const handleSaveTarget = async () => {
     if (!targetUser?.id) return;
-    if (targetItems.length === 0) {
-      toast.error("يرجى إضافة منتج واحد على الأقل");
+
+    const salesTargetValues = parseNumberList(salesTargetValue);
+    const salesRewardValues = parseNumberList(salesRewardValue);
+
+    const selectedProducts = targetItems.filter((item) => Boolean(item.productId));
+
+    if (salesTargetValues.length === 0 && selectedProducts.length === 0) {
+      toast.error("يمكنك إدخال تاركت المبيعات أو تاركت المنتجات (واحد منهما على الأقل)");
       return;
     }
 
     const seenProducts = new Set<string>();
-    for (const item of targetItems) {
-      if (!item.productId) {
-        toast.error("يرجى اختيار المنتج");
-        return;
-      }
+    for (const item of selectedProducts) {
       if (seenProducts.has(item.productId)) {
         toast.error("لا يمكن تكرار نفس المنتج في التاركت");
         return;
@@ -185,13 +187,11 @@ const UserManagement: React.FunctionComponent = () => {
 
     const loadingToast = toast.loading("جاري حفظ التاركت...");
     try {
-      const salesTargetValues = parseNumberList(salesTargetValue);
-      const salesRewardValues = parseNumberList(salesRewardValue);
       const payload = {
         userId: targetUser.id,
         salesTargetValue: salesTargetValues,
         salesRewardValue: salesRewardValues,
-        products: targetItems.map((item) => ({
+        products: selectedProducts.map((item) => ({
           productId: Number(item.productId),
           requiredQty: item.requiredQty,
           rewardValue: item.rewardValue,
@@ -415,12 +415,6 @@ const UserManagement: React.FunctionComponent = () => {
                   onClick={() => openTargetModal("assign", row)}
                 >
                   تعيين المنتج
-                </button>
-                <button
-                  className="px-2 py-1 text-xs font-bold bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200"
-                  onClick={() => openTargetModal("edit", row)}
-                >
-                  تعديل التاركت
                 </button>
               </div>
             )

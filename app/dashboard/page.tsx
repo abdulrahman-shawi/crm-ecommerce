@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { GetUserTargetProgress } from '@/server/analytics';
+import { updateUserTarget } from '@/server/user';
+import toast from 'react-hot-toast';
 
 const DashboardPage: React.FunctionComponent = () => {
   const { user } = useAuth();
@@ -24,6 +26,7 @@ const DashboardPage: React.FunctionComponent = () => {
       soldAmount?: number;
       remaining: number;
       reached: boolean;
+      isValueOnly?: boolean;
     }>;
     summary?: {
       totalSalesAmount: number;
@@ -33,6 +36,13 @@ const DashboardPage: React.FunctionComponent = () => {
     };
     error?: string;
   }>({ success: true, data: [] });
+
+  const [editTargets, setEditTargets] = React.useState<Record<string, {
+    salesTargetValues: number[];
+    salesRewardValues: number[];
+    products: Record<number, { requiredQty: number; rewardValue: number }>;
+    saving?: boolean;
+  }>>({});
 
   const sumNumbers = (values?: number[] | null) =>
     Array.isArray(values) ? values.reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
@@ -93,6 +103,109 @@ const DashboardPage: React.FunctionComponent = () => {
     return (targetProgress.data ?? []).filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
   }, [selectedMonth, targetProgress.data]);
 
+  const filteredProductTargets = React.useMemo(() => {
+    return filteredTargets.filter((item) => !item.isValueOnly);
+  }, [filteredTargets]);
+
+  React.useEffect(() => {
+    const next: Record<string, {
+      salesTargetValues: number[];
+      salesRewardValues: number[];
+      products: Record<number, { requiredQty: number; rewardValue: number }>;
+      saving?: boolean;
+    }> = {};
+
+    (targetProgress.data ?? []).forEach((item) => {
+      const targetId = item.targetId;
+      if (!next[targetId]) {
+        next[targetId] = {
+          salesTargetValues: Array.isArray(item.salesTargetValue) ? item.salesTargetValue : [],
+          salesRewardValues: Array.isArray(item.salesRewardValue) ? item.salesRewardValue : [],
+          products: {},
+        };
+      }
+      if (!next[targetId].salesTargetValues.length && Array.isArray(item.salesTargetValue)) {
+        next[targetId].salesTargetValues = item.salesTargetValue;
+      }
+      if (!next[targetId].salesRewardValues.length && Array.isArray(item.salesRewardValue)) {
+        next[targetId].salesRewardValues = item.salesRewardValue;
+      }
+      if (!item.isValueOnly && item.productId) {
+        next[targetId].products[item.productId] = {
+          requiredQty: Number(item.requiredQty) || 0,
+          rewardValue: Number(item.rewardValue) || 0,
+        };
+      }
+    });
+
+    setEditTargets(next);
+  }, [targetProgress.data]);
+
+  const updateSalesValue = (targetId: string, index: number, field: "target" | "reward", value: string) => {
+    const numeric = Number(value) || 0;
+    setEditTargets((prev) => {
+      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {} };
+      const targets = [...current.salesTargetValues];
+      const rewards = [...current.salesRewardValues];
+      if (field === "target") {
+        targets[index] = numeric;
+      } else {
+        rewards[index] = numeric;
+      }
+      return {
+        ...prev,
+        [targetId]: { ...current, salesTargetValues: targets, salesRewardValues: rewards },
+      };
+    });
+  };
+
+  const updateProductValue = (targetId: string, productId: number, field: "requiredQty" | "rewardValue", value: string) => {
+    const numeric = Number(value) || 0;
+    setEditTargets((prev) => {
+      const current = prev[targetId] || { salesTargetValues: [], salesRewardValues: [], products: {} };
+      const products = { ...current.products };
+      const existing = products[productId] || { requiredQty: 0, rewardValue: 0 };
+      products[productId] = { ...existing, [field]: numeric };
+      return {
+        ...prev,
+        [targetId]: { ...current, products },
+      };
+    });
+  };
+
+  const saveTarget = async (targetId: string) => {
+    const current = editTargets[targetId];
+    if (!current) return;
+    setEditTargets((prev) => ({
+      ...prev,
+      [targetId]: { ...current, saving: true },
+    }));
+
+    const payload = {
+      salesTargetValue: current.salesTargetValues,
+      salesRewardValue: current.salesRewardValues,
+      products: Object.entries(current.products).map(([productId, values]) => ({
+        productId: Number(productId),
+        requiredQty: values.requiredQty,
+        rewardValue: values.rewardValue,
+      })),
+    };
+
+    const res = await updateUserTarget(targetId, payload);
+    if (res?.success) {
+      toast.success("تم تحديث التاركت");
+      const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
+      setTargetProgress(refreshed as any);
+    } else {
+      toast.error(res?.error || "فشل تحديث التاركت");
+    }
+
+    setEditTargets((prev) => ({
+      ...prev,
+      [targetId]: { ...current, saving: false },
+    }));
+  };
+
   const valueTargets = React.useMemo(() => {
     const map = new Map<string, {
       targetId: string;
@@ -113,7 +226,7 @@ const DashboardPage: React.FunctionComponent = () => {
         salesRewardValue: Array.isArray(item.salesRewardValue) ? item.salesRewardValue : [],
         soldAmount: 0,
       };
-      current.soldAmount += item.soldAmount || 0;
+      current.soldAmount = Math.max(current.soldAmount, item.soldAmount || 0);
       if (!current.salesTargetValue.length && Array.isArray(item.salesTargetValue)) {
         current.salesTargetValue = item.salesTargetValue;
       }
@@ -165,7 +278,7 @@ const DashboardPage: React.FunctionComponent = () => {
       if (!user?.id) return;
       setLoading(true);
       try {
-        const res = await GetUserTargetProgress(user.id);
+        const res = await GetUserTargetProgress(user.id, selectedMonth);
         setTargetProgress(res as any);
       } catch (error) {
         console.error("Error fetching target progress:", error);
@@ -176,7 +289,7 @@ const DashboardPage: React.FunctionComponent = () => {
     };
 
     fetchTargetProgress();
-  }, [user?.id]);
+  }, [user?.id, selectedMonth]);
 
   return (
     <div className="p-6">
@@ -195,7 +308,7 @@ const DashboardPage: React.FunctionComponent = () => {
           <div className="text-sm text-slate-500">لا يوجد تاركت مضاف لهذا المستخدم.</div>
         )}
 
-        {targetProgress.success && targetProgress.data.length > 0 && (
+        {targetProgress.success && (
           <div className="overflow-x-auto">
             <div className="mb-6 grid gap-4 sm:grid-cols-4">
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -270,6 +383,7 @@ const DashboardPage: React.FunctionComponent = () => {
                       <th className="py-3 px-3">المتبقي</th>
                       <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
                       <th className="py-3 px-3">الحالة</th>
+                      <th className="py-3 px-3">حفظ</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -290,10 +404,26 @@ const DashboardPage: React.FunctionComponent = () => {
                               {row.userName}
                             </td>
                           )}
-                          <td className="py-3 px-3">{row.targetValue}</td>
+                          <td className="py-3 px-3">
+                            <input
+                              type="number"
+                              min={0}
+                              className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                              value={editTargets[row.targetId]?.salesTargetValues?.[row.rewardIndex] ?? row.targetValue}
+                              onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "target", e.target.value)}
+                            />
+                          </td>
                           <td className="py-3 px-3">{row.soldAmount.toFixed(2)}</td>
                           <td className="py-3 px-3">{remaining.toFixed(2)}</td>
-                          <td className={`py-3 px-3 font-bold bg-emerald-500 dark:bg-emerald-900 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{row.rewardValue}</td>
+                          <td className="py-3 px-3">
+                            <input
+                              type="number"
+                              min={0}
+                              className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+                              value={editTargets[row.targetId]?.salesRewardValues?.[row.rewardIndex] ?? row.rewardValue}
+                              onChange={(e) => updateSalesValue(row.targetId, row.rewardIndex, "reward", e.target.value)}
+                            />
+                          </td>
                           <td className="py-3 px-3">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-bold ${reached
@@ -303,6 +433,15 @@ const DashboardPage: React.FunctionComponent = () => {
                               {reached ? "تم الوصول" : "لم يكتمل"}
                             </span>
                           </td>
+                          <td className="py-3 px-3">
+                            <button
+                              className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+                              onClick={() => saveTarget(row.targetId)}
+                              disabled={editTargets[row.targetId]?.saving}
+                            >
+                              حفظ
+                            </button>
+                          </td>
                         </tr>
                       );
                     })}
@@ -311,55 +450,83 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
             )}
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <table className="w-full text-right text-sm">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
-                <tr>
-                  {user?.accountType === "ADMIN" && <th className="py-3 px-3">الموظف</th>}
-                  <th className="py-3 px-3">المنتج</th>
-                  <th className="py-3 px-3">المطلوب</th>
-                  <th className="py-3 px-3">المباع</th>
-                  <th className="py-3 px-3">المتبقي</th>
-                  <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
-                  <th className="py-3 px-3">الحالة</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredTargets.map((item) => {
-                  const isRewardRow = item.reached && (Number(item.rewardValue) || 0) > 0;
-                  return (
-                  <tr
-                    key={`${item.userId || "me"}-${item.productId}`}
-                    className={`transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/60 ${isRewardRow
-                      ? "bg-emerald-50/70 dark:bg-emerald-900/20"
-                      : "odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30"
-                      }`}
-                  >
-                    {user?.accountType === "ADMIN" && (
-                      <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">
-                        {item.userName || "-"}
-                      </td>
-                    )}
-                    <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">{item.productName}</td>
-                    <td className="py-3 px-3">{item.requiredQty}</td>
-                    
-                    <td className="py-3 px-3">{item.soldQty}</td>
-                    <td className="py-3 px-3">{item.remaining}</td>
-                    <td className={`py-3 px-3 font-bold bg-emerald-500 dark:bg-emerald-900 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{item.rewardValue ?? 0}</td>
-                    <td className="py-3 px-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-bold ${item.reached
-                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-                          : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"}`}
-                      >
-                        {item.reached ? "تم الوصول" : "لم يكتمل"}
-                      </span>
-                    </td>
+            {filteredProductTargets.length > 0 && (
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+              <table className="w-full text-right text-sm">
+                <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+                  <tr>
+                    {user?.accountType === "ADMIN" && <th className="py-3 px-3">الموظف</th>}
+                    <th className="py-3 px-3">المنتج</th>
+                    <th className="py-3 px-3">المطلوب</th>
+                    <th className="py-3 px-3">المباع</th>
+                    <th className="py-3 px-3">المتبقي</th>
+                    <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
+                    <th className="py-3 px-3">الحالة</th>
+                    <th className="py-3 px-3">حفظ</th>
                   </tr>
-                )})}
-              </tbody>
-            </table>
-            </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {filteredProductTargets.map((item) => {
+                    const isRewardRow = item.reached && (Number(item.rewardValue) || 0) > 0;
+                    return (
+                    <tr
+                      key={`${item.userId || "me"}-${item.productId}`}
+                      className={`transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/60 ${isRewardRow
+                        ? "bg-emerald-50/70 dark:bg-emerald-900/20"
+                        : "odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30"
+                        }`}
+                    >
+                      {user?.accountType === "ADMIN" && (
+                        <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">
+                          {item.userName || "-"}
+                        </td>
+                      )}
+                      <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">{item.productName}</td>
+                      <td className="py-3 px-3">
+                        <input
+                          type="number"
+                          min={0}
+                          className="w-24 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                          value={editTargets[item.targetId]?.products?.[item.productId]?.requiredQty ?? item.requiredQty}
+                          onChange={(e) => updateProductValue(item.targetId, item.productId, "requiredQty", e.target.value)}
+                        />
+                      </td>
+                      
+                      <td className="py-3 px-3">{item.soldQty}</td>
+                      <td className="py-3 px-3">{item.remaining}</td>
+                      <td className="py-3 px-3">
+                        <input
+                          type="number"
+                          min={0}
+                          className="w-24 rounded-md border border-emerald-200 bg-emerald-50 p-1 text-center text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+                          value={editTargets[item.targetId]?.products?.[item.productId]?.rewardValue ?? item.rewardValue ?? 0}
+                          onChange={(e) => updateProductValue(item.targetId, item.productId, "rewardValue", e.target.value)}
+                        />
+                      </td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-bold ${item.reached
+                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                            : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"}`}
+                        >
+                          {item.reached ? "تم الوصول" : "لم يكتمل"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <button
+                          className="rounded-md bg-blue-600 px-3 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+                          onClick={() => saveTarget(item.targetId)}
+                          disabled={editTargets[item.targetId]?.saving}
+                        >
+                          حفظ
+                        </button>
+                      </td>
+                    </tr>
+                  )})}
+                </tbody>
+              </table>
+              </div>
+            )}
           </div>
         )}
       </div>

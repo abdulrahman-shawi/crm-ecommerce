@@ -433,7 +433,7 @@ export async function GetTopSellingUsersByPermission(userId: string) {
   }
 }
 
-export async function GetUserTargetProgress(userId: string) {
+export async function GetUserTargetProgress(userId: string, monthKey?: string) {
   try {
     const session = cookies().get("skynova")?.value;
     const decoded = session ? await decrypt(session) : null;
@@ -446,22 +446,52 @@ export async function GetUserTargetProgress(userId: string) {
 
     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
-    const targets = await prisma.userTarget.findMany({
-      where: { userId: scopedUserId },
-      include: {
-        products: {
-          include: { product: { select: { id: true, name: true } } }
-        }
-      }
-    });
+    const canViewAllTargets = isAdmin(currentUser);
+    const targets = canViewAllTargets
+      ? await prisma.userTarget.findMany({
+          include: {
+            user: { select: { id: true, username: true } },
+            products: {
+              include: { product: { select: { id: true, name: true } } }
+            }
+          }
+        })
+      : await prisma.userTarget.findMany({
+          where: { userId: scopedUserId },
+          include: {
+            products: {
+              include: { product: { select: { id: true, name: true } } }
+            }
+          }
+        });
 
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+
+    const monthRange = (() => {
+      if (!monthKey) return null;
+      const match = monthKey.match(/^(\d{4})-(\d{2})$/);
+      if (!match) return null;
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      if (!year || !month) return null;
+      const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
+      const end = new Date(year, month, 0, 23, 59, 59, 999);
+      return { start, end };
+    })();
 
     const orderItems = await prisma.orderItem.findMany({
       where: {
         order: {
-          userId: scopedUserId,
-          status: { in: statusWhitelist }
+          ...(canViewAllTargets ? {} : { userId: scopedUserId }),
+          status: { in: statusWhitelist },
+          ...(monthRange
+            ? {
+                createdAt: {
+                  gte: monthRange.start,
+                  lte: monthRange.end,
+                },
+              }
+            : {}),
         }
       },
       select: {
@@ -472,9 +502,6 @@ export async function GetUserTargetProgress(userId: string) {
         order: { select: { userId: true, createdAt: true } }
       }
     });
-
-    const commissionByUser = new Map<string, number>();
-    commissionByUser.set(currentUser.id, Number(currentUser.salesCommissionPercent || 0));
 
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     const totalSoldByUser = new Map<string, number>();
@@ -492,9 +519,34 @@ export async function GetUserTargetProgress(userId: string) {
       }
     }
 
-    const data = targets.flatMap((target: any) =>
-      target.products.map((item: any) => {
-        const targetUserId = currentUser.id;
+    const data = targets.flatMap((target: any) => {
+      const targetUserId = canViewAllTargets ? target.user?.id : currentUser.id;
+      const monthSalesForUser = totalSoldByUser.get(String(targetUserId)) || 0;
+      const userName = canViewAllTargets ? target.user?.username || "" : currentUser.username || "";
+
+      if (!target.products || target.products.length === 0) {
+        return [
+          {
+            targetId: target.id,
+            targetCreatedAt: target.createdAt,
+            salesTargetValue: target.salesTargetValue ?? [],
+            salesRewardValue: target.salesRewardValue ?? [],
+            userId: targetUserId,
+            userName,
+            productId: 0,
+            productName: "",
+            requiredQty: 0,
+            rewardValue: 0,
+            soldQty: 0,
+            soldAmount: monthSalesForUser,
+            remaining: 0,
+            reached: false,
+            isValueOnly: true,
+          },
+        ];
+      }
+
+      return target.products.map((item: any) => {
         const key = `${targetUserId}:${item.productId}`;
         const windowStart = target.createdAt;
         const windowEnd = target.endedAt || new Date();
@@ -504,9 +556,7 @@ export async function GetUserTargetProgress(userId: string) {
         const soldQty = soldItems
           .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
           .reduce((sum, sold) => sum + sold.quantity, 0);
-        const soldAmount = soldItems
-          .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
-          .reduce((sum, sold) => sum + sold.amount, 0);
+        const soldAmount = monthSalesForUser;
         const remaining = Math.max(requiredQty - soldQty, 0);
         return {
           targetId: target.id,
@@ -514,7 +564,7 @@ export async function GetUserTargetProgress(userId: string) {
           salesTargetValue: target.salesTargetValue ?? [],
           salesRewardValue: target.salesRewardValue ?? [],
           userId: targetUserId,
-          userName: currentUser.username || "",
+          userName,
           productId: item.productId,
           productName: item.product?.name || "",
           requiredQty,
@@ -522,20 +572,18 @@ export async function GetUserTargetProgress(userId: string) {
           soldQty,
           soldAmount,
           remaining,
-          reached: soldQty >= requiredQty
+          reached: soldQty >= requiredQty,
+          isValueOnly: false,
         };
-      })
-    );
+      });
+    });
 
-    const totalSalesAmount = Array.from(totalSoldByUser.values()).reduce((sum, amount) => sum + amount, 0);
-    const totalCommissionAmount = Array.from(totalSoldByUser.entries()).reduce((sum, [soldUserId, amount]) => {
-      const percent = commissionByUser.get(soldUserId) ?? 0;
-      return sum + (amount * percent) / 100;
-    }, 0);
+    const totalSalesAmount = totalSoldByUser.get(scopedUserId) || 0;
+    const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
+    const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
     const commissionPercent = totalSalesAmount > 0
       ? Number(((totalCommissionAmount / totalSalesAmount) * 100).toFixed(2))
       : 0;
-    const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
 
     return {
       success: true,
