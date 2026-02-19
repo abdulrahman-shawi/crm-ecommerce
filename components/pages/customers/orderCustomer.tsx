@@ -30,6 +30,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     const citiesByCountry: Record<string, string[]> = {
       "سوريا": [
         "دمشق",
+        "ريف دمشق",
         "حلب",
         "حمص",
         "حماة",
