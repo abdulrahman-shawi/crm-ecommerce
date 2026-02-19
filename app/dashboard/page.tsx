@@ -136,6 +136,30 @@ const DashboardPage: React.FunctionComponent = () => {
     });
   }, [filteredTargets]);
 
+  const { totalSalesReward, productRewardTotal, valueRewardTotal } = React.useMemo(() => {
+    const currentUserId = user?.id;
+    const valueRewards = valueTargets.reduce((sum, row) => {
+      if (currentUserId && row.userId !== currentUserId) return sum;
+      const reached = row.soldAmount >= row.targetValue && row.targetValue > 0;
+      return reached ? sum + (Number(row.rewardValue) || 0) : sum;
+    }, 0);
+
+    const productRewards = filteredTargets.reduce((sum, row) => {
+      if (currentUserId && row.userId !== currentUserId) return sum;
+      const reached = row.soldQty >= row.requiredQty && row.requiredQty > 0;
+      return reached ? sum + (Number(row.rewardValue) || 0) : sum;
+    }, 0);
+
+    return {
+      totalSalesReward: valueRewards + productRewards,
+      productRewardTotal: productRewards,
+      valueRewardTotal: valueRewards,
+    };
+  }, [filteredTargets, valueTargets, user?.id]);
+
+  const wageAmount = Number(user?.wage || 0);
+  const totalEarnings = (targetProgress.summary?.totalCommissionAmount ?? 0) + totalSalesReward + wageAmount;
+
   React.useEffect(() => {
     const fetchTargetProgress = async () => {
       if (!user?.id) return;
@@ -187,15 +211,32 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-xs font-semibold text-slate-500">النسبة المحسوبة</div>
+                <div className="text-xs font-semibold text-slate-500">الراتب</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
-                  {(targetProgress.summary?.commissionPercent ?? 0).toFixed(2)}%
+                  {wageAmount.toFixed(2)}
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
                 <div className="text-xs font-semibold text-slate-500">قيمة العمولة</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
                   {(targetProgress.summary?.totalCommissionAmount ?? 0).toFixed(2)}
+                </div>
+              </div>
+            </div>
+            <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs font-semibold text-slate-500">إجمالي أرباحك</div>
+                  <div className="text-2xl font-bold text-slate-800 dark:text-white">
+                    {totalEarnings.toFixed(2)}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm text-slate-600 dark:text-slate-300">
+                  <div>قيمة العمولة: {(targetProgress.summary?.totalCommissionAmount ?? 0).toFixed(2)}</div>
+                  <div>مكافأة المنتجات: {productRewardTotal.toFixed(2)}</div>
+                  <div>مكافأة قيمة المبيعات: {valueRewardTotal.toFixed(2)}</div>
+                  <div>الراتب: {wageAmount.toFixed(2)}</div>
+                  <div>نسبة الأرباح: {(targetProgress.summary?.assignedCommissionPercent ?? 0).toFixed(2)}%</div>
                 </div>
               </div>
             </div>
@@ -219,33 +260,41 @@ const DashboardPage: React.FunctionComponent = () => {
             {valueTargets.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">تاركت قيمة المبيعات</h3>
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
                 <table className="w-full text-right text-sm">
-                  <thead className="text-xs uppercase text-slate-500 border-b border-slate-200 dark:border-slate-800">
+                  <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                     <tr>
-                      {user?.accountType === "ADMIN" && <th className="py-3 px-2">الموظف</th>}
-                      <th className="py-3 px-2">قيمة المبيعات المستهدفة</th>
-                      <th className="py-3 px-2">قيمة المبيعات المحققة</th>
-                      <th className="py-3 px-2">المتبقي</th>
-                      <th className="py-3 px-2">المكافأة</th>
-                      <th className="py-3 px-2">الحالة</th>
+                      {user?.accountType === "ADMIN" && <th className="py-3 px-3">الموظف</th>}
+                      <th className="py-3 px-3">قيمة المبيعات المستهدفة</th>
+                      <th className="py-3 px-3">قيمة المبيعات المحققة</th>
+                      <th className="py-3 px-3">المتبقي</th>
+                      <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
+                      <th className="py-3 px-3">الحالة</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {valueTargets.map((row) => {
                       const remaining = Math.max(row.targetValue - row.soldAmount, 0);
                       const reached = row.soldAmount >= row.targetValue && row.targetValue > 0;
+                      const isRewardRow = reached && (Number(row.rewardValue) || 0) > 0;
                       return (
-                        <tr key={`${row.targetId}-${row.rewardIndex}`}>
+                        <tr
+                          key={`${row.targetId}-${row.rewardIndex}`}
+                          className={`transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/60 ${isRewardRow
+                            ? "bg-emerald-50/70 dark:bg-emerald-900/20"
+                            : "odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30"
+                            }`}
+                        >
                           {user?.accountType === "ADMIN" && (
-                            <td className="py-3 px-2 font-semibold text-slate-700 dark:text-slate-200">
+                            <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">
                               {row.userName}
                             </td>
                           )}
-                          <td className="py-3 px-2">{row.targetValue}</td>
-                          <td className="py-3 px-2">{row.soldAmount.toFixed(2)}</td>
-                          <td className="py-3 px-2">{remaining.toFixed(2)}</td>
-                          <td className="py-3 px-2">{row.rewardValue}</td>
-                          <td className="py-3 px-2">
+                          <td className="py-3 px-3">{row.targetValue}</td>
+                          <td className="py-3 px-3">{row.soldAmount.toFixed(2)}</td>
+                          <td className="py-3 px-3">{remaining.toFixed(2)}</td>
+                          <td className={`py-3 px-3 font-bold bg-emerald-50/60 dark:bg-emerald-900/20 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{row.rewardValue}</td>
+                          <td className="py-3 px-3">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-bold ${reached
                                 ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
@@ -259,34 +308,45 @@ const DashboardPage: React.FunctionComponent = () => {
                     })}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <table className="w-full text-right text-sm">
-              <thead className="text-xs uppercase text-slate-500 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                 <tr>
-                  {user?.accountType === "ADMIN" && <th className="py-3 px-2">الموظف</th>}
-                  <th className="py-3 px-2">المنتج</th>
-                  <th className="py-3 px-2">المطلوب</th>
-                  <th className="py-3 px-2">المكافأة</th>
-                  <th className="py-3 px-2">المباع</th>
-                  <th className="py-3 px-2">المتبقي</th>
-                  <th className="py-3 px-2">الحالة</th>
+                  {user?.accountType === "ADMIN" && <th className="py-3 px-3">الموظف</th>}
+                  <th className="py-3 px-3">المنتج</th>
+                  <th className="py-3 px-3">المطلوب</th>
+                  <th className="py-3 px-3">المباع</th>
+                  <th className="py-3 px-3">المتبقي</th>
+                  <th className="py-3 px-3 text-emerald-700 dark:text-emerald-300">المكافأة</th>
+                  <th className="py-3 px-3">الحالة</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredTargets.map((item) => (
-                  <tr key={`${item.userId || "me"}-${item.productId}`}>
+                {filteredTargets.map((item) => {
+                  const isRewardRow = item.reached && (Number(item.rewardValue) || 0) > 0;
+                  return (
+                  <tr
+                    key={`${item.userId || "me"}-${item.productId}`}
+                    className={`transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/60 ${isRewardRow
+                      ? "bg-emerald-50/70 dark:bg-emerald-900/20"
+                      : "odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30"
+                      }`}
+                  >
                     {user?.accountType === "ADMIN" && (
-                      <td className="py-3 px-2 font-semibold text-slate-700 dark:text-slate-200">
+                      <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">
                         {item.userName || "-"}
                       </td>
                     )}
-                    <td className="py-3 px-2 font-semibold text-slate-700 dark:text-slate-200">{item.productName}</td>
-                    <td className="py-3 px-2">{item.requiredQty}</td>
-                    <td className="py-3 px-2">{item.rewardValue ?? 0}</td>
-                    <td className="py-3 px-2">{item.soldQty}</td>
-                    <td className="py-3 px-2">{item.remaining}</td>
-                    <td className="py-3 px-2">
+                    <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-200">{item.productName}</td>
+                    <td className="py-3 px-3">{item.requiredQty}</td>
+                    
+                    <td className="py-3 px-3">{item.soldQty}</td>
+                    <td className="py-3 px-3">{item.remaining}</td>
+                    <td className={`py-3 px-3 font-bold bg-emerald-50/60 dark:bg-emerald-900/20 ${isRewardRow ? "text-emerald-700 dark:text-emerald-300" : "text-emerald-800/80 dark:text-emerald-200"}`}>{item.rewardValue ?? 0}</td>
+                    <td className="py-3 px-3">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-bold ${item.reached
                           ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
@@ -296,9 +356,10 @@ const DashboardPage: React.FunctionComponent = () => {
                       </span>
                     </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>
