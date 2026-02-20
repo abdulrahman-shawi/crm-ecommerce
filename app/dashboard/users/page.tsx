@@ -256,10 +256,10 @@ const UserManagement: React.FunctionComponent = () => {
     setWageSaving((prev) => ({ ...prev, [userId]: true }));
     const res = await updateUserWage(userId, value);
     if (res?.success) {
-      toast.success(`تم تحديث الراتب إلى ${value}`);
+      toast.success(`تم تحديث البدل الثابت إلى ${value}`);
       setWageValues((prev) => ({ ...prev, [userId]: String(value) }));
     } else {
-      toast.error(res?.error || "فشل تحديث الراتب");
+      toast.error(res?.error || "فشل تحديث البدل الثابت");
     }
     setWageSaving((prev) => ({ ...prev, [userId]: false }));
   };
@@ -391,7 +391,7 @@ const UserManagement: React.FunctionComponent = () => {
             )
           },
           {
-            header: "الراتب",
+            header: "البدل الثابت",
             accessor: (row: any) => (
               <input
                 type="text"
@@ -442,7 +442,7 @@ const UserManagement: React.FunctionComponent = () => {
                 />
                 <FormInput
                   className='text-gray-800 dark:text-white'
-                  label="الراتب"
+                  label="البدل الثابت"
                   type="number"
                   step="1"
                   min={0}

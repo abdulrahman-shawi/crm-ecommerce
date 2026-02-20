@@ -177,6 +177,10 @@ const CustomrLayout: React.FC = () => {
   };
 
   const handleBulkDelete = async () => {
+    if (!user || !hasPermission(user, "deleteCustomers")) {
+      toast.error("ليس لديك صلاحية حذف العملاء");
+      return;
+    }
     if (selectedCustomers.length === 0) {
       toast.error("لا يوجد عملاء محددين");
       return;
@@ -591,9 +595,11 @@ const CustomrLayout: React.FC = () => {
                 <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
                   <UserPlus size={20} />
                 </Button>
-                <Button onClick={handleBulkDelete} variant="secondary">
-                  <Trash2 size={20} />
-                </Button>
+                {user && hasPermission(user, "deleteCustomers") && (
+                  <Button onClick={handleBulkDelete} variant="secondary">
+                    <Trash2 size={20} />
+                  </Button>
+                )}
               </>
             )}
             {canImport && (

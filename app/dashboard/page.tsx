@@ -616,7 +616,7 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-xs font-semibold text-slate-500">الراتب</div>
+                <div className="text-xs font-semibold text-slate-500">البدل الثابت</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
                   {wageAmount.toFixed(2)}
                 </div>
@@ -640,7 +640,7 @@ const DashboardPage: React.FunctionComponent = () => {
                   <div>قيمة العمولة: {(targetProgress.summary?.totalCommissionAmount ?? 0).toFixed(2)}</div>
                   <div>مكافأة المنتجات: {productRewardTotal.toFixed(2)}</div>
                   <div>مكافأة قيمة المبيعات: {valueRewardTotal.toFixed(2)}</div>
-                  <div>الراتب: {wageAmount.toFixed(2)}</div>
+                  <div>البدل الثابت: {wageAmount.toFixed(2)}</div>
                   <div>نسبة الأرباح: {(targetProgress.summary?.assignedCommissionPercent ?? 0).toFixed(2)}%</div>
                 </div>
               </div>

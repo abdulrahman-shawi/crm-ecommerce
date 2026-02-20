@@ -27,8 +27,9 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       group: "الرئيسية",
       items: [
         { icon: Home, label: "لوحة التحكم", href: "/dashboard" },
+        (user && hasAnyPermission(user, ["viewAnalytics"])) &&
         { icon: BarChart2, label: "التحليلات", href: "/dashboard/analytics" },
-      ]
+      ].filter(Boolean)
     },
     {
       group: "الأقسام الرئيسية",

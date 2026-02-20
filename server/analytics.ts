@@ -548,13 +548,12 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
       return target.products.map((item: any) => {
         const key = `${targetUserId}:${item.productId}`;
-        const windowStart = target.createdAt;
         const windowEnd = target.endedAt || new Date();
         const soldItems = soldMap.get(key) || [];
         const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
         const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
         const soldQty = soldItems
-          .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
+          .filter((sold) => sold.createdAt <= windowEnd)
           .reduce((sum, sold) => sum + sold.quantity, 0);
         const soldAmount = monthSalesForUser;
         const remaining = Math.max(requiredQty - soldQty, 0);

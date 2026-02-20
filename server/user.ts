@@ -153,7 +153,7 @@ export async function updateUserWage(id: string, wage: number) {
     return { success: true, data: user };
   } catch (error: any) {
     console.error("Prisma Error:", error);
-    return { success: false, error: "فشل في تحديث الراتب" };
+    return { success: false, error: "فشل في تحديث البدل الثابت" };
   }
 }
 
