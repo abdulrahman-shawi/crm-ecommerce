@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import { useReactToPrint } from 'react-to-print';
 import { TableAction } from '../../../components/shared/DataTable';
 import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import { permission } from 'process';
 interface IOrderLayoutProps {
 }
@@ -64,6 +66,150 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const getEffectivePrice = (price: number, discount: number) => {
         return Math.max(0, Number(price || 0) - Number(discount || 0));
+    };
+
+    const openWhatsAppByPhone = (rawPhone?: string | null) => {
+        const phone = String(rawPhone || "").trim();
+        const normalized = phone.replace(/\D/g, "");
+        if (!normalized) {
+            toast.error("لا يوجد رقم هاتف لهذا الموظف");
+            return;
+        }
+        window.open(`https://wa.me/${normalized}`, "_blank");
+    };
+
+    const buildOrderPdfFile = async (data: any) => {
+        const invoiceNo = data?.orderNumber || '-';
+        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleString('ar-EG') : '-';
+        const customerName = data?.customer?.name || 'غير محدد';
+        const statusText = data?.status || '-';
+        const finalAmount = Number(data?.finalAmount || 0).toLocaleString('ar-EG');
+        const items = Array.isArray(data?.items) ? data.items : [];
+
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('dir', 'rtl');
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = '-99999px';
+        wrapper.style.top = '0';
+        wrapper.style.width = '800px';
+        wrapper.style.background = '#ffffff';
+        wrapper.style.color = '#0f172a';
+        wrapper.style.padding = '24px';
+        wrapper.style.fontFamily = 'Tahoma, Arial, sans-serif';
+        wrapper.style.lineHeight = '1.7';
+
+        const itemsHtml = items.length
+            ? items.map((item: any, idx: number) => {
+                const name = item?.product?.name || item?.name || `منتج ${idx + 1}`;
+                const qty = Number(item?.quantity || 0);
+                const price = Number(item?.price || 0).toLocaleString('ar-EG');
+                return `<tr>
+                    <td style="padding:8px;border:1px solid #e2e8f0;">${name}</td>
+                    <td style="padding:8px;border:1px solid #e2e8f0;text-align:center;">${qty}</td>
+                    <td style="padding:8px;border:1px solid #e2e8f0;text-align:center;">${price}</td>
+                </tr>`;
+            }).join('')
+            : `<tr><td colspan="3" style="padding:10px;border:1px solid #e2e8f0;text-align:center;">لا توجد منتجات</td></tr>`;
+
+        wrapper.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h1 style="margin:0;font-size:24px;color:#2563eb;">SKYNOVA</h1>
+                <div style="font-size:14px;font-weight:700;">فاتورة الطلب #${invoiceNo}</div>
+            </div>
+            <div style="font-size:14px;margin-bottom:12px;">التاريخ: ${createdAt}</div>
+            <div style="font-size:14px;margin-bottom:6px;">العميل: <strong>${customerName}</strong></div>
+            <div style="font-size:14px;margin-bottom:6px;">الحالة: <strong>${statusText}</strong></div>
+            <div style="font-size:14px;margin-bottom:16px;">الإجمالي النهائي: <strong>${finalAmount}</strong></div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                    <tr style="background:#f8fafc;">
+                        <th style="padding:8px;border:1px solid #e2e8f0;">المنتج</th>
+                        <th style="padding:8px;border:1px solid #e2e8f0;">الكمية</th>
+                        <th style="padding:8px;border:1px solid #e2e8f0;">السعر</th>
+                    </tr>
+                </thead>
+                <tbody>${itemsHtml}</tbody>
+            </table>
+        `;
+
+        document.body.appendChild(wrapper);
+        const canvas = await html2canvas(wrapper, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+        });
+        document.body.removeChild(wrapper);
+
+        const imgData = canvas.toDataURL('image/png');
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const imageHeight = (canvas.height * pageWidth) / canvas.width;
+
+        let heightLeft = imageHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', 0, position, pageWidth, imageHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+            position = heightLeft - imageHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, pageWidth, imageHeight);
+            heightLeft -= pageHeight;
+        }
+
+        const blob = doc.output('blob');
+        return new File([blob], `order-${invoiceNo}.pdf`, { type: 'application/pdf' });
+    };
+
+    const shareOrderPdfToCustomerWhatsApp = async (data: any) => {
+        const rawPhone = data?.customer?.phone?.[0] || '';
+        const phoneNumber = String(rawPhone).replace(/\D/g, '');
+        const countryCode = String(data?.customer?.countryCode || '').replace(/\D/g, '');
+        const whatsappNumber = `${countryCode}${phoneNumber}`;
+
+        if (!phoneNumber) {
+            toast.error('لا يوجد رقم هاتف للعميل');
+            return;
+        }
+
+        const msg = `مرحباً ${data?.customer?.name || ''}، مرفق فاتورة الطلب رقم #${data?.orderNumber || ''}`;
+        const encodedMsg = encodeURIComponent(msg);
+
+        // فتح الواتساب مباشرة من نفس لحظة الضغط لتجنب حظر النافذة من المتصفح
+        const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+        window.open(waUrl, '_blank');
+
+        const pdfFile = await buildOrderPdfFile(data);
+
+        try {
+            const canShareFile = typeof navigator !== 'undefined'
+                && !!navigator.share
+                && !!navigator.canShare
+                && navigator.canShare({ files: [pdfFile] });
+
+            if (canShareFile) {
+                await navigator.share({
+                    files: [pdfFile],
+                    title: `Order #${data?.orderNumber || ''}`,
+                    text: msg,
+                });
+                return;
+            }
+        } catch (error) {
+            console.error('Share failed:', error);
+        }
+
+        const pdfUrl = URL.createObjectURL(pdfFile);
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = pdfFile.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+        toast('تم فتح واتساب مباشرة وتنزيل PDF للإرفاق');
     };
 
 
@@ -357,64 +503,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             }
         },
         (user && hasPermission(user, "editOrders")) && {
-            label: "تعديل",
+            label: "مشاركة PDF واتساب",
             icon: <Mail size={14} />,
-            onClick: (data: any) => {
-                // 1. تعيين المعرف الأساسي لحالة التعديل
-                setEditId(data.id);
-
-                // 2. تعيين بيانات العميل والحالة الأساسية
-                setCustomerId(data.customerId); // تأكد أنه ID وليس الكائن كاملاً
-                setStatus(data.status);
-                setPaymentMethod(data.paymentMethod);
-
-                // 3. تعيين بيانات المستلم
-                setReceiverName(data.receiverName || "");
-                setReceiverPhone(data.receiverPhone || "");
-                setCountry(data.country || "ليبيا");
-                setCity(data.city || "");
-                setMunicipality(data.municipality || "");
-                setFullAddress(data.fullAddress || "");
-
-                // 4. تعيين بيانات الشحن
-                setDeliveryMethod(data.deliveryMethod || "توصيل الى المنزل");
-                setGoogleMapsLink(data.googleMapsLink || "");
-                setDeliveryNotes(data.deliveryNotes || "");
-                setAdditionalNotes(data.additionalNotes || "");
-
-                // 5. تعيين المبالغ المالية
-                setOverallDiscount(data.overallDiscount || 0);
-                // المبالغ الأخرى (subTotal, grandTotal) يتم حسابها تلقائياً من الـ items
-
-
-                // 6. تعيين المنتجات (Items) 
-                // ملاحظة: تأكد أن العلاقة في Prisma تسمى items أو OrderItems
-                if (data.items && data.items.length > 0) {
-                    const formattedItems = data.items.map((item: any) => ({
-                        productId: item.productId.toString(),
-                        name: item.product?.name || item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        discount: item.discount || 0,
-                        note: item.note || "",
-                        total: getEffectivePrice(item.price, item.discount || 0) * item.quantity,
-                        modelNumber: item.product?.modelNumber || ""
-                    }));
-                    setItems(formattedItems);
-
-                    // تحديث مصفوفة البحث السريع لضمان ظهور أسماء المنتجات في الحقول
-                    const searches: Record<number, string> = {};
-                    formattedItems.forEach((item: any, idx: any) => {
-                        searches[idx] = item.name;
-                    });
-                    setSearchQueries(searches);
-                } else {
-                    // إذا لم توجد منتجات، نضع سطراً فارغاً
-                    setItems([{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
-                }
-
-                // 7. فتح المودال
-                setIsOpen(true);
+            onClick: async (data: any) => {
+                await shareOrderPdfToCustomerWhatsApp(data);
             }
         },
         (user && hasPermission(user, "deleteOrders")) && {
@@ -517,12 +609,39 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                             </div>
                         )
                     },
-                    { header: "بيعت من قبل", accessor: (e: any) => e.user.username },
+                    {
+                        header: "بيعت من قبل",
+                        accessor: (e: any) => {
+                            const employeeName = e.user?.username || e.user?.name || "-";
+                            const employeePhone = e.user?.phone || "";
+                            const hasPhone = String(employeePhone).trim().length > 0;
+
+                            return (
+                                <button
+                                    type="button"
+                                    onClick={() => openWhatsAppByPhone(employeePhone)}
+                                    className={`font-bold ${hasPhone ? "text-emerald-600 hover:text-emerald-700" : "text-slate-400 cursor-not-allowed"}`}
+                                    disabled={!hasPhone}
+                                    title={hasPhone ? "فتح واتساب" : "لا يوجد رقم هاتف"}
+                                >
+                                    {employeeName}
+                                </button>
+                            );
+                        }
+                    },
                     {
                         header: "قيمة الفاتورة",
                         accessor: (e: any) => (
                             <span className="font-black text-blue-600">
                                 {e.finalAmount?.toLocaleString()}  $
+                            </span>
+                        )
+                    },
+                    {
+                        header: "المدينة",
+                        accessor: (e: any) => (
+                            <span className="font-bold text-gray-600 dark:text-gray-300">
+                                {e.customer?.city || "-"}
                             </span>
                         )
                     },

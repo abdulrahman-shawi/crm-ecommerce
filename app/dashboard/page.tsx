@@ -33,6 +33,7 @@ const DashboardPage: React.FunctionComponent = () => {
     }>;
     summary?: {
       totalSalesAmount: number;
+      totalOrdersCount: number;
       totalCommissionAmount: number;
       commissionPercent: number;
       assignedCommissionPercent: number;
@@ -404,6 +405,7 @@ const DashboardPage: React.FunctionComponent = () => {
   }, [filteredTargets, valueTargets, user?.id]);
 
   const wageAmount = Number(user?.wage || 0);
+  const showSalesSummary = user?.accountType === "ADMIN";
   const totalEarnings = (targetProgress.summary?.totalCommissionAmount ?? 0) + totalSalesReward + wageAmount;
 
   React.useEffect(() => {
@@ -604,9 +606,11 @@ const DashboardPage: React.FunctionComponent = () => {
           <div className="overflow-x-auto">
             <div className="mb-6 grid gap-4 sm:grid-cols-4">
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-xs font-semibold text-slate-500">إجمالي المبيعات</div>
+                <div className="text-xs font-semibold text-slate-500">{showSalesSummary ? "إجمالي المبيعات" : "عدد طلباتي"}</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
-                  {(targetProgress.summary?.totalSalesAmount ?? 0).toFixed(2)}
+                  {showSalesSummary
+                    ? (targetProgress.summary?.totalSalesAmount ?? 0).toFixed(2)
+                    : String(targetProgress.summary?.totalOrdersCount ?? 0)}
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">

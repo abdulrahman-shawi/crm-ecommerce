@@ -43,6 +43,8 @@ const AnalyticPage: React.FC = () => {
     const [topSale, setTopSale] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [lowStock, setLowStock] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
+    const [expandedUserId, setExpandedUserId] = React.useState<string | null>(null);
+    const [expandedOrderByUser, setExpandedOrderByUser] = React.useState<Record<string, string | null>>({});
     const [timelineData, setTimelineData] = React.useState<any[]>([]); // 
     const [loading, setLoading] = React.useState(true);
     const [msgTimeline, setMsgTimeline] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
@@ -151,9 +153,9 @@ const AnalyticPage: React.FC = () => {
     })) || [];
 
     const topUsersData = topSellingUsers.data?.map((user: any) => ({
-    name: user.name,
-    sales: user.totalSold
-})) || [];
+        name: user.name,
+        sales: user.totalOrders || 0
+    })) || [];
 
     const showSalesTimeline = loading || timelineData.length > 0;
     const showStatusChart = loading || chartData.length > 0;
@@ -832,35 +834,109 @@ const AnalyticPage: React.FC = () => {
                         icon={<Award size={20} className="text-green-500" />}
                     />
 
-                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {topSellingUsers.data?.map((user: any, index: number) => (
-                            <div
-                                key={index}
-                                className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
-                            >
-                                <div className="flex items-center gap-3 overflow-hidden">
-                                    {/* إضافة رتبة بسيطة لإضفاء مظهر احترافي */}
-                                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 text-xs font-bold">
-                                        {index + 1}
-                                    </div>
-                                    <div className="flex flex-col overflow-hidden">
-                                        <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={user.name}>
-                                            {user.name}
-                                        </span>
-                                        <span className="text-[10px] text-slate-400 uppercase">موظف مبيعات</span>
-                                    </div>
-                                </div>
+                    <DynamicCard.Content className="space-y-3">
+                        {topSellingUsers.data?.map((userRow: any, index: number) => {
+                            const userId = String(userRow.userId || index);
+                            const isUserExpanded = expandedUserId === userId;
+                            const expandedOrderId = expandedOrderByUser[userId];
 
-                                <div className="text-right flex-shrink-0">
-                                    <div className="flex flex-col items-end">
-                                        <span className="text-red-600 dark:text-red-400 font-bold text-lg">
-                                            {user.totalSold?.toLocaleString() || 0}
+                            return (
+                                <div
+                                    key={userId}
+                                    className="p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => setExpandedUserId((prev) => (prev === userId ? null : userId))}
+                                        className="w-full flex justify-between items-center gap-3 text-right"
+                                    >
+                                        <div className="flex items-center gap-3 overflow-hidden">
+                                            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 text-xs font-bold">
+                                                {index + 1}
+                                            </div>
+                                            <div className="flex flex-col overflow-hidden">
+                                                <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={userRow.name}>
+                                                    {userRow.name}
+                                                </span>
+                                                <span className="text-[10px] text-slate-400 uppercase">موظف مبيعات</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="text-right flex-shrink-0">
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-red-600 dark:text-red-400 font-bold text-lg">
+                                                    {(userRow.totalOrders || 0).toLocaleString()}
+                                                </span>
+                                                <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">عدد الطلبات</span>
+                                            </div>
+                                        </div>
+                                    </button>
+
+                                    <div className="mt-3 flex items-center justify-between border-t border-dashed border-slate-200 dark:border-slate-700 pt-2">
+                                        <span className="text-xs text-slate-500">إجمالي المبيعات</span>
+                                        <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                                            {(Number(userRow.totalSalesAmount) || 0).toLocaleString()} $
                                         </span>
-                                        <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">طلب مكتمل</span>
                                     </div>
+
+                                    {isUserExpanded && (
+                                        <div className="mt-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-2">
+                                            <div className="mb-2 text-xs font-bold text-slate-500">طلبات المستخدم</div>
+                                            <div className="space-y-2 max-h-56 overflow-y-auto">
+                                                {(userRow.orders || []).map((order: any) => {
+                                                    const orderId = String(order.id);
+                                                    const isOrderExpanded = expandedOrderId === orderId;
+                                                    return (
+                                                        <div key={orderId} className="rounded-md border border-slate-200 dark:border-slate-700">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setExpandedOrderByUser((prev) => ({
+                                                                        ...prev,
+                                                                        [userId]: prev[userId] === orderId ? null : orderId,
+                                                                    }));
+                                                                }}
+                                                                className="w-full p-2 text-right hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                                                            >
+                                                                <div className="flex items-center justify-between gap-2">
+                                                                    <span className="font-semibold text-slate-700 dark:text-slate-200">#{order.orderNumber}</span>
+                                                                    <span className="text-xs text-slate-500">{new Date(order.createdAt).toLocaleDateString('ar-EG')}</span>
+                                                                </div>
+                                                                <div className="mt-1 flex items-center justify-between text-xs">
+                                                                    <span className="text-slate-500">{order.customer?.name || 'بدون عميل'}</span>
+                                                                    <span className="font-bold text-blue-600">{Number(order.finalAmount || 0).toLocaleString()} $</span>
+                                                                </div>
+                                                            </button>
+
+                                                            {isOrderExpanded && (
+                                                                <div className="border-t border-slate-200 dark:border-slate-700 p-2 bg-slate-50/60 dark:bg-slate-900/40">
+                                                                    <div className="text-[11px] font-bold text-slate-500 mb-2">المواد المباعة</div>
+                                                                    <div className="space-y-1">
+                                                                        {(order.items || []).map((item: any) => (
+                                                                            <div key={item.id} className="flex items-center justify-between text-xs rounded border border-slate-200 dark:border-slate-700 px-2 py-1">
+                                                                                <span className="text-slate-700 dark:text-slate-200">{item.product?.name || 'منتج'}</span>
+                                                                                <span className="text-slate-500">x{item.quantity}</span>
+                                                                            </div>
+                                                                        ))}
+                                                                        {(!order.items || order.items.length === 0) && (
+                                                                            <div className="text-xs text-slate-400">لا توجد مواد في هذا الطلب</div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+
+                                                {(!userRow.orders || userRow.orders.length === 0) && (
+                                                    <div className="text-xs text-slate-400">لا توجد طلبات لهذا المستخدم</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </DynamicCard.Content>
 
                     <DynamicCard.Footer>
@@ -870,7 +946,7 @@ const AnalyticPage: React.FC = () => {
                             </span>
                             <div className="flex items-center gap-1 text-emerald-500 font-semibold text-sm">
                                 <span>إجمالي: </span>
-                                {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalSold || 0), 0)}
+                                {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalOrders || 0), 0)}
                             </div>
                         </div>
                     </DynamicCard.Footer>

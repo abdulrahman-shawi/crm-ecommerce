@@ -396,37 +396,86 @@ export async function GetTopSellingUsersByPermission(userId: string) {
     const canViewEmployees = isAdmin(user) || Boolean(user.permission?.viewEmployees);
     if (!canViewEmployees) return { success: true, data: [] };
 
-  // 1. جلب أعلى المستخدمين مبيعاً (كأرقام معرفات فقط)
-  const topUsersGrouped = await prisma.order.groupBy({
-    by: ['userId'],
-    _count: { id: true },
-    orderBy: {
-      _count: { id: 'desc' }
-    },
-    take: 5
-  });
+    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
-  // 2. جلب تفاصيل المستخدمين (الأسماء) بناءً على المعرفات
-  const userDetails = await prisma.user.findMany({
-    where: {
-      id: { in: topUsersGrouped.map(u => u.userId).filter(Boolean) as string[] }
-    },
-    select: {
-      id: true,
-      username: true
-    }
-  });
+    const topUsersGrouped = await prisma.order.groupBy({
+      by: ['userId'],
+      where: {
+        userId: { not: null },
+        status: { in: statusWhitelist },
+      },
+      _count: { id: true },
+      _sum: { finalAmount: true },
+      orderBy: {
+        _sum: { finalAmount: 'desc' }
+      },
+      take: 10
+    });
 
-  // 3. دمج البيانات (الاسم مع عدد المبيعات)
-  const finalData = topUsersGrouped.map(group => {
-    const user = userDetails.find(u => u.id === group.userId);
-    return {
-      name: user?.username || "مستخدم غير معروف",
-      totalSold: group._count.id
-    };
-  });
+    const userIds = topUsersGrouped.map(u => u.userId).filter(Boolean) as string[];
 
-  return { success: true, data: finalData };
+    const userDetails = await prisma.user.findMany({
+      where: {
+        id: { in: userIds }
+      },
+      select: {
+        id: true,
+        username: true
+      }
+    });
+
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: { in: userIds },
+        status: { in: statusWhitelist },
+      },
+      select: {
+        id: true,
+        userId: true,
+        orderNumber: true,
+        finalAmount: true,
+        status: true,
+        createdAt: true,
+        customer: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            discount: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    const finalData = topUsersGrouped.map(group => {
+      const userInfo = userDetails.find(u => u.id === group.userId);
+      const userOrders = orders.filter(order => order.userId === group.userId);
+
+      return {
+        userId: group.userId,
+        name: userInfo?.username || "مستخدم غير معروف",
+        totalOrders: group._count.id || 0,
+        totalSalesAmount: Number(group._sum.finalAmount || 0),
+        orders: userOrders
+      };
+    });
+
+    return { success: true, data: finalData };
   } catch (error) {
     console.error("Error in GetTopSellingUsersByPermission:", error);
     return { success: false, data: [] };
@@ -500,6 +549,21 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         price: true,
         discount: true,
         order: { select: { userId: true, createdAt: true } }
+      }
+    });
+
+    const totalOrdersCount = await prisma.order.count({
+      where: {
+        userId: scopedUserId,
+        status: { in: statusWhitelist },
+        ...(monthRange
+          ? {
+              createdAt: {
+                gte: monthRange.start,
+                lte: monthRange.end,
+              },
+            }
+          : {}),
       }
     });
 
@@ -590,6 +654,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       data,
       summary: {
         totalSalesAmount,
+        totalOrdersCount,
         totalCommissionAmount,
         commissionPercent,
         assignedCommissionPercent

@@ -571,9 +571,11 @@ const CustomrLayout: React.FC = () => {
         <div className="flex justify-between items-center">
 
           <div className="flex gap-2">
+             {user && isAdmin(user) && (
             <Button onClick={toggleSelectAll} variant="outline">
               <CheckSquare size={20} />
             </Button>
+          )}
             {selectedCustomers.length > 0 && (
               <>
                 <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
@@ -586,8 +588,8 @@ const CustomrLayout: React.FC = () => {
                 )}
               </>
             )}
-            {canImport && (
-              <>
+            {user && isAdmin(user) && (
+            <>
                 <input
                   ref={importInputRef}
                   type="file"
@@ -599,9 +601,11 @@ const CustomrLayout: React.FC = () => {
                   <Upload size={20} />
                 </Button>
               </>
-            )}
+          )}
             {/* زر التصدير الذكي */}
+            {user && isAdmin(user) && (
             <Button onClick={handleExportAction}><Download size={20} /></Button>
+          )}
             {/* <button
               
               className={`flex items-center gap-2 px-6 py-2 rounded-xl text-white font-bold transition-all ${selectedCustomers.length > 0

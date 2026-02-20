@@ -13,6 +13,8 @@ import { Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
 import { hasPermission } from '@/lib/utils';
 import { getProduct } from '@/server/product';
+import PhoneInput from 'react-phone-number-input';
+import { Controller } from 'react-hook-form';
 
 const userSchema = z.object({
   username: z.string().min(3, "اسم المستخدم مطلوب"),
@@ -423,11 +425,33 @@ const UserManagement: React.FunctionComponent = () => {
             key={editId || 'create'} // لإعادة بناء الفورم عند التبديل بين تعديل وإضافة
             submitLabel={editId ? 'تحديث البيانات' : 'إرسال البيانات'}
           >
-            {({ register, formState: { errors } }) => (
+            {({ register, control, formState: { errors } }) => (
               <div className="grid gap-4">
                 <FormInput className='text-gray-800 dark:text-white' label="اسم المستخدم" {...register("username")} error={errors.username?.message as string} />
                 <FormInput className='text-gray-800 dark:text-white' label="البريد الإلكتروني" {...register("email")} error={errors.email?.message as string} />
-                <FormInput className='text-gray-800 dark:text-white' label="رقم الهاتف" {...register("phone")} error={errors.phone?.message as string} />
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
+                  <div className="dir-ltr">
+                    <Controller
+                      name="phone"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <PhoneInput
+                          international
+                          withCountryCallingCode
+                          defaultCountry="SY"
+                          value={typeof value === "string" ? value : undefined}
+                          onChange={(nextValue) => onChange(nextValue ?? "")}
+                          className="PhoneInputCustom"
+                          numberInputProps={{
+                            className: "w-full bg-white dark:bg-slate-900 p-3 rounded-md border border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-gray-900 dark:text-slate-200"
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                  {errors.phone && <p className="text-xs text-red-500">{errors.phone.message as string}</p>}
+                </div>
                 <FormInput className='text-gray-800 dark:text-white' label="كلمة المرور" type="password" {...register("password")} placeholder={editId ? "اتركها فارغة لعدم التغيير" : ""} error={errors.password?.message as string} />
                 <FormInput className='text-gray-800 dark:text-white' label="المسمى الوظيفي" {...register("jobTitle")} error={errors.jobTitle?.message as string} />
                 <FormInput

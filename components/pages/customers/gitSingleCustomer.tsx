@@ -60,6 +60,7 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
   const citiesByCountry: Record<string, string[]> = {
     "سوريا": [
       "دمشق",
+      "ريف دمشق",
       "حلب",
       "حمص",
       "حماة",
