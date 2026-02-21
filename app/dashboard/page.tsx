@@ -34,6 +34,7 @@ const DashboardPage: React.FunctionComponent = () => {
     summary?: {
       totalSalesAmount: number;
       totalOrdersCount: number;
+      deliveredOrdersCount?: number;
       totalCommissionAmount: number;
       commissionPercent: number;
       assignedCommissionPercent: number;
@@ -606,7 +607,7 @@ const DashboardPage: React.FunctionComponent = () => {
           <div className="overflow-x-auto">
             <div className="mb-6 grid gap-4 sm:grid-cols-4">
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-xs font-semibold text-slate-500">{showSalesSummary ? "إجمالي المبيعات" : "عدد طلباتي"}</div>
+                <div className="text-xs font-semibold text-slate-500">{showSalesSummary ? "إجمالي المبيعات" : "عدد الطلبات الكلي"}</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
                   {showSalesSummary
                     ? (targetProgress.summary?.totalSalesAmount ?? 0).toFixed(2)
@@ -614,9 +615,11 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-xs font-semibold text-slate-500">النسبة المعيّنة</div>
+                <div className="text-xs font-semibold text-slate-500">{showSalesSummary ? "النسبة المعيّنة" : "تم تسليمها"}</div>
                 <div className="text-xl font-bold text-slate-800 dark:text-white">
-                  {(targetProgress.summary?.assignedCommissionPercent ?? 0).toFixed(2)}%
+                  {showSalesSummary
+                    ? `${(targetProgress.summary?.assignedCommissionPercent ?? 0).toFixed(2)}%`
+                    : String(targetProgress.summary?.deliveredOrdersCount ?? 0)}
                 </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-right shadow-sm dark:border-slate-800 dark:bg-slate-950">

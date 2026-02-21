@@ -648,7 +648,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         header: "المدينة",
                         accessor: (e: any) => (
                             <span className="font-bold text-gray-600 dark:text-gray-300">
-                                {e.customer?.city || "-"}
+                                {e.city || "-"}
                             </span>
                         )
                     },

@@ -568,10 +568,24 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       }
     });
 
-    const totalOrdersCount = await prisma.order.count({
+    const deliveredOrdersCount = await prisma.order.count({
       where: {
         userId: scopedUserId,
         status: { in: statusWhitelist },
+        ...(monthRange
+          ? {
+              createdAt: {
+                gte: monthRange.start,
+                lte: monthRange.end,
+              },
+            }
+          : {}),
+      }
+    });
+
+    const totalOrdersCount = await prisma.order.count({
+      where: {
+        userId: scopedUserId,
         ...(monthRange
           ? {
               createdAt: {
@@ -671,6 +685,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       summary: {
         totalSalesAmount,
         totalOrdersCount,
+        deliveredOrdersCount,
         totalCommissionAmount,
         commissionPercent,
         assignedCommissionPercent
