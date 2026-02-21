@@ -8,7 +8,7 @@ import { getCustomer } from '@/server/customer';
 import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, updateStaus } from '@/server/order';
 import { getProduct } from '@/server/product';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Plus, Printer, Save, Search, Trash, Trash2, X } from 'lucide-react';
+import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Pencil, Plus, Printer, Save, Search, Trash, Trash2, X } from 'lucide-react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { useReactToPrint } from 'react-to-print';
@@ -91,7 +91,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         wrapper.style.position = 'fixed';
         wrapper.style.left = '-99999px';
         wrapper.style.top = '0';
-        wrapper.style.width = '800px';
+        wrapper.style.width = '820px';
         wrapper.style.background = '#ffffff';
         wrapper.style.color = '#0f172a';
         wrapper.style.padding = '24px';
@@ -109,23 +109,23 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <td style="padding:8px;border:1px solid #e2e8f0;text-align:center;">${price}</td>
                 </tr>`;
             }).join('')
-            : `<tr><td colspan="3" style="padding:10px;border:1px solid #e2e8f0;text-align:center;">لا توجد منتجات</td></tr>`;
+            : `<tr><td colspan="3" style="padding:10px;border:1px solid #e2e8f0;text-align:center;">لا توجد منتجات / No items</td></tr>`;
 
         wrapper.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                 <h1 style="margin:0;font-size:24px;color:#2563eb;">SKYNOVA</h1>
-                <div style="font-size:14px;font-weight:700;">فاتورة الطلب #${invoiceNo}</div>
+                <div style="font-size:14px;font-weight:700;">فاتورة / Invoice #${invoiceNo}</div>
             </div>
-            <div style="font-size:14px;margin-bottom:12px;">التاريخ: ${createdAt}</div>
-            <div style="font-size:14px;margin-bottom:6px;">العميل: <strong>${customerName}</strong></div>
-            <div style="font-size:14px;margin-bottom:6px;">الحالة: <strong>${statusText}</strong></div>
-            <div style="font-size:14px;margin-bottom:16px;">الإجمالي النهائي: <strong>${finalAmount}</strong></div>
+            <div style="font-size:14px;margin-bottom:10px;">التاريخ / Date: ${createdAt}</div>
+            <div style="font-size:14px;margin-bottom:6px;">العميل / Customer: <strong>${customerName}</strong></div>
+            <div style="font-size:14px;margin-bottom:6px;">الحالة / Status: <strong>${statusText}</strong></div>
+            <div style="font-size:14px;margin-bottom:16px;">الإجمالي النهائي / Final Total: <strong>${finalAmount}</strong></div>
             <table style="width:100%;border-collapse:collapse;font-size:13px;">
                 <thead>
                     <tr style="background:#f8fafc;">
-                        <th style="padding:8px;border:1px solid #e2e8f0;">المنتج</th>
-                        <th style="padding:8px;border:1px solid #e2e8f0;">الكمية</th>
-                        <th style="padding:8px;border:1px solid #e2e8f0;">السعر</th>
+                        <th style="padding:8px;border:1px solid #e2e8f0;">المنتج / Product</th>
+                        <th style="padding:8px;border:1px solid #e2e8f0;">الكمية / Qty</th>
+                        <th style="padding:8px;border:1px solid #e2e8f0;">السعر / Price</th>
                     </tr>
                 </thead>
                 <tbody>${itemsHtml}</tbody>
@@ -164,56 +164,40 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     };
 
     const shareOrderPdfToCustomerWhatsApp = async (data: any) => {
-        const rawPhone = data?.customer?.phone?.[0] || '';
-        const phoneNumber = String(rawPhone).replace(/\D/g, '');
-        const countryCode = String(data?.customer?.countryCode || '').replace(/\D/g, '');
-        const whatsappNumber = `${countryCode}${phoneNumber}`;
-
-        if (!phoneNumber) {
-            toast.error('لا يوجد رقم هاتف للعميل');
-            return;
-        }
-
-        const msg = `مرحباً ${data?.customer?.name || ''}، مرفق فاتورة الطلب رقم #${data?.orderNumber || ''}`;
-        const pdfFile = await buildOrderPdfFile(data);
-
-        const pdfBase64 = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const result = String(reader.result || '');
-                resolve(result.includes(',') ? result.split(',')[1] : result);
-            };
-            reader.onerror = () => reject(reader.error);
-            reader.readAsDataURL(pdfFile);
-        });
-
-        const loadingToast = toast.loading('جاري إرسال ملف PDF عبر واتساب...');
+        const loadingToast = toast.loading('جاري إنشاء ملف PDF...');
 
         try {
-            const res = await fetch('/api/orders/share-whatsapp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    whatsappNumber,
-                    customerName: data?.customer?.name || '',
-                    orderNumber: data?.orderNumber || '',
-                    pdfBase64,
-                    fileName: pdfFile.name,
-                }),
-            });
+            const pdfFile = await buildOrderPdfFile(data);
+            const shareTitle = `فاتورة الطلب #${data?.orderNumber || ''}`;
+            const shareText = `Invoice #${data?.orderNumber || ''} - ${data?.customer?.name || ''}`;
 
-            const json = await res.json();
-
-            if (!res.ok || !json?.success) {
-                throw new Error(json?.error || 'فشل إرسال الملف عبر واتساب');
+            if (navigator.share && navigator.canShare?.({ files: [pdfFile] })) {
+                toast.dismiss(loadingToast);
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    files: [pdfFile],
+                });
+                toast.success('تم فتح قائمة مشاركة الملف');
+                return;
             }
 
-            window.open(`https://wa.me/${whatsappNumber}`, '_blank');
-            toast.success('تم إرسال ملف PDF للعميل بنجاح');
+            const downloadUrl = URL.createObjectURL(pdfFile);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = pdfFile.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(downloadUrl);
+
+            toast.success('تم إنشاء الملف، هذا المتصفح لا يدعم مشاركة الملفات مباشرة');
         } catch (error: any) {
-            toast.error(error?.message || 'تعذر إرسال ملف PDF عبر واتساب');
+            if (error?.name === 'AbortError') {
+                toast('تم إلغاء المشاركة');
+            } else {
+                toast.error(error?.message || 'تعذر إنشاء أو مشاركة ملف PDF');
+            }
         } finally {
             toast.dismiss(loadingToast);
         }
@@ -496,6 +480,62 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         }
     };
 
+    const handleEditOrder = (data: any) => {
+        const normalizedItems = (Array.isArray(data?.items) ? data.items : []).map((item: any) => {
+            const price = Number(item?.price ?? item?.product?.price ?? 0);
+            const quantity = Number(item?.quantity ?? 1);
+            const discount = Number(item?.discount ?? 0);
+            const productId = String(item?.productId ?? item?.product?.id ?? "");
+            return {
+                productId,
+                name: item?.product?.name || item?.name || "",
+                modelNumber: item?.product?.modelNumber || item?.modelNumber || "",
+                price,
+                quantity,
+                discount,
+                note: item?.note || "",
+                total: Math.max(0, price * quantity - discount),
+            };
+        });
+
+        const nextItems = normalizedItems.length > 0
+            ? normalizedItems
+            : [{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }];
+
+        const nextSearchQueries = nextItems.reduce((acc: Record<number, string>, item: any, index: number) => {
+            acc[index] = item.name || item.modelNumber || "";
+            return acc;
+        }, {});
+
+        setEditId(data?.id ?? null);
+        setItems(nextItems);
+        setSearchQueries(nextSearchQueries);
+        setShowDropdown({});
+
+        setCustomerId(data?.customerId || "");
+        setCustomerSearchQuery(data?.customer?.name || "");
+        setStatus(data?.status || "طلب جديد");
+        setPaymentMethod(data?.paymentMethod || "عند الاستلام");
+
+        setReceiverName(data?.receiverName || "");
+        const receiverPhoneValue = Array.isArray(data?.receiverPhone)
+            ? (data.receiverPhone[0] || "")
+            : (data?.receiverPhone || "");
+        setReceiverPhone(receiverPhoneValue);
+
+        setCountry(data?.country || "ليبيا");
+        setCity(data?.city || "");
+        setMunicipality(data?.municipality || "");
+        setFullAddress(data?.fullAddress || "");
+        setGoogleMapsLink(data?.googleMapsLink || "");
+        setDeliveryMethod(data?.deliveryMethod || "توصيل الى المنزل");
+        setDeliveryNotes(data?.deliveryNotes || "");
+        setAdditionalNotes(data?.additionalNotes || "");
+        setOverallDiscount(Number(data?.discount || 0));
+
+        setIsOpen(true);
+    };
+
     const tableActions: any[] = [
         (user && hasPermission(user, "viewOrders")) && {
             label: "عرض تقارير الطلب",
@@ -507,6 +547,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 console.log(data)
                 // فتح مودال الفاتورة
                 setisOpenorder(true);
+            }
+        },
+        (user && hasPermission(user, "editOrders")) && {
+            label: "تعديل",
+            icon: <Pencil size={14} />,
+            onClick: (data: any) => {
+                handleEditOrder(data);
             }
         },
         (user && hasPermission(user, "editOrders")) && {
