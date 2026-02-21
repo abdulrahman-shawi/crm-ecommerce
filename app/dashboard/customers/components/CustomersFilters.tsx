@@ -1,0 +1,54 @@
+import * as React from "react";
+
+type CustomersFiltersProps = {
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  dateFilter: string;
+  setDateFilter: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const filterTabs = [
+  { id: "الكل", label: "الكل" },
+  { id: "فرصة جديدة", label: "فرصة جديدة" },
+  { id: "جاري المتابعة", label: "جاري المتابعة" },
+  { id: "تم البيع", label: "تم البيع" },
+  { id: "غير مهتم / ملغي", label: "غير مهتم / ملغي" },
+];
+
+export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
+  search,
+  setSearch,
+  dateFilter,
+  setDateFilter,
+}) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 items-center">
+        <div className="col-span-2">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="ابحث بالرقم أو الاسم أو المدينة"
+            className="flex-1 h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent p-5 my-3"
+          />
+        </div>
+
+        <div className="flex bg-slate-100 w-full justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
+          {filterTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setDateFilter(tab.id)}
+              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dateFilter === tab.id
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+                }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};

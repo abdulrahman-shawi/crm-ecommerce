@@ -6,21 +6,23 @@ import * as XLSX from 'xlsx';
 import { DynamicForm } from "@/components/shared/dynamic-form";
 import { FormInput } from "@/components/ui/form-input";
 import PhoneInput from 'react-phone-number-input'
-import { Button } from "@/components/ui/button";
 import { AppModal } from "@/components/ui/app-modal";
-import { AssignUsers, createCustomerAction, createmessage, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
+import { AssignUsers, createCustomerAction, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission, isAdmin } from "@/lib/utils";
 import toast from "react-hot-toast";
-import { CheckSquare, Download, Eye, MapPin, MessageCircle, Pencil, Phone, Plus, Save, Send, ShoppingBag, Trash2, Upload, UserPlus, XCircle } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 import { getProduct } from "@/server/product";
-import { createOrder } from "@/server/order";
 import { Controller, useFieldArray } from "react-hook-form";
 import ViewOrderCustomer from "@/components/pages/customers/viewOrder";
 import AssignUserModal from "@/components/pages/customers/assignuser";
 import GetCustomerSingle from "@/components/pages/customers/gitSingleCustomer";
 import OrderCustomer from "@/components/pages/customers/orderCustomer";
+import { useCustomerFilters } from "./hooks/useCustomerFilters";
+import { useCustomerSelection } from "./hooks/useCustomerSelection";
+import { useCustomerBulkActions } from "./hooks/useCustomerBulkActions";
+import { CustomersHeader } from "./components/CustomersHeader";
+import { CustomersFilters } from "./components/CustomersFilters";
+import { CustomerCard } from "./components/CustomerCard";
 
 /* ===================== Constants ===================== */
 
@@ -63,47 +65,15 @@ type CustomerFormValues = z.infer<typeof customerSchema>;
 
 /* ===================== Component ===================== */
 const CustomrLayout: React.FC = () => {
-  const [activeTabs, setActiveTabs] = React.useState<Array<"skin" | "laser" | "slimming">>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpencustomer, setIsOpencustomer] = React.useState(false);
-  const [isOpencustomerchat, setIsOpencustomerchat] = React.useState(false);
   const [isOpenOrder, setisOpenOrder] = React.useState(false);
   const [customers, setCustomers] = React.useState<any[]>([])
   const [formdata, setFormdata] = React.useState<any>(null)
   const [editId, setEditId] = React.useState<string | null>(null);
   const [customer, setCustomer] = React.useState<any>({})
   const [customerorder, setCustomerorder] = React.useState<any[]>([])
-  const [items, setItems] = React.useState([
-    { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
-  ]);
-  const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
-  const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
-  const [overallDiscount, setOverallDiscount] = React.useState(0);
-
-  // بيانات العميل والمبالغ
   const [customerId, setCustomerId] = React.useState("");
-  const [paymentMethod, setPaymentMethod] = React.useState("عند الاستلام");
-
-  // بيانات المستلم والعنوان
-  const [receiverName, setReceiverName] = React.useState("");
-  const [receiverPhone, setReceiverPhone] = React.useState<(string | undefined)[]>([""]);
-  const [country, setCountry] = React.useState("ليبيا"); // افتراضي حسب الصورة
-  const [city, setCity] = React.useState("");
-  const [municipality, setMunicipality] = React.useState("");
-  const [fullAddress, setFullAddress] = React.useState("");
-  const [status, setStatus] = React.useState("طلب جديد");
-  // تفاصيل الشحن
-  const [deliveryMethod, setDeliveryMethod] = React.useState("توصيل الى المنزل");
-  const [amount, setamount] = React.useState("");
-  const [amountBank, setamountBank] = React.useState("");
-  const [googleMapsLink, setGoogleMapsLink] = React.useState("");
-
-  const [customerSearchQuery, setCustomerSearchQuery] = React.useState("");
-  const [showCustomerDropdown, setShowCustomerDropdown] = React.useState(false);
-  const [deliveryNotes, setDeliveryNotes] = React.useState("");
-  const [additionalNotes, setAdditionalNotes] = React.useState("");
-  const subTotal = items.reduce((sum, i) => sum + i.total, 0);
-  const grandTotal = subTotal - overallDiscount;
   const [search, setSearch] = React.useState("")
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
@@ -111,145 +81,19 @@ const CustomrLayout: React.FC = () => {
 
   const [dateFilter, setDateFilter] = React.useState('الكل');
   const [alluser, setUsers] = React.useState<any[]>([])
-  const [selectedCustomers, setSelectedCustomers] = React.useState<any[]>([]);
   const importInputRef = React.useRef<HTMLInputElement | null>(null);
+  const { user } = useAuth()
+
+  const filterCustomer = useCustomerFilters(customers, search, dateFilter);
+  const {
+    selectedCustomers,
+    setSelectedCustomers,
+    areAllSelected,
+    toggleSelectAll,
+    toggleSelect,
+  } = useCustomerSelection(filterCustomer);
 
   // دالة للتعامل مع الاختيار
-
-  const filterCustomer = customers.filter((e: any) => {
-    // 1. منطق البحث النصي الحالي
-    const matchesSearch =
-      e.name?.toLowerCase().includes(search.toLowerCase()) ||
-      e.countryCode?.toLowerCase().includes(search.toLowerCase()) ||
-      e.phone?.some((p:any )=> p.toLowerCase().includes(search.toLowerCase())) ||
-      e.city?.toLowerCase().includes(search.toLowerCase()) || // أضفت المدينة كما طلبت
-      e.country?.toLowerCase().includes(search.toLowerCase());
-
-
-    // إذا كان المستخدم اختار حالة معينة، نقوم بالمطابقة، وإذا لم يختار (All) نعرض الكل
-    const matchesStatus = dateFilter !== 'الكل'
-      ? e.status === dateFilter
-      : true;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const allFilteredIds = React.useMemo(
-    () => filterCustomer.map((customer) => customer.id),
-    [filterCustomer]
-  );
-
-  const areAllSelected = allFilteredIds.length > 0 && allFilteredIds.every((id) => selectedCustomers.includes(id));
-
-  const toggleSelectAll = () => {
-    setSelectedCustomers(areAllSelected ? [] : allFilteredIds);
-  };
-
-  const handleBulkAssignUsers = async (_: string, userIds: string[]) => {
-    if (selectedCustomers.length === 0) {
-      toast.error("لا يوجد عملاء محددين");
-      return;
-    }
-
-    const loading = toast.loading("جار ربط الموظفين بالعملاء المحددين");
-    try {
-      const results = await Promise.all(
-        selectedCustomers.map((customerId) =>
-          AssignUsers(customerId, userIds)
-            .then(() => ({ success: true }))
-            .catch(() => ({ success: false }))
-        )
-      );
-
-      const failedCount = results.filter((r) => !r.success).length;
-      if (failedCount > 0) {
-        toast.error(`تعذر ربط ${failedCount} عميل`);
-      } else {
-        toast.success("تم ربط الموظفين بنجاح");
-      }
-
-      getData();
-      setSelectedCustomers([]);
-      setIsBulkAssignOpen(false);
-    } finally {
-      toast.dismiss(loading);
-    }
-  };
-
-  const handleBulkDelete = async () => {
-    if (!user || !hasPermission(user, "deleteCustomers")) {
-      toast.error("ليس لديك صلاحية حذف العملاء");
-      return;
-    }
-    if (selectedCustomers.length === 0) {
-      toast.error("لا يوجد عملاء محددين");
-      return;
-    }
-
-    const confirmDelete = window.confirm("هل أنت متأكد من حذف العملاء المحددين؟");
-    if (!confirmDelete) {
-      return;
-    }
-
-    const loading = toast.loading("جار حذف العملاء");
-    try {
-      const results = await Promise.all(
-        selectedCustomers.map((customerId) =>
-          deleteCustomer({ id: customerId })
-            .then((res) => ({ success: res.success }))
-            .catch(() => ({ success: false }))
-        )
-      );
-
-      const successCount = results.filter((r) => r.success).length;
-      const failedCount = results.filter((r) => !r.success).length;
-
-      if (successCount > 0) {
-        toast.success(`تم حذف ${successCount} عميل`);
-      }
-      if (failedCount > 0) {
-        toast.error(`تعذر حذف ${failedCount} عميل`);
-      }
-
-      getData();
-      setSelectedCustomers([]);
-    } finally {
-      toast.dismiss(loading);
-    }
-  };
-
-  const toggleSelect = (id: any) => {
-    setSelectedCustomers((prev: any) =>
-      prev.includes(id) ? prev.filter((itemId: any) => itemId !== id) : [...prev, id]
-    );
-  };
-  const updateItem = (index: number, field: string, value: any, products: any[]) => {
-    const newItems = [...items];
-    const item = newItems[index];
-
-    const isDuplicate = items.some((item, i) => item.productId === value && i !== index);
-
-    if (isDuplicate) {
-      toast.error("هذا المنتج مضاف بالفعل! يرجى اختيار منتج آخر أو تعديل الكمية.");
-      return; // توقف عن التنفيذ ولا تقم بتحديث الحالة
-    }
-
-    if (field === "productId") {
-      const product = products.find(p => p.id === Number(value));
-      item.productId = value;
-      item.name = product?.name || "";
-      item.modelNumber = product?.modelNumber || "";
-      item.price = product?.price || 0;
-      setSearchQueries({ ...searchQueries, [index]: item.name });
-      setShowDropdown({ ...showDropdown, [index]: false });
-    } else {
-      (item as any)[field] = value;
-    }
-
-    item.total = item.price * item.quantity - item.discount;
-    setItems(newItems);
-  };
-
   const deleteCus = async (data: any) => {
     const confirm = window.confirm("هل انت متأكد من الحذف")
     if (confirm) {
@@ -268,15 +112,6 @@ const CustomrLayout: React.FC = () => {
     }
   }
 
-
-  const addNewItem = () => {
-    setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
-  };
-  const toggleTab = (tab: "skin" | "laser" | "slimming") => {
-    setActiveTabs((prev) =>
-      prev.includes(tab) ? prev.filter((t) => t !== tab) : [...prev, tab]
-    );
-  };
 
   const getData = async () => {
     const res = await getCustomer();
@@ -312,8 +147,16 @@ const CustomrLayout: React.FC = () => {
 
     }
   }
+
+  const { handleBulkAssignUsers, handleBulkDelete } = useCustomerBulkActions({
+    selectedCustomers,
+    user,
+    getData,
+    setSelectedCustomers,
+    setIsBulkAssignOpen,
+  });
+
   const [products, setProduct] = React.useState<any[]>([])
-  const { user } = useAuth()
   React.useEffect(() => {
     getData();
     getAlluser();
@@ -321,7 +164,7 @@ const CustomrLayout: React.FC = () => {
       setProduct(products);
     }).catch(console.error);
   }, [user])
-  const [isPending, setIsPending] = React.useState(false);
+  
 
   // const resetForm = () => {
   //   // إغلاق المودال أولاً
@@ -578,114 +421,30 @@ const CustomrLayout: React.FC = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between flex-wrap gap-3 items-center mb-8 bg-white dark:bg-slate-900 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">نظام إدارة العملاء</h1>
-        <div className="flex items-center gap-3">
-          {user && hasPermission(user, "addCustomers") && (
-            <Button onClick={() => { setFormdata({ name: "", phone: [""] }); setEditId(null); setIsOpen(true); }}><Plus size={20} /></Button>
-          )}
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
-              {user && isAdmin(user) && (
-                <Button onClick={toggleSelectAll} variant="outline">
-                  <CheckSquare size={20} />
-                </Button>
-              )}
+      <CustomersHeader
+        user={user}
+        selectedCount={selectedCustomers.length}
+        importInputRef={importInputRef}
+        onOpenCreate={() => {
+          setFormdata({ name: "", phone: [""] });
+          setEditId(null);
+          setIsOpen(true);
+        }}
+        onToggleSelectAll={toggleSelectAll}
+        onOpenBulkAssign={() => setIsBulkAssignOpen(true)}
+        onBulkDelete={handleBulkDelete}
+        onImportClick={handleImportClick}
+        onImportFile={handleImportFile}
+        onExport={handleExportAction}
+        onClearSelection={() => setSelectedCustomers([])}
+      />
 
-              {selectedCustomers.length > 0 && user && isAdmin(user) && (
-               <>
-                <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
-                  <UserPlus size={20} />
-                </Button>
-                {user && hasPermission(user, "deleteCustomers") && (
-                  <Button onClick={handleBulkDelete} variant="secondary">
-                    <Trash2 size={20} />
-                  </Button>
-                )}
-              </>
-              )}
-
-              {user && isAdmin(user) && (
-                <>
-                  <input
-                    ref={importInputRef}
-                    type="file"
-                    accept=".xlsx,.xls"
-                    onChange={handleImportFile}
-                    className="hidden"
-                  />
-                  <Button onClick={handleImportClick} variant="outline">
-                    <Upload size={20} />
-                  </Button>
-                </>
-              )}
-
-              {/* زر التصدير الذكي */}
-              {user && isAdmin(user) && (
-                <Button onClick={handleExportAction}><Download size={20} /></Button>
-              )}
-
-            {/* <button
-              
-              className={`flex items-center gap-2 px-6 py-2 rounded-xl text-white font-bold transition-all ${selectedCustomers.length > 0
-                ? 'bg-blue-600 hover:bg-blue-700 shadow-lg scale-105'
-                : 'bg-slate-600 hover:bg-slate-700'
-                }`}
-            >
-              <Download size={18} />
-            </button> */}
-
-              {/* زر مسح التحديد - يظهر فقط عند وجود تحديد */}
-              {selectedCustomers.length > 0 && (
-                <button
-                  onClick={() => setSelectedCustomers([])}
-                  className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
-                  title="إلغاء التحديد"
-                >
-                  <XCircle size={24} />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col gap-3">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 items-center">
-          {/* حقل البحث الحالي */}
-          <div className="col-span-2">
-            <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="ابحث بالرقم أو الاسم أو المدينة"
-            className="flex-1 h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent p-5 my-3"
-          />
-          </div>
-
-          {/* خيارات التاريخ */}
-          <div className="flex bg-slate-100 w-full justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
-            {[
-              { id: 'الكل', label: 'الكل' },
-              { id: 'فرصة جديدة', label: 'فرصة جديدة' },
-              { id: 'جاري المتابعة', label: 'جاري المتابعة' },
-              { id: 'تم البيع', label: 'تم البيع' },
-              { id: 'غير مهتم / ملغي', label: 'غير مهتم / ملغي' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setDateFilter(tab.id)} // تأكد من تعريف هذا الـ State
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dateFilter === tab.id
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-
-          </div>
-        </div>
-      </div>
+      <CustomersFilters
+        search={search}
+        setSearch={setSearch}
+        dateFilter={dateFilter}
+        setDateFilter={setDateFilter}
+      />
       <div className="  dir-rtl" dir="rtl">
         <div className=" mx-auto">
 
@@ -696,193 +455,43 @@ const CustomrLayout: React.FC = () => {
                 return customer.users.some((u: any) => u.id === user?.id);
               })
               .map((customer) => (
-                <div
-                  onClick={() => getSingleCustomer(customer)}
+                <CustomerCard
                   key={customer.id}
-                  className={`group border ${customer.orders.length === 1 ? `border-pink-500` : customer.orders.length >= 2 ? 'border-purple-500' : 'border-transparent'} relative bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer`}
-                >
-                  <div className="absolute top-4 right-6 z-10">
-                    <input
-                      type="checkbox"
-                      checked={selectedCustomers.includes(customer.id)}
-                      // 1. منع الانتشار عند النقر (هذا ما يمنع البطاقة من التفاعل)
-                      onClick={(e) => e.stopPropagation()}
-                      // 2. معالجة تغيير الحالة
-                      onChange={(e) => {
-                        toggleSelect(customer.id);
-                      }}
-                      className="w-5 h-5 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                    />
-                  </div>
-                  {/* أزرار الحذف والتعديل - تظهر عند الحوام (Hover) */}
-                  <div className="absolute top-4 left-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {user && hasPermission(user, "editCustomers") && (
-                      <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setEditId(customer.id)
-                        const normalizedPhones = Array.isArray(customer.phone)
-                          ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
-                          : String(customer.phone || "")
-                              .split(/[\s,\-\n]+/)
-                              .map((num: string) => num.trim())
-                              .filter((num: string) => num.length > 0)
-                        setFormdata({
-                          name: customer.name,
-                          phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
-                        })
-                        setIsOpen(true)
-                      }}
-                      className="p-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 dark:bg-slate-800 dark:text-blue-400 transition-colors"
-                    >
-                      <Pencil size={16} />
-                    </button>
-                    )  }
-                      {user && hasPermission(user, "deleteCustomers") && (
-                        <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        deleteCus(customer)
-                      }}
-                      className="p-2 bg-rose-50 text-rose-600 rounded-full hover:bg-rose-100 dark:bg-slate-800 dark:text-rose-400 transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                      )}   
-                    
-                  </div>
-
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="space-y-3 mt-4">
-                      <div>
-                        <h3 className="text-base font-black text-slate-900 dark:text-white mb-1">
-                          {customer.name}
-                        </h3>
-                        {/* عرض آخر رسالة إذا وجدت */}
-                        <p className="text-xs text-slate-500 line-clamp-1 italic font-medium">
-                          {customer.message && customer.message.length > 0
-                            ? customer.message[customer.message.length - 1].message
-                            : "لا توجد رسائل..."}
-                        </p>
-
-                      </div>
-
-                      <div className="flex flex-wrap gap-3 items-center mt-2">
-                        {/* حالة العميل */}
-                        <select
-                          value={customer.status}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            handleStatus(customer.id, e.target.value);
-                          }}
-                          className={`
-      appearance-none outline-none cursor-pointer
-      px-4 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
-      ${customer.status === "فرصة جديدة" ? 'bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800' :
-                              customer.status === "جاري المتابعة" ? 'bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800' :
-                                customer.status === "تم البيع" ? 'bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800' :
-                                  customer.status === "غير مهتم / ملغي" ? 'bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800' :
-                                    'bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800'
-                            }
-    `}
-                        >
-                          {STATUS_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value} className="bg-white text-slate-900">
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-
-                        {/* التاريخ المنسق */}
-                        <div className="flex flex-col border-r border-slate-200 dark:border-slate-700 pr-3">
-                          <span className="text-[9px] text-slate-400 font-bold leading-none mb-1">تاريخ التسجيل</span>
-                          <span className="text-[10px] text-slate-600 dark:text-slate-400 font-black leading-none">
-                            {new Date(customer.createdAt).toLocaleDateString('ar-EG', {
-                              day: '2-digit',
-                              month: 'short',
-                              year: 'numeric'
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* الصورة الرمزية */}
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xl font-black text-white border-4 border-white dark:border-slate-800 shadow-lg">
-                      {customer.name[0].toUpperCase()}
-                    </div>
-                  </div>
-
-                  {/* الإحصائيات والأزرار السفلية */}
-                  <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-3">
-                      {/* أيقونة الطلبات */}
-                      {user && hasPermission(user, "addOrders") && (
-                        <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCustomerId(customer.id);
-                          setisOpenOrder(true);
-                        }}
-                        className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-xl transition-all"
-                        title="الطلبات"
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                      )}
-
-                      {/* أيقونة تعيين موظف (للأدمن فقط) */}
-
-                      {user && hasPermission(user, "viewOrders") && (
-                        <button
-                        className="p-2 text-slate-400 hover:text-green-500 hover:bg-blue-50 rounded-xl transition-all"
-                        title="اظهار الفواتير"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setisOpenordercustomer(true)
-                          setCustomerorder(customer.orders)
-                        }}><Eye size={20} />
-                        </button>
-                      )}
-                      {user && isAdmin(user) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCustomer(customer);
-                            setOpenAssignModal(true);
-                          }}
-                          className="p-2 flex text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all"
-                          title="تعيين موظف"
-                        >
-                          {customer.users.map((e: any, i: any) => (
-                            <div className="w-5 h-5 flex items-center rounded-full p-1">
-                              <p>{e.username[0]}</p>
-                            </div>
-                          ))}
-                        </button>
-                      )}
-                    </div>
-
-                    {/* زر واتساب */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const rawPhone = customer.phone?.[0] || '';
-                        const phoneNumber = rawPhone.replace(/\D/g, '');
-                        const countryCode = (customer.countryCode || '').replace(/\D/g, '');
-                        if (phoneNumber) {
-                          window.open(`https://wa.me/${countryCode}${phoneNumber}`, '_blank');
-                        }
-                      }}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold transition-transform active:scale-95 shadow-md shadow-green-200 dark:shadow-none"
-                    >
-                      <MessageCircle size={16} />
-                      تواصل
-                    </button>
-
-                  </div>
-                </div>
+                  customer={customer}
+                  user={user}
+                  isSelected={selectedCustomers.includes(customer.id)}
+                  statusOptions={STATUS_OPTIONS}
+                  onOpenCustomer={getSingleCustomer}
+                  onToggleSelect={toggleSelect}
+                  onEdit={(selectedCustomer) => {
+                    setEditId(selectedCustomer.id)
+                    const normalizedPhones = Array.isArray(selectedCustomer.phone)
+                      ? selectedCustomer.phone.filter((num: any) => String(num || "").trim().length > 0)
+                      : String(selectedCustomer.phone || "")
+                          .split(/[\s,\-\n]+/)
+                          .map((num: string) => num.trim())
+                          .filter((num: string) => num.length > 0)
+                    setFormdata({
+                      name: selectedCustomer.name,
+                      phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
+                    })
+                    setIsOpen(true)
+                  }}
+                  onDelete={deleteCus}
+                  onStatusChange={handleStatus}
+                  onOpenOrder={(selectedCustomerId) => {
+                    setCustomerId(selectedCustomerId);
+                    setisOpenOrder(true);
+                  }}
+                  onViewOrders={(orders) => {
+                    setisOpenordercustomer(true)
+                    setCustomerorder(orders)
+                  }}
+                  onOpenAssign={(selectedCustomer) => {
+                    setCustomer(selectedCustomer);
+                    setOpenAssignModal(true);
+                  }}
+                />
               ))}
           </div>
 
