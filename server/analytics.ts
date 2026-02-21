@@ -414,6 +414,19 @@ export async function GetTopSellingUsersByPermission(userId: string) {
 
     const userIds = topUsersGrouped.map(u => u.userId).filter(Boolean) as string[];
 
+    const allOrdersCounts = await Promise.all(
+      userIds.map(async (id) => ({
+        userId: id,
+        count: await prisma.order.count({
+          where: { userId: id },
+        }),
+      }))
+    );
+
+    const allOrdersCountByUser = new Map(
+      allOrdersCounts.map(item => [item.userId, item.count || 0])
+    );
+
     const userDetails = await prisma.user.findMany({
       where: {
         id: { in: userIds }
@@ -427,7 +440,6 @@ export async function GetTopSellingUsersByPermission(userId: string) {
     const orders = await prisma.order.findMany({
       where: {
         userId: { in: userIds },
-        status: { in: statusWhitelist },
       },
       select: {
         id: true,
@@ -465,11 +477,15 @@ export async function GetTopSellingUsersByPermission(userId: string) {
     const finalData = topUsersGrouped.map(group => {
       const userInfo = userDetails.find(u => u.id === group.userId);
       const userOrders = orders.filter(order => order.userId === group.userId);
+      const totalOrdersAll = allOrdersCountByUser.get(String(group.userId)) || 0;
+      const deliveredOrders = group._count.id || 0;
 
       return {
         userId: group.userId,
         name: userInfo?.username || "مستخدم غير معروف",
-        totalOrders: group._count.id || 0,
+        totalOrders: totalOrdersAll,
+        totalOrdersAll,
+        deliveredOrders,
         totalSalesAmount: Number(group._sum.finalAmount || 0),
         orders: userOrders
       };

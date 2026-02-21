@@ -154,7 +154,7 @@ const AnalyticPage: React.FC = () => {
 
     const topUsersData = topSellingUsers.data?.map((user: any) => ({
         name: user.name,
-        sales: user.totalOrders || 0
+        sales: user.totalOrdersAll || user.totalOrders || 0
     })) || [];
 
     const showSalesTimeline = loading || timelineData.length > 0;
@@ -863,11 +863,14 @@ const AnalyticPage: React.FC = () => {
                                         </div>
 
                                         <div className="text-right flex-shrink-0">
-                                            <div className="flex flex-col items-end">
+                                            <div className="flex flex-col items-end gap-1">
                                                 <span className="text-red-600 dark:text-red-400 font-bold text-lg">
-                                                    {(userRow.totalOrders || 0).toLocaleString()}
+                                                    {(userRow.totalOrdersAll || userRow.totalOrders || 0).toLocaleString()}
                                                 </span>
-                                                <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">عدد الطلبات</span>
+                                                <span className="text-[10px] text-slate-400 uppercase font-medium tracking-wider">الطلبات الكلية</span>
+                                                <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                                                    {(userRow.deliveredOrders || 0).toLocaleString()} تم التسليم
+                                                </span>
                                             </div>
                                         </div>
                                     </button>
@@ -944,9 +947,13 @@ const AnalyticPage: React.FC = () => {
                             <span className="text-xs text-slate-500 dark:text-slate-400 italic">
                                 * يتم تحديث هذه القائمة بناءً على أداء المبيعات الأخير لكل مستخدم
                             </span>
-                            <div className="flex items-center gap-1 text-emerald-500 font-semibold text-sm">
-                                <span>إجمالي: </span>
-                                {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalOrders || 0), 0)}
+                            <div className="flex items-center gap-3 text-emerald-500 font-semibold text-sm">
+                                <span>
+                                    الكلي: {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.totalOrdersAll || curr.totalOrders || 0), 0)}
+                                </span>
+                                <span>
+                                    تم التسليم: {topSellingUsers.data?.reduce((acc: number, curr: any) => acc + (curr.deliveredOrders || 0), 0)}
+                                </span>
                             </div>
                         </div>
                     </DynamicCard.Footer>

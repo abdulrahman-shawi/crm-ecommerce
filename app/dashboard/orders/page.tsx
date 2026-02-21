@@ -175,41 +175,48 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         }
 
         const msg = `مرحباً ${data?.customer?.name || ''}، مرفق فاتورة الطلب رقم #${data?.orderNumber || ''}`;
-        const encodedMsg = encodeURIComponent(msg);
-
-        // فتح الواتساب مباشرة من نفس لحظة الضغط لتجنب حظر النافذة من المتصفح
-        const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
-        window.open(waUrl, '_blank');
-
         const pdfFile = await buildOrderPdfFile(data);
 
+        const pdfBase64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const result = String(reader.result || '');
+                resolve(result.includes(',') ? result.split(',')[1] : result);
+            };
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(pdfFile);
+        });
+
+        const loadingToast = toast.loading('جاري إرسال ملف PDF عبر واتساب...');
+
         try {
-            const canShareFile = typeof navigator !== 'undefined'
-                && !!navigator.share
-                && !!navigator.canShare
-                && navigator.canShare({ files: [pdfFile] });
+            const res = await fetch('/api/orders/share-whatsapp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    whatsappNumber,
+                    customerName: data?.customer?.name || '',
+                    orderNumber: data?.orderNumber || '',
+                    pdfBase64,
+                    fileName: pdfFile.name,
+                }),
+            });
 
-            if (canShareFile) {
-                await navigator.share({
-                    files: [pdfFile],
-                    title: `Order #${data?.orderNumber || ''}`,
-                    text: msg,
-                });
-                return;
+            const json = await res.json();
+
+            if (!res.ok || !json?.success) {
+                throw new Error(json?.error || 'فشل إرسال الملف عبر واتساب');
             }
-        } catch (error) {
-            console.error('Share failed:', error);
-        }
 
-        const pdfUrl = URL.createObjectURL(pdfFile);
-        const link = document.createElement('a');
-        link.href = pdfUrl;
-        link.download = pdfFile.name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-        toast('تم فتح واتساب مباشرة وتنزيل PDF للإرفاق');
+            window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+            toast.success('تم إرسال ملف PDF للعميل بنجاح');
+        } catch (error: any) {
+            toast.error(error?.message || 'تعذر إرسال ملف PDF عبر واتساب');
+        } finally {
+            toast.dismiss(loadingToast);
+        }
     };
 
 
@@ -334,13 +341,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const statusCardColors: Record<string, string> = {
         "الكل": "bg-slate-900 text-white border-slate-900",
-        "طلب جديد": "bg-sky-100 text-sky-800 border-sky-200",
-        "تم استلام الطلب": "bg-blue-100 text-blue-800 border-blue-200",
-        "تم ارسال الطلب": "bg-amber-100 text-amber-800 border-amber-200",
-        "تم تسليم الطلب": "bg-emerald-100 text-emerald-800 border-emerald-200",
+        "طلب جديد": "bg-sky-200 text-sky-900 border-sky-300",
+        "تم استلام الطلب": "bg-blue-200 text-blue-900 border-blue-300",
+        "تم ارسال الطلب": "bg-amber-200 text-amber-900 border-amber-300",
+        "تم تسليم الطلب": "bg-emerald-200 text-emerald-900 border-emerald-300",
         "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700",
-        "تم الغاء الطلب": "bg-rose-100 text-rose-700 border-rose-200",
-        "معلق / نقص معلومات": "bg-gray-100 text-gray-700 border-gray-200",
+        "تم الغاء الطلب": "bg-rose-200 text-rose-900 border-rose-300",
+        "معلق / نقص معلومات": "bg-gray-200 text-gray-900 border-gray-300",
     };
 
     const statusCounts = React.useMemo(() => {
@@ -650,13 +657,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         accessor: (c: any) => {
                             // تعريف الألوان بناءً على طلبك
                             const statusColors: Record<string, string> = {
-                                "طلب جديد": "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800",
-                                "تم استلام الطلب": "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800", // أزرق
-                                "تم ارسال الطلب": "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800", // أصفر
-                                "تم تسليم الطلب": "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800", // أخضر
+                                "طلب جديد": "bg-sky-200 text-sky-900 border-sky-300 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800",
+                                "تم استلام الطلب": "bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800", // أزرق
+                                "تم ارسال الطلب": "bg-yellow-200 text-yellow-900 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800", // أصفر
+                                "تم تسليم الطلب": "bg-green-200 text-green-900 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800", // أخضر
                                 "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700 dark:bg-red-900/40 dark:text-red-200 dark:border-red-800", // أحمر غامق
-                                "تم الغاء الطلب": "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800", // أحمر فاتح
-                                "معلق / نقص معلومات": "bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700", // رمادي
+                                "تم الغاء الطلب": "bg-red-200 text-red-900 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800", // أحمر فاتح
+                                "معلق / نقص معلومات": "bg-gray-200 text-gray-900 border-gray-300 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700", // رمادي
                             };
 
                             // دالة لجلب اللون الحالي بناءً على القيمة

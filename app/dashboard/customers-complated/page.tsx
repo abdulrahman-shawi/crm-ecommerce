@@ -576,12 +576,12 @@ const CustomrLayout: React.FC = () => {
               <CheckSquare size={20} />
             </Button>
           )}
-            {selectedCustomers.length > 0 && (
+            {selectedCustomers.length > 0 && user && isAdmin(user) && (
               <>
                 <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
                   <UserPlus size={20} />
                 </Button>
-                {user && hasPermission(user, "deleteCustomers") && (
+                {hasPermission(user, "deleteCustomers") && (
                   <Button onClick={handleBulkDelete} variant="secondary">
                     <Trash2 size={20} />
                   </Button>
@@ -705,9 +705,15 @@ const CustomrLayout: React.FC = () => {
                       onClick={(e) => {
                         e.stopPropagation()
                         setEditId(customer.id)
+                        const normalizedPhones = Array.isArray(customer.phone)
+                          ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
+                          : String(customer.phone || "")
+                              .split(/[\s,\-\n]+/)
+                              .map((num: string) => num.trim())
+                              .filter((num: string) => num.length > 0)
                         setFormdata({
                           name: customer.name,
-                          phone: customer.phone ? customer.phone.join(' ') : ''
+                          phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
                         })
                         setIsOpen(true)
                       }}

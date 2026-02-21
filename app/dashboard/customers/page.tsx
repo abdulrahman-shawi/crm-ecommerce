@@ -584,17 +584,16 @@ const CustomrLayout: React.FC = () => {
           {user && hasPermission(user, "addCustomers") && (
             <Button onClick={() => { setFormdata({ name: "", phone: [""] }); setEditId(null); setIsOpen(true); }}><Plus size={20} /></Button>
           )}
-        <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              {user && isAdmin(user) && (
+                <Button onClick={toggleSelectAll} variant="outline">
+                  <CheckSquare size={20} />
+                </Button>
+              )}
 
-          <div className="flex gap-2">
-            {user && isAdmin(user) && (
-            <Button onClick={toggleSelectAll} variant="outline">
-              <CheckSquare size={20} />
-            </Button>
-          )}
-            
-            {selectedCustomers.length > 0 && (
-              <>
+              {selectedCustomers.length > 0 && user && isAdmin(user) && (
+               <>
                 <Button onClick={() => setIsBulkAssignOpen(true)} variant="outline">
                   <UserPlus size={20} />
                 </Button>
@@ -604,26 +603,28 @@ const CustomrLayout: React.FC = () => {
                   </Button>
                 )}
               </>
-            )}
-            {user && isAdmin(user) && (
-            <>
-                <input
-                  ref={importInputRef}
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleImportFile}
-                  className="hidden"
-                />
-                <Button onClick={handleImportClick} variant="outline">
-                  <Upload size={20} />
-                </Button>
-              </>
-          )}
-            {/* زر التصدير الذكي */}
-            {user && isAdmin(user) && (
-            <Button onClick={handleExportAction}><Download size={20} /></Button>
-          )}
-            
+              )}
+
+              {user && isAdmin(user) && (
+                <>
+                  <input
+                    ref={importInputRef}
+                    type="file"
+                    accept=".xlsx,.xls"
+                    onChange={handleImportFile}
+                    className="hidden"
+                  />
+                  <Button onClick={handleImportClick} variant="outline">
+                    <Upload size={20} />
+                  </Button>
+                </>
+              )}
+
+              {/* زر التصدير الذكي */}
+              {user && isAdmin(user) && (
+                <Button onClick={handleExportAction}><Download size={20} /></Button>
+              )}
+
             {/* <button
               
               className={`flex items-center gap-2 px-6 py-2 rounded-xl text-white font-bold transition-all ${selectedCustomers.length > 0
@@ -634,18 +635,18 @@ const CustomrLayout: React.FC = () => {
               <Download size={18} />
             </button> */}
 
-            {/* زر مسح التحديد - يظهر فقط عند وجود تحديد */}
-            {selectedCustomers.length > 0 && (
-              <button
-                onClick={() => setSelectedCustomers([])}
-                className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
-                title="إلغاء التحديد"
-              >
-                <XCircle size={24} />
-              </button>
-            )}
+              {/* زر مسح التحديد - يظهر فقط عند وجود تحديد */}
+              {selectedCustomers.length > 0 && (
+                <button
+                  onClick={() => setSelectedCustomers([])}
+                  className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                  title="إلغاء التحديد"
+                >
+                  <XCircle size={24} />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
       <div className="flex flex-col gap-3">
@@ -720,9 +721,15 @@ const CustomrLayout: React.FC = () => {
                       onClick={(e) => {
                         e.stopPropagation()
                         setEditId(customer.id)
+                        const normalizedPhones = Array.isArray(customer.phone)
+                          ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
+                          : String(customer.phone || "")
+                              .split(/[\s,\-\n]+/)
+                              .map((num: string) => num.trim())
+                              .filter((num: string) => num.length > 0)
                         setFormdata({
                           name: customer.name,
-                          phone: customer.phone ? customer.phone.join(' ') : ''
+                          phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
                         })
                         setIsOpen(true)
                       }}
