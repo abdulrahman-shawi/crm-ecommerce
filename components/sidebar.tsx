@@ -25,9 +25,15 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   const {user} = useAuth()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [canInstall, setCanInstall] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
-  // التقاط beforeinstallprompt event
+  // التقاط beforeinstallprompt event والكشف عن iOS
   useEffect(() => {
+    // كشف iOS
+    const isAppleOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      !!(navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+    setIsIOS(isAppleOS);
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -54,6 +60,25 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
     } else {
       toast.error("تم إلغاء التثبيت");
     }
+  };
+
+  const handleIOSInstall = () => {
+    toast.custom((t) => (
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg max-w-xs text-right">
+        <p className="font-bold text-slate-900 dark:text-white mb-2">تثبيت على iPhone</p>
+        <ol className="text-sm text-slate-600 dark:text-slate-400 space-y-1 list-decimal list-inside mb-3">
+          <li>اضغط على زر المشاركة <span className="inline-block">⬆️</span></li>
+          <li>اختر "أضف إلى شاشتك الرئيسية"</li>
+          <li>اضغط "إضافة"</li>
+        </ol>
+        <button 
+          onClick={() => toast.dismiss(t.id)}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors"
+        >
+          حسناً
+        </button>
+      </div>
+    ), { duration: 5000, position: "top-center" });
   };
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = user ? [
@@ -196,14 +221,14 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         {/* الجزء السفلي - Footer Section */}
         <div className="p-4 mt-auto space-y-3">
           {/* زر تثبيت التطبيق */}
-          {canInstall && (
+          {(canInstall || isIOS) && (
             <button 
-              onClick={handleInstallApp}
+              onClick={isIOS ? handleIOSInstall : handleInstallApp}
               className={`w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-bold text-sm ${isCollapsed ? "md:h-10 md:w-10 md:mx-auto md:p-0" : "px-3"}`}
-              title="تثبيت التطبيق على الجهاز"
+              title={isIOS ? "تثبيت التطبيق على iPhone" : "تثبيت التطبيق على الجهاز"}
             >
               <Download size={18} />
-              {!isCollapsed && <span className="text-left w-full">تنزيل التطبيق</span>}
+              {!isCollapsed && <span className="text-left w-full">{isIOS ? "تثبيت على iPhone" : "تنزيل التطبيق"}</span>}
             </button>
           )}
 
