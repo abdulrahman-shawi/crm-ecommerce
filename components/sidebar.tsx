@@ -6,11 +6,13 @@ import {
   Receipt, Box, FileText, PieChart, ShieldCheck, HelpCircle, LogOut, 
   Users2,
   Settings2,
-  RollerCoasterIcon
+  RollerCoasterIcon,
+  Download
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
 
 type MenuItem = {
   icon: any;
@@ -21,6 +23,38 @@ type MenuItem = {
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
   const pathname = usePathname();
   const {user} = useAuth()
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [canInstall, setCanInstall] = useState(false);
+
+  // التقاط beforeinstallprompt event
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setCanInstall(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) {
+      toast.error("لا يمكن تثبيت التطبيق في الوقت الحالي");
+      return;
+    }
+    
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === "accepted") {
+      toast.success("تم تثبيت التطبيق بنجاح!");
+      setCanInstall(false);
+      setDeferredPrompt(null);
+    } else {
+      toast.error("تم إلغاء التثبيت");
+    }
+  };
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = user ? [
     {
@@ -160,7 +194,19 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         )}
 
         {/* الجزء السفلي - Footer Section */}
-        <div className="p-4 mt-auto">
+        <div className="p-4 mt-auto space-y-3">
+          {/* زر تثبيت التطبيق */}
+          {canInstall && (
+            <button 
+              onClick={handleInstallApp}
+              className={`w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-bold text-sm ${isCollapsed ? "md:h-10 md:w-10 md:mx-auto md:p-0" : "px-3"}`}
+              title="تثبيت التطبيق على الجهاز"
+            >
+              <Download size={18} />
+              {!isCollapsed && <span className="text-left w-full">تنزيل التطبيق</span>}
+            </button>
+          )}
+
           <div className={`p-3 rounded-2xl bg-slate-100 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800 transition-all ${isCollapsed ? "md:p-2" : "p-3"}`}>
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0 border-2 border-white dark:border-slate-800 shadow-sm">
