@@ -672,7 +672,7 @@ const DashboardPage: React.FunctionComponent = () => {
             {valueTargets.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">تاركت قيمة المبيعات</h3>
-                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                <div className="overflow-auto line-clamp-2 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
                 <table className="w-full text-right text-sm">
                   <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                     <tr>
@@ -771,7 +771,7 @@ const DashboardPage: React.FunctionComponent = () => {
               </div>
             )}
             {filteredProductTargets.length > 0 && (
-              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+              <div className="overflow-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
               <table className="w-full text-right text-sm">
                 <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                   <tr>
