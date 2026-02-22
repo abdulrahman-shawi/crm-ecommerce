@@ -33,7 +33,7 @@ export const CustomersHeader: React.FC<CustomersHeaderProps> = ({
   return (
     <div className="flex justify-between flex-wrap gap-3 items-center mb-8 bg-white dark:bg-slate-900 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
       <h1 className="text-2xl font-bold text-slate-800 dark:text-white">نظام إدارة العملاء</h1>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center flex-wrap gap-3">
         {user && hasPermission(user, "addCustomers") && (
           <Button onClick={onOpenCreate}><Plus size={20} /></Button>
         )}
