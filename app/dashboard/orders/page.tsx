@@ -17,6 +17,7 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { permission } from 'process';
+import PhoneInput from 'react-phone-number-input';
 interface IOrderLayoutProps {
 }
 
@@ -41,11 +42,12 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     // بيانات العميل والمبالغ
     const [customerId, setCustomerId] = React.useState("");
     const [paymentMethod, setPaymentMethod] = React.useState("عند الاستلام");
+    const [amount, setAmount] = React.useState("");
 
     // بيانات المستلم والعنوان
     const [receiverName, setReceiverName] = React.useState("");
-    const [receiverPhone, setReceiverPhone] = React.useState("");
-    const [country, setCountry] = React.useState("ليبيا"); // افتراضي حسب الصورة
+    const [receiverPhone, setReceiverPhone] = React.useState<(string | undefined)[]>([""]);
+    const [country, setCountry] = React.useState("");
     const [city, setCity] = React.useState("");
     const [municipality, setMunicipality] = React.useState("");
     const [fullAddress, setFullAddress] = React.useState("");
@@ -63,6 +65,23 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [additionalNotes, setAdditionalNotes] = React.useState("");
     const subTotal = items.reduce((sum, i) => sum + i.total, 0);
     const grandTotal = subTotal - overallDiscount;
+    const remainingAmount = Math.max(0, Number(grandTotal) - Number(amount || 0));
+
+    const countries = [
+        "سوريا",
+        "لبنان",
+        "العراق",
+        "تركيا",
+        "ليبيا",
+    ];
+
+    const citiesByCountry: Record<string, string[]> = {
+        "سوريا": ["دمشق", "ريف دمشق", "حلب", "حمص", "حماة", "اللاذقية", "طرطوس", "إدلب", "درعا", "السويداء", "القنيطرة", "دير الزور", "الرقة", "الحسكة"],
+        "لبنان": ["بيروت", "طرابلس", "صيدا", "صور", "زحلة", "بعلبك", "جونية", "جبيل", "البترون", "النبطية"],
+        "العراق": ["بغداد", "البصرة", "الموصل", "أربيل", "النجف", "كربلاء", "كركوك", "السليمانية", "دهوك", "الرمادي", "الفلوجة", "سامراء", "الحلة", "الديوانية", "الناصرية", "الكوت", "العمارة"],
+        "تركيا": ["إسطنبول", "أنقرة", "إزمير", "بورصة", "أنطاليا", "أضنة", "غازي عنتاب", "قونية", "مرسين", "قيصري", "أسكي شهير", "طرابزون", "سامسون", "ديار بكر", "شانلي أورفا", "فان"],
+        "ليبيا": ["طرابلس", "بنغازي", "مصراتة", "الزاوية", "سبها", "سرت", "طبرق", "درنة", "زليتن", "أجدابيا", "البيضاء", "غريان", "الكفرة", "مرزق"],
+    };
 
     const getEffectivePrice = (price: number, discount: number) => {
         return Math.max(0, Number(price || 0) - Number(discount || 0));
@@ -452,6 +471,40 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             return;
         }
 
+        if (!receiverName || receiverName.trim() === "") {
+            toast.error("يرجى تحديد اسم المستلم");
+            return;
+        }
+
+        if (receiverPhone.length === 0 || receiverPhone.some(phone => !phone || String(phone).trim().length < 10)) {
+            toast.error("يرجى إدخال رقم هاتف صحيح");
+            return;
+        }
+
+        if (!country || !String(country).trim() || !city || !String(city).trim()) {
+            toast.error("يرجى اختيار الدولة والمدينة");
+            return;
+        }
+
+        if (paymentMethod === "مختلطة") {
+            const amountValue = Number(amount);
+
+            if (!amount) {
+                toast.error("يرجى إدخال قيمة الحوالة");
+                return;
+            }
+
+            if (amountValue < 0) {
+                toast.error("قيمة الحوالة يجب أن تكون رقمًا موجبًا");
+                return;
+            }
+
+            if (amountValue > Number(grandTotal)) {
+                toast.error("قيمة الحوالة لا يمكن أن تتجاوز الإجمالي النهائي");
+                return;
+            }
+        }
+
         // تفعيل حالة التحميل لمنع النقرات المتكررة (تعالج خطأ P2028)
         setIsSubmitting(true);
 
@@ -472,6 +525,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             deliveryMethod,
             deliveryNotes,
             paymentMethod,
+            amount: paymentMethod === "مختلطة" ? amount : "",
+            amountBank: paymentMethod === "مختلطة" ? String(remainingAmount) : "",
             additionalNotes,
             grandTotal: Number(grandTotal),
             overallDiscount: Number(overallDiscount),
@@ -538,11 +593,12 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setCustomerSearchQuery("");
         setShowCustomerDropdown(false);
         setPaymentMethod("عند الاستلام");
+        setAmount("");
 
         // إعادة بيانات المستلم والعنوان
         setReceiverName("");
-        setReceiverPhone("");
-        setCountry("ليبيا");
+        setReceiverPhone([""]);
+        setCountry("");
         setCity("");
         setMunicipality("");
         setFullAddress("");
@@ -580,7 +636,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 quantity,
                 discount,
                 note: item?.note || "",
-                total: Math.max(0, price * quantity - discount),
+                total: getEffectivePrice(price, discount) * quantity,
             };
         });
 
@@ -598,18 +654,19 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setSearchQueries(nextSearchQueries);
         setShowDropdown({});
 
-        setCustomerId(data?.customerId || "");
+        setCustomerId(String(data?.customerId || ""));
         setCustomerSearchQuery(data?.customer?.name || "");
         setStatus(data?.status || "طلب جديد");
         setPaymentMethod(data?.paymentMethod || "عند الاستلام");
+        setAmount(String(data?.amount ?? ""));
 
         setReceiverName(data?.receiverName || "");
-        const receiverPhoneValue = Array.isArray(data?.receiverPhone)
-            ? (data.receiverPhone[0] || "")
-            : (data?.receiverPhone || "");
-        setReceiverPhone(receiverPhoneValue);
+        const receiverPhoneValues = Array.isArray(data?.receiverPhone)
+            ? (data.receiverPhone.length ? data.receiverPhone : [""])
+            : [data?.receiverPhone || ""];
+        setReceiverPhone(receiverPhoneValues);
 
-        setCountry(data?.country || "ليبيا");
+        setCountry(data?.country || "");
         setCity(data?.city || "");
         setMunicipality(data?.municipality || "");
         setFullAddress(data?.fullAddress || "");
@@ -640,13 +697,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             icon: <Pencil size={14} />,
             onClick: (data: any) => {
                 handleEditOrder(data);
-            }
-        },
-        (user && hasPermission(user, "editOrders")) && {
-            label: "مشاركة PDF واتساب",
-            icon: <Mail size={14} />,
-            onClick: async (data: any) => {
-                await shareOrderPdfToCustomerWhatsApp(data);
             }
         },
         (user && hasPermission(user, "deleteOrders")) && {
@@ -855,7 +905,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                             onClick={handleSubmit}
                             className={`px-12 py-4 bg-blue-600 text-white rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2`}
                         >
-                            <Save size={20} /> حفظ الفاتورة
+                            <Save size={20} /> {editId ? "حفظ التعديلات" : "حفظ الفاتورة"}
                         </button>
                         <button
                             onClick={resetForm}
@@ -865,7 +915,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         </button>
                     </div>
                 </div>
-            } size='full' isOpen={isOpen} onClose={resetForm} title='اضافة طلب'>
+            } size='full' isOpen={isOpen} onClose={resetForm} title={editId ? 'تعديل طلب' : 'اضافة طلب'}>
                 <div>
                     <div className="space-y-4 mb-4">
                         {items.map((item: any, index: number) => (
@@ -1014,33 +1064,117 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                 <input type="text" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} placeholder="اسم المستلم" className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">رقم هاتف المستلم</label>
-                                <input type="text" value={receiverPhone} onChange={(e) => setReceiverPhone(e.target.value)} placeholder="09XXXXXXXX" className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
+                                <label className="text-xs font-bold text-slate-500">أرقام هواتف المستلم</label>
+                                {receiverPhone.map((phone: any, index: number) => (
+                                    <div key={index} className="flex gap-2 mb-2">
+                                        <PhoneInput
+                                            international
+                                            placeholder="Enter phone number"
+                                            value={phone}
+                                            withCountryCallingCode
+                                            className="w-full bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                            onChange={(value) => {
+                                                const newPhones = [...receiverPhone];
+                                                newPhones[index] = value;
+                                                setReceiverPhone(newPhones);
+                                            }}
+                                            defaultCountry="SY"
+                                        />
+                                        {receiverPhone.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setReceiverPhone(receiverPhone.filter((_: any, i: number) => i !== index))}
+                                                className="p-2 text-rose-500 bg-rose-50 rounded-lg"
+                                            >
+                                                X
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={() => setReceiverPhone([...receiverPhone, ""])}
+                                    className="text-xs text-blue-600 font-bold hover:underline"
+                                >
+                                    + إضافة رقم هاتف آخر
+                                </button>
                             </div>
                             <div className="space-y-2 md:col-span-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">طريقة الدفع</label>
-                                <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                                <select
+                                    value={paymentMethod}
+                                    onChange={(e) => {
+                                        const nextMethod = e.target.value;
+                                        setPaymentMethod(nextMethod);
+                                        if (nextMethod !== "مختلطة") {
+                                            setAmount("");
+                                        }
+                                    }}
+                                    className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                                >
                                     <option value="عند الاستلام">عند الاستلام</option>
                                     <option value="تحويل بنكي">تحويل بنكي</option>
                                     <option value="مختلطة">مختلطة</option>
                                 </select>
                             </div>
+                            {paymentMethod === "مختلطة" && (
+                                <>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-500 mr-2">القيمة المستلمة (حوالة)</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            value={amount}
+                                            onChange={(e) => setAmount(e.target.value)}
+                                            placeholder="0"
+                                            className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-500 mr-2">القيمة المتبقية (عند الباب)</label>
+                                        <input
+                                            type="text"
+                                            value={remainingAmount}
+                                            readOnly
+                                            className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         {/* القسم الثاني: تفاصيل العنوان والشحن */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">الدولة</label>
-                                <select value={country} onChange={(e) => setCountry(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all">
+                                <select
+                                    value={country}
+                                    onChange={(e) => {
+                                        setCountry(e.target.value);
+                                        setCity("");
+                                    }}
+                                    className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
+                                >
                                     <option value="">اختر الدولة</option>
-                                    <option value="تركيا">تركيا</option>
-                                    <option value="سوريا">سوريا</option>
-                                    <option value="العراق">العراق</option>
+                                    {countries.map((c) => (
+                                        <option key={c} value={c}>{c}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">المدينة / المنطقة</label>
-                                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
+                                <select
+                                    value={city}
+                                    onChange={(e) => setCity(e.target.value)}
+                                    disabled={!country}
+                                    className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold disabled:opacity-50"
+                                >
+                                    <option value="">اختر المدينة</option>
+                                    {(citiesByCountry[country] || []).map((c) => (
+                                        <option key={c} value={c}>{c}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">البلدية</label>
@@ -1050,6 +1184,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
                         {/* القسم الثالث: الشحن والملاحظات */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 mr-2">طريقة التوصيل</label>
+                                <select value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all">
+                                    <option value="توصيل الى المنزل">توصيل الى المنزل</option>
+                                    <option value="استلام من المكتب">استلام من المكتب</option>
+                                    <option value="شركة شحن">شركة شحن</option>
+                                </select>
+                            </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
                                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
@@ -1061,6 +1203,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                             <div className="space-y-2 md:col-span-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">ملاحظات التوصيل</label>
                                 <textarea rows={2} value={deliveryNotes} onChange={(e) => setDeliveryNotes(e.target.value)} placeholder="ملاحظات للمندوب..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold resize-none" />
+                            </div>
+                            <div className="space-y-2 md:col-span-2">
+                                <label className="text-xs font-bold text-slate-500 mr-2">ملاحظات إضافية</label>
+                                <textarea rows={2} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} placeholder="أي ملاحظات إضافية..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold resize-none" />
                             </div>
                         </div>
                     </div>

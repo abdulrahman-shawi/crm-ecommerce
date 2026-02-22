@@ -218,6 +218,11 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       return;
     }
 
+    if (!country || !String(country).trim() || !city || !String(city).trim()) {
+      toast.error("يرجى اختيار الدولة والمدينة");
+      return;
+    }
+
     if (!municipality || municipality.trim() === "") {
       toast.error("يرجى تحديد البلدية/المنطقة");
       return;
