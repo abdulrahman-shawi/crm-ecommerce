@@ -215,3 +215,12 @@ enum AccountType {
   MANAGER
   STAFF
 }
+
+model TrakingCompany {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  city      String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

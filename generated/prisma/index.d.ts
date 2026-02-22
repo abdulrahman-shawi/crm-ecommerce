@@ -68,6 +68,11 @@ export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
  * 
  */
 export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
+/**
+ * Model TrakingCompany
+ * 
+ */
+export type TrakingCompany = $Result.DefaultSelection<Prisma.$TrakingCompanyPayload>
 
 /**
  * Enums
@@ -313,6 +318,16 @@ export class PrismaClient<
     * ```
     */
   get orderItem(): Prisma.OrderItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trakingCompany`: Exposes CRUD operations for the **TrakingCompany** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrakingCompanies
+    * const trakingCompanies = await prisma.trakingCompany.findMany()
+    * ```
+    */
+  get trakingCompany(): Prisma.TrakingCompanyDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -757,7 +772,8 @@ export namespace Prisma {
     Customer: 'Customer',
     Message: 'Message',
     Order: 'Order',
-    OrderItem: 'OrderItem'
+    OrderItem: 'OrderItem',
+    TrakingCompany: 'TrakingCompany'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -773,7 +789,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "userTarget" | "targetProduct" | "productImage" | "customer" | "message" | "order" | "orderItem"
+      modelProps: "user" | "permission" | "category" | "product" | "userTarget" | "targetProduct" | "productImage" | "customer" | "message" | "order" | "orderItem" | "trakingCompany"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1591,6 +1607,80 @@ export namespace Prisma {
           }
         }
       }
+      TrakingCompany: {
+        payload: Prisma.$TrakingCompanyPayload<ExtArgs>
+        fields: Prisma.TrakingCompanyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrakingCompanyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrakingCompanyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          findFirst: {
+            args: Prisma.TrakingCompanyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrakingCompanyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          findMany: {
+            args: Prisma.TrakingCompanyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>[]
+          }
+          create: {
+            args: Prisma.TrakingCompanyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          createMany: {
+            args: Prisma.TrakingCompanyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrakingCompanyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>[]
+          }
+          delete: {
+            args: Prisma.TrakingCompanyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          update: {
+            args: Prisma.TrakingCompanyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrakingCompanyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrakingCompanyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TrakingCompanyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>[]
+          }
+          upsert: {
+            args: Prisma.TrakingCompanyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrakingCompanyPayload>
+          }
+          aggregate: {
+            args: Prisma.TrakingCompanyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrakingCompany>
+          }
+          groupBy: {
+            args: Prisma.TrakingCompanyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrakingCompanyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrakingCompanyCountArgs<ExtArgs>
+            result: $Utils.Optional<TrakingCompanyCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1710,6 +1800,7 @@ export namespace Prisma {
     message?: MessageOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
+    trakingCompany?: TrakingCompanyOmit
   }
 
   /* Types for Logging */
@@ -15379,6 +15470,1014 @@ export namespace Prisma {
 
 
   /**
+   * Model TrakingCompany
+   */
+
+  export type AggregateTrakingCompany = {
+    _count: TrakingCompanyCountAggregateOutputType | null
+    _min: TrakingCompanyMinAggregateOutputType | null
+    _max: TrakingCompanyMaxAggregateOutputType | null
+  }
+
+  export type TrakingCompanyMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    city: string | null
+    location: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrakingCompanyMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    city: string | null
+    location: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrakingCompanyCountAggregateOutputType = {
+    id: number
+    name: number
+    city: number
+    location: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TrakingCompanyMinAggregateInputType = {
+    id?: true
+    name?: true
+    city?: true
+    location?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrakingCompanyMaxAggregateInputType = {
+    id?: true
+    name?: true
+    city?: true
+    location?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrakingCompanyCountAggregateInputType = {
+    id?: true
+    name?: true
+    city?: true
+    location?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TrakingCompanyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrakingCompany to aggregate.
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrakingCompanies to fetch.
+     */
+    orderBy?: TrakingCompanyOrderByWithRelationInput | TrakingCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrakingCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrakingCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrakingCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrakingCompanies
+    **/
+    _count?: true | TrakingCompanyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrakingCompanyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrakingCompanyMaxAggregateInputType
+  }
+
+  export type GetTrakingCompanyAggregateType<T extends TrakingCompanyAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrakingCompany]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrakingCompany[P]>
+      : GetScalarType<T[P], AggregateTrakingCompany[P]>
+  }
+
+
+
+
+  export type TrakingCompanyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrakingCompanyWhereInput
+    orderBy?: TrakingCompanyOrderByWithAggregationInput | TrakingCompanyOrderByWithAggregationInput[]
+    by: TrakingCompanyScalarFieldEnum[] | TrakingCompanyScalarFieldEnum
+    having?: TrakingCompanyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrakingCompanyCountAggregateInputType | true
+    _min?: TrakingCompanyMinAggregateInputType
+    _max?: TrakingCompanyMaxAggregateInputType
+  }
+
+  export type TrakingCompanyGroupByOutputType = {
+    id: string
+    name: string
+    city: string | null
+    location: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TrakingCompanyCountAggregateOutputType | null
+    _min: TrakingCompanyMinAggregateOutputType | null
+    _max: TrakingCompanyMaxAggregateOutputType | null
+  }
+
+  type GetTrakingCompanyGroupByPayload<T extends TrakingCompanyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrakingCompanyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrakingCompanyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrakingCompanyGroupByOutputType[P]>
+            : GetScalarType<T[P], TrakingCompanyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrakingCompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    city?: boolean
+    location?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["trakingCompany"]>
+
+  export type TrakingCompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    city?: boolean
+    location?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["trakingCompany"]>
+
+  export type TrakingCompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    city?: boolean
+    location?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["trakingCompany"]>
+
+  export type TrakingCompanySelectScalar = {
+    id?: boolean
+    name?: boolean
+    city?: boolean
+    location?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TrakingCompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "location" | "createdAt" | "updatedAt", ExtArgs["result"]["trakingCompany"]>
+
+  export type $TrakingCompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrakingCompany"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      city: string | null
+      location: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["trakingCompany"]>
+    composites: {}
+  }
+
+  type TrakingCompanyGetPayload<S extends boolean | null | undefined | TrakingCompanyDefaultArgs> = $Result.GetResult<Prisma.$TrakingCompanyPayload, S>
+
+  type TrakingCompanyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TrakingCompanyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrakingCompanyCountAggregateInputType | true
+    }
+
+  export interface TrakingCompanyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrakingCompany'], meta: { name: 'TrakingCompany' } }
+    /**
+     * Find zero or one TrakingCompany that matches the filter.
+     * @param {TrakingCompanyFindUniqueArgs} args - Arguments to find a TrakingCompany
+     * @example
+     * // Get one TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrakingCompanyFindUniqueArgs>(args: SelectSubset<T, TrakingCompanyFindUniqueArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TrakingCompany that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TrakingCompanyFindUniqueOrThrowArgs} args - Arguments to find a TrakingCompany
+     * @example
+     * // Get one TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrakingCompanyFindUniqueOrThrowArgs>(args: SelectSubset<T, TrakingCompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrakingCompany that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyFindFirstArgs} args - Arguments to find a TrakingCompany
+     * @example
+     * // Get one TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrakingCompanyFindFirstArgs>(args?: SelectSubset<T, TrakingCompanyFindFirstArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrakingCompany that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyFindFirstOrThrowArgs} args - Arguments to find a TrakingCompany
+     * @example
+     * // Get one TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrakingCompanyFindFirstOrThrowArgs>(args?: SelectSubset<T, TrakingCompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TrakingCompanies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrakingCompanies
+     * const trakingCompanies = await prisma.trakingCompany.findMany()
+     * 
+     * // Get first 10 TrakingCompanies
+     * const trakingCompanies = await prisma.trakingCompany.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trakingCompanyWithIdOnly = await prisma.trakingCompany.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrakingCompanyFindManyArgs>(args?: SelectSubset<T, TrakingCompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TrakingCompany.
+     * @param {TrakingCompanyCreateArgs} args - Arguments to create a TrakingCompany.
+     * @example
+     * // Create one TrakingCompany
+     * const TrakingCompany = await prisma.trakingCompany.create({
+     *   data: {
+     *     // ... data to create a TrakingCompany
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrakingCompanyCreateArgs>(args: SelectSubset<T, TrakingCompanyCreateArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TrakingCompanies.
+     * @param {TrakingCompanyCreateManyArgs} args - Arguments to create many TrakingCompanies.
+     * @example
+     * // Create many TrakingCompanies
+     * const trakingCompany = await prisma.trakingCompany.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrakingCompanyCreateManyArgs>(args?: SelectSubset<T, TrakingCompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrakingCompanies and returns the data saved in the database.
+     * @param {TrakingCompanyCreateManyAndReturnArgs} args - Arguments to create many TrakingCompanies.
+     * @example
+     * // Create many TrakingCompanies
+     * const trakingCompany = await prisma.trakingCompany.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrakingCompanies and only return the `id`
+     * const trakingCompanyWithIdOnly = await prisma.trakingCompany.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrakingCompanyCreateManyAndReturnArgs>(args?: SelectSubset<T, TrakingCompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TrakingCompany.
+     * @param {TrakingCompanyDeleteArgs} args - Arguments to delete one TrakingCompany.
+     * @example
+     * // Delete one TrakingCompany
+     * const TrakingCompany = await prisma.trakingCompany.delete({
+     *   where: {
+     *     // ... filter to delete one TrakingCompany
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrakingCompanyDeleteArgs>(args: SelectSubset<T, TrakingCompanyDeleteArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TrakingCompany.
+     * @param {TrakingCompanyUpdateArgs} args - Arguments to update one TrakingCompany.
+     * @example
+     * // Update one TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrakingCompanyUpdateArgs>(args: SelectSubset<T, TrakingCompanyUpdateArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TrakingCompanies.
+     * @param {TrakingCompanyDeleteManyArgs} args - Arguments to filter TrakingCompanies to delete.
+     * @example
+     * // Delete a few TrakingCompanies
+     * const { count } = await prisma.trakingCompany.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrakingCompanyDeleteManyArgs>(args?: SelectSubset<T, TrakingCompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrakingCompanies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrakingCompanies
+     * const trakingCompany = await prisma.trakingCompany.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrakingCompanyUpdateManyArgs>(args: SelectSubset<T, TrakingCompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrakingCompanies and returns the data updated in the database.
+     * @param {TrakingCompanyUpdateManyAndReturnArgs} args - Arguments to update many TrakingCompanies.
+     * @example
+     * // Update many TrakingCompanies
+     * const trakingCompany = await prisma.trakingCompany.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TrakingCompanies and only return the `id`
+     * const trakingCompanyWithIdOnly = await prisma.trakingCompany.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TrakingCompanyUpdateManyAndReturnArgs>(args: SelectSubset<T, TrakingCompanyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TrakingCompany.
+     * @param {TrakingCompanyUpsertArgs} args - Arguments to update or create a TrakingCompany.
+     * @example
+     * // Update or create a TrakingCompany
+     * const trakingCompany = await prisma.trakingCompany.upsert({
+     *   create: {
+     *     // ... data to create a TrakingCompany
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrakingCompany we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrakingCompanyUpsertArgs>(args: SelectSubset<T, TrakingCompanyUpsertArgs<ExtArgs>>): Prisma__TrakingCompanyClient<$Result.GetResult<Prisma.$TrakingCompanyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TrakingCompanies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyCountArgs} args - Arguments to filter TrakingCompanies to count.
+     * @example
+     * // Count the number of TrakingCompanies
+     * const count = await prisma.trakingCompany.count({
+     *   where: {
+     *     // ... the filter for the TrakingCompanies we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrakingCompanyCountArgs>(
+      args?: Subset<T, TrakingCompanyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrakingCompanyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrakingCompany.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrakingCompanyAggregateArgs>(args: Subset<T, TrakingCompanyAggregateArgs>): Prisma.PrismaPromise<GetTrakingCompanyAggregateType<T>>
+
+    /**
+     * Group by TrakingCompany.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrakingCompanyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrakingCompanyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrakingCompanyGroupByArgs['orderBy'] }
+        : { orderBy?: TrakingCompanyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrakingCompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrakingCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrakingCompany model
+   */
+  readonly fields: TrakingCompanyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrakingCompany.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrakingCompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrakingCompany model
+   */
+  interface TrakingCompanyFieldRefs {
+    readonly id: FieldRef<"TrakingCompany", 'String'>
+    readonly name: FieldRef<"TrakingCompany", 'String'>
+    readonly city: FieldRef<"TrakingCompany", 'String'>
+    readonly location: FieldRef<"TrakingCompany", 'String'>
+    readonly createdAt: FieldRef<"TrakingCompany", 'DateTime'>
+    readonly updatedAt: FieldRef<"TrakingCompany", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrakingCompany findUnique
+   */
+  export type TrakingCompanyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter, which TrakingCompany to fetch.
+     */
+    where: TrakingCompanyWhereUniqueInput
+  }
+
+  /**
+   * TrakingCompany findUniqueOrThrow
+   */
+  export type TrakingCompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter, which TrakingCompany to fetch.
+     */
+    where: TrakingCompanyWhereUniqueInput
+  }
+
+  /**
+   * TrakingCompany findFirst
+   */
+  export type TrakingCompanyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter, which TrakingCompany to fetch.
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrakingCompanies to fetch.
+     */
+    orderBy?: TrakingCompanyOrderByWithRelationInput | TrakingCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrakingCompanies.
+     */
+    cursor?: TrakingCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrakingCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrakingCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrakingCompanies.
+     */
+    distinct?: TrakingCompanyScalarFieldEnum | TrakingCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * TrakingCompany findFirstOrThrow
+   */
+  export type TrakingCompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter, which TrakingCompany to fetch.
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrakingCompanies to fetch.
+     */
+    orderBy?: TrakingCompanyOrderByWithRelationInput | TrakingCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrakingCompanies.
+     */
+    cursor?: TrakingCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrakingCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrakingCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrakingCompanies.
+     */
+    distinct?: TrakingCompanyScalarFieldEnum | TrakingCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * TrakingCompany findMany
+   */
+  export type TrakingCompanyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter, which TrakingCompanies to fetch.
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrakingCompanies to fetch.
+     */
+    orderBy?: TrakingCompanyOrderByWithRelationInput | TrakingCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrakingCompanies.
+     */
+    cursor?: TrakingCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrakingCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrakingCompanies.
+     */
+    skip?: number
+    distinct?: TrakingCompanyScalarFieldEnum | TrakingCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * TrakingCompany create
+   */
+  export type TrakingCompanyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * The data needed to create a TrakingCompany.
+     */
+    data: XOR<TrakingCompanyCreateInput, TrakingCompanyUncheckedCreateInput>
+  }
+
+  /**
+   * TrakingCompany createMany
+   */
+  export type TrakingCompanyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrakingCompanies.
+     */
+    data: TrakingCompanyCreateManyInput | TrakingCompanyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrakingCompany createManyAndReturn
+   */
+  export type TrakingCompanyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * The data used to create many TrakingCompanies.
+     */
+    data: TrakingCompanyCreateManyInput | TrakingCompanyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrakingCompany update
+   */
+  export type TrakingCompanyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * The data needed to update a TrakingCompany.
+     */
+    data: XOR<TrakingCompanyUpdateInput, TrakingCompanyUncheckedUpdateInput>
+    /**
+     * Choose, which TrakingCompany to update.
+     */
+    where: TrakingCompanyWhereUniqueInput
+  }
+
+  /**
+   * TrakingCompany updateMany
+   */
+  export type TrakingCompanyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrakingCompanies.
+     */
+    data: XOR<TrakingCompanyUpdateManyMutationInput, TrakingCompanyUncheckedUpdateManyInput>
+    /**
+     * Filter which TrakingCompanies to update
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * Limit how many TrakingCompanies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrakingCompany updateManyAndReturn
+   */
+  export type TrakingCompanyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * The data used to update TrakingCompanies.
+     */
+    data: XOR<TrakingCompanyUpdateManyMutationInput, TrakingCompanyUncheckedUpdateManyInput>
+    /**
+     * Filter which TrakingCompanies to update
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * Limit how many TrakingCompanies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrakingCompany upsert
+   */
+  export type TrakingCompanyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * The filter to search for the TrakingCompany to update in case it exists.
+     */
+    where: TrakingCompanyWhereUniqueInput
+    /**
+     * In case the TrakingCompany found by the `where` argument doesn't exist, create a new TrakingCompany with this data.
+     */
+    create: XOR<TrakingCompanyCreateInput, TrakingCompanyUncheckedCreateInput>
+    /**
+     * In case the TrakingCompany was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrakingCompanyUpdateInput, TrakingCompanyUncheckedUpdateInput>
+  }
+
+  /**
+   * TrakingCompany delete
+   */
+  export type TrakingCompanyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+    /**
+     * Filter which TrakingCompany to delete.
+     */
+    where: TrakingCompanyWhereUniqueInput
+  }
+
+  /**
+   * TrakingCompany deleteMany
+   */
+  export type TrakingCompanyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrakingCompanies to delete
+     */
+    where?: TrakingCompanyWhereInput
+    /**
+     * Limit how many TrakingCompanies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrakingCompany without action
+   */
+  export type TrakingCompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrakingCompany
+     */
+    select?: TrakingCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrakingCompany
+     */
+    omit?: TrakingCompanyOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15579,6 +16678,18 @@ export namespace Prisma {
   };
 
   export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+  export const TrakingCompanyScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    city: 'city',
+    location: 'location',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TrakingCompanyScalarFieldEnum = (typeof TrakingCompanyScalarFieldEnum)[keyof typeof TrakingCompanyScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -16697,6 +17808,63 @@ export namespace Prisma {
     discount?: FloatWithAggregatesFilter<"OrderItem"> | number
     orderId?: IntWithAggregatesFilter<"OrderItem"> | number
     productId?: IntWithAggregatesFilter<"OrderItem"> | number
+  }
+
+  export type TrakingCompanyWhereInput = {
+    AND?: TrakingCompanyWhereInput | TrakingCompanyWhereInput[]
+    OR?: TrakingCompanyWhereInput[]
+    NOT?: TrakingCompanyWhereInput | TrakingCompanyWhereInput[]
+    id?: StringFilter<"TrakingCompany"> | string
+    name?: StringFilter<"TrakingCompany"> | string
+    city?: StringNullableFilter<"TrakingCompany"> | string | null
+    location?: StringNullableFilter<"TrakingCompany"> | string | null
+    createdAt?: DateTimeFilter<"TrakingCompany"> | Date | string
+    updatedAt?: DateTimeFilter<"TrakingCompany"> | Date | string
+  }
+
+  export type TrakingCompanyOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    city?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrakingCompanyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: TrakingCompanyWhereInput | TrakingCompanyWhereInput[]
+    OR?: TrakingCompanyWhereInput[]
+    NOT?: TrakingCompanyWhereInput | TrakingCompanyWhereInput[]
+    city?: StringNullableFilter<"TrakingCompany"> | string | null
+    location?: StringNullableFilter<"TrakingCompany"> | string | null
+    createdAt?: DateTimeFilter<"TrakingCompany"> | Date | string
+    updatedAt?: DateTimeFilter<"TrakingCompany"> | Date | string
+  }, "id" | "name">
+
+  export type TrakingCompanyOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    city?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TrakingCompanyCountOrderByAggregateInput
+    _max?: TrakingCompanyMaxOrderByAggregateInput
+    _min?: TrakingCompanyMinOrderByAggregateInput
+  }
+
+  export type TrakingCompanyScalarWhereWithAggregatesInput = {
+    AND?: TrakingCompanyScalarWhereWithAggregatesInput | TrakingCompanyScalarWhereWithAggregatesInput[]
+    OR?: TrakingCompanyScalarWhereWithAggregatesInput[]
+    NOT?: TrakingCompanyScalarWhereWithAggregatesInput | TrakingCompanyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrakingCompany"> | string
+    name?: StringWithAggregatesFilter<"TrakingCompany"> | string
+    city?: StringNullableWithAggregatesFilter<"TrakingCompany"> | string | null
+    location?: StringNullableWithAggregatesFilter<"TrakingCompany"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TrakingCompany"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TrakingCompany"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -17820,6 +18988,69 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type TrakingCompanyCreateInput = {
+    id?: string
+    name: string
+    city?: string | null
+    location?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrakingCompanyUncheckedCreateInput = {
+    id?: string
+    name: string
+    city?: string | null
+    location?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrakingCompanyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrakingCompanyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrakingCompanyCreateManyInput = {
+    id?: string
+    name: string
+    city?: string | null
+    location?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrakingCompanyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrakingCompanyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18788,6 +20019,33 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+  }
+
+  export type TrakingCompanyCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    city?: SortOrder
+    location?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrakingCompanyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    city?: SortOrder
+    location?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrakingCompanyMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    city?: SortOrder
+    location?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type OrderCreateNestedManyWithoutUserInput = {

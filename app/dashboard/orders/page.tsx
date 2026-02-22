@@ -85,47 +85,69 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const statusText = data?.status || '-';
         const finalAmount = Number(data?.finalAmount || 0).toLocaleString('ar-EG');
         const items = Array.isArray(data?.items) ? data.items : [];
+        const pdfStyleConfig = {
+            pageWidthPx: 820,
+            wrapperPadding: 24,
+            textColor: '#0f172a',
+            borderColor: '#e2e8f0',
+            headerBg: '#f8fafc',
+            rowBg: '#ffffff',
+            headerFontSize: 24,
+            bodyFontSize: 14,
+            tableFontSize: 13,
+            cellPadding: 8,
+            renderScale: 2,
+        };
 
         const wrapper = document.createElement('div');
         wrapper.setAttribute('dir', 'rtl');
         wrapper.style.position = 'fixed';
         wrapper.style.left = '-99999px';
         wrapper.style.top = '0';
-        wrapper.style.width = '820px';
+        wrapper.style.width = `${pdfStyleConfig.pageWidthPx}px`;
         wrapper.style.background = '#ffffff';
-        wrapper.style.color = '#0f172a';
-        wrapper.style.padding = '24px';
+        wrapper.style.color = pdfStyleConfig.textColor;
+        wrapper.style.padding = `${pdfStyleConfig.wrapperPadding}px`;
         wrapper.style.fontFamily = 'Tahoma, Arial, sans-serif';
         wrapper.style.lineHeight = '1.7';
 
         const itemsHtml = items.length
             ? items.map((item: any, idx: number) => {
                 const name = item?.product?.name || item?.name || `منتج ${idx + 1}`;
-                const qty = Number(item?.quantity || 0);
-                const price = Number(item?.price || 0).toLocaleString('ar-EG');
-                return `<tr>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${name}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;text-align:center;">${qty}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;text-align:center;">${price}</td>
+                const quantityValue = Number(item?.quantity || 0);
+                const priceValue = Number(item?.price || 0);
+                const discountValue = Number(item?.discount || 0);
+                const effectivePrice = Math.max(0, priceValue - discountValue);
+                const qty = quantityValue.toLocaleString('ar-EG');
+                const price = effectivePrice.toLocaleString('ar-EG');
+                const rowTotal = (quantityValue * effectivePrice).toLocaleString('ar-EG');
+
+                return `<tr style="background:${pdfStyleConfig.rowBg};">
+                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:right;">${name}</td>
+                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${qty}</td>
+                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${price}</td>
+                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${rowTotal}</td>
                 </tr>`;
             }).join('')
-            : `<tr><td colspan="3" style="padding:10px;border:1px solid #e2e8f0;text-align:center;">لا توجد منتجات / No items</td></tr>`;
+            : `<tr><td colspan="4" style="padding:10px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">لا توجد منتجات</td></tr>`;
 
         wrapper.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <h1 style="margin:0;font-size:24px;color:#2563eb;">SKYNOVA</h1>
-                <div style="font-size:14px;font-weight:700;">فاتورة / Invoice #${invoiceNo}</div>
+                <h1 style="margin:0;font-size:${pdfStyleConfig.headerFontSize}px;color:#2563eb;">SKYNOVA</h1>
+                <div style="font-size:${pdfStyleConfig.bodyFontSize}px;font-weight:700;">فاتورة رقم #${invoiceNo}</div>
             </div>
-            <div style="font-size:14px;margin-bottom:10px;">التاريخ / Date: ${createdAt}</div>
-            <div style="font-size:14px;margin-bottom:6px;">العميل / Customer: <strong>${customerName}</strong></div>
-            <div style="font-size:14px;margin-bottom:6px;">الحالة / Status: <strong>${statusText}</strong></div>
-            <div style="font-size:14px;margin-bottom:16px;">الإجمالي النهائي / Final Total: <strong>${finalAmount}</strong></div>
-            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:10px;">التاريخ: ${createdAt}</div>
+            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:6px;">العميل: <strong>${customerName}</strong></div>
+            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:6px;">الحالة: <strong>${statusText}</strong></div>
+            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:16px;">الإجمالي النهائي: <strong>${finalAmount}</strong></div>
+
+            <table style="width:100%;border-collapse:collapse;font-size:${pdfStyleConfig.tableFontSize}px;table-layout:fixed;">
                 <thead>
-                    <tr style="background:#f8fafc;">
-                        <th style="padding:8px;border:1px solid #e2e8f0;">المنتج / Product</th>
-                        <th style="padding:8px;border:1px solid #e2e8f0;">الكمية / Qty</th>
-                        <th style="padding:8px;border:1px solid #e2e8f0;">السعر / Price</th>
+                    <tr style="background:${pdfStyleConfig.headerBg};">
+                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:50%;">المنتج</th>
+                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:16%;">الكمية</th>
+                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:17%;">السعر</th>
+                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:17%;">الإجمالي</th>
                     </tr>
                 </thead>
                 <tbody>${itemsHtml}</tbody>
@@ -134,7 +156,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         document.body.appendChild(wrapper);
         const canvas = await html2canvas(wrapper, {
-            scale: 2,
+            scale: pdfStyleConfig.renderScale,
             useCORS: true,
             backgroundColor: '#ffffff',
         });
