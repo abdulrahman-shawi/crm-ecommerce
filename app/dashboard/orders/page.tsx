@@ -53,7 +53,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [fullAddress, setFullAddress] = React.useState("");
 
     // تفاصيل الشحن
-    const [deliveryMethod, setDeliveryMethod] = React.useState("توصيل الى المنزل");
     const [googleMapsLink, setGoogleMapsLink] = React.useState("");
 
     const [page, setPage] = React.useState(1);
@@ -368,7 +367,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "شركة الشحن": order.shippingCompany,
                 "كود التتبع": order.trackingCode,
                 "ملاحظات التوصيل": order.deliveryNotes,
-                "ملاحظات إضافية": order.additionalNotes,
                 "بواسطة الموظف": order.user?.name || "Admin",
             };
         });
@@ -522,7 +520,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             municipality,
             fullAddress,
             googleMapsLink,
-            deliveryMethod,
             deliveryNotes,
             paymentMethod,
             amount: paymentMethod === "مختلطة" ? amount : "",
@@ -604,7 +601,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setFullAddress("");
 
         // إعادة تفاصيل الشحن والملاحظات
-        setDeliveryMethod("توصيل الى المنزل");
         setGoogleMapsLink("");
         setDeliveryNotes("");
         setAdditionalNotes("");
@@ -671,7 +667,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setMunicipality(data?.municipality || "");
         setFullAddress(data?.fullAddress || "");
         setGoogleMapsLink(data?.googleMapsLink || "");
-        setDeliveryMethod(data?.deliveryMethod || "توصيل الى المنزل");
         setDeliveryNotes(data?.deliveryNotes || "");
         setAdditionalNotes(data?.additionalNotes || "");
         setOverallDiscount(Number(data?.discount || 0));
@@ -1185,14 +1180,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         {/* القسم الثالث: الشحن والملاحظات */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">طريقة التوصيل</label>
-                                <select value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all">
-                                    <option value="توصيل الى المنزل">توصيل الى المنزل</option>
-                                    <option value="استلام من المكتب">استلام من المكتب</option>
-                                    <option value="شركة شحن">شركة شحن</option>
-                                </select>
-                            </div>
-                            <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
                                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
                             </div>
@@ -1203,10 +1190,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                             <div className="space-y-2 md:col-span-2">
                                 <label className="text-xs font-bold text-slate-500 mr-2">ملاحظات التوصيل</label>
                                 <textarea rows={2} value={deliveryNotes} onChange={(e) => setDeliveryNotes(e.target.value)} placeholder="ملاحظات للمندوب..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold resize-none" />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">ملاحظات إضافية</label>
-                                <textarea rows={2} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} placeholder="أي ملاحظات إضافية..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold resize-none" />
                             </div>
                         </div>
                     </div>

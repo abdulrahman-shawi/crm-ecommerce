@@ -114,7 +114,6 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   const [fullAddress, setFullAddress] = React.useState("");
   const [status, setStatus] = React.useState("طلب جديد");
   // تفاصيل الشحن
-  const [deliveryMethod, setDeliveryMethod] = React.useState("توصيل الى المنزل");
   const [amount, setamount] = React.useState("");
   const [amountBank, setamountBank] = React.useState("");
   const [googleMapsLink, setGoogleMapsLink] = React.useState("");
@@ -199,7 +198,6 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     setFullAddress("");
 
     // إعادة تفاصيل الشحن والملاحظات
-    setDeliveryMethod("توصيل الى المنزل");
     setamount("");
     setamountBank("");
     setGoogleMapsLink("");
