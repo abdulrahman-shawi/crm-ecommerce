@@ -193,7 +193,7 @@ ${customer.status === "فرصة جديدة"
           className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold transition-transform active:scale-95 shadow-md shadow-green-200 dark:shadow-none"
         >
           <MessageCircle size={16} />
-          تواصل
+          واتس
         </button>
       </div>
     </div>

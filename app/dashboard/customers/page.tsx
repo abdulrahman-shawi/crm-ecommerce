@@ -9,7 +9,7 @@ import PhoneInput from 'react-phone-number-input'
 import { AppModal } from "@/components/ui/app-modal";
 import { AssignUsers, createCustomerAction, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
 import { useAuth } from "@/context/AuthContext";
-import { hasPermission, isAdmin } from "@/lib/utils";
+import { formatPhoneForDisplay, hasPermission, isAdmin } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { getProduct } from "@/server/product";
 import { Controller, useFieldArray } from "react-hook-form";
@@ -23,6 +23,8 @@ import { useCustomerBulkActions } from "./hooks/useCustomerBulkActions";
 import { CustomersHeader } from "./components/CustomersHeader";
 import { CustomersFilters } from "./components/CustomersFilters";
 import { CustomerCard } from "./components/CustomerCard";
+import { Eye, MessageCircle, Pencil, ShoppingBag, Table2, Trash2, UserPlus, LayoutGrid } from "lucide-react";
+import { DataTable, TableAction } from "@/components/shared/DataTable";
 
 /* ===================== Constants ===================== */
 
@@ -78,13 +80,18 @@ const CustomrLayout: React.FC = () => {
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
   const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
+  const [viewMode, setViewMode] = React.useState<"cards" | "table">("cards");
+  const [page, setPage] = React.useState(1);
+  const PAGE_SIZE = 10;
 
   const [dateFilter, setDateFilter] = React.useState('الكل');
+  const [createdFrom, setCreatedFrom] = React.useState("");
+  const [createdTo, setCreatedTo] = React.useState("");
   const [alluser, setUsers] = React.useState<any[]>([])
   const importInputRef = React.useRef<HTMLInputElement | null>(null);
   const { user } = useAuth()
 
-  const filterCustomer = useCustomerFilters(customers, search, dateFilter);
+  const filterCustomer = useCustomerFilters(customers, search, dateFilter, createdFrom, createdTo);
   const {
     selectedCustomers,
     setSelectedCustomers,
@@ -217,12 +224,39 @@ const CustomrLayout: React.FC = () => {
     }
   }
 
+  const normalizePhoneValue = (value: string) => {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return "";
+    const startsWithPlus = trimmed.startsWith("+");
+    const digits = trimmed.replace(/\D/g, "");
+    if (!digits) return "";
+    return startsWithPlus ? `+${digits}` : digits;
+  };
+
+  const normalizePhoneList = (input: unknown) => {
+    const rawValues = Array.isArray(input)
+      ? input
+      : String(input || "")
+          .split(/[،,;\n]+/)
+          .map((value) => value.trim())
+          .filter((value) => value.length > 0);
+
+    return rawValues
+      .map((value) => normalizePhoneValue(String(value)))
+      .filter((value) => value.length > 0);
+  };
+
   const onSubmit = async (data: CustomerFormValues) => {
     const loading = toast.loading(editId ? "جاري تحديث العميل" : "جاري إضافة العميل")
     if (editId) {
 
       try {
-        const res = await updateCustomer(data, editId)
+        const formattedData = {
+          ...data,
+          phone: normalizePhoneList(data.phone),
+        };
+
+        const res = await updateCustomer(formattedData, editId)
         if (res.success) {
           toast.success("تم التحديث بنجاح")
           setIsOpen(false);
@@ -237,12 +271,7 @@ const CustomrLayout: React.FC = () => {
       }
     } else {
       try {
-        const phoneArray = Array.isArray(data.phone)
-          ? data.phone.filter((num) => String(num || "").trim().length > 0)
-          : String(data.phone || "")
-              .split(/[,\s\n]+/)
-              .map(num => num.trim())
-              .filter(num => num.length > 0);
+        const phoneArray = normalizePhoneList(data.phone);
 
         const formattedData = {
           ...data,
@@ -293,7 +322,7 @@ const CustomrLayout: React.FC = () => {
 
       return {
         "اسم العميل": customer.name,
-        "رقم الهاتف": customer.phone ? customer.phone.join(' - ') : 'N/A',
+        "رقم الهاتف": customer.phone ? customer.phone.map((phone: string) => formatPhoneForDisplay(phone)).join(' - ') : 'N/A',
         "الدولة": customer.country,
         "الحالة": customer.status,
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
@@ -361,10 +390,12 @@ const CustomrLayout: React.FC = () => {
           continue;
         }
 
-        const phoneArray = phoneRaw
-          .split(/\s*-\s*|,|\n/)
-          .map((num) => num.trim())
-          .filter((num) => num.length > 0);
+        const phoneArray = normalizePhoneList(phoneRaw);
+
+        if (phoneArray.length === 0) {
+          failedCount += 1;
+          continue;
+        }
 
         const payload = {
           name,
@@ -419,6 +450,197 @@ const CustomrLayout: React.FC = () => {
     console.log(customerId, userIds)
   };
 
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, dateFilter, createdFrom, createdTo, viewMode]);
+
+  const visibleCustomers = React.useMemo(() => {
+    return filterCustomer.filter((customer) => {
+      if (isAdmin(user)) return true;
+      return customer.users.some((u: any) => u.id === user?.id);
+    });
+  }, [filterCustomer, user]);
+
+  const tableColumns = [
+    {
+      header: "تحديد",
+      accessor: (customer: any) => (
+        <input
+          type="checkbox"
+          checked={selectedCustomers.includes(customer.id)}
+          onClick={(e) => e.stopPropagation()}
+          onChange={() => toggleSelect(customer.id)}
+          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+        />
+      ),
+      className: "w-16",
+    },
+    {
+      header: "العميل",
+      accessor: (customer: any) => (
+        <button
+          type="button"
+          onClick={() => getSingleCustomer(customer)}
+          className="font-black text-slate-800 dark:text-slate-100 hover:text-blue-600"
+        >
+          {customer.name}
+        </button>
+      ),
+    },
+    {
+      header: "الهاتف",
+      accessor: (customer: any) => customer.phone ? (
+        <span dir="ltr" className="inline-block text-left">
+          {customer.phone.map((phone: string) => formatPhoneForDisplay(phone)).join(" - ")}
+        </span>
+      ) : "غير متوفر",
+      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+    },
+    {
+      header: "الدولة",
+      accessor: (customer: any) => customer.country || "-",
+      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+    },
+    {
+      header: "الحالة",
+      accessor: (customer: any) => (
+        <select
+          value={customer.status}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleStatus(customer.id, e.target.value);
+          }}
+          className={`
+            appearance-none outline-none cursor-pointer
+            px-3 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
+            ${customer.status === "فرصة جديدة"
+              ? "bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
+              : customer.status === "جاري المتابعة"
+                ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
+                : customer.status === "تم البيع"
+                  ? "bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800"
+                  : customer.status === "غير مهتم / ملغي"
+                    ? "bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+                    : "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+            }
+          `}
+        >
+          {STATUS_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value} className="bg-white text-slate-900">
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      header: "تاريخ التسجيل",
+      accessor: (customer: any) => new Date(customer.createdAt).toLocaleDateString("ar-EG", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+    },
+    {
+      header: "عدد الطلبات",
+      accessor: (customer: any) => customer.orders?.length || 0,
+      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+    },
+    {
+      header: "آخر رسالة",
+      accessor: (customer: any) => {
+        const lastMessage = customer.message && customer.message.length > 0
+          ? customer.message[customer.message.length - 1].message
+          : "لا توجد رسائل...";
+        return <span className="max-w-[220px] truncate block text-slate-500 dark:text-slate-400">{lastMessage}</span>;
+      },
+    },
+  ];
+
+  const tableActions: TableAction<any>[] = (() => {
+    const actions: TableAction<any>[] = [];
+
+    if (user && hasPermission(user, "editCustomers")) {
+      actions.push({
+        label: "تعديل",
+        icon: <Pencil size={16} />,
+        onClick: (customer: any) => {
+          setEditId(customer.id);
+          const normalizedPhones = Array.isArray(customer.phone)
+            ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
+            : String(customer.phone || "")
+                .split(/[\s,\-\n]+/)
+                .map((num: string) => num.trim())
+                .filter((num: string) => num.length > 0);
+          setFormdata({
+            name: customer.name,
+            phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
+          });
+          setIsOpen(true);
+        }
+      });
+    }
+
+    if (user && hasPermission(user, "deleteCustomers")) {
+      actions.push({
+        label: "حذف",
+        icon: <Trash2 size={16} />,
+        variant: "danger",
+        onClick: (customer: any) => deleteCus(customer),
+      });
+    }
+
+    if (user && hasPermission(user, "addOrders")) {
+      actions.push({
+        label: "الطلبات",
+        icon: <ShoppingBag size={16} />,
+        onClick: (customer: any) => {
+          setCustomerId(customer.id);
+          setisOpenOrder(true);
+        }
+      });
+    }
+
+    if (user && hasPermission(user, "viewOrders")) {
+      actions.push({
+        label: "اظهار الفواتير",
+        icon: <Eye size={16} />,
+        onClick: (customer: any) => {
+          setisOpenordercustomer(true);
+          setCustomerorder(customer.orders);
+        }
+      });
+    }
+
+    if (user && isAdmin(user)) {
+      actions.push({
+        label: "تعيين موظف",
+        icon: <UserPlus size={16} />,
+        onClick: (customer: any) => {
+          setCustomer(customer);
+          setOpenAssignModal(true);
+        }
+      });
+    }
+
+    actions.push({
+      label: "واتس",
+      icon: <MessageCircle size={16} />,
+      onClick: (customer: any) => {
+        const rawPhone = customer.phone?.[0] || "";
+        const phoneNumber = rawPhone.replace(/\D/g, "");
+        const countryCode = (customer.countryCode || "").replace(/\D/g, "");
+        if (phoneNumber) {
+          window.open(`https://wa.me/${countryCode}${phoneNumber}`, "_blank");
+        }
+      }
+    });
+
+    return actions;
+  })();
+
   return (
     <div className="p-6">
       <CustomersHeader
@@ -444,17 +666,40 @@ const CustomrLayout: React.FC = () => {
         setSearch={setSearch}
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}
+        createdFrom={createdFrom}
+        setCreatedFrom={setCreatedFrom}
+        createdTo={createdTo}
+        setCreatedTo={setCreatedTo}
       />
+      <div className="flex items-center gap-2 mb-4">
+        <button
+          type="button"
+          onClick={() => setViewMode("cards")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === "cards"
+            ? "bg-blue-600 text-white"
+            : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"}
+          `}
+        >
+          <LayoutGrid size={16} />
+          كرت
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode("table")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === "table"
+            ? "bg-blue-600 text-white"
+            : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"}
+          `}
+        >
+          <Table2 size={16} />
+          جدول
+        </button>
+      </div>
       <div className="  dir-rtl" dir="rtl">
         <div className=" mx-auto">
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterCustomer
-              .filter((customer) => {
-                if (isAdmin(user)) return true;
-                return customer.users.some((u: any) => u.id === user?.id);
-              })
-              .map((customer) => (
+          {viewMode === "cards" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {visibleCustomers.map((customer) => (
                 <CustomerCard
                   key={customer.id}
                   customer={customer}
@@ -493,7 +738,19 @@ const CustomrLayout: React.FC = () => {
                   }}
                 />
               ))}
-          </div>
+            </div>
+          ) : (
+            <DataTable
+              data={visibleCustomers}
+              columns={tableColumns}
+              actions={tableActions}
+              actindir
+              totalCount={visibleCustomers.length}
+              pageSize={PAGE_SIZE}
+              currentPage={page}
+              onPageChange={setPage}
+            />
+          )}
 
         </div>
       </div>

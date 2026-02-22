@@ -5,6 +5,10 @@ type CustomersFiltersProps = {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   dateFilter: string;
   setDateFilter: React.Dispatch<React.SetStateAction<string>>;
+  createdFrom: string;
+  setCreatedFrom: React.Dispatch<React.SetStateAction<string>>;
+  createdTo: string;
+  setCreatedTo: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const filterTabs = [
@@ -20,6 +24,10 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
   setSearch,
   dateFilter,
   setDateFilter,
+  createdFrom,
+  setCreatedFrom,
+  createdTo,
+  setCreatedTo,
 }) => {
   return (
     <div className="flex flex-col gap-3">
@@ -29,7 +37,7 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="ابحث بالرقم أو الاسم أو المدينة"
+            placeholder="ابحث بالرقم أو الاسم أو المدينة أو اسم الموظف"
             className="flex-1 h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent p-5 my-3"
           />
         </div>
@@ -47,6 +55,26 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
               {tab.label}
             </button>
           ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-slate-600 dark:text-slate-300">من تاريخ الإنشاء</label>
+          <input
+            type="date"
+            value={createdFrom}
+            onChange={(e) => setCreatedFrom(e.target.value)}
+            className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-slate-600 dark:text-slate-300">إلى تاريخ الإنشاء</label>
+          <input
+            type="date"
+            value={createdTo}
+            onChange={(e) => setCreatedTo(e.target.value)}
+            className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
+          />
         </div>
       </div>
     </div>

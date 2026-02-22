@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
-import { hasPermission } from "@/lib/utils";
+import { formatPhoneForDisplay, hasPermission } from "@/lib/utils";
 import { createmessage, updateCustomer } from "@/server/customer";
 import { MapPin, Phone, Send } from "lucide-react";
 import React from "react";
@@ -279,7 +279,9 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
             <div>
               <p className="text-[10px] text-slate-500 font-bold uppercase">الهاتف</p>
               <p className="text-sm font-bold dark:text-white">
-                {data.phone.join(" - ")}
+                <span dir="ltr" className="inline-block text-left">
+                  {data.phone.map((phone: string) => formatPhoneForDisplay(phone)).join(" - ")}
+                </span>
               </p>
             </div>
           </div>

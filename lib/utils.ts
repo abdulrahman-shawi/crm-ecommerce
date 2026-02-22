@@ -17,3 +17,21 @@ export function hasPermission(user: User | null | undefined, permission: Permiss
 export function hasAnyPermission(user: User | null | undefined, permissions: PermissionKey[]) {
   return isAdmin(user) || permissions.some((permission) => Boolean(user?.permission?.[permission]));
 }
+
+export function formatPhoneForDisplay(phone: string) {
+  const raw = String(phone ?? "").trim();
+  if (!raw) return "";
+
+  const hasPlus = raw.startsWith("+");
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return raw;
+
+  if (hasPlus && digits.length > 3) {
+    const countryCode = digits.slice(0, 3);
+    const rest = digits.slice(3);
+    const restGroups = rest.match(/.{1,3}/g)?.join(" ") ?? rest;
+    return `+${countryCode} ${restGroups}`.trim();
+  }
+
+  return digits.match(/.{1,3}/g)?.join(" ") ?? digits;
+}

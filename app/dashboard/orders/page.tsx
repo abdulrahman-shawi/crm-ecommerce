@@ -80,83 +80,147 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const buildOrderPdfFile = async (data: any) => {
         const invoiceNo = data?.orderNumber || '-';
-        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleString('ar-EG') : '-';
+        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('ar-EG') : '-';
         const customerName = data?.customer?.name || 'غير محدد';
-        const statusText = data?.status || '-';
-        const finalAmount = Number(data?.finalAmount || 0).toLocaleString('ar-EG');
+        const paymentMethodText = data?.paymentMethod || '-';
+        const receiverName = data?.receiverName || 'غير محدد';
+        const receiverPhone = Array.isArray(data?.receiverPhone) ? data.receiverPhone.filter(Boolean).join(' - ') : (data?.receiverPhone || 'لم يسجل');
+        const country = data?.country || '-';
+        const city = data?.city || 'لم يسجل';
+        const municipality = data?.municipality || 'لم يسجل';
+        const fullAddress = data?.fullAddress || 'لم يسجل';
+        const mapLink = data?.googleMapsLink || '';
         const items = Array.isArray(data?.items) ? data.items : [];
-        const pdfStyleConfig = {
-            pageWidthPx: 820,
-            wrapperPadding: 24,
-            textColor: '#0f172a',
-            borderColor: '#e2e8f0',
-            headerBg: '#f8fafc',
-            rowBg: '#ffffff',
-            headerFontSize: 24,
-            bodyFontSize: 14,
-            tableFontSize: 13,
-            cellPadding: 8,
-            renderScale: 2,
-        };
+
+        const formatMoney = (value: any) => Number(value || 0).toLocaleString('ar-EG');
+        const totalDiscount = Number(data?.discount || 0);
+        const finalAmount = Number(data?.finalAmount || 0);
+        const subtotal = finalAmount + totalDiscount;
+        const amountBank = Number(data?.amountBank || 0);
+        const amount = Number(data?.amount || 0);
+
+        const rowsHtml = items.length
+            ? items.map((item: any, idx: number) => {
+                const name = item?.product?.name || item?.name || `منتج ${idx + 1}`;
+                const quantity = Number(item?.quantity || 0);
+                const price = Number(item?.price || 0);
+                const discount = Number(item?.discount || 0);
+                const effectivePrice = Math.max(0, price - discount);
+                const total = effectivePrice * quantity;
+                return `
+                    <tr>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;">
+                            <div style="font-weight:800;color:#0f172a;">${name}</div>
+                            ${discount > 0 ? `<div style="font-size:11px;color:#ef4444;">خصم: ${formatMoney(discount)} $</div>` : ''}
+                        </td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#475569;">x${quantity}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#475569;">${formatMoney(effectivePrice)} $</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:left;font-weight:900;color:#0f172a;">${formatMoney(total)} $</td>
+                    </tr>
+                `;
+            }).join('')
+            : `
+                <tr>
+                    <td colspan="4" style="padding:12px;text-align:center;color:#94a3b8;">لا توجد منتجات</td>
+                </tr>
+            `;
 
         const wrapper = document.createElement('div');
         wrapper.setAttribute('dir', 'rtl');
         wrapper.style.position = 'fixed';
         wrapper.style.left = '-99999px';
         wrapper.style.top = '0';
-        wrapper.style.width = `${pdfStyleConfig.pageWidthPx}px`;
+        wrapper.style.width = '900px';
         wrapper.style.background = '#ffffff';
-        wrapper.style.color = pdfStyleConfig.textColor;
-        wrapper.style.padding = `${pdfStyleConfig.wrapperPadding}px`;
+        wrapper.style.color = '#0f172a';
+        wrapper.style.padding = '28px';
         wrapper.style.fontFamily = 'Tahoma, Arial, sans-serif';
         wrapper.style.lineHeight = '1.7';
 
-        const itemsHtml = items.length
-            ? items.map((item: any, idx: number) => {
-                const name = item?.product?.name || item?.name || `منتج ${idx + 1}`;
-                const quantityValue = Number(item?.quantity || 0);
-                const priceValue = Number(item?.price || 0);
-                const discountValue = Number(item?.discount || 0);
-                const effectivePrice = Math.max(0, priceValue - discountValue);
-                const qty = quantityValue.toLocaleString('ar-EG');
-                const price = effectivePrice.toLocaleString('ar-EG');
-                const rowTotal = (quantityValue * effectivePrice).toLocaleString('ar-EG');
-
-                return `<tr style="background:${pdfStyleConfig.rowBg};">
-                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:right;">${name}</td>
-                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${qty}</td>
-                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${price}</td>
-                    <td style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">${rowTotal}</td>
-                </tr>`;
-            }).join('')
-            : `<tr><td colspan="4" style="padding:10px;border:1px solid ${pdfStyleConfig.borderColor};text-align:center;">لا توجد منتجات</td></tr>`;
-
         wrapper.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <h1 style="margin:0;font-size:${pdfStyleConfig.headerFontSize}px;color:#2563eb;">SKYNOVA</h1>
-                <div style="font-size:${pdfStyleConfig.bodyFontSize}px;font-weight:700;">فاتورة رقم #${invoiceNo}</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #e2e8f0;padding-bottom:16px;margin-bottom:18px;">
+                <div style="display:flex;gap:12px;align-items:baseline;">
+                    <div style="font-size:36px;font-weight:900;color:#2563eb;letter-spacing:-1px;">SKYNOVA</div>
+                    <div style="font-size:18px;font-weight:800;color:#94a3b8;">| فاتورة مبيعات</div>
+                </div>
+                <div style="text-align:left;font-size:12px;color:#64748b;font-weight:700;">
+                    <div>رقم الفاتورة: <span style="color:#0f172a;font-weight:900;">#${invoiceNo}</span></div>
+                    <div>تاريخ الإصدار: <span style="color:#0f172a;">${createdAt}</span></div>
+                </div>
             </div>
-            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:10px;">التاريخ: ${createdAt}</div>
-            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:6px;">العميل: <strong>${customerName}</strong></div>
-            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:6px;">الحالة: <strong>${statusText}</strong></div>
-            <div style="font-size:${pdfStyleConfig.bodyFontSize}px;margin-bottom:16px;">الإجمالي النهائي: <strong>${finalAmount}</strong></div>
 
-            <table style="width:100%;border-collapse:collapse;font-size:${pdfStyleConfig.tableFontSize}px;table-layout:fixed;">
-                <thead>
-                    <tr style="background:${pdfStyleConfig.headerBg};">
-                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:50%;">المنتج</th>
-                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:16%;">الكمية</th>
-                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:17%;">السعر</th>
-                        <th style="padding:${pdfStyleConfig.cellPadding}px;border:1px solid ${pdfStyleConfig.borderColor};width:17%;">الإجمالي</th>
-                    </tr>
-                </thead>
-                <tbody>${itemsHtml}</tbody>
-            </table>
+            <div style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:18px;">
+                <div style="background:#eff6ff;border:1px solid #dbeafe;border-radius:18px;padding:16px;">
+                    <div style="font-size:18px;font-weight:900;color:#0f172a;">${customerName}</div>
+                    <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:6px;">طريقة الدفع: ${paymentMethodText}</div>
+                </div>
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:16px;">
+                    <div style="font-size:12px;font-weight:900;color:#94a3b8;letter-spacing:1px;">تفاصيل العنوان والتوصيل</div>
+                    <div style="font-size:16px;font-weight:900;color:#0f172a;margin-top:6px;">المستلم: ${receiverName}</div>
+                    <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:6px;line-height:1.7;">
+                        <div>البلد: ${country}</div>
+                        <div>المحافظة: ${city}</div>
+                        <div>المنظقة: ${municipality}</div>
+                        <div>العنوان: ${fullAddress}</div>
+                        <div>رقم التواصل: ${receiverPhone}</div>
+                        ${mapLink ? `<div>رابط الخريطة: ${mapLink}</div>` : ''}
+                    </div>
+                </div>
+            </div>
+
+            <div style="border:1px solid #e2e8f0;border-radius:18px;overflow:hidden;margin-bottom:18px;">
+                <table style="width:100%;border-collapse:collapse;text-align:right;">
+                    <thead>
+                        <tr style="background:#0f172a;color:#ffffff;">
+                            <th style="padding:10px 12px;font-size:12px;font-weight:900;">المنتج</th>
+                            <th style="padding:10px 12px;font-size:12px;font-weight:900;text-align:center;">الكمية</th>
+                            <th style="padding:10px 12px;font-size:12px;font-weight:900;text-align:center;">السعر</th>
+                            <th style="padding:10px 12px;font-size:12px;font-weight:900;text-align:left;">الإجمالي</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-end;">
+                <div style="flex:1;font-size:11px;font-weight:700;color:#94a3b8;">
+                    * هذه الفاتورة صدرت إلكترونياً وهي وثيقة رسمية.<br />
+                    * شكراً لتعاملك مع SKYNOVA.
+                </div>
+                <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
+                        <span>المجموع الفرعي:</span>
+                        <span>${formatMoney(subtotal)} $</span>
+                    </div>
+                    ${totalDiscount > 0 ? `
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
+                        <span>الخصم الممنوح:</span>
+                        <span>-${formatMoney(totalDiscount)} $</span>
+                    </div>
+                    ` : ''}
+                    ${paymentMethodText === 'مختلطة' ? `
+                    <div style="border-top:1px dashed #e2e8f0;border-bottom:1px dashed #e2e8f0;padding:8px 0;display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#2563eb;">
+                            <span>القيمة المستلمة (حوالة):</span>
+                            <span>${formatMoney(amount)} $</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#7c3aed;">
+                            <span>القيمة المتبقية (عند الباب):</span>
+                            <span>${formatMoney(amountBank)} $</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    <div style="display:flex;justify-content:space-between;align-items:center;background:#2563eb;color:#ffffff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 24px rgba(37,99,235,0.2);">
+                        <span style="font-size:14px;font-weight:900;">الإجمالي النهائي</span>
+                        <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">$</span></span>
+                    </div>
+                </div>
+            </div>
         `;
 
         document.body.appendChild(wrapper);
         const canvas = await html2canvas(wrapper, {
-            scale: pdfStyleConfig.renderScale,
+            scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff',
         });
@@ -1009,13 +1073,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             </AppModal>
 
             <AppModal size='full' isOpen={isOpenorder} onClose={() => setisOpenorder(false)} title='ملخص الطلب' >
-                <ViewOrder data={order} products={products} />
+                <ViewOrder data={order} products={products} onSharePdf={shareOrderPdfToCustomerWhatsApp} />
             </AppModal>
         </div>
     );
 };
 
-function ViewOrder({ data, products }: { data: any, products: any }) {
+function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, onSharePdf?: (order: any) => void | Promise<void> }) {
     const componentRef = React.useRef<HTMLDivElement>(null);
 
     const getEffectivePrice = (price: number, discount: number) => {
@@ -1038,11 +1102,20 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
     };
 
     return (
-        <div className="p-10 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 min-h-screen">
+        <div className="p-4 md:p-10 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 min-h-screen">
 
             {/* زر الطباعة */}
-            <div className="flex justify-end p-4 bg-white dark:bg-slate-900 no-print">
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-3 p-4 bg-white dark:bg-slate-900 no-print">
                 <button
+                    type="button"
+                    onClick={() => onSharePdf?.(data)}
+                    className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200"
+                >
+                    <Mail size={20} />
+                    مشاركة PDF
+                </button>
+                <button
+                    type="button"
                     onClick={handlePrint}
                     className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
                 >
@@ -1051,7 +1124,7 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                 </button>
             </div>
 
-            <div ref={componentRef} className="p-10 bg-white dark:bg-slate-900" dir="rtl">
+            <div ref={componentRef} className="p-4 md:p-10 bg-white dark:bg-slate-900" dir="rtl">
                 <style dangerouslySetInnerHTML={{
                     __html: `
                     @media print {
@@ -1063,19 +1136,19 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
 
                 <div id="printable-area">
                     {/* الهيدر العلوي مع إضافة "فاتورة" */}
-                    <div className="flex justify-between items-start mb-10 pb-8 border-b-2 border-slate-100">
-                        <div className="flex items-baseline gap-4">
-                            <h1 className="text-5xl font-black text-blue-600 tracking-tighter italic">SKYNOVA</h1>
-                            <span className="text-2xl font-bold text-slate-400">| فاتورة مبيعات</span>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-8 md:mb-10 pb-6 md:pb-8 border-b-2 border-slate-100">
+                        <div className="flex flex-wrap items-baseline gap-3">
+                            <h1 className="text-3xl md:text-5xl font-black text-blue-600 tracking-tighter italic">SKYNOVA</h1>
+                            <span className="text-base md:text-2xl font-bold text-slate-400">| فاتورة مبيعات</span>
                         </div>
-                        <div className="text-left space-y-1 text-sm text-slate-500 font-bold">
+                        <div className="text-left space-y-1 text-xs md:text-sm text-slate-500 font-bold">
                             <p>رقم الفاتورة: <span className="text-slate-900 dark:text-white font-mono">#{data.orderNumber}</span></p>
                             <p>تاريخ الإصدار: <span className="text-slate-900 dark:text-white">{data.createdAt instanceof Date ? data.createdAt.toLocaleDateString('ar-EG') : String(data.createdAt)}</span></p>
                         </div>
                     </div>
 
                     {/* تفاصيل العميل والمستلم والعنوان */}
-                    <div className="grid grid-cols-1 gap-8 mb-12">
+                    <div className="grid grid-cols-1 gap-6 md:gap-8 mb-8 md:mb-12">
                         <div className="p-6 bg-blue-50/50 dark:bg-blue-900/10 rounded-[2rem] border border-blue-100/50">
                             <p className="text-xl font-black text-slate-900 dark:text-white">{data.customer?.name}</p>
                             <p className="text-sm font-bold text-slate-500 mt-2">طريقة الدفع: {data.paymentMethod}</p>
@@ -1105,32 +1178,32 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                     </div>
 
                     {/* جدول المنتجات */}
-                    <div className="overflow-x-auto rounded-[2rem] border border-slate-100 mb-8">
+                    <div className="overflow-x-auto rounded-[2rem] border border-slate-100 mb-6 md:mb-8">
                         <table className="w-full text-right">
                             <thead className='border border-slate-600'>
                                 <tr className="bg-slate-900 text-white">
-                                    <th className="px-8 py-2 font-black text-sm">المنتج</th>
-                                    <th className="px-8 py-2 font-black text-sm text-center">الكمية</th>
-                                    <th className="px-8 py-2 font-black text-sm text-center">السعر</th>
-                                    <th className="px-8 py-2 font-black text-sm text-left">الإجمالي</th>
+                                    <th className="px-4 md:px-8 py-2 font-black text-xs md:text-sm">المنتج</th>
+                                    <th className="px-4 md:px-8 py-2 font-black text-xs md:text-sm text-center">الكمية</th>
+                                    <th className="px-4 md:px-8 py-2 font-black text-xs md:text-sm text-center">السعر</th>
+                                    <th className="px-4 md:px-8 py-2 font-black text-xs md:text-sm text-left">الإجمالي</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">
                                 {data.items?.map((item: any, idx: number) => (
                                     <tr key={idx} className="hover:bg-slate-50/50">
-                                        <td className="px-8 py-2">
+                                        <td className="px-4 md:px-8 py-2">
                                             <p className="font-black text-slate-800 dark:text-slate-100">{getProductName(item.productId)}</p>
                                         </td>
-                                        <td className="px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
-                                        <td className="px-8 py-2 text-center font-bold text-slate-600">{getEffectivePrice(item.price, item.discount || 0).toLocaleString()} $</td>
-                                        <td className="px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} $</td>
+                                        <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
+                                        <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600">{getEffectivePrice(item.price, item.discount || 0).toLocaleString()} $</td>
+                                        <td className="px-4 md:px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} $</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
 
-                    <div className="flex justify-between items-end gap-10">
+                    <div className="flex flex-col gap-6 md:flex-row md:justify-between md:items-end md:gap-10">
                         {/* ملاحظات قانونية */}
                         <div className="text-slate-400 text-xs font-bold leading-relaxed flex-1">
                             * هذه الفاتورة صدرت إلكترونياً وهي وثيقة رسمية.
@@ -1139,14 +1212,14 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                         </div>
 
                         {/* ملخص الحسابات */}
-                        <div className="w-96 space-y-3">
-                            <div className="flex justify-between px-6 text-slate-500 font-bold text-sm">
+                        <div className="w-full md:w-96 space-y-3">
+                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
                                 <span>المجموع الفرعي:</span>
                                 <span>{subtotal.toLocaleString()} $</span>
                             </div>
 
                             {totalDiscount > 0 && (
-                                <div className="flex justify-between px-6 text-rose-500 font-bold text-sm">
+                                <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
                                     <span>الخصم الممنوح:</span>
                                     <span>-{totalDiscount.toLocaleString()} $</span>
                                 </div>
@@ -1155,21 +1228,21 @@ function ViewOrder({ data, products }: { data: any, products: any }) {
                             {/* عرض تفاصيل الدفع المختلط */}
                             {data.paymentMethod === "مختلطة" && (
                                 <div className="border-t border-b border-dashed border-slate-200 py-3 space-y-2">
-                                    <div className="flex justify-between px-6 text-blue-600 font-bold text-sm">
+                                    <div className="flex justify-between px-4 md:px-6 text-blue-600 font-bold text-sm">
                                         <span>القيمة المستلمة (حوالة):</span>
                                         <span>{Number(data.amount).toLocaleString()} $</span>
                                     </div>
-                                    <div className="flex justify-between px-6 text-purple-600 font-bold text-sm">
+                                    <div className="flex justify-between px-4 md:px-6 text-purple-600 font-bold text-sm">
                                         <span>القيمة المتبقية (عند الباب):</span>
                                         <span>{Number(data.amountBank).toLocaleString()} $</span>
                                     </div>
                                 </div>
                             )}
 
-                            <div className="flex justify-between items-center p-6 bg-blue-600 rounded-[2rem] text-white shadow-xl">
-                                <span className="text-xl font-black">الإجمالي النهائي</span>
+                            <div className="flex justify-between items-center p-4 md:p-6 bg-blue-600 rounded-[2rem] text-white shadow-xl">
+                                <span className="text-lg md:text-xl font-black">الإجمالي النهائي</span>
                                 <div className="text-right">
-                                    <span className="text-3xl font-black italic tracking-tighter">
+                                    <span className="text-2xl md:text-3xl font-black italic tracking-tighter">
                                         {finalAmount.toLocaleString()}
                                     </span>
                                     <span className="text-sm font-bold mr-1"> $</span>
