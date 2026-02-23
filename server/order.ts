@@ -97,16 +97,17 @@ export async function createOrder(data: any, items: any[], user: any) {
                 
                 if (!product) throw new Error(`المنتج ذو الرقم ${productId} غير موجود`);
 
-                const currentQty = parseInt(product.quantity || "0");
-                const newQty = (currentQty - quantityToSubtract).toString();
+                // const currentQty = parseInt(product.quantity || "0");
+                // const newQty = (currentQty - quantityToSubtract).toString();
+                const newQty = "1";
 
                 // التحقق من عدم وجود كمية سالبة (اختياري حسب منطق عملك)
                 if (parseInt(newQty) < 0) throw new Error(`الكمية المطلوبة للمنتج ${product.name} غير متوفرة`);
 
-                await tx.product.update({
-                    where: { id: productId },
-                    data: { quantity: newQty }
-                });
+                // await tx.product.update({
+                //     where: { id: productId },
+                //     data: { quantity: newQty }
+                // });
             }
 
             if (existingOrdersCount === 0 || isSoldOrderStatus(data.status)) {
@@ -140,13 +141,13 @@ export async function updateOrder(data: any, id: any, items: any) {
             // أ - إرجاع المخزون القديم يدوياً (تحويل النص لرقم)
             for (const oldItem of oldOrder.items) {
                 const product = await tx.product.findUnique({ where: { id: oldItem.productId } });
-                if (product) {
-                    const restoredQty = (parseInt(product.quantity || "0") + oldItem.quantity).toString();
-                    await tx.product.update({
-                        where: { id: oldItem.productId },
-                        data: { quantity: restoredQty }
-                    });
-                }
+                // if (product) {
+                //     const restoredQty = (parseInt(product.quantity || "0") + oldItem.quantity).toString();
+                //     await tx.product.update({
+                //         where: { id: oldItem.productId },
+                //         data: { quantity: restoredQty }
+                //     });
+                // }
             }
 
             // ب - تحديث بيانات الطلب الرئيسية والعناصر (حذف وإضافة)
@@ -192,14 +193,14 @@ export async function updateOrder(data: any, id: any, items: any) {
             // ج - خصم المخزون الجديد
             for (const newItem of items) {
                 const product = await tx.product.findUnique({ where: { id: parseInt(newItem.productId) } });
-                if (product) {
-                    const newQty = (parseInt(product.quantity || "0") - parseInt(newItem.quantity)).toString();
-                    // يمكنك هنا إضافة شرط للتأكد من أن المخزون لا يصبح سالباً
-                    await tx.product.update({
-                        where: { id: parseInt(newItem.productId) },
-                        data: { quantity: newQty }
-                    });
-                }
+                // if (product) {
+                //     const newQty = (parseInt(product.quantity || "0") - parseInt(newItem.quantity)).toString();
+                //     // يمكنك هنا إضافة شرط للتأكد من أن المخزون لا يصبح سالباً
+                //     await tx.product.update({
+                //         where: { id: parseInt(newItem.productId) },
+                //         data: { quantity: newQty }
+                //     });
+                // }
             }
 
             return { success: true, data: updatedOrder };
@@ -231,15 +232,15 @@ export async function deleteOrder(id: any) {
                     where: { id: item.productId } 
                 });
                 
-                if (product) {
-                    const currentQty = parseInt(product.quantity || "0");
-                    const restoredQty = (currentQty + item.quantity).toString();
+                // if (product) {
+                //     const currentQty = parseInt(product.quantity || "0");
+                //     const restoredQty = (currentQty + item.quantity).toString();
                     
-                    await tx.product.update({
-                        where: { id: item.productId },
-                        data: { quantity: restoredQty }
-                    });
-                }
+                //     await tx.product.update({
+                //         where: { id: item.productId },
+                //         data: { quantity: restoredQty }
+                //     });
+                // }
             }
 
             // ب - حذف الطلب
