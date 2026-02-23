@@ -184,9 +184,34 @@ exports.Prisma.ProductScalarFieldEnum = {
   name: 'name',
   price: 'price',
   discount: 'discount',
-  description: 'description',
-  quantity: 'quantity',
   categoryId: 'categoryId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WarehouseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  location: 'location',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductStockScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  warehouseId: 'warehouseId',
+  quantity: 'quantity',
+  discountedPrice: 'discountedPrice'
+};
+
+exports.Prisma.StockMovementScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  warehouseId: 'warehouseId',
+  userId: 'userId',
+  quantity: 'quantity',
+  type: 'type',
+  reason: 'reason',
   createdAt: 'createdAt'
 };
 
@@ -264,6 +289,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   customerId: 'customerId',
   userId: 'userId',
+  warehouseId: 'warehouseId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -307,11 +333,22 @@ exports.AccountType = exports.$Enums.AccountType = {
   STAFF: 'STAFF'
 };
 
+exports.MovementType = exports.$Enums.MovementType = {
+  IN: 'IN',
+  OUT: 'OUT',
+  TRANSFER: 'TRANSFER',
+  ADJUSTMENT: 'ADJUSTMENT',
+  RETURN: 'RETURN'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
+  Warehouse: 'Warehouse',
+  ProductStock: 'ProductStock',
+  StockMovement: 'StockMovement',
   UserTarget: 'UserTarget',
   TargetProduct: 'TargetProduct',
   ProductImage: 'ProductImage',

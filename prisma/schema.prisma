@@ -26,6 +26,7 @@ model User {
   customers    Customer[]  @relation("CustomerToUser")
   message      Message[]
   targets      UserTarget[]
+  stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
 }
 
 model Permission {
@@ -97,14 +98,60 @@ model Product {
   name        String
   price       Float
   discount    Float?         @default(0)
-  description String?
-  quantity    String?
   categoryId  Int?
   createdAt   DateTime       @default(now())
   orderItems  OrderItem[]
   category    Category?      @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
   targetProducts TargetProduct[]
+stocks         ProductStock[]
+  stockMovements StockMovement[]
+}
+
+model Warehouse {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique // مثلاً: "مستودع إدلب" أو "مستودع إسطنبول"
+  location  String         // سوريا أو تركيا
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  stocks    ProductStock[]
+  orders    Order[]        // لتحديد من أي مخزن خرج الطلب
+  movements StockMovement[]
+}
+
+model ProductStock {
+  id          Int       @id @default(autoincrement())
+  productId   Int
+  warehouseId Int
+  quantity    Int       @default(0) // الكمية الفعلية في هذا الموقع
+  discountedPrice Float?   @default(0)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, warehouseId])
+}
+
+model StockMovement {
+  id          String       @id @default(uuid())
+  productId   Int
+  warehouseId Int
+  userId      String?      // الموظف المسؤول
+  quantity    Int          // موجبة للزيادة وسالبة للنقصان
+  type        MovementType
+  reason      String?      // ملاحظات (شراء، بيع، تالف، تحويل)
+  createdAt   DateTime     @default(now())
+
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  user        User?        @relation(fields: [userId], references: [id])
+}
+
+enum MovementType {
+  IN          // توريد جديد
+  OUT         // مبيعات
+  TRANSFER    // تحويل بين سوريا وتركيا
+  ADJUSTMENT  // جرد وتصحيح
+  RETURN      // مرتجع
 }
 
 model UserTarget {
@@ -193,11 +240,13 @@ model Order {
   status          String      @default("PENDING")
   customerId      String
   userId          String?
+  warehouseId     Int?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   customer        Customer    @relation(fields: [customerId], references: [id])
   user            User?       @relation(fields: [userId], references: [id])
   items           OrderItem[]
+  warehouse       Warehouse?  @relation(fields: [warehouseId], references: [id])
 }
 
 model OrderItem {
