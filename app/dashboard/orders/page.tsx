@@ -37,7 +37,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
     const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
     const [overallDiscount, setOverallDiscount] = React.useState(0);
-    const [statusFilter, setStatusFilter] = React.useState("الكل");
+    const [statusFilter, setStatusFilter] = React.useState("طلب جديد");
 
     // بيانات العميل والمبالغ
     const [customerId, setCustomerId] = React.useState("");
@@ -416,7 +416,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     }, [orders, user]);
 
     const statusOptions = [
-        "الكل",
         "طلب جديد",
         "تم استلام الطلب",
         "تم ارسال الطلب",
@@ -424,6 +423,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         "فشل التسليم مرتجع",
         "تم الغاء الطلب",
         "معلق / نقص معلومات",
+        "الكل",
     ];
 
     const statusCardColors: Record<string, string> = {
