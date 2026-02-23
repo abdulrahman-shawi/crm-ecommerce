@@ -326,57 +326,57 @@ export async function GetCustomerInteractions(userId: string) {
   }
 }
 
-export async function GetBestSellingProducts() {
-  const bestSellers = await prisma.orderItem.groupBy({
-    by: ['productId'],
-    _sum: {
-      quantity: true,
-    },
-    orderBy: {
-      _sum: {
-        quantity: 'desc',
-      },
-    },
-    take: 5, // جلب أفضل 5 منتجات فقط
-  });
+// export async function GetBestSellingProducts() {
+//   const bestSellers = await prisma.orderItem.groupBy({
+//     by: ['productId'],
+//     _sum: {
+//       quantity: true,
+//     },
+//     orderBy: {
+//       _sum: {
+//         quantity: 'desc',
+//       },
+//     },
+//     take: 5, // جلب أفضل 5 منتجات فقط
+//   });
 
-  // جلب تفاصيل أسماء المنتجات بعد الحصول على الـ IDs
-  const productsWithDetails = await Promise.all(
-    bestSellers.map(async (item) => {
-      const product = await prisma.product.findUnique({
-        where: { id: item.productId },
-        select: { name: true, price: true }
-      });
-      return {
-        ...product,
-        totalSold: item._sum.quantity,
-      };
-    })
-  );
+//   // جلب تفاصيل أسماء المنتجات بعد الحصول على الـ IDs
+//   const productsWithDetails = await Promise.all(
+//     bestSellers.map(async (item) => {
+//       const product = await prisma.product.findUnique({
+//         where: { id: item.productId },
+//         select: { name: true, price: true }
+//       });
+//       return {
+//         ...product,
+//         totalSold: item._sum.quantity,
+//       };
+//     })
+//   );
 
-  return { success: true, data: productsWithDetails };
-}
+//   return { success: true, data: productsWithDetails };
+// }
 
-export async function GetLowStockProducts() {
-  const allProducts = await prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      quantity: true,
-    }
-  });
+// export async function GetLowStockProducts() {
+//   const allProducts = await prisma.product.findMany({
+//     select: {
+//       id: true,
+//       name: true,
+//       quantity: true,
+//     }
+//   });
 
-  // تصفية المنتجات التي كميتها أقل من 5
-  // نقوم بتحويل النص إلى رقم للمقارنة
-  const lowStock = allProducts
-    .filter(p => p.quantity !== null && parseInt(p.quantity) <= 5)
-    .map(p => ({
-      name: p.name,
-      stock: parseInt(p.quantity || "0"),
-    }));
+//   // تصفية المنتجات التي كميتها أقل من 5
+//   // نقوم بتحويل النص إلى رقم للمقارنة
+//   const lowStock = allProducts
+//     .filter(p => p.quantity !== null && parseInt(p.quantity) <= 5)
+//     .map(p => ({
+//       name: p.name,
+//       stock: parseInt(p.quantity || "0"),
+//     }));
 
-  return { success: true, data: lowStock };
-}
+//   return { success: true, data: lowStock };
+// }
 
 // المستخدمين الأكثر مبيعا
 
@@ -457,7 +457,7 @@ export async function GetTopSellingUsersByPermission(userId: string) {
         items: {
           select: {
             id: true,
-            quantity: true,
+            // quantity: true,
             price: true,
             discount: true,
             product: {
@@ -498,201 +498,201 @@ export async function GetTopSellingUsersByPermission(userId: string) {
   }
 }
 
-export async function GetUserTargetProgress(userId: string, monthKey?: string) {
-  try {
-    const session = cookies().get("skynova")?.value;
-    const decoded = session ? await decrypt(session) : null;
-    const scopedUserId = decoded?.userId || userId;
+// export async function GetUserTargetProgress(userId: string, monthKey?: string) {
+//   try {
+//     const session = cookies().get("skynova")?.value;
+//     const decoded = session ? await decrypt(session) : null;
+//     const scopedUserId = decoded?.userId || userId;
 
-    const currentUser = await prisma.user.findUnique({
-      where: { id: scopedUserId },
-      include: { permission: true }
-    });
+//     const currentUser = await prisma.user.findUnique({
+//       where: { id: scopedUserId },
+//       include: { permission: true }
+//     });
 
-    if (!currentUser) return { success: false, data: [], error: "User not found" };
+//     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
-    const canViewAllTargets = isAdmin(currentUser);
-    const targets = canViewAllTargets
-      ? await prisma.userTarget.findMany({
-          include: {
-            user: { select: { id: true, username: true } },
-            products: {
-              include: { product: { select: { id: true, name: true } } }
-            }
-          }
-        })
-      : await prisma.userTarget.findMany({
-          where: { userId: scopedUserId },
-          include: {
-            products: {
-              include: { product: { select: { id: true, name: true } } }
-            }
-          }
-        });
+//     const canViewAllTargets = isAdmin(currentUser);
+//     const targets = canViewAllTargets
+//       ? await prisma.userTarget.findMany({
+//           include: {
+//             user: { select: { id: true, username: true } },
+//             products: {
+//               include: { product: { select: { id: true, name: true } } }
+//             }
+//           }
+//         })
+//       : await prisma.userTarget.findMany({
+//           where: { userId: scopedUserId },
+//           include: {
+//             products: {
+//               include: { product: { select: { id: true, name: true } } }
+//             }
+//           }
+//         });
 
-    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+//     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
-    const monthRange = (() => {
-      if (!monthKey) return null;
-      const match = monthKey.match(/^(\d{4})-(\d{2})$/);
-      if (!match) return null;
-      const year = Number(match[1]);
-      const month = Number(match[2]);
-      if (!year || !month) return null;
-      const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
-      const end = new Date(year, month, 0, 23, 59, 59, 999);
-      return { start, end };
-    })();
+//     const monthRange = (() => {
+//       if (!monthKey) return null;
+//       const match = monthKey.match(/^(\d{4})-(\d{2})$/);
+//       if (!match) return null;
+//       const year = Number(match[1]);
+//       const month = Number(match[2]);
+//       if (!year || !month) return null;
+//       const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
+//       const end = new Date(year, month, 0, 23, 59, 59, 999);
+//       return { start, end };
+//     })();
 
-    const orderItems = await prisma.orderItem.findMany({
-      where: {
-        order: {
-          ...(canViewAllTargets ? {} : { userId: scopedUserId }),
-          status: { in: statusWhitelist },
-          ...(monthRange
-            ? {
-                createdAt: {
-                  gte: monthRange.start,
-                  lte: monthRange.end,
-                },
-              }
-            : {}),
-        }
-      },
-      select: {
-        productId: true,
-        quantity: true,
-        price: true,
-        discount: true,
-        order: { select: { userId: true, createdAt: true } }
-      }
-    });
+//     const orderItems = await prisma.orderItem.findMany({
+//       where: {
+//         order: {
+//           ...(canViewAllTargets ? {} : { userId: scopedUserId }),
+//           status: { in: statusWhitelist },
+//           ...(monthRange
+//             ? {
+//                 createdAt: {
+//                   gte: monthRange.start,
+//                   lte: monthRange.end,
+//                 },
+//               }
+//             : {}),
+//         }
+//       },
+//       select: {
+//         productId: true,
+//         quantity: true,
+//         price: true,
+//         discount: true,
+//         order: { select: { userId: true, createdAt: true } }
+//       }
+//     });
 
-    const deliveredOrdersCount = await prisma.order.count({
-      where: {
-        userId: scopedUserId,
-        status: { in: statusWhitelist },
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
-      }
-    });
+//     const deliveredOrdersCount = await prisma.order.count({
+//       where: {
+//         userId: scopedUserId,
+//         status: { in: statusWhitelist },
+//         ...(monthRange
+//           ? {
+//               createdAt: {
+//                 gte: monthRange.start,
+//                 lte: monthRange.end,
+//               },
+//             }
+//           : {}),
+//       }
+//     });
 
-    const totalOrdersCount = await prisma.order.count({
-      where: {
-        userId: scopedUserId,
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
-      }
-    });
+//     const totalOrdersCount = await prisma.order.count({
+//       where: {
+//         userId: scopedUserId,
+//         ...(monthRange
+//           ? {
+//               createdAt: {
+//                 gte: monthRange.start,
+//                 lte: monthRange.end,
+//               },
+//             }
+//           : {}),
+//       }
+//     });
 
-    const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
-    const totalSoldByUser = new Map<string, number>();
-    for (const item of orderItems) {
-      const key = `${item.order.userId}:${item.productId}`;
-      const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
-      const lineAmount = netPrice * item.quantity;
-      const list = soldMap.get(key) || [];
-      list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
-      soldMap.set(key, list);
+//     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
+//     const totalSoldByUser = new Map<string, number>();
+//     for (const item of orderItems) {
+//       const key = `${item.order.userId}:${item.productId}`;
+//       const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
+//       const lineAmount = netPrice * item.quantity;
+//       const list = soldMap.get(key) || [];
+//       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
+//       soldMap.set(key, list);
 
-      if (item.order.userId) {
-        const total = totalSoldByUser.get(item.order.userId) || 0;
-        totalSoldByUser.set(item.order.userId, total + lineAmount);
-      }
-    }
+//       if (item.order.userId) {
+//         const total = totalSoldByUser.get(item.order.userId) || 0;
+//         totalSoldByUser.set(item.order.userId, total + lineAmount);
+//       }
+//     }
 
-    const data = targets.flatMap((target: any) => {
-      const targetUserId = canViewAllTargets ? target.user?.id : currentUser.id;
-      const monthSalesForUser = totalSoldByUser.get(String(targetUserId)) || 0;
-      const userName = canViewAllTargets ? target.user?.username || "" : currentUser.username || "";
+//     const data = targets.flatMap((target: any) => {
+//       const targetUserId = canViewAllTargets ? target.user?.id : currentUser.id;
+//       const monthSalesForUser = totalSoldByUser.get(String(targetUserId)) || 0;
+//       const userName = canViewAllTargets ? target.user?.username || "" : currentUser.username || "";
 
-      if (!target.products || target.products.length === 0) {
-        return [
-          {
-            targetId: target.id,
-            targetCreatedAt: target.createdAt,
-            salesTargetValue: target.salesTargetValue ?? [],
-            salesRewardValue: target.salesRewardValue ?? [],
-            userId: targetUserId,
-            userName,
-            productId: 0,
-            productName: "",
-            requiredQty: 0,
-            rewardValue: 0,
-            soldQty: 0,
-            soldAmount: monthSalesForUser,
-            remaining: 0,
-            reached: false,
-            isValueOnly: true,
-          },
-        ];
-      }
+//       if (!target.products || target.products.length === 0) {
+//         return [
+//           {
+//             targetId: target.id,
+//             targetCreatedAt: target.createdAt,
+//             salesTargetValue: target.salesTargetValue ?? [],
+//             salesRewardValue: target.salesRewardValue ?? [],
+//             userId: targetUserId,
+//             userName,
+//             productId: 0,
+//             productName: "",
+//             requiredQty: 0,
+//             rewardValue: 0,
+//             soldQty: 0,
+//             soldAmount: monthSalesForUser,
+//             remaining: 0,
+//             reached: false,
+//             isValueOnly: true,
+//           },
+//         ];
+//       }
 
-      return target.products.map((item: any) => {
-        const key = `${targetUserId}:${item.productId}`;
-        const windowEnd = target.endedAt || new Date();
-        const soldItems = soldMap.get(key) || [];
-        const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
-        const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
-        const soldQty = soldItems
-          .filter((sold) => sold.createdAt <= windowEnd)
-          .reduce((sum, sold) => sum + sold.quantity, 0);
-        const soldAmount = monthSalesForUser;
-        const remaining = Math.max(requiredQty - soldQty, 0);
-        return {
-          targetId: target.id,
-          targetCreatedAt: target.createdAt,
-          targetEndedAt: target.endedAt,
-          salesTargetValue: target.salesTargetValue ?? [],
-          salesRewardValue: target.salesRewardValue ?? [],
-          userId: targetUserId,
-          userName,
-          productId: item.productId,
-          productName: item.product?.name || "",
-          requiredQty,
-          rewardValue,
-          soldQty,
-          soldAmount,
-          remaining,
-          reached: soldQty >= requiredQty,
-          isValueOnly: false,
-        };
-      });
-    });
+//       return target.products.map((item: any) => {
+//         const key = `${targetUserId}:${item.productId}`;
+//         const windowEnd = target.endedAt || new Date();
+//         const soldItems = soldMap.get(key) || [];
+//         const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
+//         const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
+//         const soldQty = soldItems
+//           .filter((sold) => sold.createdAt <= windowEnd)
+//           .reduce((sum, sold) => sum + sold.quantity, 0);
+//         const soldAmount = monthSalesForUser;
+//         const remaining = Math.max(requiredQty - soldQty, 0);
+//         return {
+//           targetId: target.id,
+//           targetCreatedAt: target.createdAt,
+//           targetEndedAt: target.endedAt,
+//           salesTargetValue: target.salesTargetValue ?? [],
+//           salesRewardValue: target.salesRewardValue ?? [],
+//           userId: targetUserId,
+//           userName,
+//           productId: item.productId,
+//           productName: item.product?.name || "",
+//           requiredQty,
+//           rewardValue,
+//           soldQty,
+//           soldAmount,
+//           remaining,
+//           reached: soldQty >= requiredQty,
+//           isValueOnly: false,
+//         };
+//       });
+//     });
 
-    const totalSalesAmount = totalSoldByUser.get(scopedUserId) || 0;
-    const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
-    const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
-    const commissionPercent = totalSalesAmount > 0
-      ? Number(((totalCommissionAmount / totalSalesAmount) * 100).toFixed(2))
-      : 0;
+//     const totalSalesAmount = totalSoldByUser.get(scopedUserId) || 0;
+//     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
+//     const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
+//     const commissionPercent = totalSalesAmount > 0
+//       ? Number(((totalCommissionAmount / totalSalesAmount) * 100).toFixed(2))
+//       : 0;
 
-    return {
-      success: true,
-      data,
-      summary: {
-        totalSalesAmount,
-        totalOrdersCount,
-        deliveredOrdersCount,
-        totalCommissionAmount,
-        commissionPercent,
-        assignedCommissionPercent
-      }
-    };
-  } catch (error) {
-    console.error("Error in GetUserTargetProgress:", error);
-    return { success: false, data: [], error: "Internal Server Error" };
-  }
-}
+//     return {
+//       success: true,
+//       data,
+//       summary: {
+//         totalSalesAmount,
+//         totalOrdersCount,
+//         deliveredOrdersCount,
+//         totalCommissionAmount,
+//         commissionPercent,
+//         assignedCommissionPercent
+//       }
+//     };
+//   } catch (error) {
+//     console.error("Error in GetUserTargetProgress:", error);
+//     return { success: false, data: [], error: "Internal Server Error" };
+//   }
+// }

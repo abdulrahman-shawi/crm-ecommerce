@@ -70,7 +70,7 @@ export async function saveProductWithFiles(formData: FormData) {
         const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
-        const quantity = (formData.get('quantity') as string) || null;
+        // const quantity = (formData.get('quantity') as string) || null;
 
         const existingByName = await prisma.product.findFirst({
             where: {
@@ -101,7 +101,6 @@ export async function saveProductWithFiles(formData: FormData) {
                 price,
                 discount,
                 description,
-                quantity,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
                 images: {
