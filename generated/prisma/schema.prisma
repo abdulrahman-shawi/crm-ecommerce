@@ -98,6 +98,7 @@ model Product {
   name           String
   price          Float
   discount       Float?          @default(0)
+  description    String?
   categoryId     Int?
   createdAt      DateTime        @default(now())
   orderItems     OrderItem[]
