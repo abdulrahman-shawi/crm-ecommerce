@@ -3,10 +3,10 @@
 import DynamicCard from '@/components/ui/dynamicCard';
 import { useAuth } from '@/context/AuthContext';
 import {
-    GetBestSellingProducts,
+    // GetBestSellingProducts,
     GetCustomerAcquisitionMonth,
     GetCustomerInteractions,
-    GetLowStockProducts,
+    // GetLowStockProducts,
     GetSalesByCity,
     GetSalesByStatusAction,
     GetSalesTimelineAction,
@@ -64,15 +64,15 @@ const AnalyticPage: React.FC = () => {
                     resTopSale,
                     resLowStock,
                     resTopUsers,
-                    resTimeline,
-                    resMsgTimeline
+                    // resTimeline,
+                    // resMsgTimeline
                 ] = await Promise.all([
                     GetSalesByStatusAction(user.id),
                     GetCustomerInteractions(user.id),
                     GetSalesByCity(user.id),
                     GetTopCustomers(user.id),
-                    GetBestSellingProducts(),
-                    GetLowStockProducts(),
+                    // GetBestSellingProducts(),
+                    // GetLowStockProducts(),
                     GetTopSellingUsersByPermission(user.id),
                     GetSalesTimelineAction(user.id),
                     GetCustomerAcquisitionMonth(user.id) // طلب إضافي لبيانات التفاعل الزم
@@ -85,8 +85,8 @@ const AnalyticPage: React.FC = () => {
                 setTopSale(resTopSale as any);
                 setLowStock(resLowStock as any);
                 setTopSellingUsers(resTopUsers as any);
-                setTimelineData(resTimeline.data || []); // تأكد من التعامل مع الحالة التي قد لا تحتوي على بيانات
-                setMsgTimeline(resMsgTimeline as any);
+                // setTimelineData(resTimeline.data || []); // تأكد من التعامل مع الحالة التي قد لا تحتوي على بيانات
+                // setMsgTimeline(resMsgTimeline as any);
             } catch (error) {
                 console.error("Error fetching analytics:", error);
             } finally {
