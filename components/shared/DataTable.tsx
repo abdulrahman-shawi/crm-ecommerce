@@ -22,7 +22,7 @@ export interface TableAction<T> {
 }
 
 export interface Column<T> {
-  header: string;
+  header: React.ReactNode;
   accessor: keyof T | ((item: T) => React.ReactNode);
   className?: string;
   sortable?: boolean;

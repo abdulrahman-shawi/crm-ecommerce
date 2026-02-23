@@ -39,6 +39,29 @@ async function uploadSingleFile(file: File) {
     };
 }
 
+export async function uploadUserAvatar(file: File) {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'users');
+
+    try {
+        await fs.access(uploadDir);
+    } catch {
+        await fs.mkdir(uploadDir, { recursive: true });
+    }
+
+    const fileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
+    const uploadPath = path.join(uploadDir, fileName);
+
+    await fs.writeFile(uploadPath, buffer);
+
+    return {
+        url: `/uploads/users/${fileName}`,
+        type: file.type
+    };
+}
+
 export async function saveProductWithFiles(formData: FormData) {
     try {
         // تحويل البيانات مع إضافة قيم افتراضية للحماية من null

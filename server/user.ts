@@ -31,7 +31,7 @@ export async function getMe() {
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { id: true, username: true, email: true, accountType: true },
+      select: { id: true, username: true, email: true, accountType: true, phone: true, jobTitle: true, avatar: true },
     });
 
     return user;
@@ -107,6 +107,7 @@ export async function updateuser(id: string, data: any) {
       email: data.email,
       phone: data.phone || null,
       jobTitle: data.jobTitle,
+      ...(typeof data.avatar === "string" ? { avatar: data.avatar } : {}),
       accountType: data.accountType,
       salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
       wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,

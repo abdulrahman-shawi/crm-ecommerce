@@ -32,6 +32,8 @@ const STATUS_OPTIONS = [
   { label: "غير مهتم / ملغي", value: "غير مهتم / ملغي" },
 ];
 
+const LOCKED_STATUS_VALUES = new Set(["جاري المتابعة", "تم البيع"]);
+
 const FORCE_STATUS = "تم البيع";
 
 
@@ -96,9 +98,13 @@ const CustomrLayout: React.FC = () => {
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
   const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
   const { user } = useAuth()
-  const [viewMode, setViewMode] = React.useState<"cards" | "table">("cards");
+  const [viewMode, setViewMode] = React.useState<"cards" | "table">("table");
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
+  const [sortState, setSortState] = React.useState<{
+    field: "country" | "createdAt" | "ordersCount" | null;
+    direction: "asc" | "desc";
+  }>({ field: null, direction: "asc" });
 
   const [dateFilter, setDateFilter] = React.useState(FORCE_STATUS);
   const [createdFrom, setCreatedFrom] = React.useState("");
@@ -163,6 +169,65 @@ const CustomrLayout: React.FC = () => {
       return customer.users.some((u: any) => u.id === user?.id);
     });
   }, [filterCustomer, user]);
+
+  const sortedVisibleCustomers = React.useMemo(() => {
+    const list = [...visibleCustomers];
+    if (!sortState.field) return list;
+
+    list.sort((left: any, right: any) => {
+      let comparison = 0;
+
+      if (sortState.field === "country") {
+        const leftValue = String(left?.country || "").trim();
+        const rightValue = String(right?.country || "").trim();
+        comparison = leftValue.localeCompare(rightValue, "ar");
+      } else if (sortState.field === "createdAt") {
+        const leftValue = new Date(left?.createdAt || 0).getTime();
+        const rightValue = new Date(right?.createdAt || 0).getTime();
+        comparison = leftValue - rightValue;
+      } else if (sortState.field === "ordersCount") {
+        const leftValue = Array.isArray(left?.orders) ? left.orders.length : 0;
+        const rightValue = Array.isArray(right?.orders) ? right.orders.length : 0;
+        comparison = leftValue - rightValue;
+      }
+
+      return sortState.direction === "asc" ? comparison : -comparison;
+    });
+
+    return list;
+  }, [visibleCustomers, sortState]);
+
+  const toggleSort = (field: "country" | "createdAt" | "ordersCount") => {
+    setPage(1);
+    setSortState((prev) => {
+      if (prev.field === field) {
+        return {
+          field,
+          direction: prev.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      return { field, direction: "asc" };
+    });
+  };
+
+  const renderSortHeader = (
+    label: string,
+    field: "country" | "createdAt" | "ordersCount"
+  ) => {
+    const isActive = sortState.field === field;
+    const indicator = !isActive ? "↕" : sortState.direction === "asc" ? "↑" : "↓";
+
+    return (
+      <button
+        type="button"
+        onClick={() => toggleSort(field)}
+        className="inline-flex items-center gap-1 font-bold hover:text-blue-600 transition-colors"
+      >
+        <span>{label}</span>
+        <span className="text-[11px] opacity-70">{indicator}</span>
+      </button>
+    );
+  };
 
   const allFilteredIds = React.useMemo(
     () => filterCustomer.map((customer) => customer.id),
@@ -302,11 +367,7 @@ const CustomrLayout: React.FC = () => {
   const addNewItem = () => {
     setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
   };
-  const toggleTab = (tab: "skin" | "laser" | "slimming") => {
-    setActiveTabs((prev) =>
-      prev.includes(tab) ? prev.filter((t) => t !== tab) : [...prev, tab]
-    );
-  };
+
 
   const getData = async () => {
     const res = await getCustomer();
@@ -493,15 +554,38 @@ const CustomrLayout: React.FC = () => {
   };
 
   const exportCustomersToExcel = (customers: any[]) => {
+    const phoneLists = customers.map((customer) => {
+      if (Array.isArray(customer.phone)) {
+        return customer.phone
+          .map((phone: string) => String(phone || "").trim())
+          .filter((phone: string) => phone.length > 0);
+      }
+
+      const singlePhone = String(customer.phone || "").trim();
+      return singlePhone ? [singlePhone] : [];
+    });
+
+    const maxPhoneCount = phoneLists.reduce((maxCount, phones) => Math.max(maxCount, phones.length), 0);
+
     const worksheetData = customers.map((customer) => {
       // تجميع الرسائل الأخيرة أو الطلبات إذا أردت
       const lastMessage = customer.message && customer.message.length > 0
         ? customer.message[customer.message.length - 1].message
         : "لا توجد رسائل";
 
+      const phones = Array.isArray(customer.phone)
+        ? customer.phone
+        : [customer.phone].filter(Boolean);
+
+      const phoneColumns: Record<string, string> = {};
+      for (let index = 0; index < maxPhoneCount; index += 1) {
+        const value = phones[index];
+        phoneColumns[`رقم الهاتف ${index + 1}`] = value ? formatPhoneForDisplay(String(value)) : "";
+      }
+
       return {
         "اسم العميل": customer.name,
-        "رقم الهاتف": customer.phone ? customer.phone.map((phone: string) => formatPhoneForDisplay(phone)).join(' - ') : 'N/A',
+        ...phoneColumns,
         "الدولة": customer.country,
         "الحالة": customer.status,
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
@@ -630,184 +714,254 @@ const CustomrLayout: React.FC = () => {
   };
 
   const tableColumns = [
-    {
-      header: "تحديد",
-      accessor: (customer: any) => (
-        <input
-          type="checkbox"
-          checked={selectedCustomers.includes(customer.id)}
-          onClick={(e) => e.stopPropagation()}
-          onChange={() => toggleSelect(customer.id)}
-          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-        />
-      ),
-      className: "w-16",
-    },
-    {
-      header: "العميل",
-      accessor: (customer: any) => (
-        <button
-          type="button"
-          onClick={() => getSingleCustomer(customer)}
-          className="font-black text-slate-800 dark:text-slate-100 hover:text-blue-600"
-        >
-          {customer.name}
-        </button>
-      ),
-    },
-    {
-      header: "الهاتف",
-      accessor: (customer: any) => customer.phone ? (
-        <span dir="ltr" className="inline-block text-left">
-          {customer.phone.map((phone: string) => formatPhoneForDisplay(phone)).join(" - ")}
-        </span>
-      ) : "غير متوفر",
-      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
-    },
-    {
-      header: "الدولة",
-      accessor: (customer: any) => customer.country || "-",
-      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
-    },
-    {
-      header: "الحالة",
-      accessor: (customer: any) => (
-        <select
-          value={customer.status}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleStatus(customer.id, e.target.value);
-          }}
-          className={`
-            appearance-none outline-none cursor-pointer
-            px-3 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
-            ${customer.status === "فرصة جديدة"
-              ? "bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
-              : customer.status === "جاري المتابعة"
-                ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
-                : customer.status === "تم البيع"
-                  ? "bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800"
-                  : customer.status === "غير مهتم / ملغي"
-                    ? "bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
-                    : "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
-            }
-          `}
-        >
-          {STATUS_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value} className="bg-white text-slate-900">
-              {option.label}
-            </option>
-          ))}
-        </select>
-      ),
-    },
-    {
-      header: "تاريخ التسجيل",
-      accessor: (customer: any) => new Date(customer.createdAt).toLocaleDateString("ar-EG", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
-    },
-    {
-      header: "عدد الطلبات",
-      accessor: (customer: any) => customer.orders?.length || 0,
-      className: "text-xs font-bold text-slate-600 dark:text-slate-300",
-    },
-    {
-      header: "آخر رسالة",
-      accessor: (customer: any) => {
-        const lastMessage = customer.message && customer.message.length > 0
-          ? customer.message[customer.message.length - 1].message
-          : "لا توجد رسائل...";
-        return <span className="max-w-[220px] truncate block text-slate-500 dark:text-slate-400">{lastMessage}</span>;
+      {
+        header: "تحديد",
+        accessor: (customer: any) => (
+          <input
+            type="checkbox"
+            checked={selectedCustomers.includes(customer.id)}
+            onClick={(e) => e.stopPropagation()}
+            onChange={() => toggleSelect(customer.id)}
+            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+          />
+        ),
+        className: "w-16",
       },
-    },
-  ];
-
-  const tableActions: TableAction<any>[] = (() => {
-    const actions: TableAction<any>[] = [];
-
-    if (user && hasPermission(user, "editCustomers")) {
-      actions.push({
-        label: "تعديل",
-        icon: <Pencil size={16} />,
-        onClick: (customer: any) => {
-          setEditId(customer.id);
-          const normalizedPhones = Array.isArray(customer.phone)
-            ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
-            : String(customer.phone || "")
-                .split(/[\s,\-\n]+/)
-                .map((num: string) => num.trim())
-                .filter((num: string) => num.length > 0);
-          setFormdata({
-            name: customer.name,
-            phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
-          });
-          setIsOpen(true);
-        }
-      });
-    }
-
-    if (user && hasPermission(user, "deleteCustomers")) {
-      actions.push({
-        label: "حذف",
-        icon: <Trash2 size={16} />,
-        variant: "danger",
-        onClick: (customer: any) => deleteCus(customer),
-      });
-    }
-
-    if (user && hasPermission(user, "addOrders")) {
-      actions.push({
-        label: "الطلبات",
-        icon: <ShoppingBag size={16} />,
-        onClick: (customer: any) => {
-          setCustomerId(customer.id);
-          setisOpenOrder(true);
-        }
-      });
-    }
-
-    if (user && hasPermission(user, "viewOrders")) {
-      actions.push({
-        label: "اظهار الفواتير",
-        icon: <Eye size={16} />,
-        onClick: (customer: any) => {
-          setisOpenordercustomer(true);
-          setCustomerorder(customer.orders);
-        }
-      });
-    }
-
-    if (user && isAdmin(user)) {
-      actions.push({
-        label: "تعيين موظف",
-        icon: <UserPlus size={16} />,
-        onClick: (customer: any) => {
-          setCustomer(customer);
-          setOpenAssignModal(true);
-        }
-      });
-    }
-
-    actions.push({
-      label: "واتس",
-      icon: <MessageCircle size={16} />,
-      onClick: (customer: any) => {
-        const rawPhone = customer.phone?.[0] || "";
-        const phoneNumber = rawPhone.replace(/\D/g, "");
-        const countryCode = (customer.countryCode || "").replace(/\D/g, "");
-        if (phoneNumber) {
-          window.open(`https://wa.me/${countryCode}${phoneNumber}`, "_blank");
-        }
+      {
+        header: "العميل",
+        accessor: (customer: any) => (
+          <button
+            type="button"
+            onClick={() => getSingleCustomer(customer)}
+            className="font-black text-slate-800 dark:text-slate-100 hover:text-blue-600"
+          >
+            {customer.name}
+          </button>
+        ),
+      },
+      {
+        header: "الهاتف",
+        accessor: (customer: any) =>
+          customer.phone?.length
+            ? (() => {
+                const rawPhone = customer.phone?.[0] || "";
+                const phoneNumber = String(rawPhone).replace(/\D/g, "");
+                const countryCode = String(customer.countryCode || "").replace(/\D/g, "");
+                const whatsappNumber = `${countryCode}${phoneNumber}`;
+                const phoneText = customer.phone
+                  .map((phone: string) => formatPhoneForDisplay(phone))
+                  .join(" - ");
+  
+                if (!phoneNumber) {
+                  return (
+                    <span dir="ltr" className="inline-block text-left">
+                      {phoneText}
+                    </span>
+                  );
+                }
+  
+                return (
+                  <a
+                    href={`https://wa.me/${whatsappNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    dir="ltr"
+                    className="inline-block text-left hover:text-green-600"
+                  >
+                    {phoneText}
+                  </a>
+                );
+              })()
+            : "غير متوفر",
+        className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+      },
+      {
+        header: renderSortHeader("الدولة", "country"),
+        accessor: (customer: any) => customer.country || "-",
+        className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+      },
+      {
+        header: "المسؤول",
+        accessor: (customer: any) => {
+          const assignedUsers = Array.isArray(customer.users) ? customer.users : [];
+          const firstResponsible = assignedUsers[0]?.username || assignedUsers[0]?.name || "غير معين";
+          const firstAvatar = assignedUsers[0]?.avatar || "";
+          const remainingCount = Math.max(0, assignedUsers.length - 1);
+          const hasMultiple = remainingCount > 0;
+  
+          if (!(user && isAdmin(user))) {
+            return (
+              <div className="inline-flex items-center gap-2">
+                {firstAvatar ? (
+                  <img
+                    src={firstAvatar}
+                    alt={firstResponsible}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="font-bold text-slate-700 dark:text-slate-300">{firstResponsible}</span>
+                )}
+                {hasMultiple && (
+                  <span className="min-w-6 h-6 px-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-black flex items-center justify-center">
+                    {remainingCount}
+                  </span>
+                )}
+              </div>
+            );
+          }
+  
+          return (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCustomer(customer);
+                setOpenAssignModal(true);
+              }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+            >
+              {firstAvatar ? (
+                <img
+                  src={firstAvatar}
+                  alt={firstResponsible}
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ) : (
+                <span className="font-bold text-slate-700 dark:text-slate-300">{firstResponsible}</span>
+              )}
+              {hasMultiple && (
+                <span className="min-w-6 h-6 px-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-black flex items-center justify-center">
+                  {remainingCount}
+                </span>
+              )}
+            </button>
+          );
+        },
+        className: "text-xs",
+      },
+      {
+        header: "الحالة",
+        accessor: (customer: any) => (
+          <select
+            value={customer.status}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => {
+              e.stopPropagation();
+              if (LOCKED_STATUS_VALUES.has(e.target.value)) return;
+              handleStatus(customer.id, e.target.value);
+            }}
+            className={`
+              appearance-none outline-none cursor-pointer
+              px-3 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
+              ${customer.status === "فرصة جديدة"
+                ? "bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
+                : customer.status === "جاري المتابعة"
+                  ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
+                  : customer.status === "تم البيع"
+                    ? "bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800"
+                    : customer.status === "غير مهتم / ملغي"
+                      ? "bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+                      : "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+              }
+            `}
+          >
+            {STATUS_OPTIONS.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+                disabled={LOCKED_STATUS_VALUES.has(option.value)}
+                className="bg-white text-slate-900"
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        ),
+      },
+      {
+        header: renderSortHeader("تاريخ التسجيل", "createdAt"),
+        accessor: (customer: any) => new Date(customer.createdAt).toLocaleDateString("ar-EG", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+      },
+      {
+        header: renderSortHeader("عدد الطلبات", "ordersCount"),
+        accessor: (customer: any) => 
+        (
+          <button
+            type="button"
+            onClick={() => {
+              setisOpenordercustomer(true);
+            setCustomerorder(customer.orders);
+            }}
+            className="font-black text-slate-800 dark:text-slate-100 hover:text-blue-600"
+          >
+            {customer.orders?.length || 0}
+          </button>
+        ),
+          
+        className: "text-xs font-bold text-slate-600 dark:text-slate-300",
+      },
+      {
+        header: "آخر رسالة",
+        accessor: (customer: any) => {
+          const lastMessage = customer.message && customer.message.length > 0
+            ? customer.message[customer.message.length - 1].message
+            : "لا توجد رسائل...";
+          return <span className="max-w-[220px] truncate block text-slate-500 dark:text-slate-400">{lastMessage}</span>;
+        },
+      },
+    ];
+  
+    const tableActions: TableAction<any>[] = (() => {
+      const actions: TableAction<any>[] = [];
+  
+      if (user && hasPermission(user, "editCustomers")) {
+        actions.push({
+          label: "تعديل",
+          icon: <Pencil size={16} />,
+          onClick: (customer: any) => {
+            setEditId(customer.id);
+            const normalizedPhones = Array.isArray(customer.phone)
+              ? customer.phone.filter((num: any) => String(num || "").trim().length > 0)
+              : String(customer.phone || "")
+                  .split(/[\s,\-\n]+/)
+                  .map((num: string) => num.trim())
+                  .filter((num: string) => num.length > 0);
+            setFormdata({
+              name: customer.name,
+              phone: normalizedPhones.length > 0 ? normalizedPhones : [""]
+            });
+            setIsOpen(true);
+          }
+        });
       }
-    });
-
-    return actions;
-  })();
+  
+      if (user && hasPermission(user, "deleteCustomers")) {
+        actions.push({
+          label: "حذف",
+          icon: <Trash2 size={16} />,
+          variant: "danger",
+          onClick: (customer: any) => deleteCus(customer),
+        });
+      }
+  
+      if (user && hasPermission(user, "addOrders")) {
+        actions.push({
+          label: "الطلبات",
+          icon: <ShoppingBag size={16} />,
+          onClick: (customer: any) => {
+            setCustomerId(customer.id);
+            setisOpenOrder(true);
+          }
+        });
+      }
+  
+      return actions;
+    })();
 
   return (
     <div className="p-6">
@@ -887,19 +1041,16 @@ const CustomrLayout: React.FC = () => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="ابحث بالرقم أو الاسم أو المدينة أو اسم الموظف"
+            placeholder="ابحث بالرقم أو الاسم أو الدولة أو المدينة أو اسم الموظف"
             className="flex-1 h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent p-5 my-3"
           />
           </div>
 
           {/* خيارات التاريخ */}
-          <div className="flex bg-slate-100 w-full justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
+          <div className="flex bg-slate-100 w-[100px] justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
             {[
-              { id: 'الكل', label: 'الكل' },
-              { id: 'فرصة جديدة', label: 'فرصة جديدة' },
-              { id: 'جاري المتابعة', label: 'جاري المتابعة' },
+              
               { id: 'تم البيع', label: 'تم البيع' },
-              { id: 'غير مهتم / ملغي', label: 'غير مهتم / ملغي' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -918,39 +1069,8 @@ const CustomrLayout: React.FC = () => {
 
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-300">من تاريخ الإنشاء</label>
-            <input
-              type="date"
-              value={createdFrom}
-              onChange={(e) => setCreatedFrom(e.target.value)}
-              className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-300">إلى تاريخ الإنشاء</label>
-            <input
-              type="date"
-              value={createdTo}
-              onChange={(e) => setCreatedTo(e.target.value)}
-              className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
-            />
-          </div>
-        </div>
       </div>
       <div className="flex items-center gap-2 mb-4">
-        <button
-          type="button"
-          onClick={() => setViewMode("cards")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === "cards"
-            ? "bg-blue-600 text-white"
-            : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"}
-          `}
-        >
-          <LayoutGrid size={16} />
-          كرت
-        </button>
         <button
           type="button"
           onClick={() => setViewMode("table")}
@@ -961,6 +1081,17 @@ const CustomrLayout: React.FC = () => {
         >
           <Table2 size={16} />
           جدول
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode("cards")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === "cards"
+            ? "bg-blue-600 text-white"
+            : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"}
+          `}
+        >
+          <LayoutGrid size={16} />
+          كرت
         </button>
       </div>
       <div className="  dir-rtl" dir="rtl">
@@ -1046,6 +1177,7 @@ const CustomrLayout: React.FC = () => {
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => {
                             e.stopPropagation();
+                            if (LOCKED_STATUS_VALUES.has(e.target.value)) return;
                             handleStatus(customer.id, e.target.value);
                           }}
                           className={`
@@ -1060,11 +1192,47 @@ const CustomrLayout: React.FC = () => {
     `}
                         >
                           {STATUS_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value} className="bg-white text-slate-900">
+                            <option
+                              key={option.value}
+                              value={option.value}
+                              disabled={LOCKED_STATUS_VALUES.has(option.value)}
+                              className="bg-white text-slate-900"
+                            >
                               {option.label}
                             </option>
                           ))}
                         </select>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!(user && isAdmin(user))) return;
+                            setCustomer(customer);
+                            setOpenAssignModal(true);
+                          }}
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all ${user && isAdmin(user)
+                            ? "bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                            : "bg-slate-100/60 dark:bg-slate-800/60 cursor-default"}`}
+                          title="ربط الموظفين"
+                        >
+                          {customer.users?.[0]?.avatar ? (
+                            <img
+                              src={customer.users[0].avatar}
+                              alt={customer.users?.[0]?.username || customer.users?.[0]?.name || "avatar"}
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-[11px] font-black text-slate-700 dark:text-slate-300">
+                              {customer.users?.[0]?.username || customer.users?.[0]?.name || "غير معين"}
+                            </span>
+                          )}
+                          {(customer.users?.length || 0) > 1 && (
+                            <span className="min-w-6 h-6 px-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-black flex items-center justify-center">
+                              {(customer.users?.length || 0) - 1}
+                            </span>
+                          )}
+                        </button>
 
                         {/* التاريخ المنسق */}
                         <div className="flex flex-col border-r border-slate-200 dark:border-slate-700 pr-3">
@@ -1117,23 +1285,6 @@ const CustomrLayout: React.FC = () => {
                         }}><Eye size={20} />
                         </button>
                       )}
-                      {user && isAdmin(user) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCustomer(customer);
-                            setOpenAssignModal(true);
-                          }}
-                          className="p-2 flex text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all"
-                          title="تعيين موظف"
-                        >
-                          {customer.users.map((e: any, i: any) => (
-                            <div className="w-5 h-5 flex items-center rounded-full p-1">
-                              <p>{e.username[0]}</p>
-                            </div>
-                          ))}
-                        </button>
-                      )}
                     </div>
 
                     {/* زر واتساب */}
@@ -1159,11 +1310,11 @@ const CustomrLayout: React.FC = () => {
             </div>
           ) : (
             <DataTable
-              data={visibleCustomers}
+              data={sortedVisibleCustomers}
               columns={tableColumns}
               actions={tableActions}
               actindir
-              totalCount={visibleCustomers.length}
+              totalCount={sortedVisibleCustomers.length}
               pageSize={PAGE_SIZE}
               currentPage={page}
               onPageChange={setPage}

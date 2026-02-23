@@ -2188,6 +2188,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     jobTitle: string | null
+    avatar: string | null
     accountType: $Enums.AccountType | null
     password: string | null
     salesCommissionPercent: number | null
@@ -2203,6 +2204,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     jobTitle: string | null
+    avatar: string | null
     accountType: $Enums.AccountType | null
     password: string | null
     salesCommissionPercent: number | null
@@ -2218,6 +2220,7 @@ export namespace Prisma {
     email: number
     phone: number
     jobTitle: number
+    avatar: number
     accountType: number
     password: number
     salesCommissionPercent: number
@@ -2245,6 +2248,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     jobTitle?: true
+    avatar?: true
     accountType?: true
     password?: true
     salesCommissionPercent?: true
@@ -2260,6 +2264,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     jobTitle?: true
+    avatar?: true
     accountType?: true
     password?: true
     salesCommissionPercent?: true
@@ -2275,6 +2280,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     jobTitle?: true
+    avatar?: true
     accountType?: true
     password?: true
     salesCommissionPercent?: true
@@ -2377,6 +2383,7 @@ export namespace Prisma {
     email: string
     phone: string | null
     jobTitle: string | null
+    avatar: string | null
     accountType: $Enums.AccountType
     password: string
     salesCommissionPercent: number
@@ -2411,6 +2418,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     jobTitle?: boolean
+    avatar?: boolean
     accountType?: boolean
     password?: boolean
     salesCommissionPercent?: boolean
@@ -2432,6 +2440,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     jobTitle?: boolean
+    avatar?: boolean
     accountType?: boolean
     password?: boolean
     salesCommissionPercent?: boolean
@@ -2448,6 +2457,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     jobTitle?: boolean
+    avatar?: boolean
     accountType?: boolean
     password?: boolean
     salesCommissionPercent?: boolean
@@ -2464,6 +2474,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     jobTitle?: boolean
+    avatar?: boolean
     accountType?: boolean
     password?: boolean
     salesCommissionPercent?: boolean
@@ -2473,7 +2484,7 @@ export namespace Prisma {
     permissionId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "jobTitle" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "jobTitle" | "avatar" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | User$ordersArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
@@ -2504,6 +2515,7 @@ export namespace Prisma {
       email: string
       phone: string | null
       jobTitle: string | null
+      avatar: string | null
       accountType: $Enums.AccountType
       password: string
       salesCommissionPercent: number
@@ -2944,6 +2956,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
     readonly jobTitle: FieldRef<"User", 'String'>
+    readonly avatar: FieldRef<"User", 'String'>
     readonly accountType: FieldRef<"User", 'AccountType'>
     readonly password: FieldRef<"User", 'String'>
     readonly salesCommissionPercent: FieldRef<"User", 'Float'>
@@ -15475,8 +15488,18 @@ export namespace Prisma {
 
   export type AggregateTrakingCompany = {
     _count: TrakingCompanyCountAggregateOutputType | null
+    _avg: TrakingCompanyAvgAggregateOutputType | null
+    _sum: TrakingCompanySumAggregateOutputType | null
     _min: TrakingCompanyMinAggregateOutputType | null
     _max: TrakingCompanyMaxAggregateOutputType | null
+  }
+
+  export type TrakingCompanyAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type TrakingCompanySumAggregateOutputType = {
+    price: number | null
   }
 
   export type TrakingCompanyMinAggregateOutputType = {
@@ -15484,6 +15507,7 @@ export namespace Prisma {
     name: string | null
     city: string | null
     location: string | null
+    price: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15493,6 +15517,7 @@ export namespace Prisma {
     name: string | null
     city: string | null
     location: string | null
+    price: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15502,17 +15527,27 @@ export namespace Prisma {
     name: number
     city: number
     location: number
+    price: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type TrakingCompanyAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type TrakingCompanySumAggregateInputType = {
+    price?: true
+  }
+
   export type TrakingCompanyMinAggregateInputType = {
     id?: true
     name?: true
     city?: true
     location?: true
+    price?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15522,6 +15557,7 @@ export namespace Prisma {
     name?: true
     city?: true
     location?: true
+    price?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15531,6 +15567,7 @@ export namespace Prisma {
     name?: true
     city?: true
     location?: true
+    price?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -15574,6 +15611,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: TrakingCompanyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TrakingCompanySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: TrakingCompanyMinAggregateInputType
@@ -15604,6 +15653,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: TrakingCompanyCountAggregateInputType | true
+    _avg?: TrakingCompanyAvgAggregateInputType
+    _sum?: TrakingCompanySumAggregateInputType
     _min?: TrakingCompanyMinAggregateInputType
     _max?: TrakingCompanyMaxAggregateInputType
   }
@@ -15613,9 +15664,12 @@ export namespace Prisma {
     name: string
     city: string | null
     location: string | null
+    price: number | null
     createdAt: Date
     updatedAt: Date
     _count: TrakingCompanyCountAggregateOutputType | null
+    _avg: TrakingCompanyAvgAggregateOutputType | null
+    _sum: TrakingCompanySumAggregateOutputType | null
     _min: TrakingCompanyMinAggregateOutputType | null
     _max: TrakingCompanyMaxAggregateOutputType | null
   }
@@ -15639,6 +15693,7 @@ export namespace Prisma {
     name?: boolean
     city?: boolean
     location?: boolean
+    price?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["trakingCompany"]>
@@ -15648,6 +15703,7 @@ export namespace Prisma {
     name?: boolean
     city?: boolean
     location?: boolean
+    price?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["trakingCompany"]>
@@ -15657,6 +15713,7 @@ export namespace Prisma {
     name?: boolean
     city?: boolean
     location?: boolean
+    price?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["trakingCompany"]>
@@ -15666,11 +15723,12 @@ export namespace Prisma {
     name?: boolean
     city?: boolean
     location?: boolean
+    price?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TrakingCompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "location" | "createdAt" | "updatedAt", ExtArgs["result"]["trakingCompany"]>
+  export type TrakingCompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "location" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["trakingCompany"]>
 
   export type $TrakingCompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TrakingCompany"
@@ -15680,6 +15738,7 @@ export namespace Prisma {
       name: string
       city: string | null
       location: string | null
+      price: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["trakingCompany"]>
@@ -16109,6 +16168,7 @@ export namespace Prisma {
     readonly name: FieldRef<"TrakingCompany", 'String'>
     readonly city: FieldRef<"TrakingCompany", 'String'>
     readonly location: FieldRef<"TrakingCompany", 'String'>
+    readonly price: FieldRef<"TrakingCompany", 'Float'>
     readonly createdAt: FieldRef<"TrakingCompany", 'DateTime'>
     readonly updatedAt: FieldRef<"TrakingCompany", 'DateTime'>
   }
@@ -16497,6 +16557,7 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     jobTitle: 'jobTitle',
+    avatar: 'avatar',
     accountType: 'accountType',
     password: 'password',
     salesCommissionPercent: 'salesCommissionPercent',
@@ -16685,6 +16746,7 @@ export namespace Prisma {
     name: 'name',
     city: 'city',
     location: 'location',
+    price: 'price',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16810,6 +16872,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
+    avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
     salesCommissionPercent?: FloatFilter<"User"> | number
@@ -16830,6 +16893,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
+    avatar?: SortOrderInput | SortOrder
     accountType?: SortOrder
     password?: SortOrder
     salesCommissionPercent?: SortOrder
@@ -16853,6 +16917,7 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
+    avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
     salesCommissionPercent?: FloatFilter<"User"> | number
@@ -16873,6 +16938,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
+    avatar?: SortOrderInput | SortOrder
     accountType?: SortOrder
     password?: SortOrder
     salesCommissionPercent?: SortOrder
@@ -16896,6 +16962,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     jobTitle?: StringNullableWithAggregatesFilter<"User"> | string | null
+    avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
     accountType?: EnumAccountTypeWithAggregatesFilter<"User"> | $Enums.AccountType
     password?: StringWithAggregatesFilter<"User"> | string
     salesCommissionPercent?: FloatWithAggregatesFilter<"User"> | number
@@ -17818,6 +17885,7 @@ export namespace Prisma {
     name?: StringFilter<"TrakingCompany"> | string
     city?: StringNullableFilter<"TrakingCompany"> | string | null
     location?: StringNullableFilter<"TrakingCompany"> | string | null
+    price?: FloatNullableFilter<"TrakingCompany"> | number | null
     createdAt?: DateTimeFilter<"TrakingCompany"> | Date | string
     updatedAt?: DateTimeFilter<"TrakingCompany"> | Date | string
   }
@@ -17827,6 +17895,7 @@ export namespace Prisma {
     name?: SortOrder
     city?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    price?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17839,6 +17908,7 @@ export namespace Prisma {
     NOT?: TrakingCompanyWhereInput | TrakingCompanyWhereInput[]
     city?: StringNullableFilter<"TrakingCompany"> | string | null
     location?: StringNullableFilter<"TrakingCompany"> | string | null
+    price?: FloatNullableFilter<"TrakingCompany"> | number | null
     createdAt?: DateTimeFilter<"TrakingCompany"> | Date | string
     updatedAt?: DateTimeFilter<"TrakingCompany"> | Date | string
   }, "id" | "name">
@@ -17848,11 +17918,14 @@ export namespace Prisma {
     name?: SortOrder
     city?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    price?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TrakingCompanyCountOrderByAggregateInput
+    _avg?: TrakingCompanyAvgOrderByAggregateInput
     _max?: TrakingCompanyMaxOrderByAggregateInput
     _min?: TrakingCompanyMinOrderByAggregateInput
+    _sum?: TrakingCompanySumOrderByAggregateInput
   }
 
   export type TrakingCompanyScalarWhereWithAggregatesInput = {
@@ -17863,6 +17936,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"TrakingCompany"> | string
     city?: StringNullableWithAggregatesFilter<"TrakingCompany"> | string | null
     location?: StringNullableWithAggregatesFilter<"TrakingCompany"> | string | null
+    price?: FloatNullableWithAggregatesFilter<"TrakingCompany"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"TrakingCompany"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TrakingCompany"> | Date | string
   }
@@ -17873,6 +17947,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -17892,6 +17967,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -17911,6 +17987,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -17930,6 +18007,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -17949,6 +18027,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -17964,6 +18043,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -17978,6 +18058,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -18993,6 +19074,7 @@ export namespace Prisma {
     name: string
     city?: string | null
     location?: string | null
+    price?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19002,6 +19084,7 @@ export namespace Prisma {
     name: string
     city?: string | null
     location?: string | null
+    price?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19011,6 +19094,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     city?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19020,6 +19104,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     city?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19029,6 +19114,7 @@ export namespace Prisma {
     name: string
     city?: string | null
     location?: string | null
+    price?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19038,6 +19124,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     city?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19047,6 +19134,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     city?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19177,6 +19265,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     jobTitle?: SortOrder
+    avatar?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
     salesCommissionPercent?: SortOrder
@@ -19197,6 +19286,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     jobTitle?: SortOrder
+    avatar?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
     salesCommissionPercent?: SortOrder
@@ -19212,6 +19302,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     jobTitle?: SortOrder
+    avatar?: SortOrder
     accountType?: SortOrder
     password?: SortOrder
     salesCommissionPercent?: SortOrder
@@ -20026,8 +20117,13 @@ export namespace Prisma {
     name?: SortOrder
     city?: SortOrder
     location?: SortOrder
+    price?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type TrakingCompanyAvgOrderByAggregateInput = {
+    price?: SortOrder
   }
 
   export type TrakingCompanyMaxOrderByAggregateInput = {
@@ -20035,6 +20131,7 @@ export namespace Prisma {
     name?: SortOrder
     city?: SortOrder
     location?: SortOrder
+    price?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20044,8 +20141,13 @@ export namespace Prisma {
     name?: SortOrder
     city?: SortOrder
     location?: SortOrder
+    price?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type TrakingCompanySumOrderByAggregateInput = {
+    price?: SortOrder
   }
 
   export type OrderCreateNestedManyWithoutUserInput = {
@@ -21637,6 +21739,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -21655,6 +21758,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -21702,6 +21806,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
+    avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
     password?: StringFilter<"User"> | string
     salesCommissionPercent?: FloatFilter<"User"> | number
@@ -21967,6 +22072,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -21985,6 +22091,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22043,6 +22150,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -22061,6 +22169,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -22348,6 +22457,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22366,6 +22476,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22506,6 +22617,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22524,6 +22636,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22607,6 +22720,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -22625,6 +22739,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -22686,6 +22801,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22704,6 +22820,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -22812,6 +22929,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -22830,6 +22948,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23278,6 +23397,7 @@ export namespace Prisma {
     email: string
     phone?: string | null
     jobTitle?: string | null
+    avatar?: string | null
     accountType?: $Enums.AccountType
     password: string
     salesCommissionPercent?: number
@@ -23292,6 +23412,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23310,6 +23431,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23328,6 +23450,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23606,6 +23729,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23624,6 +23748,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
@@ -23642,6 +23767,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
     password?: StringFieldUpdateOperationsInput | string
     salesCommissionPercent?: FloatFieldUpdateOperationsInput | number

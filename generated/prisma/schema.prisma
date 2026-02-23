@@ -13,6 +13,7 @@ model User {
   email                  String       @unique
   phone                  String?
   jobTitle               String?
+  avatar                 String?
   accountType            AccountType  @default(STAFF)
   password               String
   salesCommissionPercent Float        @default(0)
@@ -221,6 +222,7 @@ model TrakingCompany {
   name      String   @unique
   city      String?
   location  String?
+  price     Float?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

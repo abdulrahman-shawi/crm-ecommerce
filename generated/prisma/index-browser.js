@@ -126,6 +126,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   jobTitle: 'jobTitle',
+  avatar: 'avatar',
   accountType: 'accountType',
   password: 'password',
   salesCommissionPercent: 'salesCommissionPercent',
@@ -281,6 +282,7 @@ exports.Prisma.TrakingCompanyScalarFieldEnum = {
   name: 'name',
   city: 'city',
   location: 'location',
+  price: 'price',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

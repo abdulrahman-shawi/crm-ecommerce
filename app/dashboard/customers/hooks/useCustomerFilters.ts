@@ -1,5 +1,16 @@
 import * as React from "react";
 
+const normalizeStatus = (value: unknown) =>
+  String(value ?? "")
+    .replace(/[\u064B-\u065F\u0670]/g, "")
+    .replace(/\u0640/g, "")
+    .replace(/[\u200E\u200F\u202A-\u202E]/g, "")
+    .replace(/[إأآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+
 export function useCustomerFilters(
   customers: any[],
   search: string,
@@ -36,7 +47,11 @@ export function useCustomerFilters(
         customer.country?.toLowerCase().includes(normalizedSearch) ||
         hasAssignedUserMatch;
 
-      const matchesStatus = dateFilter !== "الكل" ? customer.status === dateFilter : true;
+      const selectedStatus = normalizeStatus(dateFilter);
+      const currentStatus = normalizeStatus(customer?.status);
+      const matchesStatus = selectedStatus !== normalizeStatus("الكل")
+        ? currentStatus === selectedStatus
+        : true;
       const customerCreatedAt = customer?.createdAt ? new Date(customer.createdAt) : null;
       const hasValidCreatedAt = Boolean(customerCreatedAt && !Number.isNaN(customerCreatedAt.getTime()));
       const customerCreatedKey = hasValidCreatedAt

@@ -4,6 +4,8 @@ import { Eye, MessageCircle, Pencil, ShoppingBag, Trash2 } from "lucide-react";
 
 type StatusOption = { label: string; value: string };
 
+const LOCKED_STATUS_VALUES = new Set(["جاري المتابعة", "تم البيع"]);
+
 type CustomerCardProps = {
   customer: any;
   user: any;
@@ -92,6 +94,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => {
                 e.stopPropagation();
+                if (LOCKED_STATUS_VALUES.has(e.target.value)) return;
                 onStatusChange(customer.id, e.target.value);
               }}
               className={`
@@ -110,11 +113,45 @@ ${customer.status === "فرصة جديدة"
 `}
             >
               {statusOptions.map((option) => (
-                <option key={option.value} value={option.value} className="bg-white text-slate-900">
+                <option
+                  key={option.value}
+                  value={option.value}
+                  disabled={LOCKED_STATUS_VALUES.has(option.value)}
+                  className="bg-white text-slate-900"
+                >
                   {option.label}
                 </option>
               ))}
             </select>
+
+            {user && isAdmin(user) && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenAssign(customer);
+                }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+                title="ربط الموظفين"
+              >
+                {customer.users?.[0]?.avatar ? (
+                  <img
+                    src={customer.users[0].avatar}
+                    alt={customer.users?.[0]?.username || customer.users?.[0]?.name || "avatar"}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-[11px] font-black text-slate-700 dark:text-slate-300">
+                    {customer.users?.[0]?.username || customer.users?.[0]?.name || "غير معين"}
+                  </span>
+                )}
+                {(customer.users?.length || 0) > 1 && (
+                  <span className="min-w-6 h-6 px-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-black flex items-center justify-center">
+                    {(customer.users?.length || 0) - 1}
+                  </span>
+                )}
+              </button>
+            )}
 
             <div className="flex flex-col border-r border-slate-200 dark:border-slate-700 pr-3">
               <span className="text-[9px] text-slate-400 font-bold leading-none mb-1">تاريخ التسجيل</span>
@@ -162,22 +199,6 @@ ${customer.status === "فرصة جديدة"
             </button>
           )}
 
-          {user && isAdmin(user) && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenAssign(customer);
-              }}
-              className="p-2 flex text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all"
-              title="تعيين موظف"
-            >
-              {customer.users.map((item: any, index: any) => (
-                <div key={`${customer.id}-${item.id ?? index}`} className="w-5 h-5 flex items-center rounded-full p-1">
-                  <p>{item.username[0]}</p>
-                </div>
-              ))}
-            </button>
-          )}
         </div>
 
         <button

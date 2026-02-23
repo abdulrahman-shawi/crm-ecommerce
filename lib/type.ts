@@ -55,6 +55,7 @@ export interface User {
   email: string;
   phone?: string | null;
   jobTitle?: string | null;
+  avatar?: string | null;
   accountType: "ADMIN" | "MANAGER" | "STAFF";
   password: string;
   createdAt: Date;

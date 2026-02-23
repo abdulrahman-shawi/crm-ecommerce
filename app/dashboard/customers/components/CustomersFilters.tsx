@@ -12,11 +12,11 @@ type CustomersFiltersProps = {
 };
 
 const filterTabs = [
-  { id: "الكل", label: "الكل" },
   { id: "فرصة جديدة", label: "فرصة جديدة" },
   { id: "جاري المتابعة", label: "جاري المتابعة" },
   { id: "تم البيع", label: "تم البيع" },
   { id: "غير مهتم / ملغي", label: "غير مهتم / ملغي" },
+  { id: "الكل", label: "الكل" },
 ];
 
 export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
@@ -37,7 +37,7 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="ابحث بالرقم أو الاسم أو المدينة أو اسم الموظف"
+            placeholder="ابحث بالرقم أو الاسم أو الدولة أو المدينة أو اسم الموظف"
             className="flex-1 h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent p-5 my-3"
           />
         </div>
@@ -45,6 +45,7 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
         <div className="flex bg-slate-100 w-full justify-center dark:bg-slate-800 p-1 rounded-xl gap-1 h-11 items-center">
           {filterTabs.map((tab) => (
             <button
+              type="button"
               key={tab.id}
               onClick={() => setDateFilter(tab.id)}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dateFilter === tab.id
@@ -55,26 +56,6 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
               {tab.label}
             </button>
           ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-slate-600 dark:text-slate-300">من تاريخ الإنشاء</label>
-          <input
-            type="date"
-            value={createdFrom}
-            onChange={(e) => setCreatedFrom(e.target.value)}
-            className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-slate-600 dark:text-slate-300">إلى تاريخ الإنشاء</label>
-          <input
-            type="date"
-            value={createdTo}
-            onChange={(e) => setCreatedTo(e.target.value)}
-            className="h-11 w-full rounded-lg border border-slate-800/50 dark:border-slate-100/50 text-slate-800 dark:text-slate-100 bg-transparent px-4"
-          />
         </div>
       </div>
     </div>
