@@ -8,6 +8,11 @@ export async function getProduct() {
         include: {
             category: true,
             images: true,
+            stocks: {
+                include: {
+                    warehouse: true,
+                },
+            },
         }
     });
     return JSON.parse(JSON.stringify(products));

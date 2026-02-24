@@ -17,7 +17,7 @@ export async function GET() {
         const users = await prisma.user.findUnique({
              where: { id: decoded.userId },
       include:{
-        permission:true
+                permission:true
       }
         });
 

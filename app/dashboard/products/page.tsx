@@ -5,14 +5,16 @@ import { DynamicForm } from '@/components/shared/dynamic-form';
 import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 import { FormInput } from '@/components/ui/form-input';
+import { FormSelect } from '@/components/ui/select-form';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { getallcategory } from '@/server/category';
 import { deleteProduct, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct } from '@/server/product';
+import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
 import { image } from 'framer-motion/client';
-import { Mail, Plus } from 'lucide-react';
+import { Mail, Plus, Warehouse } from 'lucide-react';
 import * as React from 'react';
 import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -24,6 +26,7 @@ const productschama = z.object({
     description: z.string().optional().nullable(),
     price: z.coerce.number().min(0, "السعر يجب أن يكون رقم موجب"),
     categoryId: z.coerce.number().min(1, "يرجى اختيار فئة"),
+    warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
     quantity: z.coerce.string().min(1, "يرجى اختيار كمية المنتج"),
     discount: z.coerce.number().min(0, "الخصم يجب أن يكون رقم موجب").optional().default(0),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
@@ -35,6 +38,7 @@ const ProductLayout = () => {
     const [editId, setEditId] = React.useState<string | number | null>(null);
     const [categories, setCategories] = React.useState<any[]>([]);
     const [products, setProducts] = React.useState<any[]>([]);
+    const [warehouses, setWarehouses] = React.useState<any[]>([]);
     const [tab, setTab] = React.useState<'table' | "grid">('grid');
     const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
@@ -48,6 +52,7 @@ const ProductLayout = () => {
             setProducts(products);
             console.log("Products loaded:", products);
         }).catch(console.error);
+        getWarehouse().then(setWarehouses).catch(console.error);
 
     }, []);
 
@@ -72,6 +77,7 @@ const ProductLayout = () => {
                 formData.append('description', data.description || '');
                 formData.append('discount', (data.discount || 0).toString());
                 formData.append('quantity', (data.quantity || 0).toString());
+                formData.append('warehouseId', data.warehouseId.toString());
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
                 if (data.files && data.files.length > 0) {
@@ -102,6 +108,7 @@ const ProductLayout = () => {
                 formData.append('description', data.description || '');
                 formData.append('discount', (data.discount || 0).toString());
                 formData.append('quantity', (data.quantity || 0).toString());
+                formData.append('warehouseId', data.warehouseId.toString());
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
                 if (data.files && data.files.length > 0) {
@@ -154,7 +161,8 @@ const ProductLayout = () => {
                     categoryId: data.categoryId,
                     description: data.description,
                     discount: data.discount,
-                    quantity:data.quantity,
+                    quantity: data.stocks?.[0]?.quantity ?? data.quantity,
+                    warehouseId: data.stocks?.[0]?.warehouseId ?? data.warehouseId,
                     // تمرير الصور الحالية إذا كان المكون يدعم عرضها كـ Preview
                     files: data.images || []
                 });
@@ -418,6 +426,16 @@ const ProductLayout = () => {
 
                                 <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="السعر" {...register("price")} error={errors.price?.message as string} />
                                 <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="الخصم" {...register("discount")} error={errors.discount?.message as string} />
+                                <FormSelect
+                                    label="المستودع"
+                                    placeholder="اختر المستودع"
+                                    options={warehouses.map((warehouse) => ({
+                                        value: warehouse.id,
+                                        label: warehouse.name,
+                                    }))}
+                                    {...register("warehouseId")}
+                                    error={errors.warehouseId?.message as string}
+                                />
                                 <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="الكمية" {...register("quantity")} error={errors.quantity?.message as string} />
                                 <textarea {...register("description")} placeholder='الوصف' className='col-span-2 border border-slate-400/30 bg-transparent text-slate-900 dark:text-slate-100' rows={5}></textarea>
                                 <div className="md:col-span-2 border-t pt-4">

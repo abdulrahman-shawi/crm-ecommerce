@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)
         permission: {
           connect: { id: data.permissions } 
-        }
+        },
         },
     });
     return new Response(JSON.stringify({ success: true, data: createuser }), { status: 201 });

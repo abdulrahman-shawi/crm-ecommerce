@@ -17,6 +17,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   // بيانات المستلم والعنوان
   const [receiverName, setReceiverName] = React.useState("");
   const [receiverPhone, setReceiverPhone] = React.useState<(string | undefined)[]>([""]);
+  const [stockCountry, setStockCountry] = React.useState<"سوريا" | "تركيا" | "">("");
   const [country, setCountry] = React.useState("");
   const [city, setCity] = React.useState("");
     const countries = [
@@ -126,6 +127,14 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
   const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
   const { user } = useAuth()
+
+  const getProductAvailableStockByCountry = (product: any, selectedCountry: string) => {
+    if (!Array.isArray(product?.stocks)) return 0;
+    return product.stocks
+      .filter((stock: any) => String(stock?.warehouse?.location || "") === selectedCountry)
+      .reduce((sum: number, stock: any) => sum + (Number(stock?.quantity) || 0), 0);
+  };
+
   const addNewItem = () => {
     setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
   };
@@ -192,6 +201,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     // إعادة بيانات المستلم والعنوان
     setReceiverName("");
     setReceiverPhone([""]);
+    setStockCountry("");
     setCountry("");
     setCity("");
     setMunicipality("");
@@ -213,6 +223,11 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
     if (!receiverName || receiverName.trim() === "") {
       toast.error("يرجى تحديد اسم المستلم");
+      return;
+    }
+
+    if (!stockCountry) {
+      toast.error("يرجى اختيار بلد المخزون (سوريا أو تركيا)");
       return;
     }
 
@@ -259,6 +274,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       status,
       receiverName,
       receiverPhone,
+      stockCountry,
       country,
       city,
       municipality,
@@ -357,6 +373,25 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
               />
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-slate-500 mr-2">بلد المخزون</label>
+                <select
+                  value={stockCountry}
+                  onChange={(e) => {
+                    setStockCountry(e.target.value as "سوريا" | "تركيا" | "");
+                    setItems([{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
+                    setSearchQueries({});
+                    setShowDropdown({});
+                  }}
+                  className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                >
+                  <option value="">اختر بلد المخزون</option>
+                  <option value="سوريا">سوريا</option>
+                  <option value="تركيا">تركيا</option>
+                </select>
+              </div>
+            </div>
             {items.map((item: any, index: number) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 items-center">
                 <div className="md:col-span-3 relative"> {/* تم إضافة relative هنا لضبط القائمة المنسدلة */}
@@ -376,19 +411,19 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                     {showDropdown[index] && (
                       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-[210] w-full mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl max-h-48 overflow-y-auto">
                         {products?.filter((p: any) => {
-                          // تحويل القيمة النصية من قاعدة البيانات إلى رقم
-                          const currentStock = parseInt(p.quantity) || 0;
-
-                          // الشرط: الكمية أكبر من 0
+                          const currentStock = stockCountry ? getProductAvailableStockByCountry(p, stockCountry) : 0;
                           const isAvailable = currentStock > 0;
+                          const matchesCountry = stockCountry
+                            ? Array.isArray(p?.stocks) && p.stocks.some((s: any) => String(s?.warehouse?.location || "") === stockCountry)
+                            : false;
 
                           // شرط البحث (الاسم أو الموديل)
                           const query = (searchQueries[index] || "").toLowerCase();
                           const matchesSearch =
-                            p.name.toLowerCase().includes(query) ||
-                            (p.modelNumber && p.modelNumber.toLowerCase().includes(query));
+                            String(p?.name || "").toLowerCase().includes(query) ||
+                            String(p?.modelNumber || "").toLowerCase().includes(query);
 
-                          return isAvailable && matchesSearch;
+                          return isAvailable && matchesSearch && matchesCountry;
                         }
                         ).map((product: any) => (
                           <div

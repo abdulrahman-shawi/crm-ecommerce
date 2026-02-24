@@ -70,7 +70,8 @@ export async function saveProductWithFiles(formData: FormData) {
         const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
-        // const quantity = (formData.get('quantity') as string) || null;
+        const warehouseId = parseInt(formData.get('warehouseId') as string);
+        const quantity = parseInt(formData.get('quantity') as string) || 0;
 
         const existingByName = await prisma.product.findFirst({
             where: {
@@ -103,6 +104,14 @@ export async function saveProductWithFiles(formData: FormData) {
                 description,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
+                ...(warehouseId ? {
+                    stocks: {
+                        create: {
+                            warehouseId,
+                            quantity,
+                        }
+                    }
+                } : {}),
                 images: {
                     create: fileDataArray.map(file => ({
                         url: file.url,
@@ -133,6 +142,8 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+        const warehouseId = parseInt(formData.get('warehouseId') as string);
+        const quantity = parseInt(formData.get('quantity') as string) || 0;
 
         const existingByName = await prisma.product.findFirst({
             where: {
@@ -203,6 +214,25 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             },
             include: { images: true }
         });
+
+        if (warehouseId) {
+            await prisma.productStock.upsert({
+                where: {
+                    productId_warehouseId: {
+                        productId,
+                        warehouseId,
+                    }
+                },
+                update: {
+                    quantity,
+                },
+                create: {
+                    productId,
+                    warehouseId,
+                    quantity,
+                }
+            });
+        }
 
         revalidatePath('/dashboard/products');
         return { success: true, product };

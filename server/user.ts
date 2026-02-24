@@ -31,7 +31,15 @@ export async function getMe() {
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { id: true, username: true, email: true, accountType: true, phone: true, jobTitle: true, avatar: true },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        accountType: true,
+        phone: true,
+        jobTitle: true,
+        avatar: true,
+      },
     });
 
     return user;
@@ -114,7 +122,7 @@ export async function updateuser(id: string, data: any) {
       permission: {
         connect: { id: data.permissions }
       }
-    };  
+    };
     // تحديث كلمة المرور فقط إذا تم توفير واحدة جديدة
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10); //

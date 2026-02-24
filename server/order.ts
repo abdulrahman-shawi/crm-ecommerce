@@ -51,6 +51,17 @@ export async function createOrder(data: any, items: any[], user: any) {
             const existingOrdersCount = await tx.order.count({
                 where: { customerId: data.customerId }
             });
+
+            const stockCountry = String(data.stockCountry || "").trim();
+            if (!stockCountry) {
+                throw new Error("يرجى اختيار بلد المخزون");
+            }
+
+            const orderWarehouse = await tx.warehouse.findFirst({
+                where: { location: stockCountry },
+                orderBy: { id: "asc" },
+                select: { id: true }
+            });
             
             // 1. إنشاء الطلب
             const newOrder = await tx.order.create({
@@ -77,6 +88,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
                     user: { connect: { id: user } },
+                    ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
                         create: items.map((item: any) => ({
                             productId: parseInt(item.productId),
@@ -91,23 +103,32 @@ export async function createOrder(data: any, items: any[], user: any) {
             // 2. تحديث المخزون داخل نفس العملية
             for (const item of items) {
                 const productId = parseInt(item.productId);
-                const quantityToSubtract = parseInt(item.quantity);
+                let remaining = parseInt(item.quantity);
 
-                const product = await tx.product.findUnique({ where: { id: productId } });
-                
-                if (!product) throw new Error(`المنتج ذو الرقم ${productId} غير موجود`);
+                const stocks = await tx.productStock.findMany({
+                    where: {
+                        productId,
+                        warehouse: { location: stockCountry }
+                    },
+                    orderBy: { quantity: "desc" }
+                });
 
-                // const currentQty = parseInt(product.quantity || "0");
-                // const newQty = (currentQty - quantityToSubtract).toString();
-                const newQty = "1";
+                const totalAvailable = stocks.reduce((sum, stock) => sum + (Number(stock.quantity) || 0), 0);
+                if (totalAvailable < remaining) {
+                    throw new Error(`الكمية المطلوبة للمنتج رقم ${productId} غير متوفرة في ${stockCountry}`);
+                }
 
-                // التحقق من عدم وجود كمية سالبة (اختياري حسب منطق عملك)
-                if (parseInt(newQty) < 0) throw new Error(`الكمية المطلوبة للمنتج ${product.name} غير متوفرة`);
+                for (const stock of stocks) {
+                    if (remaining <= 0) break;
+                    const currentQty = Number(stock.quantity) || 0;
+                    const consumed = Math.min(currentQty, remaining);
+                    remaining -= consumed;
 
-                // await tx.product.update({
-                //     where: { id: productId },
-                //     data: { quantity: newQty }
-                // });
+                    await tx.productStock.update({
+                        where: { id: stock.id },
+                        data: { quantity: currentQty - consumed }
+                    });
+                }
             }
 
             if (existingOrdersCount === 0 || isSoldOrderStatus(data.status)) {
@@ -132,22 +153,39 @@ export async function updateOrder(data: any, id: any, items: any) {
         // 1. جلب البيانات الأساسية خارج الـ Transaction لتقليل وقت القفل
         const oldOrder = await prisma.order.findUnique({
             where: { id },
-            include: { items: true }
+            include: { items: true, warehouse: true }
         });
 
         if (!oldOrder) return { success: false, error: "الطلب غير موجود" };
 
         return await prisma.$transaction(async (tx) => {
-            // أ - إرجاع المخزون القديم يدوياً (تحويل النص لرقم)
-            for (const oldItem of oldOrder.items) {
-                const product = await tx.product.findUnique({ where: { id: oldItem.productId } });
-                // if (product) {
-                //     const restoredQty = (parseInt(product.quantity || "0") + oldItem.quantity).toString();
-                //     await tx.product.update({
-                //         where: { id: oldItem.productId },
-                //         data: { quantity: restoredQty }
-                //     });
-                // }
+            const stockCountry = String(data.stockCountry || oldOrder.warehouse?.location || "").trim();
+
+            const orderWarehouse = stockCountry
+                ? await tx.warehouse.findFirst({
+                    where: { location: stockCountry },
+                    orderBy: { id: "asc" },
+                    select: { id: true }
+                })
+                : null;
+
+            if (stockCountry) {
+                for (const oldItem of oldOrder.items) {
+                    const stock = await tx.productStock.findFirst({
+                        where: {
+                            productId: oldItem.productId,
+                            warehouse: { location: stockCountry }
+                        },
+                        orderBy: { quantity: "desc" }
+                    });
+
+                    if (stock) {
+                        await tx.productStock.update({
+                            where: { id: stock.id },
+                            data: { quantity: (Number(stock.quantity) || 0) + oldItem.quantity }
+                        });
+                    }
+                }
             }
 
             // ب - تحديث بيانات الطلب الرئيسية والعناصر (حذف وإضافة)
@@ -171,6 +209,7 @@ export async function updateOrder(data: any, id: any, items: any) {
                     deliveryMethod: data.deliveryMethod,
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
+                    ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
                         deleteMany: {}, // حذف العناصر السابقة
                         create: items.map((item: any) => ({
@@ -191,16 +230,36 @@ export async function updateOrder(data: any, id: any, items: any) {
             }
 
             // ج - خصم المخزون الجديد
-            for (const newItem of items) {
-                const product = await tx.product.findUnique({ where: { id: parseInt(newItem.productId) } });
-                // if (product) {
-                //     const newQty = (parseInt(product.quantity || "0") - parseInt(newItem.quantity)).toString();
-                //     // يمكنك هنا إضافة شرط للتأكد من أن المخزون لا يصبح سالباً
-                //     await tx.product.update({
-                //         where: { id: parseInt(newItem.productId) },
-                //         data: { quantity: newQty }
-                //     });
-                // }
+            if (stockCountry) {
+                for (const newItem of items) {
+                    const productId = parseInt(newItem.productId);
+                    let remaining = parseInt(newItem.quantity);
+
+                    const stocks = await tx.productStock.findMany({
+                        where: {
+                            productId,
+                            warehouse: { location: stockCountry }
+                        },
+                        orderBy: { quantity: "desc" }
+                    });
+
+                    const totalAvailable = stocks.reduce((sum, stock) => sum + (Number(stock.quantity) || 0), 0);
+                    if (totalAvailable < remaining) {
+                        throw new Error(`الكمية المطلوبة للمنتج رقم ${productId} غير متوفرة في ${stockCountry}`);
+                    }
+
+                    for (const stock of stocks) {
+                        if (remaining <= 0) break;
+                        const currentQty = Number(stock.quantity) || 0;
+                        const consumed = Math.min(currentQty, remaining);
+                        remaining -= consumed;
+
+                        await tx.productStock.update({
+                            where: { id: stock.id },
+                            data: { quantity: currentQty - consumed }
+                        });
+                    }
+                }
             }
 
             return { success: true, data: updatedOrder };
@@ -220,27 +279,31 @@ export async function deleteOrder(id: any) {
         // 1. جلب البيانات خارج الـ Transaction لتقليل وقت القفل
         const oldOrder = await prisma.order.findUnique({
             where: { id },
-            include: { items: true }
+            include: { items: true, warehouse: true }
         });
 
         if (!oldOrder) return { success: false, error: "الطلب غير موجود" };
 
         return await prisma.$transaction(async (tx) => {
-            // أ - إرجاع المخزون (التعامل مع الحقل النصي)
-            for (const item of oldOrder.items) {
-                const product = await tx.product.findUnique({ 
-                    where: { id: item.productId } 
-                });
-                
-                // if (product) {
-                //     const currentQty = parseInt(product.quantity || "0");
-                //     const restoredQty = (currentQty + item.quantity).toString();
-                    
-                //     await tx.product.update({
-                //         where: { id: item.productId },
-                //         data: { quantity: restoredQty }
-                //     });
-                // }
+            const stockCountry = String(oldOrder.warehouse?.location || "").trim();
+
+            if (stockCountry) {
+                for (const item of oldOrder.items) {
+                    const stock = await tx.productStock.findFirst({
+                        where: {
+                            productId: item.productId,
+                            warehouse: { location: stockCountry }
+                        },
+                        orderBy: { quantity: "desc" }
+                    });
+
+                    if (stock) {
+                        await tx.productStock.update({
+                            where: { id: stock.id },
+                            data: { quantity: (Number(stock.quantity) || 0) + item.quantity }
+                        });
+                    }
+                }
             }
 
             // ب - حذف الطلب

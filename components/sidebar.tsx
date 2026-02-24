@@ -7,7 +7,8 @@ import {
   Users2,
   Settings2,
   RollerCoasterIcon,
-  Download
+  Download,
+  Warehouse
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -95,6 +96,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       items : [
         (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
         { icon: Receipt, label: "الأقسام", href: "/dashboard/categories" },
+        (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
+        { icon: Warehouse, label: "المستودعات", href: "/dashboard/inventories" },
         (user && hasAnyPermission(user, ["viewProducts", "addProducts", "editProducts", "deleteProducts"])) &&
         { icon: Box, label: "المخزن والمنتجات", href: "/dashboard/products" },
         (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&

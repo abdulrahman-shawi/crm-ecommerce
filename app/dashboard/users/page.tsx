@@ -493,6 +493,7 @@ const UserManagement: React.FunctionComponent = () => {
                   </select>
                   {errors.permissions && <p className="text-red-500 text-xs">{errors.permissions.message as string}</p>}
                 </div>
+
               </div>
             )}
           </DynamicForm>
