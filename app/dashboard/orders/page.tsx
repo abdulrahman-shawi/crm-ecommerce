@@ -98,7 +98,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const buildOrderPdfFile = async (data: any) => {
         const invoiceNo = data?.orderNumber || '-';
-        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('ar-EG') : '-';
+        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US') : '-';
         const customerName = data?.customer?.name || 'غير محدد';
         const paymentMethodText = data?.paymentMethod || '-';
         const receiverName = data?.receiverName || 'غير محدد';
@@ -110,12 +110,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const mapLink = data?.googleMapsLink || '';
         const items = Array.isArray(data?.items) ? data.items : [];
 
-        const formatMoney = (value: any) => Number(value || 0).toLocaleString('ar-EG');
+        const formatMoney = (value: any) => Number(value || 0).toLocaleString('en-US');
         const totalDiscount = Number(data?.discount || 0);
         const finalAmount = Number(data?.finalAmount || 0);
         const subtotal = finalAmount + totalDiscount;
         const amountBank = Number(data?.amountBank || 0);
         const amount = Number(data?.amount || 0);
+
+        const logoUrl = `${window.location.origin}/skynova-light.png`;
 
         const rowsHtml = items.length
             ? items.map((item: any, idx: number) => {
@@ -156,10 +158,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         wrapper.style.lineHeight = '1.7';
 
         wrapper.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #e2e8f0;padding-bottom:16px;margin-bottom:18px;">
-                <div style="display:flex;gap:12px;align-items:baseline;">
-                    <div style="font-size:36px;font-weight:900;color:#2563eb;letter-spacing:-1px;">SKYNOVA</div>
-                    <div style="font-size:18px;font-weight:800;color:#94a3b8;">| فاتورة مبيعات</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #e2e8f0;padding-bottom:16px;margin-bottom:18px;">
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <img src="${logoUrl}" alt="SKYNOVA" style="height:48px;object-fit:contain;" />
+                    <div style="font-size:18px;font-weight:800;color:#94a3b8;">فاتورة مبيعات</div>
                 </div>
                 <div style="text-align:left;font-size:12px;color:#64748b;font-weight:700;">
                     <div>رقم الفاتورة: <span style="color:#0f172a;font-weight:900;">#${invoiceNo}</span></div>
@@ -203,7 +205,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             <div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-end;">
                 <div style="flex:1;font-size:11px;font-weight:700;color:#94a3b8;">
                     * هذه الفاتورة صدرت إلكترونياً وهي وثيقة رسمية.<br />
-                    * شكراً لتعاملك مع SKYNOVA.
+                    * شكراً لتعاملك معنا.
                 </div>
                 <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
@@ -675,7 +677,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     };
 
     const tableActions: any[] = [
-        (user && hasPermission(user, "viewOrders")) && {
+        (user) && {
             label: "عرض تقارير الطلب",
             icon: <BarChart2 size={14} />,
             onClick: (data: any) => {
@@ -687,7 +689,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 setisOpenorder(true);
             }
         },
-        (user && hasPermission(user, "editOrders")) && {
+        (user && isAdmin(user)) && {
             label: "تعديل",
             icon: <Pencil size={14} />,
             onClick: (data: any) => {

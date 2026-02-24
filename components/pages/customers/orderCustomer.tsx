@@ -357,23 +357,23 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       } size='full' isOpen={isOpenOrder} onClose={resetForm} title='اضافة طلب'>
         <div>
           <div className="space-y-4 mb-4">
-            <div className="flex flex-col gap-2 my-1">
-              <label className="text-xs font-bold text-slate-500 mr-2" htmlFor="">العميل /المورد</label>
-              <input
-                disabled={true}
-                type="text"
-                // يعرض اسم العميل المختار حالياً أو نص البحث
-                value={customerSearchQuery || customers?.find((c: any) => c.id === customerId)?.name || ""}
-                placeholder="ابحث عن عميل..."
-                onFocus={() => setShowCustomerDropdown(true)}
-                onChange={(e) => {
-                  setCustomerSearchQuery(e.target.value);
-                  setShowCustomerDropdown(true);
-                }}
-                className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
-              />
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="flex flex-col gap-2 my-1">
+                <label className="text-xs font-bold text-slate-500 mr-2" htmlFor="">العميل /المورد</label>
+                <input
+                  disabled={true}
+                  type="text"
+                  // يعرض اسم العميل المختار حالياً أو نص البحث
+                  value={customerSearchQuery || customers?.find((c: any) => c.id === customerId)?.name || ""}
+                  placeholder="ابحث عن عميل..."
+                  onFocus={() => setShowCustomerDropdown(true)}
+                  onChange={(e) => {
+                    setCustomerSearchQuery(e.target.value);
+                    setShowCustomerDropdown(true);
+                  }}
+                  className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
+                />
+              </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">بلد المخزون</label>
                 <select

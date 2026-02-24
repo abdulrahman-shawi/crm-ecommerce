@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
-// import { GetUserTargetProgress } from '@/server/analytics';
+import { GetUserTargetProgress } from '@/server/analytics';
 import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, updateUserTarget } from '@/server/user';
 import { getProduct } from '@/server/product';
 import toast from 'react-hot-toast';
@@ -414,8 +414,8 @@ const DashboardPage: React.FunctionComponent = () => {
       if (!user?.id) return;
       setLoading(true);
       try {
-        // const res = await GetUserTargetProgress(user.id, selectedMonth);
-        // setTargetProgress(res as any);
+        const res = await GetUserTargetProgress(user.id, selectedMonth);
+        setTargetProgress(res as any);
       } catch (error) {
         console.error("Error fetching target progress:", error);
         setTargetProgress({ success: false, data: [], error: "Internal Error" });
