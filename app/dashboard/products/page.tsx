@@ -163,7 +163,7 @@ const ProductLayout = () => {
         if (selectedWarehouseFilter === 'all') return products;
 
         return products.filter((product) =>
-            product.stocks?.some((stock: any) => stock.warehouse?.name === selectedWarehouseFilter)
+            product.stocks?.some((stock: any) => stock.warehouse?.location === selectedWarehouseFilter)
         );
     }, [products, selectedWarehouseFilter]);
 
@@ -244,7 +244,7 @@ const ProductLayout = () => {
                 >
                     <option value="all">كل المستودعات</option>
                     {warehouses.map((warehouse) => (
-                        <option key={warehouse.id} value={warehouse.name}>{warehouse.name}</option>
+                        <option key={warehouse.id} value={warehouse.location}>{warehouse.location || warehouse.name}</option>
                     ))}
                 </select>
             </div>
