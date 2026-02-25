@@ -6,6 +6,13 @@ export const getWarehouse  = async () => {
     // من هنا يمكنك إضافة منطق الحصول على بيانات المستودع
     const warehouses = await prisma.warehouse.findMany({
         orderBy: { createdAt: 'desc' },
+        include: {
+            _count: {
+                select: {
+                    stocks: true,
+                },
+            },
+        },
     });
     return JSON.parse(JSON.stringify(warehouses));
 }

@@ -288,7 +288,7 @@ const ProductLayout = () => {
                                 </p>
 
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold">
-                                    المخزون: {product.stocks?.[0]?.quantity ?? product.quantity ?? 0}
+                                    المخزون: {product.stocks?.[0]?.quantity ?? product.quantity ?? 0} | المستودع: {product.stocks?.[0]?.warehouse?.name || "غير محدد"}
                                 </p>
 
                                 <div className="mt-auto flex items-center justify-between">

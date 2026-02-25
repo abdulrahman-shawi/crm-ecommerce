@@ -137,7 +137,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                         {cat.name}
                                     </h3>
                                     <p className="text-sm text-slate-500 mt-1">
-                                        {(cat.products?.length || 0)} منتج مرتبط
+                                        {(cat._count?.stocks || 0)} منتج مرتبط
                                     </p>
                                 </div>
 
