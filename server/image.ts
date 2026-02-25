@@ -74,6 +74,9 @@ export async function saveProductWithFiles(formData: FormData) {
         const warehouseId = parseInt(formData.get('warehouseId') as string);
         const quantity = parseInt(formData.get('quantity') as string) || 0;
 
+        if (quantity < 0) {
+            return { success: false, error: "الكمية لا يمكن أن تكون سالبة" };
+        }
         const hasValidWarehouse = Number.isInteger(warehouseId) && warehouseId > 0;
 
         const existingByNameAndStock = await prisma.product.findFirst({
