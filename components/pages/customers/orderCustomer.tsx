@@ -8,13 +8,17 @@ import React from "react";
 import toast from "react-hot-toast";
 import PhoneInput from 'react-phone-number-input'
 
-const TURKEY_EXCHANGE_RATE = 44;
+// سعر صرف الدولار مقابل الليرة التركية (يتم تحديثه من المستخدم عند اختيار تركيا)
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 export default function OrderCustomer({ customers, customerId, products, isOpenOrder, setEditId, setCustomerId, setisOpenOrder, editId, getData }: { customers: any, customerId: any, products: any, isOpenOrder: any, setEditId: any, setCustomerId: any, setisOpenOrder: any, editId: any, getData: any }) {
+  // ...existing code...
   const [items, setItems] = React.useState([
     { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
   ]);
   const [paymentMethod, setPaymentMethod] = React.useState("عند الاستلام");
+  // حقل سعر الصرف عند اختيار تركيا
+  const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState(DEFAULT_TURKEY_EXCHANGE_RATE);
 
   // بيانات المستلم والعنوان
   const [receiverName, setReceiverName] = React.useState("");
@@ -132,9 +136,10 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
   const isTurkeyStock = stockCountry === "تركيا";
   const currencySymbol = isTurkeyStock ? "₺" : "$";
+  // استخدم سعر الصرف المدخل بدل الثابت
   const convertUsdToOrderCurrency = (value: number) => {
     const normalized = Number(value || 0);
-    return isTurkeyStock ? normalized * TURKEY_EXCHANGE_RATE : normalized;
+    return isTurkeyStock ? normalized * turkeyExchangeRate : normalized;
   };
 
   const getProductAvailableStockByCountry = (product: any, selectedCountry: string) => {
@@ -412,6 +417,10 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                     setItems([{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
                     setSearchQueries({});
                     setShowDropdown({});
+                    // إعادة سعر الصرف الافتراضي عند تغيير البلد
+                    if (e.target.value === "تركيا") {
+                      setTurkeyExchangeRate(DEFAULT_TURKEY_EXCHANGE_RATE);
+                    }
                   }}
                   className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                 >
@@ -420,6 +429,21 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   <option value="تركيا">تركيا</option>
                 </select>
               </div>
+              {/* حقل سعر الصرف يظهر فقط إذا البلد تركيا */}
+              {stockCountry === "تركيا" && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 mr-2">سعر صرف الدولار مقابل الليرة التركية</label>
+                  <input
+                    type="number"
+                    min={1}
+                    step={0.01}
+                    value={turkeyExchangeRate}
+                    onChange={e => setTurkeyExchangeRate(Number(e.target.value) || DEFAULT_TURKEY_EXCHANGE_RATE)}
+                    className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                    placeholder="مثلاً: 32.5"
+                  />
+                </div>
+              )}
             </div>
             {items.map((item: any, index: number) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 items-center">
