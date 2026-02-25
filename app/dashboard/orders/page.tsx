@@ -406,20 +406,34 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         }
     }
 
+    // أضف هذه الأسطر إذا كانت غير موجودة
+const [warehouseLocation, setWarehouseLocation] = React.useState(""); 
+const [searchQuery, setSearchQuery] = React.useState("");
     const filterOrder = React.useMemo(() => {
-        if (!user) return []; // إذا لم يتم تحميل المستخدم بعد، ارجع مصفوفة فارغة
+    if (!user) return [];
 
-        return orders.filter((order: any) => {
-            // 1. إذا كان أدمن، يرى كل الطلبات
-            const isAdminUser = isAdmin(user) || hasPermission(user, "viewOrders");
+    // تحديد ما إذا كان المستخدم أدمن
+    const isAdminUser = isAdmin(user) || hasPermission(user, "viewOrders");
 
-            if (isAdminUser) return orders;
+    return orders.filter((order: any) => {
+        // أ - فلتر الصلاحيات (أدمن يرى الكل، موظف يرى طلباته)
+        const isOwner = order.userId === user.id;
+        if (!isAdminUser && !isOwner) return false;
 
-            // 2. إذا كان موظف، يرى فقط الطلبات التي قام بإنشائها هو
-            // ملاحظة: تأكد أن الحقل في الـ Schema هو userId
-            return order.userId === user.id;
-        });
-    }, [orders, user]);
+        // ب - فلتر البحث النصي (اسم العميل، الموظف، رقم الطلب، المدينة)
+        const query = searchQuery.trim().toLowerCase();
+        const matchesText = !query ||
+            (order.customer?.name && order.customer.name.toLowerCase().includes(query)) ||
+            (order.user?.username && order.user.username.toLowerCase().includes(query)) ||
+            (order.orderNumber && String(order.orderNumber).includes(query)) ||
+            (order.city && order.city.toLowerCase().includes(query));
+
+        // ج - فلتر المستودع
+        const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
+
+        return matchesText && matchesLocation;
+    });
+}, [orders, user, searchQuery, warehouseLocation]);
 
     const statusOptions = [
         "طلب جديد",
@@ -754,6 +768,34 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <Download size={20} />
                 </button>
             </div>
+            <div className="flex flex-col md:flex-row gap-4 mb-6 items-center justify-between">
+    <div className="relative w-full md:w-96">
+        <span className="absolute inset-y-0 right-3 flex items-center pr-2 pointer-events-none">
+            {/* أيقونة بحث بسيطة */}
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </span>
+        <input
+            type="text"
+            placeholder="بحث باسم العميل، الموظف، أو المدينة..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full pr-10 pl-3 py-2 border border-gray-300 dark:border-gray-950 rounded-lg bg-white dark:bg-slate-950 dark:text-slate-100 focus:ring-blue-500 focus:border-blue-500 text-sm"
+        />
+    </div>
+
+    {/* فلتر المستودع (الدولة) */}
+    <select
+        value={warehouseLocation}
+        onChange={(e) => setWarehouseLocation(e.target.value)}
+        className="w-full md:w-48 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
+    >
+        <option value="">كل المستودعات</option>
+        <option value="سوريا">سوريا</option>
+        <option value="تركيا">تركيا</option>
+    </select>
+</div>
             <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3 mb-6">
                 {statusOptions.map((status) => (
                     <button
@@ -886,324 +928,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         })
                     },
                 ]} />
-            <AppModal footer={
-                <div className="pt-6 w-full flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex gap-6 items-center">
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-red-500 uppercase px-1">خصم إضافي (كلي)</label>
-                            <div className="relative">
-                                <input type="number" value={overallDiscount} onChange={(e) => setOverallDiscount(Number(e.target.value))} className="w-32 bg-red-50 dark:bg-red-900/10 p-3 rounded-2xl border border-red-100 dark:border-red-900/20 outline-none font-bold text-red-600 text-center" placeholder="0" />
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400"> $</span>
-                            </div>
-                        </div>
-                        <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 rounded-3xl">
-                            <p className="text-[10px] font-bold text-blue-600 uppercase mb-1">الإجمالي النهائي</p>
-                            <h3 className="text-3xl font-black font-sans text-blue-600 italic"> ${grandTotal.toLocaleString()}</h3>
-                        </div>
-                    </div>
-                    <div className="flex gap-4">
-                        <button
-                            onClick={handleSubmit}
-                            className={`px-12 py-4 bg-blue-600 text-white rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2`}
-                        >
-                            <Save size={20} /> {editId ? "حفظ التعديلات" : "حفظ الفاتورة"}
-                        </button>
-                        <button
-                            onClick={resetForm}
-                            className="px-8 py-4 bg-slate-100 dark:bg-slate-800 rounded-2xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            إلغاء
-                        </button>
-                    </div>
-                </div>
-            } size='full' isOpen={isOpen} onClose={resetForm} title={editId ? 'تعديل طلب' : 'اضافة طلب'}>
-                <div>
-                    <div className="space-y-4 mb-4">
-                        {items.map((item: any, index: number) => (
-                            <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 items-center">
-                                <div className="md:col-span-3 relative"> {/* تم إضافة relative هنا لضبط القائمة المنسدلة */}
-                                    <label className="text-[10px] font-bold text-slate-400 mb-1">المنتج</label>
-                                    <input
-                                        type="text"
-                                        value={searchQueries[index] || item.name || item.modelNumber}
-                                        placeholder="اكتب اسم المنتج..."
-                                        onFocus={() => setShowDropdown({ ...showDropdown, [index]: true })}
-                                        onChange={(e) => {
-                                            setSearchQueries({ ...searchQueries, [index]: e.target.value });
-                                            setShowDropdown({ ...showDropdown, [index]: true });
-                                        }}
-                                        className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl border-none outline-none font-bold text-sm shadow-sm"
-                                    />
-                                    <AnimatePresence>
-                                        {showDropdown[index] && (
-                                            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-[210] w-full mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl max-h-48 overflow-y-auto">
-                                                {products?.filter((p: any) =>
-                                                    // البحث في الاسم
-                                                    p.name.toLowerCase().includes((searchQueries[index] || "").toLowerCase()) ||
-                                                    // البحث في رقم الموديل
-                                                    (p.modelNumber && p.modelNumber.toLowerCase().includes((searchQueries[index] || "").toLowerCase()))
-                                                ).map((product: any) => {
-                                                    const firstStock = Array.isArray(product?.stocks) ? product.stocks[0] : null;
-                                                    return (
-                                                    <div
-                                                        key={product.id}
-                                                        onClick={() => updateItem(index, "productId", product.id.toString(), products)}
-                                                        className="px-4 py-3 hover:bg-blue-50 text-slate-900 dark:text-slate-50 dark:hover:bg-blue-900/20 cursor-pointer text-sm font-bold border-b border-slate-50 dark:border-slate-700 last:border-0"
-                                                    >
-                                                        <div className="flex justify-between items-center">
-                                                            <span className='text-slate-900 dark:text-slate-50'>{product.name}</span>
-                                                            <span className="text-[10px] bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500">
-                                                                {product.modelNumber}
-                                                            </span>
-                                                        </div>
-                                                        <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(Number(firstStock?.price || 0), Number(firstStock?.discount || 0))}</div>
-                                                    </div>
-                                                )})}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                                <div className="md:col-span-1">
-                                    <label className="text-[10px] font-bold text-slate-400 mb-1">الكمية</label>
-                                    <input type="number" value={item.quantity} onChange={(e) => updateItem(index, "quantity", parseInt(e.target.value) || 0, products)} className="w-full text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900 p-3 rounded-xl text-center font-bold outline-none text-sm shadow-sm" />
-                                </div>
-                                <div className="md:col-span-1 text-center">
-                                    <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                                    <div className="p-3 text-sm font-bold"> ${getEffectivePrice(item.price, item.discount)}</div>
-                                </div>
-                                <div className="md:col-span-1">
-                                    <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
-                                    <input type="number" value={item.discount} onChange={(e) => updateItem(index, "discount", Number(e.target.value) || 0, products)} className="w-full bg-red-50 dark:bg-red-900/10 p-3 rounded-xl text-center font-bold text-red-600 outline-none text-sm border border-red-100 dark:border-red-900/20" />
-                                </div>
-                                <div className="md:col-span-4">
-                                    <label className="text-[10px] font-bold text-slate-400 mb-1">ملاحظات المنتج</label>
-                                    <input type="text" value={item.note} onChange={(e) => updateItem(index, "note", e.target.value, products)} className="w-full bg-white dark:bg-slate-900 p-3 rounded-xl outline-none text-xs shadow-sm" placeholder="إضافة ملاحظة..." />
-                                </div>
-                                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> ${item.total}</div>
-                                <div className="md:col-span-1 flex justify-center">
-                                    <button onClick={() => setItems(items.filter((_: any, i: number) => i !== index))} className="text-red-400 hover:text-red-600"><Trash2 size={18} /></button>
-                                </div>
-                            </div>
-                        ))}
-                        <button onClick={addNewItem} className="w-full py-3 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 font-bold text-xs hover:border-blue-500 hover:text-blue-500 transition-all">+ إضافة بند جديد</button>
-                    </div>
-                    <div className="space-y-8" dir="rtl">
-                        {/* القسم الأول: بيانات العميل والطلب */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50 dark:bg-slate-800/20 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
-                            {/* العميل / المورد مع قائمة منسدلة للبحث */}
-                            <div className="space-y-2 md:col-span-2 relative">
-                                <label className="text-xs font-bold text-slate-500 mr-2">العميل / المورد</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        // يعرض اسم العميل المختار حالياً أو نص البحث
-                                        value={customerSearchQuery || customers?.find(c => c.id === customerId)?.name || ""}
-                                        placeholder="ابحث عن عميل..."
-                                        onFocus={() => setShowCustomerDropdown(true)}
-                                        onChange={(e) => {
-                                            setCustomerSearchQuery(e.target.value);
-                                            setShowCustomerDropdown(true);
-                                        }}
-                                        className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
-                                    />
-
-                                    {/* أيقونة سهم أو بحث صغيرة للجمالية */}
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                                        <Search size={18} />
-                                    </div>
-                                </div>
-
-                                <AnimatePresence>
-                                    {showCustomerDropdown && (
-                                        <>
-                                            {/* طبقة شفافة لإغلاق القائمة عند الضغط خارجها */}
-                                            <div
-                                                className="fixed inset-0 z-[200]"
-                                                onClick={() => setShowCustomerDropdown(false)}
-                                            />
-
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0 }}
-                                                className="absolute z-[210] w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto"
-                                            >
-                                                {customers?.filter((c: any) =>
-                                                    c.name.toLowerCase().includes((customerSearchQuery || "").toLowerCase()) ||
-                                                    c.phone?.includes(customerSearchQuery || "")
-                                                ).length > 0 ? (
-                                                    customers
-                                                        ?.filter((c: any) =>
-                                                            c.name.toLowerCase().includes((customerSearchQuery || "").toLowerCase())
-                                                        )
-                                                        .map((customer: any) => (
-                                                            <div
-                                                                key={customer.id}
-                                                                onClick={() => {
-                                                                    setCustomerId(customer.id);
-                                                                    setCustomerSearchQuery(customer.name);
-                                                                    setShowCustomerDropdown(false);
-                                                                }}
-                                                                className="px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer border-b border-slate-50 dark:border-slate-700 last:border-0 transition-colors"
-                                                            >
-                                                                <div className="font-bold text-slate-800 dark:text-slate-100">{customer.name}</div>
-                                                                {customer.phone && (
-                                                                    <div className="text-xs text-slate-500 mt-0.5">{customer.phone}</div>
-                                                                )}
-                                                            </div>
-                                                        ))
-                                                ) : (
-                                                    <div className="p-4 text-center text-slate-400 text-sm italic">
-                                                        لا يوجد نتائج مطابقة...
-                                                    </div>
-                                                )}
-                                            </motion.div>
-                                        </>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">اسم الشخص المستلم</label>
-                                <input type="text" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} placeholder="اسم المستلم" className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500">أرقام هواتف المستلم</label>
-                                {receiverPhone.map((phone: any, index: number) => (
-                                    <div key={index} className="flex gap-2 mb-2">
-                                        <PhoneInput
-                                            international
-                                            placeholder="Enter phone number"
-                                            value={phone}
-                                            withCountryCallingCode
-                                            className="w-full bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                                            onChange={(value) => {
-                                                const newPhones = [...receiverPhone];
-                                                newPhones[index] = value;
-                                                setReceiverPhone(newPhones);
-                                            }}
-                                            defaultCountry="SY"
-                                        />
-                                        {receiverPhone.length > 1 && (
-                                            <button
-                                                type="button"
-                                                onClick={() => setReceiverPhone(receiverPhone.filter((_: any, i: number) => i !== index))}
-                                                className="p-2 text-rose-500 bg-rose-50 rounded-lg"
-                                            >
-                                                X
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                                <button
-                                    type="button"
-                                    onClick={() => setReceiverPhone([...receiverPhone, ""])}
-                                    className="text-xs text-blue-600 font-bold hover:underline"
-                                >
-                                    + إضافة رقم هاتف آخر
-                                </button>
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">طريقة الدفع</label>
-                                <select
-                                    value={paymentMethod}
-                                    onChange={(e) => {
-                                        const nextMethod = e.target.value;
-                                        setPaymentMethod(nextMethod);
-                                        if (nextMethod !== "مختلطة") {
-                                            setAmount("");
-                                        }
-                                    }}
-                                    className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                                >
-                                    <option value="عند الاستلام">عند الاستلام</option>
-                                    <option value="تحويل بنكي">تحويل بنكي</option>
-                                    <option value="مختلطة">مختلطة</option>
-                                </select>
-                            </div>
-                            {paymentMethod === "مختلطة" && (
-                                <>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-500 mr-2">القيمة المستلمة (حوالة)</label>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            step="0.01"
-                                            value={amount}
-                                            onChange={(e) => setAmount(e.target.value)}
-                                            placeholder="0"
-                                            className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-500 mr-2">القيمة المتبقية (عند الباب)</label>
-                                        <input
-                                            type="text"
-                                            value={remainingAmount}
-                                            readOnly
-                                            className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                                        />
-                                    </div>
-                                </>
-                            )}
-                        </div>
-
-                        {/* القسم الثاني: تفاصيل العنوان والشحن */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">الدولة</label>
-                                <select
-                                    value={country}
-                                    onChange={(e) => {
-                                        setCountry(e.target.value);
-                                        setCity("");
-                                    }}
-                                    className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all"
-                                >
-                                    <option value="">اختر الدولة</option>
-                                    {countries.map((c) => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">المدينة / المنطقة</label>
-                                <select
-                                    value={city}
-                                    onChange={(e) => setCity(e.target.value)}
-                                    disabled={!country}
-                                    className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold disabled:opacity-50"
-                                >
-                                    <option value="">اختر المدينة</option>
-                                    {(citiesByCountry[country] || []).map((c) => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">البلدية</label>
-                                <input type="text" value={municipality} onChange={(e) => setMunicipality(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
-                            </div>
-                        </div>
-
-                        {/* القسم الثالث: الشحن والملاحظات */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
-                                <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">رابط الخريطة</label>
-                                <input type="text" value={googleMapsLink} onChange={(e) => setGoogleMapsLink(e.target.value)} placeholder="رابط الخريطة" className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                                <label className="text-xs font-bold text-slate-500 mr-2">ملاحظات التوصيل</label>
-                                <textarea rows={2} value={deliveryNotes} onChange={(e) => setDeliveryNotes(e.target.value)} placeholder="ملاحظات للمندوب..." className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold resize-none" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </AppModal>
+            
 
             <AppModal size='full' isOpen={isOpenordercustomer} onClose={() => setisOpenordercustomer(false)} title='طلبات العميل'>
                 <ViewOrderCustomer orders={ordercustomer} />
