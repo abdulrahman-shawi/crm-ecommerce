@@ -44,6 +44,7 @@ const ProductLayout = () => {
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
     const [forData, setFormData] = React.useState<any>(null);
     const [page, setPage] = React.useState(1);
+        const [selectedWarehouseFilter, setSelectedWarehouseFilter] = React.useState<string>('all');
     const {user} = useAuth()
   const PAGE_SIZE = 10;
     React.useEffect(() => {
@@ -148,6 +149,14 @@ const ProductLayout = () => {
         setIsOpen(true);
     }
 
+    const filteredProducts = React.useMemo(() => {
+        if (selectedWarehouseFilter === 'all') return products;
+
+        return products.filter((product) =>
+            product.stocks?.some((stock: any) => stock.warehouse?.name === selectedWarehouseFilter)
+        );
+    }, [products, selectedWarehouseFilter]);
+
     const tableActions: any[] = [
         (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true) ) &&
         {
@@ -209,9 +218,29 @@ const ProductLayout = () => {
                 <Button onClick={() => setTab("grid")} >قائمة</Button>
                 <Button onClick={() => setTab("table")} >جدول</Button>
             </div>
+
+            <div className="mb-4 max-w-xs">
+                <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
+                    عرض حسب المستودع
+                </label>
+                <select
+                    value={selectedWarehouseFilter}
+                    onChange={(e) => {
+                        setSelectedWarehouseFilter(e.target.value);
+                        setPage(1);
+                    }}
+                    className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                >
+                    <option value="all">كل المستودعات</option>
+                    {warehouses.map((warehouse) => (
+                        <option key={warehouse.id} value={warehouse.name}>{warehouse.name}</option>
+                    ))}
+                </select>
+            </div>
+
             {tab === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {products.map((product) => (
+                    {filteredProducts.map((product) => (
                         <div
                             key={product.id}
                             className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 flex flex-col"
@@ -247,7 +276,7 @@ const ProductLayout = () => {
                                 </p>
 
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold">
-                                    المخزون: {product.quantity || 0}
+                                    المخزون: {product.stocks?.[0]?.quantity ?? product.quantity ?? 0}
                                 </p>
 
                                 <div className="mt-auto flex items-center justify-between">
@@ -347,8 +376,8 @@ const ProductLayout = () => {
             </AppModal>
             {tab === 'table' && (
                 <DataTable
-                    data={products}
-                     totalCount={products.length} // لنفترض وجود 150 عميل في الداتا بيز
+                    data={filteredProducts}
+                     totalCount={filteredProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
                 pageSize={PAGE_SIZE}
                 currentPage={page}
                 onPageChange={(newPage) => setPage(newPage)}
