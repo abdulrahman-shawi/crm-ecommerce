@@ -113,7 +113,9 @@ export async function saveProductWithFiles(formData: FormData) {
             return { success: false, error: "لا يمكن تكرار نفس المستودع أكثر من مرة" };
         }
 
-        const existingByNameAndStock = await prisma.product.findFirst({
+        const submittedWarehouseIds = warehouseStocks.map((item) => item.warehouseId);
+
+        const existingByNameAndWarehouse = await prisma.product.findFirst({
             where: {
                 name: {
                     equals: normalizedName,
@@ -121,18 +123,17 @@ export async function saveProductWithFiles(formData: FormData) {
                 },
                 stocks: {
                     some: {
-                        OR: warehouseStocks.map((item) => ({
-                            warehouseId: item.warehouseId,
-                            quantity: item.quantity,
-                        }))
+                        warehouseId: {
+                            in: submittedWarehouseIds,
+                        }
                     }
                 }
             },
             select: { id: true }
         });
 
-        if (existingByNameAndStock) {
-            return { success: false, error: "المنتج موجود بنفس الاسم ونفس المخزون" };
+        if (existingByNameAndWarehouse) {
+            return { success: false, error: "لا يمكن إضافة نفس المنتج في نفس المستودع أكثر من مرة" };
         }
         
         // جلب الملفات والتأكد أنها من نوع File فعلاً
@@ -230,19 +231,28 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             return { success: false, error: "لا يمكن تكرار نفس المستودع أكثر من مرة" };
         }
 
-        const existingByName = await prisma.product.findFirst({
+        const submittedWarehouseIds = warehouseStocks.map((item) => item.warehouseId);
+
+        const existingByNameAndWarehouse = await prisma.product.findFirst({
             where: {
                 name: {
                     equals: name.trim(),
                     mode: 'insensitive',
                 },
-                NOT: { id: productId }
+                NOT: { id: productId },
+                stocks: {
+                    some: {
+                        warehouseId: {
+                            in: submittedWarehouseIds,
+                        }
+                    }
+                }
             },
             select: { id: true }
         });
 
-        if (existingByName) {
-            return { success: false, error: "اسم المنتج موجود بالفعل" };
+        if (existingByNameAndWarehouse) {
+            return { success: false, error: "لا يمكن إضافة نفس المنتج في نفس المستودع أكثر من مرة" };
         }
 
         // 1. جلب الملفات الجديدة من الـ FormData
