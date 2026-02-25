@@ -10,6 +10,7 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
   const value = Number(amount || 0);
   return String(warehouseLocation || "").trim() === "تركيا" ? value / TURKEY_EXCHANGE_RATE : value;
 };
+const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "معلق / نقص معلومات", "فشل التسليم مرتجع"];
 
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string) {
@@ -404,6 +405,30 @@ export async function GetTopSellingUsersByPermission(userId: string) {
 
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
+    const revenueOrders = await prisma.order.findMany({
+      where: {
+        ...(canViewAllTargets ? {} : { userId: scopedUserId }),
+        status: { notIn: NON_REVENUE_STATUSES },
+        ...(monthRange
+          ? {
+              createdAt: {
+                gte: monthRange.start,
+                lte: monthRange.end,
+              },
+            }
+          : {}),
+      },
+      select: {
+        userId: true,
+        finalAmount: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
+      }
+    });
+
     const topUsersGrouped = await prisma.order.groupBy({
       by: ['userId'],
       where: {
@@ -689,7 +714,18 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       });
     });
 
-    const totalSalesAmount = totalSoldByUser.get(scopedUserId) || 0;
+    const totalRevenueByUser = new Map<string, number>();
+    for (const order of revenueOrders) {
+      const orderUserId = String(order.userId || "");
+      if (!orderUserId) continue;
+      const converted = normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
+      const current = totalRevenueByUser.get(orderUserId) || 0;
+      totalRevenueByUser.set(orderUserId, current + converted);
+    }
+
+    const totalSalesAmount = canViewAllTargets
+      ? Array.from(totalRevenueByUser.values()).reduce((sum, value) => sum + value, 0)
+      : (totalRevenueByUser.get(scopedUserId) || 0);
     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
     const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
     const commissionPercent = totalSalesAmount > 0
