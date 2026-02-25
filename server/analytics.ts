@@ -553,8 +553,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const revenueOrders = await prisma.order.findMany({
       where: {
-        ...(canViewAllTargets ? {} : { userId: scopedUserId }),
-        status: { notIn: NON_REVENUE_STATUSES },
+        userId: scopedUserId,
+        status: { in: statusWhitelist },
         ...(monthRange
           ? {
               createdAt: {
