@@ -8,6 +8,8 @@ import React from "react";
 import toast from "react-hot-toast";
 import PhoneInput from 'react-phone-number-input'
 
+const TURKEY_EXCHANGE_RATE = 44;
+
 export default function OrderCustomer({ customers, customerId, products, isOpenOrder, setEditId, setCustomerId, setisOpenOrder, editId, getData }: { customers: any, customerId: any, products: any, isOpenOrder: any, setEditId: any, setCustomerId: any, setisOpenOrder: any, editId: any, getData: any }) {
   const [items, setItems] = React.useState([
     { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
@@ -128,6 +130,13 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
   const { user } = useAuth()
 
+  const isTurkeyStock = stockCountry === "تركيا";
+  const currencySymbol = isTurkeyStock ? "₺" : "$";
+  const convertUsdToOrderCurrency = (value: number) => {
+    const normalized = Number(value || 0);
+    return isTurkeyStock ? normalized * TURKEY_EXCHANGE_RATE : normalized;
+  };
+
   const getProductAvailableStockByCountry = (product: any, selectedCountry: string) => {
     if (!Array.isArray(product?.stocks)) return 0;
     return product.stocks
@@ -149,8 +158,8 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     }
 
     return {
-      price: Number(matchedStock?.price || 0),
-      discount: Number(matchedStock?.discount || 0),
+      price: convertUsdToOrderCurrency(Number(matchedStock?.price || 0)),
+      discount: convertUsdToOrderCurrency(Number(matchedStock?.discount || 0)),
     };
   };
 
@@ -351,12 +360,12 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
               <label className="text-[10px] font-bold text-red-500 uppercase px-1">خصم إضافي (كلي)</label>
               <div className="relative">
                 <input type="number" value={overallDiscount} onChange={(e) => setOverallDiscount(Number(e.target.value))} className="w-32 bg-red-50 dark:bg-red-900/10 p-3 rounded-2xl border border-red-100 dark:border-red-900/20 outline-none font-bold text-red-600 text-center" placeholder="0" />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400"> $</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400"> {currencySymbol}</span>
               </div>
             </div>
             <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 rounded-3xl">
               <p className="text-[10px] font-bold text-blue-600 uppercase mb-1">الإجمالي النهائي</p>
-              <h3 className="text-3xl font-black font-sans text-blue-600 italic"> ${grandTotal.toLocaleString()}</h3>
+              <h3 className="text-3xl font-black font-sans text-blue-600 italic"> {currencySymbol}{grandTotal.toLocaleString()}</h3>
             </div>
           </div>
           <div className="flex gap-4">
@@ -459,7 +468,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                                 {product.modelNumber}
                               </span>
                             </div>
-                            <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(pricing.price, pricing.discount)}</div>
+                            <div className="text-blue-500 text-xs mt-1"> {currencySymbol} {getEffectivePrice(pricing.price, pricing.discount)}</div>
                           </div>
                         )})}
                       </motion.div>
@@ -472,7 +481,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 </div>
                 <div className="md:col-span-1 text-center">
                   <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                  <div className="p-3 text-sm font-bold"> ${getEffectivePrice(item.price, item.discount)}</div>
+                  <div className="p-3 text-sm font-bold"> {currencySymbol}{getEffectivePrice(item.price, item.discount)}</div>
                 </div>
                 <div className="md:col-span-1">
                   <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
@@ -482,7 +491,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   <label className="text-[10px] font-bold text-slate-400 mb-1">ملاحظات المنتج</label>
                   <input type="text" value={item.note} onChange={(e) => updateItem(index, "note", e.target.value, products)} className="w-full bg-white dark:bg-slate-900 p-3 rounded-xl outline-none text-xs shadow-sm" placeholder="إضافة ملاحظة..." />
                 </div>
-                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> ${item.total}</div>
+                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> {currencySymbol}{item.total}</div>
                 <div className="md:col-span-1 flex justify-center">
                   <button
                     onClick={() => {

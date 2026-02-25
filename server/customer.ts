@@ -13,6 +13,7 @@ export async function getCustomer() {
       users:true,
       orders:{
         include:{
+          warehouse: true,
           items:{
             include:{
               product:true

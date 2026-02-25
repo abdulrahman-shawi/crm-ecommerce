@@ -21,6 +21,8 @@ import PhoneInput from 'react-phone-number-input';
 interface IOrderLayoutProps {
 }
 
+const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
+
 const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [products, setProduct] = React.useState<any[]>([])
     const [customers, setCustomers] = React.useState<any[]>([])
@@ -97,6 +99,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     };
 
     const buildOrderPdfFile = async (data: any) => {
+        const currencySymbol = getOrderCurrencySymbol(data);
         const invoiceNo = data?.orderNumber || '-';
         const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US') : '-';
         const customerName = data?.customer?.name || 'غير محدد';
@@ -131,11 +134,11 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <tr>
                         <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;">
                             <div style="font-weight:800;color:#0f172a;">${name}</div>
-                            ${discount > 0 ? `<div style="font-size:11px;color:#ef4444;">خصم: ${formatMoney(discount)} $</div>` : ''}
+                            ${discount > 0 ? `<div style="font-size:11px;color:#ef4444;">خصم: ${formatMoney(discount)} ${currencySymbol}</div>` : ''}
                         </td>
                         <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#475569;">x${quantity}</td>
-                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#475569;">${formatMoney(effectivePrice)} $</td>
-                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:left;font-weight:900;color:#0f172a;">${formatMoney(total)} $</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#475569;">${formatMoney(effectivePrice)} ${currencySymbol}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;text-align:left;font-weight:900;color:#0f172a;">${formatMoney(total)} ${currencySymbol}</td>
                     </tr>
                 `;
             }).join('')
@@ -210,29 +213,29 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
                         <span>المجموع الفرعي:</span>
-                        <span>${formatMoney(subtotal)} $</span>
+                        <span>${formatMoney(subtotal)} ${currencySymbol}</span>
                     </div>
                     ${totalDiscount > 0 ? `
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
                         <span>الخصم الممنوح:</span>
-                        <span>-${formatMoney(totalDiscount)} $</span>
+                        <span>-${formatMoney(totalDiscount)} ${currencySymbol}</span>
                     </div>
                     ` : ''}
                     ${paymentMethodText === 'مختلطة' ? `
                     <div style="border-top:1px dashed #e2e8f0;border-bottom:1px dashed #e2e8f0;padding:8px 0;display:flex;flex-direction:column;gap:6px;">
                         <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#2563eb;">
                             <span>القيمة المستلمة (حوالة):</span>
-                            <span>${formatMoney(amount)} $</span>
+                            <span>${formatMoney(amount)} ${currencySymbol}</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#7c3aed;">
                             <span>القيمة المتبقية (عند الباب):</span>
-                            <span>${formatMoney(amountBank)} $</span>
+                            <span>${formatMoney(amountBank)} ${currencySymbol}</span>
                         </div>
                     </div>
                     ` : ''}
                     <div style="display:flex;justify-content:space-between;align-items:center;background:#2563eb;color:#ffffff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 24px rgba(37,99,235,0.2);">
                         <span style="font-size:14px;font-weight:900;">الإجمالي النهائي</span>
-                        <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">$</span></span>
+                        <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">${currencySymbol}</span></span>
                     </div>
                 </div>
             </div>
@@ -821,7 +824,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         header: "قيمة الفاتورة",
                         accessor: (e: any) => (
                             <span className="font-black text-blue-600">
-                                {e.finalAmount?.toLocaleString()}  $
+                                {e.finalAmount?.toLocaleString()}  {getOrderCurrencySymbol(e)}
                             </span>
                         )
                     },
@@ -1215,6 +1218,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
 function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, onSharePdf?: (order: any) => void | Promise<void> }) {
     const componentRef = React.useRef<HTMLDivElement>(null);
+    const currencySymbol = getOrderCurrencySymbol(data);
 
     const getEffectivePrice = (price: number, discount: number) => {
         return Math.max(0, Number(price || 0) - Number(discount || 0));
@@ -1329,8 +1333,8 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                             <p className="font-black text-slate-800 dark:text-slate-100">{getProductName(item.productId)}</p>
                                         </td>
                                         <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
-                                        <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600">{getEffectivePrice(item.price, item.discount || 0).toLocaleString()} $</td>
-                                        <td className="px-4 md:px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} $</td>
+                                        <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600">{getEffectivePrice(item.price, item.discount || 0).toLocaleString()} {currencySymbol}</td>
+                                        <td className="px-4 md:px-8 py-2 text-left font-black text-slate-900 dark:text-white">{(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} {currencySymbol}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -1349,13 +1353,13 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                         <div className="w-full md:w-96 space-y-3">
                             <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
                                 <span>المجموع الفرعي:</span>
-                                <span>{subtotal.toLocaleString()} $</span>
+                                <span>{subtotal.toLocaleString()} {currencySymbol}</span>
                             </div>
 
                             {totalDiscount > 0 && (
                                 <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
                                     <span>الخصم الممنوح:</span>
-                                    <span>-{totalDiscount.toLocaleString()} $</span>
+                                    <span>-{totalDiscount.toLocaleString()} {currencySymbol}</span>
                                 </div>
                             )}
 
@@ -1364,11 +1368,11 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <div className="border-t border-b border-dashed border-slate-200 py-3 space-y-2">
                                     <div className="flex justify-between px-4 md:px-6 text-blue-600 font-bold text-sm">
                                         <span>القيمة المستلمة (حوالة):</span>
-                                        <span>{Number(data.amount).toLocaleString()} $</span>
+                                        <span>{Number(data.amount).toLocaleString()} {currencySymbol}</span>
                                     </div>
                                     <div className="flex justify-between px-4 md:px-6 text-purple-600 font-bold text-sm">
                                         <span>القيمة المتبقية (عند الباب):</span>
-                                        <span>{Number(data.amountBank).toLocaleString()} $</span>
+                                        <span>{Number(data.amountBank).toLocaleString()} {currencySymbol}</span>
                                     </div>
                                 </div>
                             )}
@@ -1379,7 +1383,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                     <span className="text-2xl md:text-3xl font-black italic tracking-tighter">
                                         {finalAmount.toLocaleString()}
                                     </span>
-                                    <span className="text-sm font-bold mr-1"> $</span>
+                                    <span className="text-sm font-bold mr-1"> {currencySymbol}</span>
                                 </div>
                             </div>
                         </div>
@@ -1436,7 +1440,7 @@ function ViewOrderCustomer({ orders }: { orders: any[] }) {
 
                             <div className="text-left space-y-1">
                                 <p className="font-black text-lg text-slate-900 dark:text-white italic">
-                                    {Number(order.finalAmount).toLocaleString()} <span className="text-xs">ل.س</span>
+                                    {Number(order.finalAmount).toLocaleString()} <span className="text-xs">{getOrderCurrencySymbol(order)}</span>
                                 </p>
                                 <div className={`text-[10px] px-2 py-0.5 rounded-full inline-block font-bold ${order.status === 'مدفوعة' || order.status === 'تم التسليم'
                                     ? 'bg-emerald-100 text-emerald-600'
@@ -1469,7 +1473,7 @@ function ViewOrderCustomer({ orders }: { orders: any[] }) {
                                                 <span className="text-blue-600">{item.quantity}</span>
                                                 <span className="text-[10px] text-slate-400 mr-1">×</span>
                                                 <span className="text-xs text-slate-600 dark:text-slate-400 ml-2">
-                                                    {Number(item.price).toLocaleString()} ل.س
+                                                    {Number(item.price).toLocaleString()} {getOrderCurrencySymbol(order)}
                                                 </span>
                                             </div>
                                         </div>

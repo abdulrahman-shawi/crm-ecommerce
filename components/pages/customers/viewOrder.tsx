@@ -2,6 +2,8 @@
 import { ChevronDown, ChevronUp, Package } from "lucide-react";
 import React from "react";
 
+const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
+
 export default function ViewOrderCustomer({ orders }: { orders: any[] }) {
   // حالة لتخزين معرف الطلب المفتوح حالياً لعرض منتجاته
   const [expandedOrderId, setExpandedOrderId] = React.useState<number | null>(null);
@@ -48,7 +50,7 @@ export default function ViewOrderCustomer({ orders }: { orders: any[] }) {
 
               <div className="text-left space-y-1">
                 <p className="font-black text-lg text-slate-900 dark:text-white italic">
-                  {Number(order.finalAmount).toLocaleString()} <span className="text-xs">ل.س</span>
+                  {Number(order.finalAmount).toLocaleString()} <span className="text-xs">{getOrderCurrencySymbol(order)}</span>
                 </p>
                 <div className={`text-[10px] px-2 py-0.5 rounded-full inline-block font-bold ${order.status === 'مدفوعة' || order.status === 'تم التسليم'
                   ? 'bg-emerald-100 text-emerald-600'
@@ -81,7 +83,7 @@ export default function ViewOrderCustomer({ orders }: { orders: any[] }) {
                         <span className="text-blue-600">{item.quantity}</span>
                         <span className="text-[10px] text-slate-400 mr-1">×</span>
                         <span className="text-xs text-slate-600 dark:text-slate-400 ml-2">
-                          {Number(item.price).toLocaleString()} ل.س
+                          {Number(item.price).toLocaleString()} {getOrderCurrencySymbol(order)}
                         </span>
                       </div>
                     </div>

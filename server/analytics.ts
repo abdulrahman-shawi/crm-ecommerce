@@ -5,6 +5,12 @@ import { hasPermission, isAdmin } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/auth";
 
+const TURKEY_EXCHANGE_RATE = 44;
+const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | null) => {
+  const value = Number(amount || 0);
+  return String(warehouseLocation || "").trim() === "تركيا" ? value / TURKEY_EXCHANGE_RATE : value;
+};
+
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string) {
   try {
@@ -564,7 +570,17 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         quantity: true,
         price: true,
         discount: true,
-        order: { select: { userId: true, createdAt: true } }
+        order: {
+          select: {
+            userId: true,
+            createdAt: true,
+            warehouse: {
+              select: {
+                location: true,
+              }
+            }
+          }
+        }
       }
     });
 
@@ -602,7 +618,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     for (const item of orderItems) {
       const key = `${item.order.userId}:${item.productId}`;
       const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
-      const lineAmount = netPrice * item.quantity;
+      const rawLineAmount = netPrice * item.quantity;
+      const lineAmount = normalizeOrderAmountToUSD(rawLineAmount, item.order?.warehouse?.location);
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
