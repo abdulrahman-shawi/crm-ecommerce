@@ -375,3 +375,58 @@ export async function deleteProduct(productId: number) {
         };
     }
 }
+
+export async function deleteProductFromWarehouse(productId: number, warehouseId: number) {
+    try {
+        if (!Number.isInteger(productId) || productId <= 0 || !Number.isInteger(warehouseId) || warehouseId <= 0) {
+            return { success: false, error: "بيانات الحذف غير صحيحة" };
+        }
+
+        const result = await prisma.$transaction(async (tx) => {
+            await tx.productStock.delete({
+                where: {
+                    productId_warehouseId: {
+                        productId,
+                        warehouseId,
+                    }
+                }
+            });
+
+            const remainingStocks = await tx.productStock.count({ where: { productId } });
+
+            if (remainingStocks === 0) {
+                const product = await tx.product.findUnique({
+                    where: { id: productId },
+                    include: { images: true }
+                });
+
+                if (product) {
+                    await tx.product.delete({ where: { id: productId } });
+                    return { deletedProduct: true, images: product.images };
+                }
+            }
+
+            return { deletedProduct: false, images: [] as Array<{ url: string }> };
+        });
+
+        if (result.deletedProduct && result.images.length > 0) {
+            for (const img of result.images) {
+                try {
+                    const filePath = path.join(process.cwd(), 'public', img.url);
+                    await fs.unlink(filePath);
+                } catch (err) {
+                    console.error(`فشل حذف الملف: ${img.url}`, err);
+                }
+            }
+        }
+
+        revalidatePath('/dashboard/products');
+        return { success: true, deletedProduct: result.deletedProduct };
+    } catch (error: any) {
+        console.error("Error deleting product from warehouse:", error);
+        return {
+            success: false,
+            error: error.message || "حدث خطأ أثناء حذف المنتج من المستودع"
+        };
+    }
+}

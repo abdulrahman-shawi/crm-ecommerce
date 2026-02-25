@@ -9,7 +9,7 @@ import { FormSelect } from '@/components/ui/select-form';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { getallcategory } from '@/server/category';
-import { deleteProduct, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
+import { deleteProductFromWarehouse, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct } from '@/server/product';
 import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
@@ -270,13 +270,19 @@ const ProductLayout = () => {
             icon: <Plus className="rotate-45" size={14} />,
             variant: "danger",
             onClick: async (data: any) => {
-                const confirm = window.confirm("هل أنت متأكد من حذف هذا المنتج");
+                const warehouseName = data?.__stock?.warehouse?.name || "المستودع";
+                const confirm = window.confirm(`هل أنت متأكد من حذف هذا المنتج من ${warehouseName}؟`);
                 if (confirm) {
                     const loadingToast = toast.loading('جاري الحذف...');
                     try {
-                        const res = await deleteProduct(data.id)
+                        const res = await deleteProductFromWarehouse(Number(data.id), Number(data?.__stock?.warehouseId))
                         if (res.success) {
-                            toast.success("تم حذف المنتج بنجاح")
+                            toast.success("تم حذف المنتج من المستودع بنجاح")
+                            getProduct().then((products) => {
+                                setProducts(products);
+                            }).catch(console.error);
+                        } else {
+                            toast.error(res.error || "فشل حذف المنتج من المستودع")
                         }
                     } catch (error) {
                         toast.error('فشل في حذف المستخدم');
