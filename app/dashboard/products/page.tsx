@@ -57,6 +57,16 @@ const ProductLayout = () => {
 
     }, []);
 
+    React.useEffect(() => {
+        const syriaWarehouse = warehouses.find(
+            (warehouse) => typeof warehouse?.name === 'string' && warehouse.name.includes('سوريا')
+        );
+
+        if (syriaWarehouse) {
+            setSelectedWarehouseFilter(syriaWarehouse.name);
+        }
+    }, [warehouses]);
+
     const handleClose = () => {
         setIsOpen(false);
         setEditId(null);
