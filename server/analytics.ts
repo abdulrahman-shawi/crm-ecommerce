@@ -714,18 +714,10 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       });
     });
 
-    const totalRevenueByUser = new Map<string, number>();
-    for (const order of revenueOrders) {
-      const orderUserId = String(order.userId || "");
-      if (!orderUserId) continue;
+    const totalSalesAmount = revenueOrders.reduce((sum, order) => {
       const converted = normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
-      const current = totalRevenueByUser.get(orderUserId) || 0;
-      totalRevenueByUser.set(orderUserId, current + converted);
-    }
-
-    const totalSalesAmount = canViewAllTargets
-      ? Array.from(totalRevenueByUser.values()).reduce((sum, value) => sum + value, 0)
-      : (totalRevenueByUser.get(scopedUserId) || 0);
+      return sum + converted;
+    }, 0);
     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
     const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
     const commissionPercent = totalSalesAmount > 0
