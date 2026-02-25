@@ -67,12 +67,10 @@ export async function saveProductWithFiles(formData: FormData) {
         // تحويل البيانات مع إضافة قيم افتراضية للحماية من null
         const name = formData.get('name') as string;
         const normalizedName = name.trim();
-        const price = parseFloat(formData.get('price') as string) || 0;
-        const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
-        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number }> = [];
+        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
         if (warehouseStocksRaw) {
             try {
@@ -82,6 +80,7 @@ export async function saveProductWithFiles(formData: FormData) {
                         warehouseId: Number(item?.warehouseId),
                         quantity: Number(item?.quantity ?? 0),
                         stockPrice: Number(item?.stockPrice ?? 0),
+                        stockDiscount: Number(item?.stockDiscount ?? 0),
                     }));
                 }
             } catch {
@@ -93,7 +92,7 @@ export async function saveProductWithFiles(formData: FormData) {
             const warehouseId = parseInt(formData.get('warehouseId') as string);
             const quantity = parseInt(formData.get('quantity') as string) || 0;
             if (Number.isInteger(warehouseId) && warehouseId > 0) {
-                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0 }];
+                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, stockDiscount: 0 }];
             }
         }
 
@@ -102,7 +101,7 @@ export async function saveProductWithFiles(formData: FormData) {
         }
 
         const hasInvalidWarehouseStock = warehouseStocks.some(
-            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0
+            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
         );
 
         if (hasInvalidWarehouseStock) {
@@ -148,8 +147,6 @@ export async function saveProductWithFiles(formData: FormData) {
         const product = await prisma.product.create({
             data: {
                 name: normalizedName,
-                price,
-                discount,
                 description,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
@@ -157,7 +154,8 @@ export async function saveProductWithFiles(formData: FormData) {
                     create: warehouseStocks.map((item) => ({
                         warehouseId: item.warehouseId,
                         quantity: item.quantity,
-                        discountedPrice: item.stockPrice,
+                        price: item.stockPrice,
+                        discount: item.stockDiscount,
                     }))
                 },
                 images: {
@@ -186,12 +184,10 @@ export async function saveProductWithFiles(formData: FormData) {
 export async function updateProductWithFiles(productId: number, formData: FormData) {
     try {
         const name = formData.get('name') as string;
-        const price = parseFloat(formData.get('price') as string) || 0;
-        const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
-        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number }> = [];
+        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
         if (warehouseStocksRaw) {
             try {
@@ -201,6 +197,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                         warehouseId: Number(item?.warehouseId),
                         quantity: Number(item?.quantity ?? 0),
                         stockPrice: Number(item?.stockPrice ?? 0),
+                        stockDiscount: Number(item?.stockDiscount ?? 0),
                     }));
                 }
             } catch {
@@ -212,7 +209,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             const warehouseId = parseInt(formData.get('warehouseId') as string);
             const quantity = parseInt(formData.get('quantity') as string) || 0;
             if (Number.isInteger(warehouseId) && warehouseId > 0) {
-                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0 }];
+                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, stockDiscount: 0 }];
             }
         }
 
@@ -221,7 +218,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         }
 
         const hasInvalidWarehouseStock = warehouseStocks.some(
-            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0
+            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
         );
 
         if (hasInvalidWarehouseStock) {
@@ -285,8 +282,6 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             where: { id: productId },
             data: {
                 name,
-                price,
-                discount,
                 description,
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
@@ -294,7 +289,8 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                     create: warehouseStocks.map((item) => ({
                         warehouseId: item.warehouseId,
                         quantity: item.quantity,
-                        discountedPrice: item.stockPrice,
+                        price: item.stockPrice,
+                        discount: item.stockDiscount,
                     })),
                 },
                 // تحديث الصور فقط إذا تم رفع صور جديدة

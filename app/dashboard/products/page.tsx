@@ -24,16 +24,15 @@ import { ta } from 'zod/v4/locales';
 const productschama = z.object({
     name: z.string().min(3, "اسم المنتج مطلوب"),
     description: z.string().optional().nullable(),
-    price: z.coerce.number().min(0, "السعر يجب أن يكون رقم موجب"),
     categoryId: z.coerce.number().min(1, "يرجى اختيار فئة"),
     warehouseStocks: z.array(
         z.object({
             warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
             quantity: z.coerce.number().min(0, "يرجى إدخال كمية صحيحة"),
             stockPrice: z.coerce.number().min(0, "يرجى إدخال سعر صحيح").optional().default(0),
+            stockDiscount: z.coerce.number().min(0, "يرجى إدخال خصم صحيح").optional().default(0),
         })
     ).min(1, "يجب إضافة مستودع واحد على الأقل"),
-    discount: z.coerce.number().min(0, "الخصم يجب أن يكون رقم موجب").optional().default(0),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
 });
 
@@ -50,7 +49,7 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => append({ warehouseId: '', quantity: 0, stockPrice: 0 })}
+                    onClick={() => append({ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 })}
                 >
                     إضافة مستودع
                 </Button>
@@ -86,9 +85,17 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                         <FormInput
                             className='text-slate-900 dark:text-slate-100'
                             type="number"
-                            label="سعر المخزون"
+                            label="سعر المنتج"
                             {...register(`warehouseStocks.${index}.stockPrice`)}
                             error={errors?.warehouseStocks?.[index]?.stockPrice?.message as string}
+                        />
+
+                        <FormInput
+                            className='text-slate-900 dark:text-slate-100'
+                            type="number"
+                            label="خصم المنتج"
+                            {...register(`warehouseStocks.${index}.stockDiscount`)}
+                            error={errors?.warehouseStocks?.[index]?.stockDiscount?.message as string}
                         />
 
                         <Button
@@ -148,10 +155,8 @@ const ProductLayout = () => {
             if (editId) {
                 const formData = new FormData();
                 formData.append('name', data.name);
-                formData.append('price', data.price.toString());
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
-                formData.append('discount', (data.discount || 0).toString());
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
@@ -178,10 +183,8 @@ const ProductLayout = () => {
             } else {
                 const formData = new FormData();
                 formData.append('name', data.name);
-                formData.append('price', data.price.toString());
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
-                formData.append('discount', (data.discount || 0).toString());
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
@@ -222,12 +225,17 @@ const ProductLayout = () => {
         setIsOpen(true);
     }
 
-    const filteredProducts = React.useMemo(() => {
-        if (selectedWarehouseFilter === 'all') return products;
-
-        return products.filter((product) =>
-            product.stocks?.some((stock: any) => String(stock.warehouseId) === selectedWarehouseFilter)
-        );
+    const displayProducts = React.useMemo(() => {
+        return products.flatMap((product: any) => {
+            const stocks = Array.isArray(product?.stocks) ? product.stocks : [];
+            return stocks
+                .filter((stock: any) => selectedWarehouseFilter === 'all' || String(stock?.warehouseId) === selectedWarehouseFilter)
+                .map((stock: any) => ({
+                    ...product,
+                    __stock: stock,
+                    __rowId: `${product.id}-${stock.warehouseId}`,
+                }));
+        });
     }, [products, selectedWarehouseFilter]);
 
     const tableActions: any[] = [
@@ -239,17 +247,16 @@ const ProductLayout = () => {
                 setEditId(data.id);
                 setFormData({
                     name: data.name,
-                    price: data.price,
                     categoryId: data.categoryId,
                     description: data.description,
-                    discount: data.discount,
                     warehouseStocks: data.stocks?.length
                         ? data.stocks.map((stock: any) => ({
                             warehouseId: stock.warehouseId,
                             quantity: stock.quantity,
-                            stockPrice: stock.discountedPrice ?? 0,
+                            stockPrice: stock.price ?? 0,
+                            stockDiscount: stock.discount ?? 0,
                         }))
-                        : [{ warehouseId: '', quantity: 0, stockPrice: 0 }],
+                        : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
                     // تمرير الصور الحالية إذا كان المكون يدعم عرضها كـ Preview
                     files: data.images || []
                 });
@@ -320,9 +327,9 @@ const ProductLayout = () => {
 
             {tab === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredProducts.map((product) => (
+                    {displayProducts.map((product: any) => (
                         <div
-                            key={product.id}
+                            key={product.__rowId}
                             className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 flex flex-col"
                         >
                             {/* Image Section */}
@@ -338,9 +345,9 @@ const ProductLayout = () => {
                                         <img src="/uploads/icon.png" className="w-16 opacity-20" alt="no-image" />
                                     </div>
                                 )}
-                                {product.discount > 0 && (
+                                {Number(product?.__stock?.discount || 0) > 0 && (
                                     <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                        خصم {product.discount} $
+                                        خصم {Number(product?.__stock?.discount || 0)} $
                                     </span>
                                 )}
                             </div>
@@ -356,29 +363,23 @@ const ProductLayout = () => {
                                 </p>
 
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold">
-                                    المخزون: {product.stocks?.length
-                                        ? product.stocks.reduce((sum: number, stock: any) => sum + Number(stock?.quantity || 0), 0)
-                                        : (product.quantity ?? 0)
-                                    } | المستودعات: {product.stocks?.length
-                                        ? product.stocks.map((stock: any) => stock?.warehouse?.name).filter(Boolean).join('، ')
-                                        : "غير محدد"
-                                    }
+                                    المخزون: {Number(product?.__stock?.quantity || 0)} | المستودع: {product?.__stock?.warehouse?.name || "غير محدد"}
                                 </p>
 
                                 <div className="mt-auto flex items-center justify-between">
                                     <div>
-                                        {product.discount > 0 ? (
+                                        {Number(product?.__stock?.discount || 0) > 0 ? (
                                             <div className="flex flex-col">
                                                 <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                                    {Number(product.price) - Number(product.discount)} <span className="text-xs font-normal">$</span>
+                                                    {Number(product?.__stock?.price || 0) - Number(product?.__stock?.discount || 0)} <span className="text-xs font-normal">$</span>
                                                 </p>
                                                 <span className="text-xs text-slate-400 line-through">
-                                                    {product.price} $
+                                                    {Number(product?.__stock?.price || 0)} $
                                                 </span>
                                             </div>
                                         ) : (
                                             <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                                {product.price} <span className="text-xs font-normal">$</span>
+                                                {Number(product?.__stock?.price || 0)} <span className="text-xs font-normal">$</span>
                                             </p>
                                         )}
                                     </div>
@@ -431,10 +432,10 @@ const ProductLayout = () => {
                             </div>
 
                             <div className="text-3xl font-bold text-blue-600">
-                                {Number(selectedProduct.price) - Number(selectedProduct.discount)} $
-                                {selectedProduct.discount > 0 && (
+                                {Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)} $
+                                {Number(selectedProduct?.__stock?.discount || 0) > 0 && (
                                     <span className="text-sm text-slate-400 line-through mr-3 font-normal">
-                                        {selectedProduct.price} $
+                                        {Number(selectedProduct?.__stock?.price || 0)} $
                                     </span>
                                 )}
                             </div>
@@ -462,8 +463,8 @@ const ProductLayout = () => {
             </AppModal>
             {tab === 'table' && (
                 <DataTable
-                    data={filteredProducts}
-                     totalCount={filteredProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
+                    data={displayProducts}
+                     totalCount={displayProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
                 pageSize={PAGE_SIZE}
                 currentPage={page}
                 onPageChange={(newPage) => setPage(newPage)}
@@ -492,29 +493,32 @@ const ProductLayout = () => {
                         {
                             header: "السعر",
                             accessor: (row: any) => (
-                                row.discount > 0 ? (
+                                Number(row?.__stock?.discount || 0) > 0 ? (
                                     <div className="flex flex-col">
                                         <span className="font-bold text-slate-800 dark:text-slate-100">
-                                            {Number(row.price) - Number(row.discount)} $
+                                            {Number(row?.__stock?.price || 0) - Number(row?.__stock?.discount || 0)} $
                                         </span>
                                         <span className="text-xs text-slate-400 line-through">
-                                            {row.price} $
+                                            {Number(row?.__stock?.price || 0)} $
                                         </span>
                                     </div>
                                 ) : (
-                                    `${row.price} $`
+                                    `${Number(row?.__stock?.price || 0)} $`
                                 )
                             )
                         },
                         {
                             header: "الخصم",
-                            accessor: (row: any) => row.discount > 0 ? `${row.discount} $` : "—"
+                            accessor: (row: any) => Number(row?.__stock?.discount || 0) > 0 ? `${Number(row?.__stock?.discount || 0)} $` : "—"
+                        },
+                        {
+                            header: "المخزون",
+                            accessor: (row: any) => Number(row?.__stock?.quantity || 0)
                         },
                         {
                             header: "المستودع",
                             accessor: (row: any) => {
-                                const warehouseNames = row.stocks?.map((stock: any) => stock?.warehouse?.name).filter(Boolean) || [];
-                                return warehouseNames.length ? warehouseNames.join('، ') : "غير محدد";
+                                return row?.__stock?.warehouse?.name || "غير محدد";
                             }
                         },
 
@@ -527,7 +531,7 @@ const ProductLayout = () => {
                     <DynamicForm
                         schema={productschama}
                         onSubmit={onSubmit}
-                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0 }] }}
+                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }] }}
                         submitLabel={editId ? "تعديل المنتج" : "حفظ المنتج"}
                     >
                         {({ register, control, formState: { errors } }) => (
@@ -545,9 +549,6 @@ const ProductLayout = () => {
                                     </select>
                                     {errors.categoryId && <p className="text-xs text-red-500">{errors.categoryId.message as string}</p>}
                                 </div>
-
-                                <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="السعر" {...register("price")} error={errors.price?.message as string} />
-                                <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="الخصم" {...register("discount")} error={errors.discount?.message as string} />
                                 <WarehouseStocksFields
                                     control={control}
                                     register={register}

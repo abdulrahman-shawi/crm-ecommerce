@@ -316,11 +316,12 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         if (field === "productId") {
             const product = products.find(p => p.id === Number(value));
+            const firstStock = Array.isArray(product?.stocks) ? product.stocks[0] : null;
             item.productId = value;
             item.name = product?.name || "";
             item.modelNumber = product?.modelNumber || "";
-            item.price = product?.price || 0;
-            item.discount = product?.discount || 0;
+            item.price = Number(firstStock?.price || 0);
+            item.discount = Number(firstStock?.discount || 0);
             setSearchQueries({ ...searchQueries, [index]: item.name });
             setShowDropdown({ ...showDropdown, [index]: false });
         } else {
@@ -622,7 +623,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const handleEditOrder = (data: any) => {
         const normalizedItems = (Array.isArray(data?.items) ? data.items : []).map((item: any) => {
-            const price = Number(item?.price ?? item?.product?.price ?? 0);
+            const price = Number(item?.price ?? item?.product?.stocks?.[0]?.price ?? 0);
             const quantity = Number(item?.quantity ?? 1);
             const discount = Number(item?.discount ?? 0);
             const productId = String(item?.productId ?? item?.product?.id ?? "");
@@ -938,7 +939,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                                     p.name.toLowerCase().includes((searchQueries[index] || "").toLowerCase()) ||
                                                     // البحث في رقم الموديل
                                                     (p.modelNumber && p.modelNumber.toLowerCase().includes((searchQueries[index] || "").toLowerCase()))
-                                                ).map((product: any) => (
+                                                ).map((product: any) => {
+                                                    const firstStock = Array.isArray(product?.stocks) ? product.stocks[0] : null;
+                                                    return (
                                                     <div
                                                         key={product.id}
                                                         onClick={() => updateItem(index, "productId", product.id.toString(), products)}
@@ -950,9 +953,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                                                                 {product.modelNumber}
                                                             </span>
                                                         </div>
-                                                        <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(product.price, product.discount)}</div>
+                                                        <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(Number(firstStock?.price || 0), Number(firstStock?.discount || 0))}</div>
                                                     </div>
-                                                ))}
+                                                )})}
                                             </motion.div>
                                         )}
                                     </AnimatePresence>

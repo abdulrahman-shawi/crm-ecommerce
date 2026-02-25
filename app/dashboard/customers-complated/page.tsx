@@ -331,10 +331,12 @@ const CustomrLayout: React.FC = () => {
 
     if (field === "productId") {
       const product = products.find(p => p.id === Number(value));
+      const firstStock = Array.isArray(product?.stocks) ? product.stocks[0] : null;
       item.productId = value;
       item.name = product?.name || "";
       item.modelNumber = product?.modelNumber || "";
-      item.price = product?.price || 0;
+      item.price = Number(firstStock?.price || 0);
+      item.discount = Number(firstStock?.discount || 0);
       setSearchQueries({ ...searchQueries, [index]: item.name });
       setShowDropdown({ ...showDropdown, [index]: false });
     } else {

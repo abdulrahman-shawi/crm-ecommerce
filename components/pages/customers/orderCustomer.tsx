@@ -135,6 +135,25 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       .reduce((sum: number, stock: any) => sum + (Number(stock?.quantity) || 0), 0);
   };
 
+  const getProductPricingByCountry = (product: any, selectedCountry: string) => {
+    if (!Array.isArray(product?.stocks) || !selectedCountry) {
+      return { price: 0, discount: 0 };
+    }
+
+    const matchedStock = product.stocks.find((stock: any) =>
+      String(stock?.warehouse?.location || "") === selectedCountry && Number(stock?.quantity || 0) > 0
+    );
+
+    if (!matchedStock) {
+      return { price: 0, discount: 0 };
+    }
+
+    return {
+      price: Number(matchedStock?.price || 0),
+      discount: Number(matchedStock?.discount || 0),
+    };
+  };
+
   const addNewItem = () => {
     setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
   };
@@ -156,11 +175,12 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
     if (field === "productId") {
       const product = products.find(p => p.id === Number(value));
+      const pricing = getProductPricingByCountry(product, stockCountry);
       item.productId = value;
       item.name = product?.name || "";
       item.modelNumber = product?.modelNumber || "";
-      item.price = product?.price || 0;
-      item.discount = product?.discount || 0;
+      item.price = pricing.price;
+      item.discount = pricing.discount;
       setSearchQueries({ ...searchQueries, [index]: item.name });
       setShowDropdown({ ...showDropdown, [index]: false });
     } else {
@@ -425,7 +445,9 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
                           return isAvailable && matchesSearch && matchesCountry;
                         }
-                        ).map((product: any) => (
+                        ).map((product: any) => {
+                          const pricing = getProductPricingByCountry(product, stockCountry);
+                          return (
                           <div
                             key={product.id}
                             onClick={() => updateItem(index, "productId", product.id.toString(), products)}
@@ -437,9 +459,9 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                                 {product.modelNumber}
                               </span>
                             </div>
-                            <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(product.price, product.discount)}</div>
+                            <div className="text-blue-500 text-xs mt-1"> $ {getEffectivePrice(pricing.price, pricing.discount)}</div>
                           </div>
-                        ))}
+                        )})}
                       </motion.div>
                     )}
                   </AnimatePresence>

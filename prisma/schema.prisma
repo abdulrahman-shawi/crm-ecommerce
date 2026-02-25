@@ -96,8 +96,6 @@ model Category {
 model Product {
   id          Int            @id @default(autoincrement())
   name        String
-  price       Float
-  discount    Float?         @default(0)
   description String?
   categoryId  Int?
   createdAt   DateTime       @default(now())
@@ -125,7 +123,8 @@ model ProductStock {
   productId   Int
   warehouseId Int
   quantity    Int       @default(0) // الكمية الفعلية في هذا الموقع
-  discountedPrice Float?   @default(0)
+  price       Float     @default(0)
+  discount    Float     @default(0)
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
 
