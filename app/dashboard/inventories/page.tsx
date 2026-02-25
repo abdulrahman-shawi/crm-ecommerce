@@ -51,11 +51,11 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
     }
 
     const handledelete = async (data: any) => {
-        const loadingToast = toast.loading('جاري حذف الفئة...');
+        const loadingToast = toast.loading('جاري حذف المستودع...');
         try {
             const res = await deletecategory(data.id)
             if (res.success) {
-                toast.success("تم حذف الفئة بنجاح")
+                toast.success("تم حذف المستودع بنجاح")
             } else {
                 toast.error("حدث خطأ أثناء حذف المنتج")
             }
@@ -73,19 +73,19 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                 console.log("تعديل:", editId);
                 updateWarehouse(editId, data).then((result) => {
                     if (result.success) {
-                        toast.success("تم تحديث بيانات الفئة بنجاح");
+                        toast.success("تم تحديث بيانات المستودع بنجاح");
                         handleClose(); // نغلق المودال فقط عند النجاح
                     } else {
-                        toast.error(result.error || "فشل في تحديث بيانات الفئة");
+                        toast.error(result.error || "فشل في تحديث بيانات المستودع");
                     }
                 });
             } else {
                 createWarehouse(data).then((result) => {
                     if (result.success) {
-                        toast.success("تم إنشاء الفئة بنجاح");
+                        toast.success("تم إنشاء المستودع بنجاح");
                         handleClose(); // نغلق المودال فقط عند النجاح
                     } else {
-                        toast.error(result.error || "فشل في إنشاء الفئة، يرجى التحقق من المدخلات");
+                        toast.error(result.error || "فشل في إنشاء المستودع، يرجى التحقق من المدخلات");
                     }
                 });
             }
@@ -108,14 +108,16 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-6">
-                <div className="text-xl font-bold">إدارة الفئات</div>
+                <div className="text-xl font-bold">إدارة المستودعات
+
+                </div>
                 {
                     user && hasPermission(user, "addCategories") && (
                         <Button
                             onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-6"
                         >
-                            إضافة فئة جديدة
+                            إضافة مستودع جديدة
                         </Button>
                     )
                 }
@@ -165,7 +167,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                 </div>
             </AnimatePresence>
             <AppModal
-                title={editId ? "تعديل بيانات الفئة" : "إضافة فئة جديدة"}
+                title={editId ? "تعديل بيانات المستودع" : "إضافة مستودع جديدة"}
                 isOpen={isOpen}
                 onClose={handleClose}
             >
@@ -181,7 +183,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                             <div className="grid gap-4">
                                 <FormInput
                                     className='text-gray-800 dark:text-white'
-                                    label="اسم الفئة"
+                                    label="اسم المستودع"
                                     {...register("name")}
                                     error={errors.name?.message as string}
                                 />

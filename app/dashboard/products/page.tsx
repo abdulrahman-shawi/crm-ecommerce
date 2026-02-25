@@ -16,7 +16,7 @@ import { error } from 'console';
 import { image } from 'framer-motion/client';
 import { Mail, Plus, Warehouse } from 'lucide-react';
 import * as React from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useFieldArray } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import z from 'zod';
 import { ta } from 'zod/v4/locales';
@@ -26,11 +26,85 @@ const productschama = z.object({
     description: z.string().optional().nullable(),
     price: z.coerce.number().min(0, "السعر يجب أن يكون رقم موجب"),
     categoryId: z.coerce.number().min(1, "يرجى اختيار فئة"),
-    warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
-    quantity: z.coerce.string().min(1, "يرجى اختيار كمية المنتج"),
+    warehouseStocks: z.array(
+        z.object({
+            warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
+            quantity: z.coerce.number().min(0, "يرجى إدخال كمية صحيحة"),
+            stockPrice: z.coerce.number().min(0, "يرجى إدخال سعر صحيح").optional().default(0),
+        })
+    ).min(1, "يجب إضافة مستودع واحد على الأقل"),
     discount: z.coerce.number().min(0, "الخصم يجب أن يكون رقم موجب").optional().default(0),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
 });
+
+const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) => {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'warehouseStocks'
+    });
+
+    return (
+        <div className="md:col-span-2 border rounded-lg p-3 border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-slate-800 dark:text-slate-200">المخزون حسب المستودع</h3>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => append({ warehouseId: '', quantity: 0, stockPrice: 0 })}
+                >
+                    إضافة مستودع
+                </Button>
+            </div>
+
+            <div className="grid gap-3">
+                {fields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm text-right font-medium text-slate-800 dark:text-slate-200">المستودع</label>
+                            <select
+                                {...register(`warehouseStocks.${index}.warehouseId`)}
+                                className="h-10 border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            >
+                                <option value="">اختر المستودع</option>
+                                {warehouses.map((warehouse: any) => (
+                                    <option key={warehouse.id} value={warehouse.id}>{warehouse.name}</option>
+                                ))}
+                            </select>
+                            {errors?.warehouseStocks?.[index]?.warehouseId && (
+                                <p className="text-xs text-red-500">{errors.warehouseStocks[index].warehouseId.message as string}</p>
+                            )}
+                        </div>
+
+                        <FormInput
+                            className='text-slate-900 dark:text-slate-100'
+                            type="number"
+                            label="الكمية"
+                            {...register(`warehouseStocks.${index}.quantity`)}
+                            error={errors?.warehouseStocks?.[index]?.quantity?.message as string}
+                        />
+
+                        <FormInput
+                            className='text-slate-900 dark:text-slate-100'
+                            type="number"
+                            label="سعر المخزون"
+                            {...register(`warehouseStocks.${index}.stockPrice`)}
+                            error={errors?.warehouseStocks?.[index]?.stockPrice?.message as string}
+                        />
+
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => remove(index)}
+                            disabled={fields.length === 1}
+                        >
+                            حذف
+                        </Button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
 
 const ProductLayout = () => {
@@ -57,19 +131,10 @@ const ProductLayout = () => {
 
     }, []);
 
-    React.useEffect(() => {
-        const syriaWarehouse = warehouses.find(
-            (warehouse) => typeof warehouse?.location === 'string' && warehouse.location.includes('سوريا')
-        );
-
-        if (syriaWarehouse) {
-            setSelectedWarehouseFilter(syriaWarehouse.location);
-        }
-    }, [warehouses]);
-
     const handleClose = () => {
         setIsOpen(false);
         setEditId(null);
+        setFormData(null);
     };
 
     const handleShowDetails = (product: any) => {
@@ -87,8 +152,7 @@ const ProductLayout = () => {
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
                 formData.append('discount', (data.discount || 0).toString());
-                formData.append('quantity', (data.quantity || 0).toString());
-                formData.append('warehouseId', data.warehouseId.toString());
+                formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
                 if (data.files && data.files.length > 0) {
@@ -118,8 +182,7 @@ const ProductLayout = () => {
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
                 formData.append('discount', (data.discount || 0).toString());
-                formData.append('quantity', (data.quantity || 0).toString());
-                formData.append('warehouseId', data.warehouseId.toString());
+                formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
                 if (data.files && data.files.length > 0) {
@@ -163,7 +226,7 @@ const ProductLayout = () => {
         if (selectedWarehouseFilter === 'all') return products;
 
         return products.filter((product) =>
-            product.stocks?.some((stock: any) => stock.warehouse?.location === selectedWarehouseFilter)
+            product.stocks?.some((stock: any) => String(stock.warehouseId) === selectedWarehouseFilter)
         );
     }, [products, selectedWarehouseFilter]);
 
@@ -180,8 +243,13 @@ const ProductLayout = () => {
                     categoryId: data.categoryId,
                     description: data.description,
                     discount: data.discount,
-                    quantity: data.stocks?.[0]?.quantity ?? data.quantity,
-                    warehouseId: data.stocks?.[0]?.warehouseId ?? data.warehouseId,
+                    warehouseStocks: data.stocks?.length
+                        ? data.stocks.map((stock: any) => ({
+                            warehouseId: stock.warehouseId,
+                            quantity: stock.quantity,
+                            stockPrice: stock.discountedPrice ?? 0,
+                        }))
+                        : [{ warehouseId: '', quantity: 0, stockPrice: 0 }],
                     // تمرير الصور الحالية إذا كان المكون يدعم عرضها كـ Preview
                     files: data.images || []
                 });
@@ -219,7 +287,7 @@ const ProductLayout = () => {
                 <h1 className="text-xl font-bold">إدارة المنتجات</h1>
                 {(user && (user.accountType === "ADMIN" || user.permission?.addProducts === true ))
                 && (
-                    <Button onClick={() => setIsOpen(true)}>إضافة منتج جديد</Button>
+                    <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}>إضافة منتج جديد</Button>
                 )
                 }
                 
@@ -244,7 +312,7 @@ const ProductLayout = () => {
                 >
                     <option value="all">كل المستودعات</option>
                     {warehouses.map((warehouse) => (
-                        <option key={warehouse.id} value={warehouse.location}>{warehouse.location || warehouse.name}</option>
+                        <option key={warehouse.id} value={String(warehouse.id)}>{warehouse.name}</option>
                     ))}
                 </select>
             </div>
@@ -288,7 +356,13 @@ const ProductLayout = () => {
                                 </p>
 
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold">
-                                    المخزون: {product.stocks?.[0]?.quantity ?? product.quantity ?? 0} | المستودع: {product.stocks?.[0]?.warehouse?.name || "غير محدد"}
+                                    المخزون: {product.stocks?.length
+                                        ? product.stocks.reduce((sum: number, stock: any) => sum + Number(stock?.quantity || 0), 0)
+                                        : (product.quantity ?? 0)
+                                    } | المستودعات: {product.stocks?.length
+                                        ? product.stocks.map((stock: any) => stock?.warehouse?.name).filter(Boolean).join('، ')
+                                        : "غير محدد"
+                                    }
                                 </p>
 
                                 <div className="mt-auto flex items-center justify-between">
@@ -436,6 +510,13 @@ const ProductLayout = () => {
                             header: "الخصم",
                             accessor: (row: any) => row.discount > 0 ? `${row.discount} $` : "—"
                         },
+                        {
+                            header: "المستودع",
+                            accessor: (row: any) => {
+                                const warehouseNames = row.stocks?.map((stock: any) => stock?.warehouse?.name).filter(Boolean) || [];
+                                return warehouseNames.length ? warehouseNames.join('، ') : "غير محدد";
+                            }
+                        },
 
                     ]}
                 />
@@ -446,7 +527,7 @@ const ProductLayout = () => {
                     <DynamicForm
                         schema={productschama}
                         onSubmit={onSubmit}
-                        defaultValues={forData}
+                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0 }] }}
                         submitLabel={editId ? "تعديل المنتج" : "حفظ المنتج"}
                     >
                         {({ register, control, formState: { errors } }) => (
@@ -467,17 +548,12 @@ const ProductLayout = () => {
 
                                 <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="السعر" {...register("price")} error={errors.price?.message as string} />
                                 <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="الخصم" {...register("discount")} error={errors.discount?.message as string} />
-                                <FormSelect
-                                    label="المستودع"
-                                    placeholder="اختر المستودع"
-                                    options={warehouses.map((warehouse) => ({
-                                        value: warehouse.id,
-                                        label: warehouse.name,
-                                    }))}
-                                    {...register("warehouseId")}
-                                    error={errors.warehouseId?.message as string}
+                                <WarehouseStocksFields
+                                    control={control}
+                                    register={register}
+                                    errors={errors}
+                                    warehouses={warehouses}
                                 />
-                                <FormInput className='text-slate-900 dark:text-slate-100' type="number" label="الكمية" {...register("quantity")} error={errors.quantity?.message as string} />
                                 <textarea {...register("description")} placeholder='الوصف' className='col-span-2 border border-slate-400/30 bg-transparent text-slate-900 dark:text-slate-100' rows={5}></textarea>
                                 <div className="md:col-span-2 border-t pt-4">
                                     <Controller
