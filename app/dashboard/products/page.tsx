@@ -214,7 +214,8 @@ const ProductLayout = () => {
                 }
                 
             </div>
-            <div className="flex gap-4 mb-4">
+            <div className="flex flex-wrap justify-between items-center gap-3">
+                <div className="flex gap-4 mb-4">
                 <Button onClick={() => setTab("grid")} >قائمة</Button>
                 <Button onClick={() => setTab("table")} >جدول</Button>
             </div>
@@ -236,6 +237,7 @@ const ProductLayout = () => {
                         <option key={warehouse.id} value={warehouse.name}>{warehouse.name}</option>
                     ))}
                 </select>
+            </div>
             </div>
 
             {tab === 'grid' && (
