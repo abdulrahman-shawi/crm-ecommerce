@@ -66,6 +66,7 @@ export async function saveProductWithFiles(formData: FormData) {
     try {
         // تحويل البيانات مع إضافة قيم افتراضية للحماية من null
         const name = formData.get('name') as string;
+        const normalizedName = name.trim();
         const price = parseFloat(formData.get('price') as string) || 0;
         const discount = parseFloat(formData.get('discount') as string) || 0;
         const categoryId = parseInt(formData.get('categoryId') as string);
@@ -73,18 +74,34 @@ export async function saveProductWithFiles(formData: FormData) {
         const warehouseId = parseInt(formData.get('warehouseId') as string);
         const quantity = parseInt(formData.get('quantity') as string) || 0;
 
-        const existingByName = await prisma.product.findFirst({
+        const hasValidWarehouse = Number.isInteger(warehouseId) && warehouseId > 0;
+
+        const existingByNameAndStock = await prisma.product.findFirst({
             where: {
                 name: {
-                    equals: name.trim(),
+                    equals: normalizedName,
                     mode: 'insensitive',
-                }
+                },
+                ...(hasValidWarehouse
+                    ? {
+                        stocks: {
+                            some: {
+                                warehouseId,
+                                quantity,
+                            }
+                        }
+                    }
+                    : {
+                        stocks: {
+                            none: {}
+                        }
+                    })
             },
             select: { id: true }
         });
 
-        if (existingByName) {
-            return { success: false, error: "اسم المنتج موجود بالفعل" };
+        if (existingByNameAndStock) {
+            return { success: false, error: "المنتج موجود بنفس الاسم ونفس المخزون" };
         }
         
         // جلب الملفات والتأكد أنها من نوع File فعلاً
@@ -98,13 +115,13 @@ export async function saveProductWithFiles(formData: FormData) {
         // تم استخدام transaction لضمان عدم إنشاء منتج إذا فشلت عملية ربط الصور (اختياري ولكن أفضل)
         const product = await prisma.product.create({
             data: {
-                name,
+                name: normalizedName,
                 price,
                 discount,
                 description,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
-                ...(warehouseId ? {
+                ...(hasValidWarehouse ? {
                     stocks: {
                         create: {
                             warehouseId,
