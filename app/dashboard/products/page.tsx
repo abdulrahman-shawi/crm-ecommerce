@@ -59,11 +59,11 @@ const ProductLayout = () => {
 
     React.useEffect(() => {
         const syriaWarehouse = warehouses.find(
-            (warehouse) => typeof warehouse?.name === 'string' && warehouse.location.includes('سوريا')
+            (warehouse) => typeof warehouse?.location === 'string' && warehouse.location.includes('سوريا')
         );
 
         if (syriaWarehouse) {
-            setSelectedWarehouseFilter(syriaWarehouse.name);
+            setSelectedWarehouseFilter(syriaWarehouse.location);
         }
     }, [warehouses]);
 
