@@ -138,6 +138,16 @@ const ProductLayout = () => {
 
     }, []);
 
+    const locationOptions = React.useMemo(() => {
+        return Array.from(
+            new Set(
+                warehouses
+                    .map((warehouse: any) => String(warehouse?.location || '').trim())
+                    .filter((location: string) => location.length > 0)
+            )
+        );
+    }, [warehouses]);
+
     const handleClose = () => {
         setIsOpen(false);
         setEditId(null);
@@ -229,7 +239,7 @@ const ProductLayout = () => {
         return products.flatMap((product: any) => {
             const stocks = Array.isArray(product?.stocks) ? product.stocks : [];
             return stocks
-                .filter((stock: any) => selectedWarehouseFilter === 'all' || String(stock?.warehouseId) === selectedWarehouseFilter)
+                .filter((stock: any) => selectedWarehouseFilter === 'all' || String(stock?.warehouse?.location || '') === selectedWarehouseFilter)
                 .map((stock: any) => ({
                     ...product,
                     __stock: stock,
@@ -324,8 +334,8 @@ const ProductLayout = () => {
                     className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 >
                     <option value="all">كل المستودعات</option>
-                    {warehouses.map((warehouse) => (
-                        <option key={warehouse.id} value={String(warehouse.id)}>{warehouse.name}</option>
+                    {locationOptions.map((location) => (
+                        <option key={location} value={location}>{location}</option>
                     ))}
                 </select>
             </div>
