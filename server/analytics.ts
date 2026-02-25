@@ -405,30 +405,6 @@ export async function GetTopSellingUsersByPermission(userId: string) {
 
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
-    const revenueOrders = await prisma.order.findMany({
-      where: {
-        ...(canViewAllTargets ? {} : { userId: scopedUserId }),
-        status: { notIn: NON_REVENUE_STATUSES },
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
-      },
-      select: {
-        userId: true,
-        finalAmount: true,
-        warehouse: {
-          select: {
-            location: true,
-          }
-        }
-      }
-    });
-
     const topUsersGrouped = await prisma.order.groupBy({
       by: ['userId'],
       where: {
@@ -574,6 +550,30 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const end = new Date(year, month, 0, 23, 59, 59, 999);
       return { start, end };
     })();
+
+    const revenueOrders = await prisma.order.findMany({
+      where: {
+        ...(canViewAllTargets ? {} : { userId: scopedUserId }),
+        status: { notIn: NON_REVENUE_STATUSES },
+        ...(monthRange
+          ? {
+              createdAt: {
+                gte: monthRange.start,
+                lte: monthRange.end,
+              },
+            }
+          : {}),
+      },
+      select: {
+        userId: true,
+        finalAmount: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
+      }
+    });
 
     const orderItems = await prisma.orderItem.findMany({
       where: {
