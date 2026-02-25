@@ -59,7 +59,7 @@ const ProductLayout = () => {
 
     React.useEffect(() => {
         const syriaWarehouse = warehouses.find(
-            (warehouse) => typeof warehouse?.name === 'string' && warehouse.name.includes('سوريا')
+            (warehouse) => typeof warehouse?.name === 'string' && warehouse.location.includes('سوريا')
         );
 
         if (syriaWarehouse) {
