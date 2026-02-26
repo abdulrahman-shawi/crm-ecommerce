@@ -454,38 +454,41 @@ const [searchQuery, setSearchQuery] = React.useState("");
     const filterOrder = React.useMemo(() => {
     if (!user) return [];
 
-    // 1. تحديد الرتبة والصلاحيات العامة مرة واحدة
-    const isAdminUser = isAdmin(user) || hasPermission(user, "viewOrders");
-    const canAccessSyria = hasPermission(user, "accessSyria");
-    const canAccessTurkey = hasPermission(user, "accessTurkey");
+    // 1. استخراج الصلاحيات من جدول Permission (حسب Prisma Schema)
+    const permissions = user.permission || {};
+    const isAdminUser = user.accountType === "ADMIN"; // التحقق المباشر من الرتبة
+    const canAccessSyria = permissions.accessSyria === true;
+    const canAccessTurkey = permissions.accessTurkey === true;
 
     return orders.filter((order: any) => {
-        // --- أولاً: فلتر الملكية (Owner/Admin) ---
         const isOwner = order.userId === user.id;
-        // إذا لم يكن أدمن وليس صاحب الطلب، استبعده فوراً
-        if (!isAdminUser && !isOwner) return false;
-
-        // --- ثانياً: فلتر المستودعات (Permissions per Location) ---
         const orderLocation = String(order.warehouse?.location || "").trim();
-        
-       if (!isAdminUser) {
-            // إذا كان الطلب في تركيا والمستخدم لا يملك صلاحية تركيا -> احجبه
-            if (orderLocation === "تركيا" && !canAccessTurkey) return false;
 
-            // إذا كان الطلب في سوريا والمستخدم لا يملك صلاحية سوريا -> احجبه
-            if (orderLocation === "سوريا" && !canAccessSyria) return false;
+        // --- منطق السماح بالرؤية (Visibility Logic) ---
+        let hasAccess = false;
 
-            // ميزة إضافية: إذا كان المستخدم يملك صلاحية بلد واحد فقط (تركيا مثلاً)
-            // نضمن عدم رؤيته لطلبات البلاد الأخرى التي ليس لها مخزن محدد
-            if (canAccessTurkey && !canAccessSyria && orderLocation !== "تركيا") {
-                return false; 
-            }
-            
-            if (canAccessSyria && !canAccessTurkey && orderLocation !== "سوريا") {
-                return false;
-            }
+        // أ - شرط صلاحية المنطقة (الأولوية القصوى)
+        // إذا كان الطلب في سوريا والمستخدم لديه صلاحية سوريا، يراه (سواء كان أدمن أو لا)
+        if (orderLocation === "سوريا" && canAccessSyria) {
+            hasAccess = true;
+        } 
+        // إذا كان الطلب في تركيا والمستخدم لديه صلاحية تركيا، يراه
+        else if (orderLocation === "تركيا" && canAccessTurkey) {
+            hasAccess = true;
         }
-        // --- ثالثاً: فلتر البحث النصي ---
+        // ب - شرط الأدمن (لرؤية الطلبات التي ليس لها مستودع محدد أو في مناطق أخرى)
+        else if (isAdminUser) {
+            hasAccess = true;
+        }
+        // ج - شرط صاحب الطلب
+        else if (isOwner) {
+            hasAccess = true;
+        }
+
+        // إذا لم يتحقق أي شرط مما سبق، يتم حجب الطلب
+        if (!hasAccess) return false;
+
+        // --- فلتر البحث النصي ---
         const query = searchQuery.trim().toLowerCase();
         const matchesText = !query ||
             (order.customer?.name && order.customer.name.toLowerCase().includes(query)) ||
@@ -495,7 +498,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
         if (!matchesText) return false;
 
-        // --- رابعاً: فلتر المستودع المختار من الواجهة (Dropdown) ---
+        // --- فلتر المستودع المختار من الواجهة (Dropdown) ---
         const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
         
         return matchesLocation;
