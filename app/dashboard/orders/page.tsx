@@ -454,15 +454,38 @@ const [searchQuery, setSearchQuery] = React.useState("");
     const filterOrder = React.useMemo(() => {
     if (!user) return [];
 
-    // تحديد ما إذا كان المستخدم أدمن
+    // 1. تحديد الرتبة والصلاحيات العامة مرة واحدة
     const isAdminUser = isAdmin(user) || hasPermission(user, "viewOrders");
+    const canAccessSyria = hasPermission(user, "accessSyria");
+    const canAccessTurkey = hasPermission(user, "accessTurkey");
 
     return orders.filter((order: any) => {
-        // أ - فلتر الصلاحيات (أدمن يرى الكل، موظف يرى طلباته)
+        // --- أولاً: فلتر الملكية (Owner/Admin) ---
         const isOwner = order.userId === user.id;
+        // إذا لم يكن أدمن وليس صاحب الطلب، استبعده فوراً
         if (!isAdminUser && !isOwner) return false;
 
-        // ب - فلتر البحث النصي (اسم العميل، الموظف، رقم الطلب، المدينة)
+        // --- ثانياً: فلتر المستودعات (Permissions per Location) ---
+        const orderLocation = String(order.warehouse?.location || "").trim();
+        
+       if (!isAdminUser) {
+            // إذا كان الطلب في تركيا والمستخدم لا يملك صلاحية تركيا -> احجبه
+            if (orderLocation === "تركيا" && !canAccessTurkey) return false;
+
+            // إذا كان الطلب في سوريا والمستخدم لا يملك صلاحية سوريا -> احجبه
+            if (orderLocation === "سوريا" && !canAccessSyria) return false;
+
+            // ميزة إضافية: إذا كان المستخدم يملك صلاحية بلد واحد فقط (تركيا مثلاً)
+            // نضمن عدم رؤيته لطلبات البلاد الأخرى التي ليس لها مخزن محدد
+            if (canAccessTurkey && !canAccessSyria && orderLocation !== "تركيا") {
+                return false; 
+            }
+            
+            if (canAccessSyria && !canAccessTurkey && orderLocation !== "سوريا") {
+                return false;
+            }
+        }
+        // --- ثالثاً: فلتر البحث النصي ---
         const query = searchQuery.trim().toLowerCase();
         const matchesText = !query ||
             (order.customer?.name && order.customer.name.toLowerCase().includes(query)) ||
@@ -470,10 +493,12 @@ const [searchQuery, setSearchQuery] = React.useState("");
             (order.orderNumber && String(order.orderNumber).includes(query)) ||
             (order.city && order.city.toLowerCase().includes(query));
 
-        // ج - فلتر المستودع
-        const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
+        if (!matchesText) return false;
 
-        return matchesText && matchesLocation;
+        // --- رابعاً: فلتر المستودع المختار من الواجهة (Dropdown) ---
+        const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
+        
+        return matchesLocation;
     });
 }, [orders, user, searchQuery, warehouseLocation]);
 

@@ -44,6 +44,9 @@ export interface Permission {
   editPermissions: boolean;
   deletePermissions: boolean;
 
+  accessTurkey: boolean;
+  accessSyria: boolean;
+
   users?: User[]; // optional to avoid circular reference issues
 }
 
