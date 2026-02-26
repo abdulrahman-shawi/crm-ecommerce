@@ -8,6 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { hasPermission } from '@/lib/utils';
 
+
 export default function PermissionsPage() {
     const [roles, setRoles] = useState<any[]>([]);
     const [selectedRole, setSelectedRole] = useState<any>(null);
@@ -58,20 +59,20 @@ export default function PermissionsPage() {
     };
 
     const togglePermission = (fieldName: string) => {
-    if (!selectedRole) return;
+        if (!selectedRole) return;
 
-    // تحديث الحالة المحلية فوراً لضمان استجابة الواجهة
-    setSelectedRole((prevRole: any) => {
-        const updated = { ...prevRole, [fieldName]: !prevRole[fieldName] };
-        
-        // تحديث المصفوفة الكلية أيضاً لضمان مزامنة القائمة الجانبية
-        setRoles((prevRoles) => 
-            prevRoles.map(r => r.id === prevRole.id ? updated : r)
-        );
-        
-        return updated;
-    });
-};
+        // تحديث الحالة المحلية فوراً لضمان استجابة الواجهة
+        setSelectedRole((prevRole: any) => {
+            const updated = { ...prevRole, [fieldName]: !prevRole[fieldName] };
+
+            // تحديث المصفوفة الكلية أيضاً لضمان مزامنة القائمة الجانبية
+            setRoles((prevRoles) =>
+                prevRoles.map(r => r.id === prevRole.id ? updated : r)
+            );
+
+            return updated;
+        });
+    };
 
     const handleSave = async () => {
         if (!selectedRole) return;
@@ -179,20 +180,20 @@ export default function PermissionsPage() {
 
                                     <div className="p-8 flex-1 overflow-y-auto custom-scrollbar space-y-10">
                                         {/* الصفوف القياسية التي تتبع نمط: view, add, edit, delete */}
-<PermissionRow title="المنتجات" suffix="Products" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="تصنيف المنتجات" suffix="Categories" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="التقارير" suffix="Reports" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="الطلبات" suffix="Orders" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="المصاريف" suffix="Expenses" role={selectedRole} onToggle={togglePermission} />
-<PermissionRow title="الصلاحيات" suffix="Permissions" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="المنتجات" suffix="Products" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="تصنيف المنتجات" suffix="Categories" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="التقارير" suffix="Reports" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="الطلبات" suffix="Orders" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="المصاريف" suffix="Expenses" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="الصلاحيات" suffix="Permissions" role={selectedRole} onToggle={togglePermission} />
 
-{/* ملاحظة: إحصائيات النظام تملك حقلاً واحداً فقط (viewAnalytics) */}
-{/* إذا كان PermissionRow مصمماً لعرض 4 مربعات اختيار، فقد تحتاج لمكون بسيط أو تخصيص لهذا الحقل */}
-<div className="flex items-center justify-between p-4 border-b">
+                                        {/* ملاحظة: إحصائيات النظام تملك حقلاً واحداً فقط (viewAnalytics) */}
+                                        {/* إذا كان PermissionRow مصمماً لعرض 4 مربعات اختيار، فقد تحتاج لمكون بسيط أو تخصيص لهذا الحقل */}
+                                        <div className="flex items-center justify-between p-4 border-b">
 
-</div>
+                                        </div>
                                         <div className="border-b dark:border-slate-800 last:border-0 pb-8">
                                             <h4 className="font-black mb-4 flex items-center gap-2 text-slate-800 dark:text-slate-200">
                                                 <div className="w-2 h-2 rounded-full bg-indigo-500" /> إحصائيات النظام
@@ -200,6 +201,28 @@ export default function PermissionsPage() {
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                                 <SinglePermissionBox label="عرض التحليلات" fieldName="viewAnalytics" role={selectedRole} onToggle={togglePermission} />
                                             </div>
+                                        </div>
+                                        <div className="border-b dark:border-slate-800 last:border-0 pb-8 mt-10">
+                                            <h4 className="font-black mb-4 flex items-center gap-2 text-slate-800 dark:text-slate-200">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500" /> النطاق الجغرافي للمستودعات
+                                            </h4>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                <SinglePermissionBox
+                                                    label="وصول مستودعات سوريا"
+                                                    fieldName="accessSyria"
+                                                    role={selectedRole}
+                                                    onToggle={togglePermission}
+                                                />
+                                                <SinglePermissionBox
+                                                    label="وصول مستودعات تركيا"
+                                                    fieldName="accessTurkey"
+                                                    role={selectedRole}
+                                                    onToggle={togglePermission}
+                                                />
+                                            </div>
+                                            <p className="text-xs text-slate-400 mt-2 px-2 italic">
+                                                * سيتمكن المستخدم من رؤية الطلبات المرتبطة بمستودعات هذا الموقع فقط.
+                                            </p>
                                         </div>
                                     </div>
                                 </>

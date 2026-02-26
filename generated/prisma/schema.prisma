@@ -84,7 +84,9 @@ model Permission {
   addPermissions    Boolean @default(false)
   deletePermissions Boolean @default(false)
 
-  users User[]
+  accessSyria  Boolean @default(false) // الوصول لمستودعات سوريا
+  accessTurkey Boolean @default(false) // الوصول لمستودعات تركيا
+  users        User[]
 }
 
 model Category {

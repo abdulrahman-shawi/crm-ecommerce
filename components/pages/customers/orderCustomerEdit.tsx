@@ -1,6 +1,6 @@
 import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
-import { createOrder } from "@/server/order";
+import { createOrder, updateOrder } from "@/server/order";
 import { useOrderStore } from "@/store/customer";
 import { AnimatePresence, motion } from "framer-motion";
 import { Save, Trash2 } from "lucide-react";
@@ -11,7 +11,7 @@ import PhoneInput from 'react-phone-number-input'
 // سعر صرف الدولار مقابل الليرة التركية (يتم تحديثه من المستخدم عند اختيار تركيا)
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
-export default function OrderCustomer({ customers, customerId, products, isOpenOrder, setEditId, setCustomerId, setisOpenOrder, editId, getData }: { customers: any, customerId: any, products: any, isOpenOrder: any, setEditId: any, setCustomerId: any, setisOpenOrder: any, editId: any, getData: any }) {
+export default function OrderCustomerEdit({ initialData, customers, customerId, products, isOpenOrder, setEditId, setCustomerId, setisOpenOrder, editId, getData }: { initialData?: any, customers: any, customerId: any, products: any, isOpenOrder: any, setEditId: any, setCustomerId: any, setisOpenOrder: any, editId: any, getData: any }) {
   // ...existing code...
   const [items, setItems] = React.useState([
     { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
@@ -162,6 +162,29 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     };
   };
 
+  React.useEffect(() => {
+  if (initialData && isOpenOrder) {
+    console.log("Initial Data:", initialData)
+    // تعبئة البيانات عند التعديل
+    setItems(initialData.items || []);
+    setCustomerId(initialData.customerId || "");
+    setReceiverName(initialData.receiverName || "");
+    setReceiverPhone(initialData.receiverPhone || [""]);
+    setStockCountry(initialData?.warehouse?.location?.trim() || "");
+    setCountry(initialData.country || "");
+    setCity(initialData.city || "");
+    setamount(initialData?.amount)
+    setamountBank(initialData?.amountBank)
+    setMunicipality(initialData.municipality || "");
+    setFullAddress(initialData.fullAddress || "");
+    setPaymentMethod(initialData.paymentMethod || "عند الاستلام");
+    setOverallDiscount(initialData.overallDiscount || 0);
+    setStatus(initialData.status || "طلب جديد");
+  } else if (!initialData && isOpenOrder) {
+    // تصفير الحقول عند إضافة طلب جديد
+    resetForm();
+  }
+}, [initialData, isOpenOrder]);
   const addNewItem = () => {
     setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
   };
@@ -201,7 +224,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
   const setGrandTotal = useOrderStore((state) => state.setGrandTotal);
 
-  const subTotal = items.reduce((sum, i) => sum + i.total, 0);
+  const subTotal = items.reduce((sum, item) => sum + ((item.price - item.discount) * item.quantity), 0);
   const grandTotal = subTotal - overallDiscount;
   // تحديث المخزن العالمي عند تغير المجموع أو المبلغ المدفوع
   React.useEffect(() => {
@@ -321,7 +344,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     try {
       let res;
       // // حالة إنشاء طلب جديد
-      res = await createOrder(orderData, items, user?.id);
+      res = await updateOrder(orderData, editId , items);
       console.log(orderData, customerId, items, user?.id)
       if (res.success) {
         toast.success(editId ? "تم تحديث الطلب بنجاح" : "تم حفظ الطلب بنجاح");
@@ -354,6 +377,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     <div>
       <AppModal footer={
         <div className="pt-6 w-full flex flex-col md:flex-row justify-between items-center gap-6">
+          {`editId ${editId} grandTotal ${grandTotal} amount ${amount} amountBank ${amountBank}`}
           <div className="flex gap-6 items-center">
             <div className="space-y-1">
               <label className="text-[10px] font-bold text-red-500 uppercase px-1">خصم إضافي (كلي)</label>
@@ -408,7 +432,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   value={stockCountry}
                   onChange={(e) => {
                     setStockCountry(e.target.value as "سوريا" | "تركيا" | "");
-                    setItems([{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
+                
                     setSearchQueries({});
                     setShowDropdown({});
                     // إعادة سعر الصرف الافتراضي عند تغيير البلد
@@ -445,7 +469,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   <label className="text-[10px] font-bold text-slate-400 mb-1">المنتج</label>
                   <input
                     type="text"
-                    value={searchQueries[index] || item.name || item.modelNumber}
+                    value={searchQueries[index] || item.product?.name || item.product?.modelNumber}
                     placeholder="اكتب اسم المنتج..."
                     onFocus={() => setShowDropdown({ ...showDropdown, [index]: true })}
                     onChange={(e) => {
@@ -509,7 +533,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   <label className="text-[10px] font-bold text-slate-400 mb-1">ملاحظات المنتج</label>
                   <input type="text" value={item.note} onChange={(e) => updateItem(index, "note", e.target.value, products)} className="w-full bg-white dark:bg-slate-900 p-3 rounded-xl outline-none text-xs shadow-sm" placeholder="إضافة ملاحظة..." />
                 </div>
-                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> {currencySymbol}{item.total}</div>
+                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> {currencySymbol}{(item.price -item.discount) * item.quantity }</div>
                 <div className="md:col-span-1 flex justify-center">
                   <button
                     onClick={() => {
@@ -561,7 +585,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500">أرقام هواتف المستلم</label>
-
+  {`subTotal : ${subTotal}`}
                 {receiverPhone.map((phone: any, index: any) => (
                   <div key={index} className="flex gap-2">
                     <PhoneInput
@@ -614,7 +638,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-slate-500 mr-2">المبلغ المتبقي</label>
-                    <input type="text" value={grandTotal - Number(amount)} readOnly className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
+                    <input type="text" value={Number(grandTotal) - Number(amount)} readOnly className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-left" dir="ltr" />
                   </div>
                 </div>
               ) : (

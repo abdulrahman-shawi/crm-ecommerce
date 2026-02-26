@@ -206,7 +206,7 @@ export async function updateOrder(data: any, id: any, items: any) {
                     municipality: data.municipality,
                     fullAddress: data.fullAddress,
                     googleMapsLink: data.googleMapsLink,
-                    amountBank: data.amountBank,
+                    amountBank: String(data.amountBank),
                     amount: data.amount,
                     deliveryMethod: data.deliveryMethod,
                     deliveryNotes: data.deliveryNotes,

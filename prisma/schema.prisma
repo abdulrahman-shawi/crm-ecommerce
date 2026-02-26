@@ -8,48 +8,48 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(uuid())
-  username     String
-  email        String      @unique
-  phone        String?
-  jobTitle     String?
-  avatar       String?
-  accountType  AccountType @default(STAFF)
-  password     String
-  salesCommissionPercent Float       @default(0)
-  wage         Int       @default(0)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  permissionId String?
-  orders       Order[]
-  permission   Permission? @relation(fields: [permissionId], references: [id])
-  customers    Customer[]  @relation("CustomerToUser")
-  message      Message[]
-  targets      UserTarget[]
+  id                     String          @id @default(uuid())
+  username               String
+  email                  String          @unique
+  phone                  String?
+  jobTitle               String?
+  avatar                 String?
+  accountType            AccountType     @default(STAFF)
+  password               String
+  salesCommissionPercent Float           @default(0)
+  wage                   Int             @default(0)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  permissionId           String?
+  orders                 Order[]
+  permission             Permission?     @relation(fields: [permissionId], references: [id])
+  customers              Customer[]      @relation("CustomerToUser")
+  message                Message[]
+  targets                UserTarget[]
   stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
 }
 
 model Permission {
-  id              String  @id @default(uuid())
-  roleName        String
-  
+  id       String @id @default(uuid())
+  roleName String
+
   // المنتجات
-  viewProducts    Boolean @default(false)
-  addProducts     Boolean @default(false)
-  editProducts    Boolean @default(false)
-  deleteProducts  Boolean @default(false)
-  
+  viewProducts   Boolean @default(false)
+  addProducts    Boolean @default(false)
+  editProducts   Boolean @default(false)
+  deleteProducts Boolean @default(false)
+
   // التقارير
-  viewReports     Boolean @default(false)
-  addReports      Boolean @default(false)
-  editReports     Boolean @default(false)
-  deleteReports   Boolean @default(false)
-  
+  viewReports   Boolean @default(false)
+  addReports    Boolean @default(false)
+  editReports   Boolean @default(false)
+  deleteReports Boolean @default(false)
+
   // الطلبات
-  viewOrders      Boolean @default(false)
-  addOrders       Boolean @default(false)
-  editOrders      Boolean @default(false)
-  deleteOrders    Boolean @default(false)
+  viewOrders   Boolean @default(false)
+  addOrders    Boolean @default(false)
+  editOrders   Boolean @default(false)
+  deleteOrders Boolean @default(false)
 
   // العملاء (تم دمج الفرد والجملة والتقويم في حقل واحد)
   viewCustomers   Boolean @default(false)
@@ -64,27 +64,29 @@ model Permission {
   deleteEmployees Boolean @default(false)
 
   // المصاريف
-  viewExpenses    Boolean @default(false)
-  addExpenses     Boolean @default(false)
-  editExpenses    Boolean @default(false)
-  deleteExpenses  Boolean @default(false)
+  viewExpenses   Boolean @default(false)
+  addExpenses    Boolean @default(false)
+  editExpenses   Boolean @default(false)
+  deleteExpenses Boolean @default(false)
 
   // إحصائيات النظام
-  viewAnalytics   Boolean @default(false)
+  viewAnalytics Boolean @default(false)
 
   // تصنيف المنتجات
-  viewCategories  Boolean @default(false)
-  addCategories   Boolean @default(false)
-  editCategories  Boolean @default(false)
+  viewCategories   Boolean @default(false)
+  addCategories    Boolean @default(false)
+  editCategories   Boolean @default(false)
   deleteCategories Boolean @default(false)
 
   // الصلاحيات (لإدارة الأدوار نفسها)
-  viewPermissions Boolean @default(false)
-  editPermissions Boolean @default(false)
-  addPermissions Boolean @default(false)
+  viewPermissions   Boolean @default(false)
+  editPermissions   Boolean @default(false)
+  addPermissions    Boolean @default(false)
   deletePermissions Boolean @default(false)
 
-  users           User[]
+  accessSyria  Boolean @default(false) // الوصول لمستودعات سوريا
+  accessTurkey Boolean @default(false) // الوصول لمستودعات تركيا
+  users        User[]
 }
 
 model Category {
@@ -94,27 +96,27 @@ model Category {
 }
 
 model Product {
-  id          Int            @id @default(autoincrement())
-  name        String
-  description String?
-  categoryId  Int?
-  createdAt   DateTime       @default(now())
-  orderItems  OrderItem[]
-  category    Category?      @relation(fields: [categoryId], references: [id])
-  images      ProductImage[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  description    String?
+  categoryId     Int?
+  createdAt      DateTime        @default(now())
+  orderItems     OrderItem[]
+  category       Category?       @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
   targetProducts TargetProduct[]
-stocks         ProductStock[]
+  stocks         ProductStock[]
   stockMovements StockMovement[]
 }
 
 model Warehouse {
-  id        Int            @id @default(autoincrement())
-  name      String         @unique // مثلاً: "مستودع إدلب" أو "مستودع إسطنبول"
-  location  String         // سوريا أو تركيا
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id        Int             @id @default(autoincrement())
+  name      String          @unique // مثلاً: "مستودع إدلب" أو "مستودع إسطنبول"
+  location  String // سوريا أو تركيا
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
   stocks    ProductStock[]
-  orders    Order[]        // لتحديد من أي مخزن خرج الطلب
+  orders    Order[] // لتحديد من أي مخزن خرج الطلب
   movements StockMovement[]
 }
 
@@ -135,46 +137,46 @@ model StockMovement {
   id          String       @id @default(uuid())
   productId   Int
   warehouseId Int
-  userId      String?      // الموظف المسؤول
-  quantity    Int          // موجبة للزيادة وسالبة للنقصان
+  userId      String? // الموظف المسؤول
+  quantity    Int // موجبة للزيادة وسالبة للنقصان
   type        MovementType
-  reason      String?      // ملاحظات (شراء، بيع، تالف، تحويل)
+  reason      String? // ملاحظات (شراء، بيع، تالف، تحويل)
   createdAt   DateTime     @default(now())
 
-  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
-  user        User?        @relation(fields: [userId], references: [id])
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id])
 }
 
 enum MovementType {
-  IN          // توريد جديد
-  OUT         // مبيعات
-  TRANSFER    // تحويل بين سوريا وتركيا
-  ADJUSTMENT  // جرد وتصحيح
-  RETURN      // مرتجع
+  IN // توريد جديد
+  OUT // مبيعات
+  TRANSFER // تحويل بين سوريا وتركيا
+  ADJUSTMENT // جرد وتصحيح
+  RETURN // مرتجع
 }
 
 model UserTarget {
-  id              String         @id @default(uuid())
-  userId          String
-  salesTargetValue Int[]          @default([])
-  salesRewardValue Int[]          @default([])
-  isActive        Boolean        @default(true)
-  endedAt         DateTime?
-  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products        TargetProduct[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id               String          @id @default(uuid())
+  userId           String
+  salesTargetValue Int[]           @default([])
+  salesRewardValue Int[]           @default([])
+  isActive         Boolean         @default(true)
+  endedAt          DateTime?
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products         TargetProduct[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 model TargetProduct {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   targetId    String
   productId   Int
   requiredQty Int[]
   rewardValue Int[]
   target      UserTarget @relation(fields: [targetId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([targetId, productId])
 }
@@ -188,34 +190,34 @@ model ProductImage {
 }
 
 model Customer {
-  id              String     @id @default(uuid())
-  name            String     @unique
-  phone           String[]
-  countryCode     String?
-  phonestatus     String?
-  country         String?
-  gender          String?
-  age             String?
-  source          String?
-  city            String?
-  rating          Int?
-  status          String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  orders          Order[]
-  users           User[]     @relation("CustomerToUser")
-  message         Message[]
+  id          String    @id @default(uuid())
+  name        String    @unique
+  phone       String[]
+  countryCode String?
+  phonestatus String?
+  country     String?
+  gender      String?
+  age         String?
+  source      String?
+  city        String?
+  rating      Int?
+  status      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  orders      Order[]
+  users       User[]    @relation("CustomerToUser")
+  message     Message[]
 }
 
 model Message {
-  id  String @id @default(uuid())
-  message   String?
+  id         String   @id @default(uuid())
+  message    String?
   customerId String
   userId     String
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  customer      Customer     @relation(fields: [customerId] , references: [id] , onDelete: Cascade)
-  user      User     @relation(fields: [userId] , references: [id] , onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Order {
@@ -233,8 +235,8 @@ model Order {
   fullAddress     String?
   deliveryNotes   String?
   googleMapsLink  String?
-  amount String?
-  amountBank    String?
+  amount          String?
+  amountBank      String?
   deliveryMethod  String?
   additionalNotes String?
   status          String      @default("PENDING")
@@ -253,7 +255,7 @@ model OrderItem {
   id        Int     @id @default(autoincrement())
   quantity  Int     @default(1)
   price     Float
-  discount     Float
+  discount  Float
   orderId   Int
   productId Int
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -266,10 +268,9 @@ enum AccountType {
   STAFF
 }
 
-
-model TrakingCompany{
-  id        String  @id @default(uuid())
-  name      String  @unique
+model TrakingCompany {
+  id        String   @id @default(uuid())
+  name      String   @unique
   city      String?
   location  String?
   price     Float?

@@ -47,3 +47,15 @@ export const updateWarehouse = async (id: string, data: any) => {
         return { success: false, error: "فشل في تحديث بيانات المستودع" };
     }   
 }
+
+export const deleteWarehouse = async (id: string) => {
+    try {
+        await prisma.warehouse.delete({
+            where: { id: Number(id) },
+        });
+        return { success: true };
+    } catch (error: any) {
+        console.error("Prisma Error:", error);
+        return { success: false, error: "فشل في حذف المستودع، قد يكون مرتبطًا بسجلات أخرى" };
+    }   
+}

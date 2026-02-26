@@ -18,7 +18,54 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { permission } from 'process';
 import PhoneInput from 'react-phone-number-input';
+import { useOrderStore } from '@/store/customer';
+import OrderCustomer from '@/components/pages/customers/orderCustomer';
+import OrderCustomerEdit from '@/components/pages/customers/orderCustomerEdit';
 interface IOrderLayoutProps {
+}
+
+interface OrderCustomerProps {
+  items: any[];
+  setItems: React.Dispatch<React.SetStateAction<any[]>>;
+  customers: any[];
+  customerId: any;
+  setCustomerId: React.Dispatch<React.SetStateAction<any>>;
+  products: any[];
+  isOpenOrder: boolean;
+  setisOpenOrder: React.Dispatch<React.SetStateAction<boolean>>;
+  editId: any;
+  setEditId: React.Dispatch<React.SetStateAction<any>>;
+  getData: () => Promise<void>;
+  
+  // الخصائص المفقودة التي تسبب الخطأ:
+  receiverName: string;
+  setReceiverName: React.Dispatch<React.SetStateAction<string>>;
+  receiverPhone: any[];
+  setReceiverPhone: React.Dispatch<React.SetStateAction<any[]>>;
+  country: string;
+  setCountry: React.Dispatch<React.SetStateAction<string>>;
+  city: string;
+  setCity: React.Dispatch<React.SetStateAction<string>>;
+  municipality: string;
+  setMunicipality: React.Dispatch<React.SetStateAction<string>>;
+  fullAddress: string;
+  setFullAddress: React.Dispatch<React.SetStateAction<string>>;
+  paymentMethod: string;
+  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
+  amount: any;
+  setAmount: React.Dispatch<React.SetStateAction<any>>;
+  overallDiscount: number;
+  setOverallDiscount: React.Dispatch<React.SetStateAction<number>>;
+  status: string;
+  setStatus: React.Dispatch<React.SetStateAction<string>>;
+  deliveryNotes: string;
+  setDeliveryNotes: React.Dispatch<React.SetStateAction<string>>;
+  additionalNotes: string;
+  setAdditionalNotes: React.Dispatch<React.SetStateAction<string>>;
+  googleMapsLink: string;
+  setGoogleMapsLink: React.Dispatch<React.SetStateAction<string>>;
+  isSubmitting: boolean;
+  handleSubmit: () => Promise<void>;
 }
 
 const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
@@ -68,13 +115,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const grandTotal = subTotal - overallDiscount;
     const remainingAmount = Math.max(0, Number(grandTotal) - Number(amount || 0));
 
-    const countries = [
-        "سوريا",
-        "لبنان",
-        "العراق",
-        "تركيا",
-        "ليبيا",
-    ];
+
 
     const citiesByCountry: Record<string, string[]> = {
         "سوريا": ["دمشق", "ريف دمشق", "حلب", "حمص", "حماة", "اللاذقية", "طرطوس", "إدلب", "درعا", "السويداء", "القنيطرة", "دير الزور", "الرقة", "الحسكة"],
@@ -402,6 +443,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const Order = async () => {
         const res = await getOrders()
         if (res.success) {
+            console.log(res.data)
             setorders(res.data)
         }
     }
@@ -691,7 +733,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
         setAdditionalNotes(data?.additionalNotes || "");
         setOverallDiscount(Number(data?.discount || 0));
 
-        setIsOpen(true);
+        setisOpenordercustomer(true);
     };
 
     const tableActions: any[] = [
@@ -711,7 +753,9 @@ const [searchQuery, setSearchQuery] = React.useState("");
             label: "تعديل",
             icon: <Pencil size={14} />,
             onClick: (data: any) => {
-                handleEditOrder(data);
+                setEditId(data?.id ?? null);
+                setorder(data);
+                setIsOpen(true);
             }
         },
         (user && hasPermission(user, "deleteOrders")) && {
@@ -937,6 +981,22 @@ const [searchQuery, setSearchQuery] = React.useState("");
             <AppModal size='full' isOpen={isOpenorder} onClose={() => setisOpenorder(false)} title='ملخص الطلب' >
                 <ViewOrder data={order} products={products} onSharePdf={shareOrderPdfToCustomerWhatsApp} />
             </AppModal>
+
+            {/* مودال إنشاء وتعديل الطلب */}
+{isOpen && (
+    <OrderCustomerEdit 
+      isOpenOrder={isOpen} 
+      setisOpenOrder={setIsOpen}
+      editId={editId}
+      setEditId={setEditId}
+      initialData={order} // هنا نمرر كائن الطلب بالكامل
+      customers={customers}
+      customerId={customerId}
+      setCustomerId={setCustomerId}
+      products={products}
+      getData={Order} // تأكد من أن هذه الدالة تقوم بتحديث قائمة الطلبات بعد التعديل أو الإنشاء
+    />
+)}
         </div>
     );
 };
@@ -1215,4 +1275,11 @@ function ViewOrderCustomer({ orders }: { orders: any[] }) {
         </div>
     );
 }
+
+// سعر صرف الدولار مقابل الليرة التركية (يتم تحديثه من المستخدم عند اختيار تركيا)
+
+
+
+
+
 export default OrderLayout;

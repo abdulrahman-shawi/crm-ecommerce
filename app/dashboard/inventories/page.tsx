@@ -8,7 +8,7 @@ import { FormSelect } from '@/components/ui/select-form';
 import { useAuth } from '@/context/AuthContext';
 import { hasPermission } from '@/lib/utils';
 import { createcategory, deletecategory, getallcategory, updatecategory } from '@/server/category';
-import { createWarehouse, getWarehouse, updateWarehouse } from '@/server/warehouse';
+import { createWarehouse, deleteWarehouse, getWarehouse, updateWarehouse } from '@/server/warehouse';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, Trash2 } from 'lucide-react';
 import * as React from 'react';
@@ -52,18 +52,21 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
 
     const handledelete = async (data: any) => {
         const loadingToast = toast.loading('جاري حذف المستودع...');
-        try {
-            const res = await deletecategory(data.id)
-            if (res.success) {
-                toast.success("تم حذف المستودع بنجاح")
-            } else {
-                toast.error("حدث خطأ أثناء حذف المنتج")
+        const confirmed = confirm("هل أنت متأكد من حذف هذا المستودع؟");
+        if (confirmed) {
+            try {
+                const res = await deleteWarehouse(data.id)
+                if (res.success) {
+                    toast.success("تم حذف المستودع بنجاح")
+                } else {
+                    toast.error("حدث خطأ أثناء حذف المستودع: " + (res.error || "فشل في حذف المستودع، قد يكون مرتبطًا بسجلات أخرى"))
+                }
+            } catch (error: any) {
+                toast.error("خطأ", error)
+            } finally {
+                toast.dismiss(loadingToast)
+                getData()
             }
-        } catch (error: any) {
-            toast.error("خطأ", error)
-        } finally {
-            toast.dismiss(loadingToast)
-            getData()
         }
     }
     const onSubmit = async (data: z.infer<typeof categorySchema>) => {
@@ -146,19 +149,19 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                 <div className="flex gap-2">
                                     {user && hasPermission(user, "editCategories") && (
                                         <button
-                                        onClick={() => handleEdit(cat)}
-                                        className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-blue-600 hover:bg-blue-600 hover:text-white transition-all"
-                                    >
-                                        <Edit size={16} />
-                                    </button>
+                                            onClick={() => handleEdit(cat)}
+                                            className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-blue-600 hover:bg-blue-600 hover:text-white transition-all"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
                                     )}
                                     {user && hasPermission(user, "deleteCategories") && (
                                         <button
-                                        onClick={() => handledelete(cat)}
-                                        className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
+                                            onClick={() => handledelete(cat)}
+                                            className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
                                     )}
                                 </div>
                             </div>
@@ -188,7 +191,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                     error={errors.name?.message as string}
                                 />
                                 <FormSelect
-                                options={locationOptions}
+                                    options={locationOptions}
                                     className='text-gray-800 dark:text-white'
                                     label="موقع المستودع"
                                     {...register("location")}

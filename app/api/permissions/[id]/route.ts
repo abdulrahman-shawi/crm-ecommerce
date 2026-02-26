@@ -64,6 +64,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
                 addPermissions: Boolean(data.addPermissions),
                 editPermissions: Boolean(data.editPermissions),
                 deletePermissions: Boolean(data.deletePermissions),
+                accessSyria: Boolean(data.accessSyria),
+                accessTurkey: Boolean(data.accessTurkey),
 
                 // إحصائيات النظام (حقل واحد فقط)
                 viewAnalytics: Boolean(data.viewAnalytics),
