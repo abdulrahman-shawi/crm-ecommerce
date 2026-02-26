@@ -377,7 +377,6 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     <div>
       <AppModal footer={
         <div className="pt-6 w-full flex flex-col md:flex-row justify-between items-center gap-6">
-          {`editId ${editId} grandTotal ${grandTotal} amount ${amount} amountBank ${amountBank}`}
           <div className="flex gap-6 items-center">
             <div className="space-y-1">
               <label className="text-[10px] font-bold text-red-500 uppercase px-1">خصم إضافي (كلي)</label>
@@ -585,7 +584,6 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500">أرقام هواتف المستلم</label>
-  {`subTotal : ${subTotal}`}
                 {receiverPhone.map((phone: any, index: any) => (
                   <div key={index} className="flex gap-2">
                     <PhoneInput
