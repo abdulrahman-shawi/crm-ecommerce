@@ -459,6 +459,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
     const isAdminUser = user.accountType === "ADMIN"; // التحقق المباشر من الرتبة
     const canAccessSyria = permissions.accessSyria === true;
     const canAccessTurkey = permissions.accessTurkey === true;
+    const viewOrder = permissions.viewOrders === true;
 
     return orders.filter((order: any) => {
         const isOwner = order.userId === user.id;
@@ -478,6 +479,8 @@ const [searchQuery, setSearchQuery] = React.useState("");
         }
         // ب - شرط الأدمن (لرؤية الطلبات التي ليس لها مستودع محدد أو في مناطق أخرى)
         else if (isAdminUser) {
+            hasAccess = true;
+        }else if(viewOrder){
             hasAccess = true;
         }
         // ج - شرط صاحب الطلب
