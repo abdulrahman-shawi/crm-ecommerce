@@ -461,32 +461,30 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
     return orders.filter((order: any) => {
         // --- أولاً: فلتر الملكية (Owner/Admin) ---
-        const permissions = user.permission || {};
-    const isAdminUser = user.accountType === "ADMIN" || permissions.viewOrders;
-    const canAccessSyria = permissions.accessSyria;
-    const canAccessTurkey = permissions.accessTurkey;
-
-    return orders.filter((order: any) => {
-        // --- أ - فلتر الملكية (إذا كان هو من أنشأ الطلب يراه دائماً) ---
         const isOwner = order.userId === user.id;
-        if (isOwner) return true; // صاحب الطلب يراه فوراً بغض النظر عن الموقع
+        // إذا لم يكن أدمن وليس صاحب الطلب، استبعده فوراً
+        if (!isAdminUser && !isOwner) return false;
 
-        // إذا كان أدمن يرى كل شيء
-        if (isAdminUser) return true;
+        // --- ثانياً: فلتر المستودعات (Permissions per Location) ---
+        const orderLocation = String(order.warehouse?.location || "").trim();
+        
+       if (!isAdminUser) {
+            // إذا كان الطلب في تركيا والمستخدم لا يملك صلاحية تركيا -> احجبه
+            if (orderLocation === "تركيا" && !canAccessTurkey) return false;
 
-        // --- ب - منطق صلاحيات المواقع (Region Permissions) ---
-        // الوصول لموقع المخزن المرتبط بالطلب
-        const orderLocation = order.warehouse?.location;
+            // إذا كان الطلب في سوريا والمستخدم لا يملك صلاحية سوريا -> احجبه
+            if (orderLocation === "سوريا" && !canAccessSyria) return false;
 
-        // إذا كان الطلب غير مرتبط بموقع، قد ترغب في إظهاره للموظف لكي لا يضيع
-        if (!orderLocation) return true; 
-
-        // التحقق من الصلاحية بناءً على الموقع
-        if (orderLocation === "سوريا" && canAccessSyria) return true;
-        if (orderLocation === "تركيا" && canAccessTurkey) return true;
-
-        return false; // أي حالة أخرى يتم حجبها
-    });
+            // ميزة إضافية: إذا كان المستخدم يملك صلاحية بلد واحد فقط (تركيا مثلاً)
+            // نضمن عدم رؤيته لطلبات البلاد الأخرى التي ليس لها مخزن محدد
+            if (canAccessTurkey && !canAccessSyria && orderLocation !== "تركيا") {
+                return false; 
+            }
+            
+            if (canAccessSyria && !canAccessTurkey && orderLocation !== "سوريا") {
+                return false;
+            }
+        }
         // --- ثالثاً: فلتر البحث النصي ---
         const query = searchQuery.trim().toLowerCase();
         const matchesText = !query ||
