@@ -54,14 +54,6 @@ export default function InventoryPage() {
               ))}
             </div>
           </div>
-          <div className="flex gap-3">
-            <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-2xl bg-white dark:bg-slate-900 border dark:border-slate-800 dark:text-white shadow-sm transition-transform active:scale-90">
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <button onClick={() => { setMovementType("IN"); setIsModalOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold shadow-xl flex items-center gap-2 transition-all">
-              <Plus size={20}/> حركة مخزنية
-            </button>
-          </div>
         </header>
 
         {/* Table */}
@@ -84,7 +76,7 @@ export default function InventoryPage() {
                   <td className="p-6"><span className={`px-3 py-1 rounded-lg text-[10px] font-black ${stock.warehouse.location === 'سوريا' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'}`}>{stock.warehouse.location}</span></td>
                   <td className="p-6 text-2xl font-mono font-bold text-blue-600 dark:text-blue-400">{stock.quantity}</td>
                   <td className="p-6">
-                    <button onClick={() => { setMovementType("ADJUSTMENT"); setModalCountry(stock.warehouse.location); setSourceWarehouseId(stock.warehouseId.toString()); setIsModalOpen(true); }} className="text-sm font-bold text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition underline underline-offset-4">جرد</button>
+                    <button onClick={() => { setMovementType("ADJUSTMENT"); setModalCountry(stock.warehouse.location); setSourceWarehouseId(stock.warehouseId.toString()); setIsModalOpen(true); }} className="text-sm font-bold text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition underline underline-offset-4">الحركات</button>
                   </td>
                 </tr>
               ))}
@@ -111,8 +103,6 @@ export default function InventoryPage() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold dark:text-slate-500 uppercase mr-2">نوع العملية</label>
                   <select className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none focus:ring-2 ring-blue-500 transition" value={movementType} onChange={(e) => setMovementType(e.target.value)}>
-                    <option value="IN">توريد بضاعة (IN)</option>
-                    <option value="OUT">بيع / صرف (OUT)</option>
                     <option value="TRANSFER">تحويل مخزني (Transfer)</option>
                     <option value="ADJUSTMENT">جرد وتصحيح كمية</option>
                   </select>
