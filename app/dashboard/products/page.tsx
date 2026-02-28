@@ -256,7 +256,7 @@ const ProductLayout = () => {
         const excelData = displayProducts.map((stock: any) => ({
             "اسم المنتج": stock.name,
             "المستودع": stock.__stock.warehouse.name,
-            "البلد": stock.__stock.warehouse.location,
+            "التصنيف": stock.categoryId ? (categories.find(c => c.id === stock.categoryId)?.name || "غير محدد") : "غير محدد",
             "الكمية الحالية": stock.__stock.quantity,
             "السعر": stock.__stock.price,
             "الخصم": stock.__stock.discount,
