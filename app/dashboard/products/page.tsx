@@ -235,6 +235,8 @@ const ProductLayout = () => {
         setIsOpen(true);
     }
 
+    
+
     const displayProducts = React.useMemo(() => {
         return products.flatMap((product: any) => {
             const stocks = Array.isArray(product?.stocks) ? product.stocks : [];
@@ -248,6 +250,20 @@ const ProductLayout = () => {
         });
     }, [products, selectedWarehouseFilter]);
 
+    const ExportToExcel = () => {
+    // تجهيز البيانات بشكل مقروء
+    const excelData = displayProducts.map((stock: any) => ({
+      "اسم المنتج": stock.name,
+      "المستودع": stock.__stock.warehouse.name,
+      "البلد": stock.__stock.warehouse.location,
+      "الكمية الحالية": stock.__stock.quantity,
+      "السعر": stock.__stock.price,
+        "الخصم": stock.__stock.discount,
+      "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
+    }));
+    // يمكنك إضافة منطق التصدير هنا إذا رغبت
+    };
+    
     const tableActions: any[] = [
         (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true) ) &&
         {
@@ -307,6 +323,8 @@ const ProductLayout = () => {
     React.useEffect(() => {
     setPage(1);
 }, [selectedWarehouseFilter]);
+
+
     return (
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
