@@ -30,6 +30,7 @@ export interface Column<T> {
 
 interface DataTableProps<T> {
   data: T[];
+  rowKey?: keyof T | ((item: T) => string | number); // أضف هذا السطر
   columns: Column<T>[];
   actindir?:boolean;
   actions?: TableAction<T>[];
@@ -46,6 +47,7 @@ interface DataTableProps<T> {
  */
 export function DataTable<T extends { id: string | number }>({
   data,
+  rowKey,
   actindir,
   columns,
   actions,
@@ -58,7 +60,11 @@ export function DataTable<T extends { id: string | number }>({
   
   // 1. حساب إجمالي الصفحات
   const totalPages = useMemo(() => Math.ceil(totalCount / pageSize), [totalCount, pageSize]);
-  
+  const getRowKey = (item: T, index: number) => {
+    if (typeof rowKey === 'function') return rowKey(item);
+    if (rowKey && item[rowKey]) return item[rowKey] as string | number;
+    return item.id || index; // القيمة الافتراضية
+  };
   // 2. منطق القص (Slice) لعرض صفحة واحدة فقط من المصفوفة
   const paginatedData = useMemo(() => {
     // إذا كانت البيانات المرسلة هي بالفعل صفحة واحدة من السيرفر، لا داعي للقص
@@ -99,8 +105,8 @@ export function DataTable<T extends { id: string | number }>({
 
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {paginatedData.length > 0 ? (
-              paginatedData.map((item) => (
-                <tr key={item.id} className="group hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
+              paginatedData.map((item, idx) => (
+                <tr key={getRowKey(item, idx)} className="group hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
                   {columns.map((col, idx) => (
                     <td key={idx} className={cn("p-4 text-slate-600 dark:text-slate-400 whitespace-nowrap", col.className)}>
                       {typeof col.accessor === "function" 
