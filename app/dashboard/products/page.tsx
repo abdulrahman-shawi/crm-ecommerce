@@ -304,6 +304,9 @@ const ProductLayout = () => {
         },
     ].filter(Boolean);
 
+    React.useEffect(() => {
+    setPage(1);
+}, [selectedWarehouseFilter]);
     return (
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
