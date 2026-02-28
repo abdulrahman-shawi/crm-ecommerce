@@ -84,7 +84,6 @@ export default function InventoryPage() {
             className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
           >
             <FileDown size={18} />
-            تصدير Excel
           </button>
         </header>
 
