@@ -20,6 +20,7 @@ import { Controller, useFieldArray } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import z from 'zod';
 import { ta } from 'zod/v4/locales';
+import * as XLSX from 'xlsx';
 
 const productschama = z.object({
     name: z.string().min(3, "اسم المنتج مطلوب"),
@@ -261,6 +262,17 @@ const ProductLayout = () => {
             "الخصم": stock.__stock.discount,
             "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
         }));
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "المخزون الحالي");
+        
+            // تحسين: ضبط عرض الأعمدة تلقائياً
+            const maxWidth = 20;
+            worksheet["!cols"] = [
+              { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
+            ];
+        
+            XLSX.writeFile(workbook, `inventory_${new Date().getTime()}.xlsx`);
         // يمكنك إضافة منطق التصدير هنا إذا رغبت
     };
 
