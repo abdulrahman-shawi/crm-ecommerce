@@ -8,7 +8,7 @@ const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
 
 export async function getOrders() {
     const order = await prisma.order.findMany({
-        orderBy:{id:"desc"},
+        orderBy:{createdAt:"desc"},
         include:{
             warehouse:true,
             user:{
