@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { getInventoryData, createMovementAction } from "@/server/move";
-import { Package, Plus, X, MapPin, Moon, Sun, ArrowRightLeft } from "lucide-react";
+import { Package, Plus, X, MapPin, Moon, Sun, ArrowRightLeft, FileDown } from "lucide-react";
 import * as XLSX from "xlsx";
 
 export default function InventoryPage() {
@@ -9,7 +9,7 @@ export default function InventoryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  
+
   // الفلاتر
   const [viewCountry, setViewCountry] = useState("الكل");
   const [modalCountry, setModalCountry] = useState("تركيا");
@@ -19,33 +19,33 @@ export default function InventoryPage() {
   useEffect(() => { loadData(); }, []);
   const loadData = () => getInventoryData().then(setData);
 
-  
+
   if (!data) return <div className="h-screen flex items-center justify-center dark:bg-slate-950 dark:text-white font-bold">جاري تحميل البيانات...</div>;
 
-  const filteredStocks = data.stocks.filter((s:any) => viewCountry === "الكل" || s.warehouse.location === viewCountry);
+  const filteredStocks = data.stocks.filter((s: any) => viewCountry === "الكل" || s.warehouse.location === viewCountry);
 
   const ExportToExcel = () => {
-  // تجهيز البيانات بشكل مقروء
-  const excelData = filteredStocks.map((stock:any) => ({
-    "اسم المنتج": stock.product.name,
-    "المستودع": stock.warehouse.name,
-    "البلد": stock.warehouse.location,
-    "الكمية الحالية": stock.quantity,
-    "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
-  }));
+    // تجهيز البيانات بشكل مقروء
+    const excelData = filteredStocks.map((stock: any) => ({
+      "اسم المنتج": stock.product.name,
+      "المستودع": stock.warehouse.name,
+      "البلد": stock.warehouse.location,
+      "الكمية الحالية": stock.quantity,
+      "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
+    }));
 
-  const worksheet = XLSX.utils.json_to_sheet(excelData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "المخزون الحالي");
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "المخزون الحالي");
 
-  // تحسين: ضبط عرض الأعمدة تلقائياً
-  const maxWidth = 20;
-  worksheet["!cols"] = [
-    { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
-  ];
+    // تحسين: ضبط عرض الأعمدة تلقائياً
+    const maxWidth = 20;
+    worksheet["!cols"] = [
+      { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
+    ];
 
-  XLSX.writeFile(workbook, `inventory_${viewCountry}_${new Date().getTime()}.xlsx`);
-};
+    XLSX.writeFile(workbook, `inventory_${viewCountry}_${new Date().getTime()}.xlsx`);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ export default function InventoryPage() {
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen p-6 transition-colors duration-500 bg-slate-50 dark:bg-slate-950 text-right" dir="rtl">
-        
+
         {/* Header */}
         <header className="flex justify-between items-center mb-10">
           <div>
@@ -79,6 +79,13 @@ export default function InventoryPage() {
               ))}
             </div>
           </div>
+          <button
+            onClick={ExportToExcel}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
+          >
+            <FileDown size={18} />
+            تصدير Excel
+          </button>
         </header>
 
         {/* Table */}
@@ -97,7 +104,7 @@ export default function InventoryPage() {
               {filteredStocks.map((stock: any) => (
                 <tr key={`${stock.productId}-${stock.warehouseId}`} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition text-center">
                   <td className="p-6 text-right font-bold dark:text-slate-200">{stock.product.name}</td>
-                  <td className="p-6 text-right text-slate-500 dark:text-slate-400"><MapPin size={14} className="inline ml-1 opacity-50"/> {stock.warehouse.name}</td>
+                  <td className="p-6 text-right text-slate-500 dark:text-slate-400"><MapPin size={14} className="inline ml-1 opacity-50" /> {stock.warehouse.name}</td>
                   <td className="p-6"><span className={`px-3 py-1 rounded-lg text-[10px] font-black ${stock.warehouse.location === 'سوريا' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'}`}>{stock.warehouse.location}</span></td>
                   <td className="p-6 text-2xl font-mono font-bold text-blue-600 dark:text-blue-400">{stock.quantity}</td>
                   <td className="p-6">
@@ -136,14 +143,14 @@ export default function InventoryPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-bold dark:text-slate-500 uppercase mr-2">المستودع (من / الحالي)</label>
-                    <select 
-                      name="warehouseId" 
+                    <select
+                      name="warehouseId"
                       value={sourceWarehouseId}
                       onChange={(e) => setSourceWarehouseId(e.target.value)}
                       className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none" required
                     >
                       <option value="">اختر المستودع...</option>
-                      {data.warehouses.filter((w:any)=>w.location === modalCountry).map((w:any) => <option key={w.id} value={w.id}>{w.name}</option>)}
+                      {data.warehouses.filter((w: any) => w.location === modalCountry).map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
                     </select>
                   </div>
 
@@ -152,7 +159,7 @@ export default function InventoryPage() {
                       <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase mr-2">إلى مستودع (الوجهة)</label>
                       <select name="targetWarehouseId" className="w-full p-4 bg-blue-50 dark:bg-blue-900/20 dark:text-white border border-blue-200 dark:border-blue-800 rounded-2xl outline-none" required>
                         <option value="">اختر الوجهة...</option>
-                        {data.warehouses.map((w:any) => <option key={w.id} value={w.id}>{w.name}</option>)}
+                        {data.warehouses.map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
                       </select>
                     </div>
                   )}
@@ -161,19 +168,19 @@ export default function InventoryPage() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold dark:text-slate-500 uppercase mr-2">المنتج</label>
                   {/* استبدل الجزء الخاص باختيار المنتج بهذا الكود */}
-<select name="productId" className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none" required>
-  <option value="">اختر المنتج...</option>
-  {(movementType === "IN" 
-    ? data.products // في التوريد نظهر كل المنتجات المسجلة في النظام
-    : Array.from(new Set(
-        data.stocks
-          .filter((s: any) => s.warehouse.location === modalCountry)
-          .map((s: any) => s.product)
-      )) // في الصرف أو التحويل نظهر فقط المنتجات التي لها رصيد في هذا البلد
-  ).map((p: any) => (
-    <option key={p.id} value={p.id}>{p.name}</option>
-  ))}
-</select>
+                  <select name="productId" className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none" required>
+                    <option value="">اختر المنتج...</option>
+                    {(movementType === "IN"
+                      ? data.products // في التوريد نظهر كل المنتجات المسجلة في النظام
+                      : Array.from(new Set(
+                        data.stocks
+                          .filter((s: any) => s.warehouse.location === modalCountry)
+                          .map((s: any) => s.product)
+                      )) // في الصرف أو التحويل نظهر فقط المنتجات التي لها رصيد في هذا البلد
+                    ).map((p: any) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
