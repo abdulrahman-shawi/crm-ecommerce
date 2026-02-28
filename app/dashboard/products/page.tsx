@@ -14,7 +14,7 @@ import { getProduct } from '@/server/product';
 import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
 import { image } from 'framer-motion/client';
-import { Mail, Plus, Warehouse } from 'lucide-react';
+import { FileDown, Mail, Plus, Warehouse } from 'lucide-react';
 import * as React from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -125,9 +125,9 @@ const ProductLayout = () => {
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
     const [forData, setFormData] = React.useState<any>(null);
     const [page, setPage] = React.useState(1);
-        const [selectedWarehouseFilter, setSelectedWarehouseFilter] = React.useState<string>('all');
-    const {user} = useAuth()
-  const PAGE_SIZE = 10;
+    const [selectedWarehouseFilter, setSelectedWarehouseFilter] = React.useState<string>('all');
+    const { user } = useAuth()
+    const PAGE_SIZE = 10;
     React.useEffect(() => {
         getallcategory().then(setCategories).catch(console.error);
         getProduct().then((products) => {
@@ -235,7 +235,7 @@ const ProductLayout = () => {
         setIsOpen(true);
     }
 
-    
+
 
     const displayProducts = React.useMemo(() => {
         return products.flatMap((product: any) => {
@@ -251,21 +251,21 @@ const ProductLayout = () => {
     }, [products, selectedWarehouseFilter]);
 
     const ExportToExcel = () => {
-    // تجهيز البيانات بشكل مقروء
-    const excelData = displayProducts.map((stock: any) => ({
-      "اسم المنتج": stock.name,
-      "المستودع": stock.__stock.warehouse.name,
-      "البلد": stock.__stock.warehouse.location,
-      "الكمية الحالية": stock.__stock.quantity,
-      "السعر": stock.__stock.price,
-        "الخصم": stock.__stock.discount,
-      "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
-    }));
-    // يمكنك إضافة منطق التصدير هنا إذا رغبت
+        // تجهيز البيانات بشكل مقروء
+        const excelData = displayProducts.map((stock: any) => ({
+            "اسم المنتج": stock.name,
+            "المستودع": stock.__stock.warehouse.name,
+            "البلد": stock.__stock.warehouse.location,
+            "الكمية الحالية": stock.__stock.quantity,
+            "السعر": stock.__stock.price,
+            "الخصم": stock.__stock.discount,
+            "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
+        }));
+        // يمكنك إضافة منطق التصدير هنا إذا رغبت
     };
-    
+
     const tableActions: any[] = [
-        (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true) ) &&
+        (user && (user.accountType === "ADMIN" || user.permission?.editProducts === true)) &&
         {
             label: "تعديل",
             icon: <Mail size={14} />,
@@ -321,45 +321,51 @@ const ProductLayout = () => {
     ].filter(Boolean);
 
     React.useEffect(() => {
-    setPage(1);
-}, [selectedWarehouseFilter]);
+        setPage(1);
+    }, [selectedWarehouseFilter]);
 
 
     return (
         <div className="p-4" dir="rtl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-bold">إدارة المنتجات</h1>
-                {(user && (user.accountType === "ADMIN" || user.permission?.addProducts === true ))
-                && (
-                    <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}>إضافة منتج جديد</Button>
-                )
+                {(user && (user.accountType === "ADMIN" || user.permission?.addProducts === true))
+                    && (
+                        <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}>إضافة منتج جديد</Button>
+                    )
                 }
-                
+
             </div>
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <div className="flex gap-4 mb-4">
-                <Button onClick={() => setTab("grid")} >قائمة</Button>
-                <Button onClick={() => setTab("table")} >جدول</Button>
-            </div>
+                    <Button onClick={() => setTab("grid")} >قائمة</Button>
+                    <Button onClick={() => setTab("table")} >جدول</Button>
+                    <button
+                        onClick={ExportToExcel}
+                        className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
+                    >
+                        <FileDown size={18} />
+                    </button>
+                </div>
 
-            <div className="mb-4 max-w-xs">
-                <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
-                    عرض حسب المستودع
-                </label>
-                <select
-                    value={selectedWarehouseFilter}
-                    onChange={(e) => {
-                        setSelectedWarehouseFilter(e.target.value);
-                        setPage(1);
-                    }}
-                    className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                >
-                    <option value="all">كل المستودعات</option>
-                    {locationOptions.map((location) => (
-                        <option key={location} value={location}>{location}</option>
-                    ))}
-                </select>
-            </div>
+                <div className="mb-4 max-w-xs">
+                    <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
+                        عرض حسب المستودع
+                    </label>
+                    <select
+                        value={selectedWarehouseFilter}
+                        onChange={(e) => {
+                            setSelectedWarehouseFilter(e.target.value);
+                            setPage(1);
+                        }}
+                        className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    >
+                        <option value="all">كل المستودعات</option>
+                        {locationOptions.map((location) => (
+                            <option key={location} value={location}>{location}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             {tab === 'grid' && (
@@ -502,10 +508,10 @@ const ProductLayout = () => {
                 <DataTable
                     data={displayProducts}
                     rowKey={"__rowId"}
-                     totalCount={displayProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
-                pageSize={PAGE_SIZE}
-                currentPage={page}
-                onPageChange={(newPage) => setPage(newPage)}
+                    totalCount={displayProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
+                    pageSize={PAGE_SIZE}
+                    currentPage={page}
+                    onPageChange={(newPage) => setPage(newPage)}
                     actions={tableActions}
                     columns={[
                         {
