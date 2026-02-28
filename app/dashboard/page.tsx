@@ -56,7 +56,9 @@ const DashboardPage: React.FunctionComponent = () => {
   const [newTargetUserId, setNewTargetUserId] = React.useState("");
   const [newSalesTargetInput, setNewSalesTargetInput] = React.useState("");
   const [newSalesRewardInput, setNewSalesRewardInput] = React.useState("");
-  const [newTargetStartDate, setNewTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [newTargetStartDate, setNewTargetStartDate] = React.useState<string>(
+  () => new Date().toISOString().slice(0, 10)
+);
   const [newTargetEndDate, setNewTargetEndDate] = React.useState("");
   const [newProducts, setNewProducts] = React.useState<Array<{ productId: string; requiredQty: number; rewardValue: number }>>([
     { productId: "", requiredQty: 1, rewardValue: 0 },
