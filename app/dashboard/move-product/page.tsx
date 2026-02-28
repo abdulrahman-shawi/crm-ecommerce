@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { getInventoryData, createMovementAction } from "@/server/move";
 import { Package, Plus, X, MapPin, Moon, Sun, ArrowRightLeft } from "lucide-react";
+import * as XLSX from "xlsx";
 
 export default function InventoryPage() {
   const [data, setData] = useState<any>(null);
@@ -18,9 +19,33 @@ export default function InventoryPage() {
   useEffect(() => { loadData(); }, []);
   const loadData = () => getInventoryData().then(setData);
 
+  
   if (!data) return <div className="h-screen flex items-center justify-center dark:bg-slate-950 dark:text-white font-bold">جاري تحميل البيانات...</div>;
 
   const filteredStocks = data.stocks.filter((s:any) => viewCountry === "الكل" || s.warehouse.location === viewCountry);
+
+  const ExportToExcel = () => {
+  // تجهيز البيانات بشكل مقروء
+  const excelData = filteredStocks.map((stock:any) => ({
+    "اسم المنتج": stock.product.name,
+    "المستودع": stock.warehouse.name,
+    "البلد": stock.warehouse.location,
+    "الكمية الحالية": stock.quantity,
+    "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(excelData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "المخزون الحالي");
+
+  // تحسين: ضبط عرض الأعمدة تلقائياً
+  const maxWidth = 20;
+  worksheet["!cols"] = [
+    { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
+  ];
+
+  XLSX.writeFile(workbook, `inventory_${viewCountry}_${new Date().getTime()}.xlsx`);
+};
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
