@@ -519,7 +519,7 @@ const DashboardPage: React.FunctionComponent = () => {
                   <input
                     type="date"
                     className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
-                    value={new Date().toISOString()}
+                    value={newTargetStartDate}
                     onChange={(e) => setNewTargetStartDate(e.target.value)}
                   />
                 </div>
