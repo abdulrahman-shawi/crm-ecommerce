@@ -120,7 +120,7 @@ const ProductLayout = () => {
     const [categories, setCategories] = React.useState<any[]>([]);
     const [products, setProducts] = React.useState<any[]>([]);
     const [warehouses, setWarehouses] = React.useState<any[]>([]);
-    const [tab, setTab] = React.useState<'table' | "grid">('grid');
+    const [tab, setTab] = React.useState<'table' | "grid">('table');
     const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
     const [forData, setFormData] = React.useState<any>(null);

@@ -613,7 +613,7 @@ const CustomrLayout: React.FC = () => {
       className: "text-xs font-bold text-slate-600 dark:text-slate-300",
     },
     {
-      header: renderSortHeader("الدولة", "country"),
+      header: "الدولة",
       accessor: (customer: any) => customer.country || "-",
       className: "text-xs font-bold text-slate-600 dark:text-slate-300",
     },
@@ -716,7 +716,7 @@ const CustomrLayout: React.FC = () => {
       ),
     },
     {
-      header: renderSortHeader("تاريخ التسجيل", "createdAt"),
+      header: "تاريخ التسجيل",
       accessor: (customer: any) => new Date(customer.createdAt).toLocaleDateString("ar-EG", {
         day: "2-digit",
         month: "short",
@@ -725,7 +725,7 @@ const CustomrLayout: React.FC = () => {
       className: "text-xs font-bold text-slate-600 dark:text-slate-300",
     },
     {
-      header: renderSortHeader("عدد الطلبات", "ordersCount"),
+      header: "عدد الطلبات",
       accessor: (customer: any) => 
       (
         <button
