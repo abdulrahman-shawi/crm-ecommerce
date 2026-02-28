@@ -480,6 +480,7 @@ const ProductLayout = () => {
             {tab === 'table' && (
                 <DataTable
                     data={displayProducts}
+                    rowKey={"__rowId"}
                      totalCount={displayProducts.length} // لنفترض وجود 150 عميل في الداتا بيز
                 pageSize={PAGE_SIZE}
                 currentPage={page}
