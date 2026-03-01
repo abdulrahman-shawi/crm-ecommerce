@@ -14,6 +14,7 @@ const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "معلق / نقص �
 
 const getOrderAmountFromItemsInUSD = (order: {
   finalAmount?: number | null;
+  discount?: number | null;
   warehouse?: { location?: string | null } | null;
   items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
 }) => {
@@ -23,14 +24,18 @@ const getOrderAmountFromItemsInUSD = (order: {
     return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
   }
 
-  return items.reduce((sum, item) => {
+  const itemsTotal = items.reduce((sum, item) => {
     const quantity = Math.max(0, Number(item.quantity || 0));
     const unitPrice = Number(item.price || 0);
     const unitDiscount = Number(item.discount || 0);
     const netUnitPrice = Math.max(0, unitPrice - unitDiscount);
     const rawLineAmount = netUnitPrice * quantity;
-    return sum + normalizeOrderAmountToUSD(rawLineAmount, order.warehouse?.location);
+    return sum + rawLineAmount;
   }, 0);
+
+  const globalDiscount = Math.max(0, Number(order.discount || 0));
+  const finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
+  return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location);
 };
 
 type OrderDateFilter = {
@@ -209,6 +214,7 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
         status: true,
         createdAt: true,
         finalAmount: true,
+        discount: true,
         warehouse: {
           select: {
             location: true,
@@ -747,6 +753,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
         userId: true,
         orderNumber: true,
         finalAmount: true,
+        discount: true,
         status: true,
         createdAt: true,
         warehouse: {
@@ -918,6 +925,14 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       select: {
         userId: true,
         finalAmount: true,
+        discount: true,
+        items: {
+          select: {
+            quantity: true,
+            price: true,
+            discount: true,
+          }
+        },
         warehouse: {
           select: {
             location: true,
@@ -942,6 +957,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         }
       },
       select: {
+        orderId: true,
         productId: true,
         quantity: true,
         price: true,
@@ -949,6 +965,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         order: {
           select: {
             userId: true,
+            discount: true,
             createdAt: true,
             warehouse: {
               select: {
@@ -991,11 +1008,24 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     const totalSoldByUser = new Map<string, number>();
+
+    const orderItemsRawTotals = new Map<number, number>();
+    for (const item of orderItems) {
+      const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
+      const rawLineAmount = netPrice * Math.max(0, Number(item.quantity || 0));
+      const current = orderItemsRawTotals.get(item.orderId) || 0;
+      orderItemsRawTotals.set(item.orderId, current + rawLineAmount);
+    }
+
     for (const item of orderItems) {
       const key = `${item.order.userId}:${item.productId}`;
       const netPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
-      const rawLineAmount = netPrice * item.quantity;
-      const lineAmount = normalizeOrderAmountToUSD(rawLineAmount, item.order?.warehouse?.location);
+      const rawLineAmount = netPrice * Math.max(0, Number(item.quantity || 0));
+      const orderRawTotal = orderItemsRawTotals.get(item.orderId) || 0;
+      const orderGlobalDiscount = Math.max(0, Number(item.order?.discount || 0));
+      const discountShare = orderRawTotal > 0 ? (rawLineAmount / orderRawTotal) * orderGlobalDiscount : 0;
+      const adjustedLineAmount = Math.max(0, rawLineAmount - discountShare);
+      const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location);
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
@@ -1066,7 +1096,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     });
 
     const totalSalesAmount = revenueOrders.reduce((sum, order) => {
-      const converted = normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
+      const converted = getOrderAmountFromItemsInUSD(order);
       return sum + converted;
     }, 0);
     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
