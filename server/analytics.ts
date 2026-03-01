@@ -38,6 +38,8 @@ type OrderDateFilter = {
   endDate?: string;
 };
 
+type EmployeeReportPeriod = "day" | "week" | "month";
+
 const buildOrderDateWhere = (dateFilter?: OrderDateFilter) => {
   const startDate = dateFilter?.startDate ? new Date(dateFilter.startDate) : undefined;
   const endDate = dateFilter?.endDate ? new Date(dateFilter.endDate) : undefined;
@@ -59,6 +61,30 @@ const buildOrderDateWhere = (dateFilter?: OrderDateFilter) => {
     ...(startDate ? { gte: startDate } : {}),
     ...(endDate ? { lte: endDate } : {}),
   };
+};
+
+const buildPeriodRange = (period: EmployeeReportPeriod) => {
+  const now = new Date();
+  const start = new Date(now);
+  const end = new Date(now);
+
+  if (period === "day") {
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+    return { start, end };
+  }
+
+  if (period === "week") {
+    start.setDate(now.getDate() - 6);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+    return { start, end };
+  }
+
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { start, end };
 };
 
 // src/actions/analytics.ts
@@ -576,6 +602,123 @@ export async function GetLowStockProducts(userId: string, threshold = 5) {
 
 export async function GetTopSellingUsers() {
   return { success: true, data: [] };
+}
+
+export async function GetEmployeeCustomerReport(userId: string, period: EmployeeReportPeriod = "month") {
+  try {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!currentUser) return { success: false, error: "User not found", data: [] };
+
+    const canViewEmployees = isAdmin(currentUser) || Boolean(currentUser.permission?.viewEmployees);
+    if (!canViewEmployees) return { success: true, data: [] };
+
+    const periodRange = buildPeriodRange(period);
+    const deliveredStatuses = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+
+    const employees = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+      },
+      orderBy: {
+        username: "asc",
+      }
+    });
+
+    if (employees.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    const employeeIds = employees.map((employee) => employee.id);
+
+    const communicationGroups = await prisma.message.groupBy({
+      by: ["userId", "customerId"],
+      where: {
+        userId: { in: employeeIds },
+        createdAt: {
+          gte: periodRange.start,
+          lte: periodRange.end,
+        },
+      },
+    });
+
+    const communicatedCustomersByUser = new Map<string, number>();
+    communicationGroups.forEach((item) => {
+      const previous = communicatedCustomersByUser.get(item.userId) || 0;
+      communicatedCustomersByUser.set(item.userId, previous + 1);
+    });
+
+    const newCustomers = await prisma.customer.findMany({
+      where: {
+        createdAt: {
+          gte: periodRange.start,
+          lte: periodRange.end,
+        },
+      },
+      select: {
+        users: {
+          select: {
+            id: true,
+          }
+        }
+      }
+    });
+
+    const addedCustomersByUser = new Map<string, number>();
+    newCustomers.forEach((customer) => {
+      const distinctIds = new Set((customer.users || []).map((user) => user.id));
+      distinctIds.forEach((id) => {
+        const previous = addedCustomersByUser.get(id) || 0;
+        addedCustomersByUser.set(id, previous + 1);
+      });
+    });
+
+    const deliveredGroups = await prisma.order.groupBy({
+      by: ["userId", "customerId"],
+      where: {
+        userId: { in: employeeIds },
+        status: { in: deliveredStatuses },
+        createdAt: {
+          gte: periodRange.start,
+          lte: periodRange.end,
+        },
+      },
+    });
+
+    const deliveredCustomersByUser = new Map<string, number>();
+    deliveredGroups.forEach((item) => {
+      if (!item.userId) return;
+      const previous = deliveredCustomersByUser.get(item.userId) || 0;
+      deliveredCustomersByUser.set(item.userId, previous + 1);
+    });
+
+    const data = employees
+      .map((employee) => ({
+        userId: employee.id,
+        name: employee.username || "مستخدم غير معروف",
+        communicatedCustomers: communicatedCustomersByUser.get(employee.id) || 0,
+        addedCustomers: addedCustomersByUser.get(employee.id) || 0,
+        deliveredCustomers: deliveredCustomersByUser.get(employee.id) || 0,
+      }))
+      .sort((a, b) => b.deliveredCustomers - a.deliveredCustomers);
+
+    return {
+      success: true,
+      data,
+      range: {
+        startDate: periodRange.start,
+        endDate: periodRange.end,
+        period,
+      }
+    };
+  } catch (error) {
+    console.error("Error in GetEmployeeCustomerReport:", error);
+    return { success: false, data: [], error: "Internal Server Error" };
+  }
 }
 
 export async function GetTopSellingUsersByPermission(userId: string, dateFilter?: OrderDateFilter) {

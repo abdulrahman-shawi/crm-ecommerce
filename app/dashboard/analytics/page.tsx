@@ -5,21 +5,19 @@ import { useAuth } from '@/context/AuthContext';
 import {
     GetBestSellingProducts,
     GetCustomerAcquisitionMonth,
-    GetCustomerInteractions,
+    GetEmployeeCustomerReport,
     GetLowStockProducts,
     GetSalesByCity,
     GetSalesByStatusAction,
     GetSalesTimelineAction,
-    GetTopCustomers,
     GetTopSellingUsersByPermission
 } from '@/server/analytics';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
-import { u } from 'framer-motion/client';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
 import { TrendingUp, TrendingDown, Package, Users, X, MapPin, Award, Trophy } from 'lucide-react';
 import * as React from 'react';
-import { set } from 'zod';
 
 type OrderFilterPreset = 'this_month' | 'last_month' | 'custom';
+type EmployeeReportPeriod = 'day' | 'week' | 'month';
 
 const toInputDate = (date: Date) => {
     const year = date.getFullYear();
@@ -42,6 +40,13 @@ const getPresetDateRange = (preset: OrderFilterPreset) => {
     return { startDate: toInputDate(start), endDate: toInputDate(end) };
 };
 
+const formatUSD = (value: number | undefined | null) => {
+    return Number(value || 0).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3,
+    });
+};
+
 const AnalyticPage: React.FC = () => {
     // تحديد الحالة المختارة لفتح المودال
     const [selectedStatus, setSelectedStatus] = React.useState<any>(null);
@@ -60,12 +65,12 @@ const AnalyticPage: React.FC = () => {
         };
     }>({ success: true, data: [] });
 
-    const [msg, setMsg] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [country, setCountry] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
-    const [topCustomer, setTopCustomer] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [topSale, setTopSale] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [lowStock, setLowStock] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
     const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
+    const [employeeCustomerReport, setEmployeeCustomerReport] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
+    const [employeeReportPeriod, setEmployeeReportPeriod] = React.useState<EmployeeReportPeriod>('month');
     const [expandedUserId, setExpandedUserId] = React.useState<string | null>(null);
     const [expandedOrderByUser, setExpandedOrderByUser] = React.useState<Record<string, string | null>>({});
     const [timelineData, setTimelineData] = React.useState<any[]>([]); // 
@@ -100,35 +105,32 @@ const AnalyticPage: React.FC = () => {
                 // تنفيذ جميع الطلبات بالتوازي لتحسين الأداء
                 const [
                     resStatus,
-                    resMsg,
                     resCountry,
-                    resTopCust,
                     resTopSale,
                     resLowStock,
                     resTopUsers,
                     resTimeline,
-                    resMsgTimeline
+                    resMsgTimeline,
+                    resEmployeeReport
                 ] = await Promise.all([
                     GetSalesByStatusAction(user.id, orderDateFilter),
-                    GetCustomerInteractions(user.id, orderDateFilter),
                     GetSalesByCity(user.id, orderDateFilter),
-                    GetTopCustomers(user.id, orderDateFilter),
                     GetBestSellingProducts(user.id, orderDateFilter),
                     GetLowStockProducts(user.id),
                     GetTopSellingUsersByPermission(user.id, orderDateFilter),
                     GetSalesTimelineAction(user.id, orderDateFilter),
-                    GetCustomerAcquisitionMonth(user.id, orderDateFilter)
+                    GetCustomerAcquisitionMonth(user.id, orderDateFilter),
+                    GetEmployeeCustomerReport(user.id, employeeReportPeriod)
                 ]);
 
                 setResult(resStatus as any);
-                setMsg(resMsg as any);
                 setCountry(resCountry as any);
-                setTopCustomer(resTopCust as any);
                 setTopSale(resTopSale as any);
                 setLowStock(resLowStock as any);
                 setTopSellingUsers(resTopUsers as any);
                 setTimelineData((resTimeline as any)?.data || []);
                 setMsgTimeline(resMsgTimeline as any);
+                setEmployeeCustomerReport(resEmployeeReport as any);
             } catch (error) {
                 console.error("Error fetching analytics:", error);
             } finally {
@@ -137,7 +139,7 @@ const AnalyticPage: React.FC = () => {
         };
 
         fetchAllData();
-    }, [user?.id, orderDateFilter, isInvalidCustomRange]);
+    }, [user?.id, orderDateFilter, employeeReportPeriod, isInvalidCustomRange]);
 
     const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
@@ -146,14 +148,6 @@ const AnalyticPage: React.FC = () => {
         value: item._sum.finalAmount || 0,
         count: item._count.id || 0
     })) || [];
-    const interactionData = React.useMemo(() => {
-        return msg.data?.map((item: any) => ({
-            name: item.name,
-            // الوصول الصحيح للعدد من بنية Prisma
-            count: item._count?.message || 0
-        })) || [];
-    }, [msg.data]);
-
     const allStatuses = React.useMemo(() => {
         // جمع كل الحالات الفريدة الموجودة في جميع الأشهر
         const statuses = new Set<string>();
@@ -189,29 +183,20 @@ const AnalyticPage: React.FC = () => {
         '#4d4dff', // أزرق غامق
     ];
 
-    const topCustData = topCustomer.data?.map((item: any) => ({
-        name: item.name,
-        "عدد الطلبات": item._count?.orders || 0
-    })) || [];
-
     const topUsersData = topSellingUsers.data?.map((user: any) => ({
         name: user.name,
         sales: user.totalOrdersAll || user.totalOrders || 0
     })) || [];
 
     const showSalesTimeline = loading || timelineData.length > 0;
-    const showStatusChart = loading || chartData.length > 0;
-    const showCustomerInteractions = loading || (msg.data?.length || 0) > 0;
-    const showInteractionChart = loading || interactionData.length > 0;
     const showCustomerGrowth = loading || (msgTimeline.data?.length || 0) > 0;
     const showSalesByCountry = loading || (country.data?.length || 0) > 0;
     const showSalesGeo = loading || cityData.length > 0;
-    const showTopCustomersCards = loading || (topCustomer.data?.length || 0) > 0;
-    const showTopCustomersChart = loading || topCustData.length > 0;
     const showTopProducts = loading || (topSale.data?.length || 0) > 0;
     const showLowStock = loading || (lowStock.data?.length || 0) > 0;
     const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
     const showTopUsersChart = loading || topUsersData.length > 0;
+    const showEmployeeCustomerReport = loading || (employeeCustomerReport.data?.length || 0) > 0;
     return (
         <div className="p-8 relative">
             <div className="mb-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40">
@@ -220,202 +205,57 @@ const AnalyticPage: React.FC = () => {
                         <label className="text-xs font-bold text-slate-500">عرض التحليلات حسب الفترة</label>
                         <select
                             value={orderFilterPreset}
-                            onChange={(e) => setOrderFilterPreset(e.target.value as OrderFilterPreset)}
-                            className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                        >
-                            <option value="this_month">هذا الشهر</option>
-                            <option value="last_month">الشهر الماضي</option>
-                            <option value="custom">مخصص</option>
-                        </select>
-                    </div>
-
-                    {orderFilterPreset === 'custom' && (
-                        <>
-                            <div className="flex flex-col gap-1">
-                                <label className="text-xs font-bold text-slate-500">من تاريخ</label>
-                                <input
-                                    type="date"
-                                    value={customStartDate}
-                                    onChange={(e) => setCustomStartDate(e.target.value)}
-                                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                                />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <label className="text-xs font-bold text-slate-500">إلى تاريخ</label>
-                                <input
-                                    type="date"
-                                    value={customEndDate}
-                                    onChange={(e) => setCustomEndDate(e.target.value)}
-                                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                                />
-                            </div>
-                        </>
-                    )}
-                </div>
-
-                {isInvalidCustomRange && (
-                    <p className="mt-2 text-xs text-red-500 font-bold">تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
-                )}
-            </div>
-
-            {/* الشباك المنبثق (Modal) لتفاصيل الطلبات */}
-            {selectedStatus && (
-                <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
-                    onClick={() => setSelectedStatus(null)}
-                >
-                    <div
-                        className="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {/* رأس المودال */}
-                        <div className="p-4 border-b flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 rounded-t-xl">
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-800 dark:text-white">
-                                    طلبات حالة: {selectedStatus.status}
-                                </h3>
-                                <p className="text-sm text-slate-500">
-                                    الإجمالي: {selectedStatus.amount?.toLocaleString()}$ ({selectedStatus.count} طلب)
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => setSelectedStatus(null)}
-                                className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* جدول الطلبات داخل المودال */}
-                        <div className="overflow-y-auto p-4">
-                            <table className="w-full text-right border-collapse">
-                                <thead>
-                                    <tr className="text-xs font-bold text-slate-400 border-b uppercase tracking-wider">
-                                        <th className="pb-3 px-2">رقم الطلب</th>
-                                        <th className="pb-3 px-2">العميل</th>
-                                        <th className="pb-3 px-2">المبلغ</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                    {selectedStatus.ordersDetails?.map((order: any) => (
-                                        <tr key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                                            <td className="py-3 px-2 text-sm text-blue-600 font-medium font-mono">
-                                                #{order.orderNumber}
-                                            </td>
-                                            <td className="py-3 px-2 text-sm text-slate-600 dark:text-slate-300">
-                                                {order.customerName}
-                                            </td>
-                                            <td className="py-3 px-2 text-sm font-bold text-slate-900 dark:text-white">
-                                                {order.amount?.toLocaleString()}$
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 1. كرت إحصائيات المبيعات حسب الحالة */}
-            <DynamicCard
-                isLoading={loading}
-                isError={!result.success}
-                isEmpty={!loading && result.success && result.data?.length === 0}
-                variant="glass"
-            >
-                <DynamicCard.Header
-                    title="حالات الطلبات"
-                    description="انقر على أي حالة لعرض تفاصيل الطلبات الخاصة بها"
-                    icon={<Package size={20} />}
-                />
-
-                <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {result.data?.map((item: any) => (
-                        <div
-                            key={item.status}
-                            onClick={() => setSelectedStatus(item)}
-                            className="flex flex-col p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 cursor-pointer hover:ring-2 hover:ring-blue-500/20 hover:border-blue-300 transition-all group"
-                        >
-                            <div className="flex justify-between items-center mb-2">
-                                <div className="flex flex-col">
-                                    <span className="font-semibold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 transition-colors">
-                                        {item.status}
-                                    </span>
-                                    <span className="text-xs text-slate-500">{item.count} طلب</span>
-                                </div>
-                                <span className="text-blue-600 font-bold">{item.amount?.toLocaleString()}$</span>
-                            </div>
-
-                            {/* عرض أرقام الطلبات كـ Badges */}
-                            <div className="mt-2 pt-2 border-t border-dashed border-slate-200 dark:border-slate-700">
-                                <p className="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-tight">آخر الطلبات:</p>
-                                <div className="flex flex-wrap gap-1">
-                                    {item.ordersDetails?.slice(0, 3).map((order: any) => (
-                                        <span key={order.id} className="text-[9px] bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-400">
-                                            #{order.orderNumber}
-                                        </span>
-                                    ))}
-                                    {item.count > 3 && (
-                                        <span className="text-[9px] text-slate-400 self-center">
-                                            +{item.count - 3} أخرى
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </DynamicCard.Content>
-
-                <DynamicCard.Footer>
-                    <div className="flex flex-col w-full gap-2">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500">إجمالي المبيعات (الصافي):</span>
-                            <span className="text-lg font-bold text-green-600">{result.summary?.totalRevenue.toLocaleString()} $</span>
-                        </div>
-                        <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2 items-center">
-                            <div className="flex flex-col">
-                                <span className="text-sm text-red-500">مبالغ ملغاة/فاشلة:</span>
-                                <span className="text-[10px] text-slate-400 italic">
-                                    ({result.summary?.cancelledCount || 0} ملغى | {result.summary?.missingInfoCount || 0} نقص معلومات)
-                                </span>
-                            </div>
-                            <span className="text-sm font-semibold text-red-500">-{result.summary?.lostRevenue.toLocaleString()} $</span>
-                        </div>
-                        <div className="flex justify-between pt-1 items-center">
-                            <span className="text-xs text-slate-400 uppercase tracking-wider">الإجمالي الكلي المخطط:</span>
-                            <span className="text-xs text-slate-400 font-medium">{result.summary?.grossTotal.toLocaleString()} $</span>
-                        </div>
-                    </div>
-                </DynamicCard.Footer>
-            </DynamicCard>
-
-
-            {/* جدول السجل الزمني الشهري */}
-            {showSalesTimeline && (
-                <DynamicCard
-                    isLoading={loading}
-                    variant="glass"
-                    className="mt-6"
-                >
-                    <DynamicCard.Header
-                        title="السجل الزمني للمبيعات"
-                        description="تحليل أداء الحالات شهرياً"
-                        icon={<Package size={20} />}
-                    />
-                    <DynamicCard.Content>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-right border-collapse">
-                                <thead>
-                                    <tr className="bg-slate-100/50 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-400">
-                                        <th className="p-4 rounded-r-lg">الشهر</th>
-                                        <th className="p-4">تفاصيل الحالات (عدد الطلبات | المبالغ)</th>
-                                        <th className="p-4 rounded-l-lg text-left">إجمالي الشهر</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                    {/* ملاحظة: افترضنا أننا خزنّا نتيجة الـ Action الجديد في متغير اسمه timelineData */}
-                                    {timelineData?.map((month: any, idx: number) => {
+                            {showCustomerGrowth && (
+                                <DynamicCard isLoading={loading} variant="glass" className="mt-6">
+                                    <DynamicCard.Header
+                                        title="نمو قاعدة العملاء"
+                                        description="عدد العملاء الجدد المسجلين خلال آخر 30 يوم"
+                                        icon={<Users size={20} className="text-blue-500" />}
+                                    />
+                                    <DynamicCard.Content className="h-[350px] w-full pt-6">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <BarChart data={msgTimeline.data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                                <XAxis
+                                                    dataKey="date"
+                                                    tick={{ fontSize: 11, fill: '#64748b' }}
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    dy={10}
+                                                />
+                                                <YAxis
+                                                    tick={{ fontSize: 11, fill: '#64748b' }}
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    allowDecimals={false}
+                                                />
+                                                <Tooltip
+                                                    cursor={{ fill: '#f8fafc' }}
+                                                    contentStyle={{
+                                                        borderRadius: '12px',
+                                                        border: 'none',
+                                                        boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+                                                        direction: 'rtl'
+                                                    }}
+                                                    formatter={(value: number | undefined) => {
+                                                        return [`${value} عميل جديد`, "العدد"];
+                                                    }}
+                                                />
+                                                <Bar
+                                                    dataKey="العملاء الجدد"
+                                                    fill="#3b82f6"
+                                                    radius={[6, 6, 0, 0]}
+                                                    barSize={40}
+                                                >
+                                                    {msgTimeline.data.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} className="hover:opacity-80 transition-opacity cursor-pointer" />
+                                                    ))}
+                                                </Bar>
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </DynamicCard.Content>
+                                </DynamicCard>
+                            )}
                                         const monthTotal = (Object.values(month.statuses || {}) as any[]).reduce((sum: number, status: any) => {
                                             return sum + (Number(status.amount) || 0);
                                         }, 0);
@@ -432,14 +272,14 @@ const AnalyticPage: React.FC = () => {
                                                                 <span className="text-[10px] text-slate-500 font-bold">{status}</span>
                                                                 <div className="flex justify-between items-center mt-1">
                                                                     <span className="text-xs text-blue-600">{details.count} طلب</span>
-                                                                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{details.amount.toLocaleString()}$</span>
+                                                                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{formatUSD(details.amount)}$</span>
                                                                 </div>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 </td>
                                                 <td className="p-4 text-left font-black text-green-600 dark:text-green-400 text-lg">
-                                                    {monthTotal.toLocaleString()}$
+                                                    {formatUSD(monthTotal)}$
                                                 </td>
                                             </tr>
                                         );
@@ -466,10 +306,10 @@ const AnalyticPage: React.FC = () => {
                                 <YAxis
                                     tick={{ fontSize: 12 }}
                                     stroke="#94a3b8"
-                                    tickFormatter={(value) => `$${value.toLocaleString()}`} // تنسيق العملة
+                                    tickFormatter={(value) => `$${formatUSD(Number(value || 0))}`}
                                 />
                                 <Tooltip
-                                    formatter={(value: number | undefined) => `${value?.toLocaleString() || 0}$`} // تنسيق القيم في الـ Tooltip
+                                    formatter={(value: number | undefined) => `${formatUSD(value)}$`}
                                     contentStyle={{ borderRadius: '10px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                                     labelStyle={{ color: '#333' }}
                                 />
@@ -672,7 +512,7 @@ const AnalyticPage: React.FC = () => {
                                     <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
                                 </div>
                                 <span className="text-green-600 dark:text-green-400 font-bold text-lg">
-                                    {item._sum?.finalAmount?.toLocaleString() || 0}$
+                                    {formatUSD(item._sum?.finalAmount)}$
                                 </span>
                             </div>
                         ))}
@@ -721,7 +561,7 @@ const AnalyticPage: React.FC = () => {
                                     itemStyle={{ color: '#fff' }}
                                     formatter={(value: number | undefined) => {
                                         const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
-                                        return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
+                                        return [`${formatUSD(amount)}$`, "إجمالي المبيعات"];
                                     }}
                                 />
                                 <Legend
@@ -745,127 +585,57 @@ const AnalyticPage: React.FC = () => {
                 </DynamicCard>
             )}
 
-            {showTopCustomersCards && (
+            {showEmployeeCustomerReport && (
                 <DynamicCard
                     isLoading={loading}
-                    isError={!topCustomer.success}
-                    isEmpty={!loading && topCustomer.success && topCustomer.data?.length === 0}
-                    variant="glass"
-                    className='mt-3'
-                >
-                    <DynamicCard.Header
-                        title="أفضل العملاء"
-                        description="أكثر 10 عملاء شراءً بناءً على عدد الطلبات الإجمالي"
-                        icon={<Users size={20} />} // تغيير الأيقونة لتناسب العملاء
-                    />
-
-                    <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {topCustomer.data?.map((item: any) => (
-                            <div
-                                key={item.id}
-                                className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24"
-                            >
-                                <div className="flex flex-col justify-center overflow-hidden">
-                                    <span className="font-semibold text-slate-700 dark:text-slate-200 truncate" title={item.name}>
-                                        {item.name}
-                                    </span>
-                                    <span className="text-xs text-slate-500 dark:text-slate-400">
-                                        {item._count?.orders || 0} طلبات منفذة
-                                    </span>
-                                </div>
-                                <div className="text-right flex-shrink-0">
-                                    <div className="flex flex-col items-end">
-                                        <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">
-                                            {/* يمكنك إضافة إجمالي مبالغ العميل هنا إذا قمت بتعديل الـ Action */}
-                                            VIP
-                                        </span>
-                                        <span className="text-[10px] text-slate-400 uppercase">تصنيف العميل</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </DynamicCard.Content>
-
-                    <DynamicCard.Footer>
-                        <div className="flex flex-col justify-start w-full">
-                            <div className="flex justify-between w-full items-center">
-                                <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                                    إجمالي طلبات كبار العملاء:
-                                </span>
-                                <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                    {topCustomer.data?.reduce((sum: number, item: any) => sum + (item._count?.orders || 0), 0)} طلب
-                                </span>
-                            </div>
-                            <p className="text-[10px] text-slate-400 dark:text-slate-500 italic">
-                                * يتم تحديث هذه القائمة بناءً على نشاط الطلبات الأخير
-                            </p>
-                        </div>
-                    </DynamicCard.Footer>
-                </DynamicCard>
-            )}
-
-            {/* باقي الكروت (أفضل العملاء، المنتجات، المخزون) تستمر بنفس النمط... */}
-
-            {showTopCustomersChart && (
-                <DynamicCard
-                    isLoading={loading}
-                    isError={!topCustomer.success}
-                    isEmpty={!loading && topCustData.length === 0}
+                    isError={!employeeCustomerReport.success}
+                    isEmpty={!loading && employeeCustomerReport.success && employeeCustomerReport.data?.length === 0}
                     variant="glass"
                     className="mt-6"
                 >
                     <DynamicCard.Header
-                        title="أفضل 10 عملاء"
-                        description="ترتيب العملاء الأكثر طلباً للمنتجات"
-                        icon={<Award size={20} className="text-yellow-500" />}
+                        title="تقرير العملاء لكل موظف"
+                        description="عدد العملاء المتواصل معهم والمضافين والمُسلّم طلبهم لكل موظف"
+                        icon={<Users size={20} className="text-indigo-500" />}
                     />
-                    <DynamicCard.Content className="h-[350px] w-full pt-6">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={topCustData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                                {/* شبكة خلفية ناعمة تناسب الثيم الداكن */}
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
-                                <XAxis
-                                    dataKey="name"
-                                    tick={{ fontSize: 10, fill: '#94a3b8' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    interval={0} // لضمان ظهور جميع أسماء العملاء
-                                />
-                                <YAxis
-                                    tick={{ fontSize: 11, fill: '#94a3b8' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    allowDecimals={false}
-                                />
-                                <Tooltip
-                                    cursor={{ fill: '#1e293b', opacity: 0.4 }}
-                                    contentStyle={{
-                                        backgroundColor: '#0f172a',
-                                        borderRadius: '12px',
-                                        border: '1px solid #1e293b',
-                                        direction: 'rtl'
-                                    }}
-                                    itemStyle={{ color: '#f8fafc' }}
-                                    formatter={(value: number | undefined) => {
-                                        const amount = value ?? 0; // إذا كانت القيمة غير معرفة نعتبرها 0
-                                        return [`${amount.toLocaleString()}$`, "إجمالي المبيعات"];
-                                    }}
-                                />
-                                <Bar
-                                    dataKey="عدد الطلبات"
-                                    radius={[6, 6, 0, 0]}
-                                    barSize={35}
+                    <DynamicCard.Content>
+                        <div className="flex justify-end mb-4">
+                            <div className="flex flex-col gap-1 min-w-[220px]">
+                                <label className="text-xs font-bold text-slate-500">فلترة التقرير</label>
+                                <select
+                                    value={employeeReportPeriod}
+                                    onChange={(e) => setEmployeeReportPeriod(e.target.value as EmployeeReportPeriod)}
+                                    className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                                 >
-                                    {topCustData.map((entry: any, index: number) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            // تدرج لوني: الذهبي للمركز الأول، والبرتقالي للبقية
-                                            fill={index === 0 ? '#f59e0b' : '#fb923c'}
-                                        />
+                                    <option value="day">اليوم</option>
+                                    <option value="week">الأسبوع</option>
+                                    <option value="month">الشهر</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-right border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-100/50 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-400">
+                                        <th className="p-3 rounded-r-lg">الموظف</th>
+                                        <th className="p-3">تم التواصل معهم</th>
+                                        <th className="p-3">العملاء المضافين</th>
+                                        <th className="p-3 rounded-l-lg">تم تسليم طلبهم</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                    {employeeCustomerReport.data?.map((row: any) => (
+                                        <tr key={row.userId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                                            <td className="p-3 font-semibold text-slate-700 dark:text-slate-200">{row.name}</td>
+                                            <td className="p-3 text-blue-600 font-bold">{Number(row.communicatedCustomers || 0).toLocaleString()}</td>
+                                            <td className="p-3 text-purple-600 font-bold">{Number(row.addedCustomers || 0).toLocaleString()}</td>
+                                            <td className="p-3 text-emerald-600 font-bold">{Number(row.deliveredCustomers || 0).toLocaleString()}</td>
+                                        </tr>
                                     ))}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
+                                </tbody>
+                            </table>
+                        </div>
                     </DynamicCard.Content>
                 </DynamicCard>
             )}
@@ -963,7 +733,7 @@ const AnalyticPage: React.FC = () => {
                                     <div className="mt-3 flex items-center justify-between border-t border-dashed border-slate-200 dark:border-slate-700 pt-2">
                                         <span className="text-xs text-slate-500">إجمالي المبيعات</span>
                                         <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                                            {(Number(userRow.totalSalesAmount) || 0).toLocaleString()} $
+                                            {formatUSD(Number(userRow.totalSalesAmount) || 0)} $
                                         </span>
                                     </div>
 
@@ -992,7 +762,7 @@ const AnalyticPage: React.FC = () => {
                                                                 </div>
                                                                 <div className="mt-1 flex items-center justify-between text-xs">
                                                                     <span className="text-slate-500">{order.customer?.name || 'بدون عميل'}</span>
-                                                                    <span className="font-bold text-blue-600">{Number(order.finalAmount || 0).toLocaleString()} $</span>
+                                                                    <span className="font-bold text-blue-600">{formatUSD(Number(order.finalAmount || 0))} $</span>
                                                                 </div>
                                                             </button>
 
