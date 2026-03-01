@@ -26,7 +26,7 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     { label: "احالة", value: "احالة" },
     { label: "زيارة شخصية", value: "زيارة شخصية" },
     { label: "معرض", value: "معرض" },
-    { label: "مختلطة", value: "مختلطة" },
+    { label: "أرشيف / رقم قديم", value: "أرشيف / رقم قديم" },
   ];
 
   const genderOptions = [

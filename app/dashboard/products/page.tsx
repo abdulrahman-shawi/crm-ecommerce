@@ -373,7 +373,8 @@ const ProductLayout = () => {
                     </button>
                 </div>
 
-                <div className="mb-4 max-w-xs">
+                <div className="flex items-center gap-3">
+                    <div className="mb-4 max-w-xs">
                     <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
                         بحث بالاسم
                     </label>
@@ -425,6 +426,7 @@ const ProductLayout = () => {
                             <option key={location} value={location}>{location}</option>
                         ))}
                     </select>
+                </div>
                 </div>
             </div>
 
