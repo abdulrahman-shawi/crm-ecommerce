@@ -222,7 +222,7 @@ export async function GetCustomerAcquisition(userId: string) {
   }
 }
 
-export async function GetCustomerAcquisitionMonth(userId: string) {
+export async function GetCustomerAcquisitionMonth(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -232,7 +232,11 @@ export async function GetCustomerAcquisitionMonth(userId: string) {
     if (!user) return { success: false, error: "User not found" };
 
     const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
-    const customerWhere = canViewCustomers ? {} : { users: { some: { id: userId } } };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const customerWhere = {
+      ...(canViewCustomers ? {} : { users: { some: { id: userId } } }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
 
     // جلب جميع العملاء (أو يمكنك تحديد فترة زمنية أطول مثل آخر سنة)
     const customers = await prisma.customer.findMany({
@@ -270,7 +274,7 @@ export async function GetCustomerAcquisitionMonth(userId: string) {
   }
 }
 
-export async function GetTopCustomers(userId: string) {
+export async function GetTopCustomers(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -280,18 +284,37 @@ export async function GetTopCustomers(userId: string) {
     if (!user) return { success: false, error: "User not found" };
 
     const canViewCustomers = isAdmin(user) || Boolean(user.permission?.viewCustomers);
-    const customerWhere = canViewCustomers ? {} : { users: { some: { id: userId } } };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
 
-    const topCustomers = await prisma.customer.findMany({
-      take: 10, // أعلى 5 عملاء
-      where: customerWhere,
-      include: {
-        _count: { select: { orders: true } }, // عدد الطلبات
+    const groupedOrders = await prisma.order.groupBy({
+      by: ['customerId'],
+      where: {
+        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+        ...(canViewCustomers ? {} : { customer: { users: { some: { id: userId } } } }),
       },
-      orderBy: {
-        orders: { _count: 'desc' }
-      }
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+      take: 10,
     });
+
+    const customerIds = groupedOrders.map((row) => row.customerId);
+    if (customerIds.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    const customers = await prisma.customer.findMany({
+      where: { id: { in: customerIds } },
+      select: { id: true, name: true },
+    });
+
+    const customerMap = new Map(customers.map((row) => [row.id, row.name]));
+
+    const topCustomers = groupedOrders.map((row) => ({
+      id: row.customerId,
+      name: customerMap.get(row.customerId) || 'عميل غير معروف',
+      _count: { orders: row._count.id || 0 },
+    }));
+
     return { success: true, data: topCustomers };
   } catch (error) {
     console.error("Error in GetTopCustomers:", error);
@@ -353,7 +376,7 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
 
 // src/actions/analytics.ts
 
-export async function GetCustomerInteractions(userId: string) {
+export async function GetCustomerInteractions(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -370,7 +393,11 @@ export async function GetCustomerInteractions(userId: string) {
       : { users: { some: { id: userId } } };
 
     // 2. فلترة الرسائل داخل العد (للإحصاء الدقيق)
-    const messageFilter = canViewCustomers ? {} : { userId: userId };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const messageFilter = {
+      ...(canViewCustomers ? {} : { userId: userId }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
 
     const interactions = await prisma.customer.findMany({
       where: whereClause,
@@ -383,70 +410,122 @@ export async function GetCustomerInteractions(userId: string) {
           }
         }
       },
-      orderBy: {
-        message: { _count: 'desc' }
-      },
-      take: 10
+      take: 100
     });
 
-    return { success: true, data: interactions };
+    const topInteractions = interactions
+      .sort((a, b) => (b._count?.message || 0) - (a._count?.message || 0))
+      .slice(0, 10);
+
+    return { success: true, data: topInteractions };
   } catch (error) {
     console.error("Error:", error);
     return { success: false, error: "Internal Server Error" };
   }
 }
 
-// export async function GetBestSellingProducts() {
-//   const bestSellers = await prisma.orderItem.groupBy({
-//     by: ['productId'],
-//     _sum: {
-//       quantity: true,
-//     },
-//     orderBy: {
-//       _sum: {
-//         quantity: 'desc',
-//       },
-//     },
-//     take: 5, // جلب أفضل 5 منتجات فقط
-//   });
+export async function GetBestSellingProducts(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
 
-//   // جلب تفاصيل أسماء المنتجات بعد الحصول على الـ IDs
-//   const productsWithDetails = await Promise.all(
-//     bestSellers.map(async (item) => {
-//       const product = await prisma.product.findUnique({
-//         where: { id: item.productId },
-//         select: { name: true, price: true }
-//       });
-//       return {
-//         ...product,
-//         totalSold: item._sum.quantity,
-//       };
-//     })
-//   );
+    if (!user) return { success: false, error: "User not found", data: [] };
 
-//   return { success: true, data: productsWithDetails };
-// }
+    const canViewAllOrders = isAdmin(user) || Boolean(user.permission?.viewOrders);
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
 
-// export async function GetLowStockProducts() {
-//   const allProducts = await prisma.product.findMany({
-//     select: {
-//       id: true,
-//       name: true,
-//       quantity: true,
-//     }
-//   });
+    const bestSellers = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        order: {
+          ...(canViewAllOrders ? {} : { userId: userId }),
+          ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+        },
+      },
+      _sum: {
+        quantity: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: 'desc',
+        },
+      },
+      take: 10,
+    });
 
-//   // تصفية المنتجات التي كميتها أقل من 5
-//   // نقوم بتحويل النص إلى رقم للمقارنة
-//   const lowStock = allProducts
-//     .filter(p => p.quantity !== null && parseInt(p.quantity) <= 5)
-//     .map(p => ({
-//       name: p.name,
-//       stock: parseInt(p.quantity || "0"),
-//     }));
+    const productIds = bestSellers.map((item) => item.productId);
+    if (productIds.length === 0) return { success: true, data: [] };
 
-//   return { success: true, data: lowStock };
-// }
+    const products = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, name: true }
+    });
+
+    const productNameMap = new Map(products.map((row) => [row.id, row.name]));
+
+    const productsWithDetails = bestSellers.map((item) => ({
+      id: item.productId,
+      name: productNameMap.get(item.productId) || "منتج غير معروف",
+      totalSold: Number(item._sum.quantity || 0),
+    }));
+
+    return { success: true, data: productsWithDetails };
+  } catch (error) {
+    console.error("Error in GetBestSellingProducts:", error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function GetLowStockProducts(userId: string, threshold = 5) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found", data: [] };
+
+    const canViewProducts = isAdmin(user) || Boolean(user.permission?.viewProducts);
+    if (!canViewProducts) return { success: true, data: [] };
+
+    const allProducts = await prisma.product.findMany({
+      select: {
+        id: true,
+        name: true,
+        stocks: {
+          select: {
+            quantity: true,
+            warehouse: {
+              select: {
+                location: true,
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const lowStock = allProducts
+      .map((product) => {
+        const stock = (product.stocks || []).reduce((sum, row) => sum + (Number(row.quantity) || 0), 0);
+        return {
+          id: product.id,
+          name: product.name,
+          stock,
+        };
+      })
+      .filter((product) => product.stock <= threshold)
+      .sort((a, b) => a.stock - b.stock)
+      .slice(0, 10);
+
+    return { success: true, data: lowStock };
+  } catch (error) {
+    console.error("Error in GetLowStockProducts:", error);
+    return { success: false, data: [] };
+  }
+}
 
 // المستخدمين الأكثر مبيعا
 
@@ -454,7 +533,7 @@ export async function GetTopSellingUsers() {
   return { success: true, data: [] };
 }
 
-export async function GetTopSellingUsersByPermission(userId: string) {
+export async function GetTopSellingUsersByPermission(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -467,12 +546,14 @@ export async function GetTopSellingUsersByPermission(userId: string) {
     if (!canViewEmployees) return { success: true, data: [] };
 
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
 
     const topUsersGrouped = await prisma.order.groupBy({
       by: ['userId'],
       where: {
         userId: { not: null },
         status: { in: statusWhitelist },
+        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       },
       _count: { id: true },
       _sum: { finalAmount: true },
@@ -488,7 +569,10 @@ export async function GetTopSellingUsersByPermission(userId: string) {
       userIds.map(async (id) => ({
         userId: id,
         count: await prisma.order.count({
-          where: { userId: id },
+          where: {
+            userId: id,
+            ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+          },
         }),
       }))
     );
@@ -510,6 +594,7 @@ export async function GetTopSellingUsersByPermission(userId: string) {
     const orders = await prisma.order.findMany({
       where: {
         userId: { in: userIds },
+        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       },
       select: {
         id: true,

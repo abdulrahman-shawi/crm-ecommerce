@@ -3,10 +3,10 @@
 import DynamicCard from '@/components/ui/dynamicCard';
 import { useAuth } from '@/context/AuthContext';
 import {
-    // GetBestSellingProducts,
+    GetBestSellingProducts,
     GetCustomerAcquisitionMonth,
     GetCustomerInteractions,
-    // GetLowStockProducts,
+    GetLowStockProducts,
     GetSalesByCity,
     GetSalesByStatusAction,
     GetSalesTimelineAction,
@@ -103,23 +103,29 @@ const AnalyticPage: React.FC = () => {
                     resMsg,
                     resCountry,
                     resTopCust,
+                    resTopSale,
+                    resLowStock,
                     resTopUsers,
                     resTimeline,
                     resMsgTimeline
                 ] = await Promise.all([
                     GetSalesByStatusAction(user.id, orderDateFilter),
-                    GetCustomerInteractions(user.id),
+                    GetCustomerInteractions(user.id, orderDateFilter),
                     GetSalesByCity(user.id, orderDateFilter),
-                    GetTopCustomers(user.id),
-                    GetTopSellingUsersByPermission(user.id),
+                    GetTopCustomers(user.id, orderDateFilter),
+                    GetBestSellingProducts(user.id, orderDateFilter),
+                    GetLowStockProducts(user.id),
+                    GetTopSellingUsersByPermission(user.id, orderDateFilter),
                     GetSalesTimelineAction(user.id, orderDateFilter),
-                    GetCustomerAcquisitionMonth(user.id)
+                    GetCustomerAcquisitionMonth(user.id, orderDateFilter)
                 ]);
 
                 setResult(resStatus as any);
                 setMsg(resMsg as any);
                 setCountry(resCountry as any);
                 setTopCustomer(resTopCust as any);
+                setTopSale(resTopSale as any);
+                setLowStock(resLowStock as any);
                 setTopSellingUsers(resTopUsers as any);
                 setTimelineData((resTimeline as any)?.data || []);
                 setMsgTimeline(resMsgTimeline as any);
@@ -211,7 +217,7 @@ const AnalyticPage: React.FC = () => {
             <div className="mb-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40">
                 <div className="flex flex-col md:flex-row md:items-end gap-4">
                     <div className="flex flex-col gap-1 min-w-[220px]">
-                        <label className="text-xs font-bold text-slate-500">عرض الطلبات حسب الفترة</label>
+                        <label className="text-xs font-bold text-slate-500">عرض التحليلات حسب الفترة</label>
                         <select
                             value={orderFilterPreset}
                             onChange={(e) => setOrderFilterPreset(e.target.value as OrderFilterPreset)}
@@ -863,35 +869,34 @@ const AnalyticPage: React.FC = () => {
                     </DynamicCard.Content>
                 </DynamicCard>
             )}
+
             {(showTopProducts || showLowStock) && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                    {/* المنتجات الأكثر مبيعاً */}
                     {showTopProducts && (
                         <DynamicCard isLoading={loading} isError={!topSale.success} variant="glass">
                             <DynamicCard.Header title="المنتجات الأكثر مبيعاً" icon={<TrendingUp className="text-emerald-500" />} />
                             <DynamicCard.Content className="space-y-4">
                                 {topSale.data?.map((product: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between items-center p-3 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
+                                    <div key={product.id || idx} className="flex justify-between items-center p-3 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
                                         <div className="flex items-center gap-3">
                                             <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
                                             <span className="text-sm font-medium">{product.name}</span>
                                         </div>
-                                        <span className="text-sm font-bold text-emerald-600">{product.totalSold} قطعة</span>
+                                        <span className="text-sm font-bold text-emerald-600">{Number(product.totalSold || 0).toLocaleString()} قطعة</span>
                                     </div>
                                 ))}
                             </DynamicCard.Content>
                         </DynamicCard>
                     )}
 
-                    {/* مخزون منخفض */}
                     {showLowStock && (
                         <DynamicCard isLoading={loading} isError={!lowStock.success} variant="glass">
                             <DynamicCard.Header title="تنبيه المخزون" icon={<TrendingDown className="text-red-500" />} />
                             <DynamicCard.Content className="space-y-4">
                                 {lowStock.data?.map((product: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between items-center p-3 bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+                                    <div key={product.id || idx} className="flex justify-between items-center p-3 bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
                                         <span className="text-sm font-medium">{product.name}</span>
-                                        <span className="text-sm font-bold text-red-600">{product.stock} متوفر</span>
+                                        <span className="text-sm font-bold text-red-600">{Number(product.stock || 0)} متوفر</span>
                                     </div>
                                 ))}
                             </DynamicCard.Content>
@@ -899,6 +904,7 @@ const AnalyticPage: React.FC = () => {
                     )}
                 </div>
             )}
+
             {showTopSellingUsers && (
                 <DynamicCard
                     isLoading={loading}

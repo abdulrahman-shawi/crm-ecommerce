@@ -68,10 +68,23 @@ const DashboardPage: React.FunctionComponent = () => {
   const sumNumbers = (values?: number[] | null) =>
     Array.isArray(values) ? values.reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
 
-  const [selectedMonth, setSelectedMonth] = React.useState<string>(() => {
+  const [monthFilterPreset, setMonthFilterPreset] = React.useState<"this_month" | "last_month" | "custom">("this_month");
+  const [customMonth, setCustomMonth] = React.useState<string>(() => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   });
+
+  const selectedMonth = React.useMemo(() => {
+    const now = new Date();
+    if (monthFilterPreset === "this_month") {
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    }
+    if (monthFilterPreset === "last_month") {
+      const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      return `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}`;
+    }
+    return customMonth;
+  }, [monthFilterPreset, customMonth]);
 
   const monthKey = (value?: string | Date) => {
     if (!value) return "unknown";
@@ -86,13 +99,6 @@ const DashboardPage: React.FunctionComponent = () => {
       .map((item) => Number(item.trim()))
       .filter((item) => Number.isFinite(item));
 
-  const monthLabel = (value?: string | Date) => {
-    if (!value) return "غير محدد";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "غير محدد";
-    return new Intl.DateTimeFormat('ar-EG', { month: 'long', year: 'numeric' }).format(date);
-  };
-
   const getDaysLeftInMonth = (key: string) => {
     if (key === "all" || key === "unknown") return null;
     const [yearStr, monthStr] = key.split("-");
@@ -105,26 +111,6 @@ const DashboardPage: React.FunctionComponent = () => {
     const diffMs = endOfDay.getTime() - today.getTime();
     return Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
   };
-
-  const monthOptions = React.useMemo(() => {
-    const now = new Date();
-    const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const previousKey = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, "0")}`;
-    const allowed = new Set([currentKey, previousKey]);
-
-    const keys = new Map<string, string>();
-    (targetProgress.data ?? []).forEach((item) => {
-      const key = monthKey(item.targetCreatedAt);
-      if (allowed.has(key) && !keys.has(key)) {
-        keys.set(key, monthLabel(item.targetCreatedAt));
-      }
-    });
-
-    const entries = Array.from(keys.entries());
-    entries.sort(([a], [b]) => a.localeCompare(b));
-    return entries;
-  }, [targetProgress.data]);
 
   const filteredTargets = React.useMemo(() => {
     return (targetProgress.data ?? []).filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
@@ -654,21 +640,37 @@ const DashboardPage: React.FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              {monthOptions.map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedMonth(key)}
-                  className={`rounded-full px-3 py-1 text-xs font-bold ${selectedMonth === key
-                    ? "bg-blue-600 text-white"
-                    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"}`}
-                >
-                  {label}
-                </button>
-              ))}
-              <span className="text-xs text-slate-500">
-                باقي {getDaysLeftInMonth(selectedMonth)} يوم لنهاية الشهر
-              </span>
+            <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-800 dark:bg-slate-900/40">
+              <div className="flex flex-col md:flex-row md:items-end gap-3">
+                <div className="flex flex-col gap-1 min-w-[220px]">
+                  <label className="text-xs font-bold text-slate-500">عرض التاركت حسب الشهر</label>
+                  <select
+                    value={monthFilterPreset}
+                    onChange={(e) => setMonthFilterPreset(e.target.value as "this_month" | "last_month" | "custom")}
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                  >
+                    <option value="this_month">هذا الشهر</option>
+                    <option value="last_month">الشهر الماضي</option>
+                    <option value="custom">مخصص</option>
+                  </select>
+                </div>
+
+                {monthFilterPreset === "custom" && (
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-bold text-slate-500">اختر الشهر</label>
+                    <input
+                      type="month"
+                      value={customMonth}
+                      onChange={(e) => setCustomMonth(e.target.value)}
+                      className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                    />
+                  </div>
+                )}
+
+                <span className="text-xs text-slate-500 md:mr-auto">
+                  باقي {getDaysLeftInMonth(selectedMonth)} يوم لنهاية الشهر
+                </span>
+              </div>
             </div>
 
             {valueTargets.length > 0 && (
