@@ -116,6 +116,14 @@ const UserManagement: React.FunctionComponent = () => {
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
 
+  /**
+   * Opens a new dashboard tab impersonating the selected employee without replacing current admin session.
+   */
+  const openEmployeeView = (employeeId: string) => {
+    if (!employeeId) return;
+    window.open(`/dashboard?asUser=${employeeId}`, '_blank', 'noopener,noreferrer');
+  };
+
   const handleClose = () => {
     setIsOpen(false);
     setEditId(null);
@@ -373,7 +381,24 @@ const UserManagement: React.FunctionComponent = () => {
                 onPageChange={(newPage) => setPage(newPage)}
       actions={tableActions} columns={
         [
-          { header: "الاسم", accessor: "username" },
+          {
+            header: "الاسم",
+            accessor: (row: any) => {
+              const canImpersonate = user?.accountType === "ADMIN" && row?.id && row?.id !== user?.id;
+              if (!canImpersonate) return row?.username;
+
+              return (
+                <button
+                  type="button"
+                  onClick={() => openEmployeeView(String(row.id))}
+                  className="font-semibold text-blue-600 hover:underline"
+                  title="فتح لوحة الموظف في تبويب جديد"
+                >
+                  {row?.username}
+                </button>
+              );
+            }
+          },
           { header: "البريد الإلكتروني", accessor: "email" },
           { header: "رقم الهاتف", accessor: "phone" },
           {

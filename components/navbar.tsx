@@ -13,7 +13,14 @@ export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
   const [time, setTime] = useState(new Date());
 
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, isImpersonating, stopImpersonation } = useAuth();
+    /**
+     * Returns current tab to admin identity when impersonation mode is active.
+     */
+    const handleBackToAdmin = () => {
+      stopImpersonation();
+    };
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileName, setProfileName] = useState("");
@@ -129,6 +136,17 @@ export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
       </div>
 
       <div className="flex items-center gap-4">
+        {isImpersonating && (
+          <button
+            type="button"
+            onClick={handleBackToAdmin}
+            className="hidden sm:inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 hover:bg-blue-100 dark:border-blue-900/50 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-900/30"
+            title="الرجوع لحساب الأدمن"
+          >
+            الرجوع لحساب الأدمن
+          </button>
+        )}
+
         <button className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all relative">
           <Bell size={20} />
           <span className="absolute top-2 right-2 w-2 h-2 bg-blue-600 rounded-full border-2 border-white dark:border-slate-950"></span>
