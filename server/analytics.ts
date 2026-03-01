@@ -12,6 +12,27 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "معلق / نقص معلومات", "فشل التسليم مرتجع"];
 
+const getOrderAmountFromItemsInUSD = (order: {
+  finalAmount?: number | null;
+  warehouse?: { location?: string | null } | null;
+  items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
+}) => {
+  const items = Array.isArray(order.items) ? order.items : [];
+
+  if (items.length === 0) {
+    return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
+  }
+
+  return items.reduce((sum, item) => {
+    const quantity = Math.max(0, Number(item.quantity || 0));
+    const unitPrice = Number(item.price || 0);
+    const unitDiscount = Number(item.discount || 0);
+    const netUnitPrice = Math.max(0, unitPrice - unitDiscount);
+    const rawLineAmount = netUnitPrice * quantity;
+    return sum + normalizeOrderAmountToUSD(rawLineAmount, order.warehouse?.location);
+  }, 0);
+};
+
 type OrderDateFilter = {
   startDate?: string;
   endDate?: string;
@@ -60,7 +81,19 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
     const orders = await prisma.order.findMany({
       where: whereClause,
       include: {
-        customer: true, // جلب بيانات العميل
+        customer: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        },
+        items: {
+          select: {
+            quantity: true,
+            price: true,
+            discount: true,
+          }
+        }
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -75,38 +108,38 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
     let failedReturnCount = 0;
 
     orders.forEach(order => {
+      const orderAmountUSD = getOrderAmountFromItemsInUSD(order);
+
       if (!statusGroups[order.status]) {
         statusGroups[order.status] = {
           status: order.status,
           count: 0,
           amount: 0,
-          ordersDetails: [] // لتخزين قائمة الطلبات بدل المنتجات
+          ordersDetails: []
         };
       }
 
       statusGroups[order.status].count += 1;
-      statusGroups[order.status].amount += order.finalAmount;
+      statusGroups[order.status].amount += orderAmountUSD;
       
-      // إضافة بيانات الطلب بدلاً من تجميع المنتجات
       statusGroups[order.status].ordersDetails.push({
         id: order.id,
         orderNumber: order.orderNumber,
         customerName: order.customer.name,
-        amount: order.finalAmount,
+        amount: orderAmountUSD,
       });
 
-      // منطق الحساب والعدادات
       if (order.status === "تم الغاء الطلب") {
         cancelledCount++;
-        lostRevenue += order.finalAmount;
+        lostRevenue += orderAmountUSD;
       } else if (order.status === "معلق / نقص معلومات") {
         missingInfoCount++;
-        lostRevenue += order.finalAmount;
+        lostRevenue += orderAmountUSD;
       } else if (order.status === "فشل التسليم مرتجع") {
         failedReturnCount++;
-        lostRevenue += order.finalAmount;
+        lostRevenue += orderAmountUSD;
       } else {
-        totalRevenue += order.finalAmount;
+        totalRevenue += orderAmountUSD;
       }
     });
 
@@ -147,19 +180,31 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
     const orders = await prisma.order.findMany({
       where: whereClause,
       select: {
-        finalAmount: true,
         status: true,
         createdAt: true,
+        finalAmount: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        },
+        items: {
+          select: {
+            quantity: true,
+            price: true,
+            discount: true,
+          }
+        }
       },
-      orderBy: { createdAt: 'asc' } // من الأقدم للأحدث لرسم الخط الزمني
+      orderBy: { createdAt: 'asc' }
     });
 
-    // كائن لتخزين البيانات: "الشهر-السنة": { الحالات }
     const timeline: Record<string, any> = {};
 
     orders.forEach(order => {
+      const orderAmountUSD = getOrderAmountFromItemsInUSD(order);
       const date = new Date(order.createdAt);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`; // مثال: 2-2024
+      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
 
       if (!timeline[monthYear]) {
         timeline[monthYear] = {
@@ -176,12 +221,12 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
       }
 
       timeline[monthYear].statuses[order.status].count += 1;
-      timeline[monthYear].statuses[order.status].amount += order.finalAmount;
+      timeline[monthYear].statuses[order.status].amount += orderAmountUSD;
     });
 
     return { 
       success: true, 
-      data: Object.values(timeline) // تحويلها لمصفوفة لسهولة العرض
+      data: Object.values(timeline)
     };
   } catch (error) {
     console.error(error);
