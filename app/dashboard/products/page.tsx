@@ -86,6 +86,7 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                         <FormInput
                             className='text-slate-900 dark:text-slate-100'
                             type="number"
+                            step="0.01"
                             label="سعر المنتج"
                             {...register(`warehouseStocks.${index}.stockPrice`)}
                             error={errors?.warehouseStocks?.[index]?.stockPrice?.message as string}
@@ -94,6 +95,7 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                         <FormInput
                             className='text-slate-900 dark:text-slate-100'
                             type="number"
+                            step="0.01"
                             label="خصم المنتج"
                             {...register(`warehouseStocks.${index}.stockDiscount`)}
                             error={errors?.warehouseStocks?.[index]?.stockDiscount?.message as string}
@@ -127,6 +129,8 @@ const ProductLayout = () => {
     const [forData, setFormData] = React.useState<any>(null);
     const [page, setPage] = React.useState(1);
     const [selectedWarehouseFilter, setSelectedWarehouseFilter] = React.useState<string>('all');
+    const [nameFilter, setNameFilter] = React.useState('');
+    const [categoryFilter, setCategoryFilter] = React.useState<string>('all');
     const { user } = useAuth()
     const PAGE_SIZE = 10;
     React.useEffect(() => {
@@ -239,8 +243,17 @@ const ProductLayout = () => {
 
 
     const displayProducts = React.useMemo(() => {
+        const normalizedNameFilter = nameFilter.trim().toLowerCase();
+
         return products.flatMap((product: any) => {
             const stocks = Array.isArray(product?.stocks) ? product.stocks : [];
+
+            const matchesName = !normalizedNameFilter || String(product?.name || '').toLowerCase().includes(normalizedNameFilter);
+            const matchesCategory = categoryFilter === 'all' || String(product?.categoryId || '') === categoryFilter;
+            if (!matchesName || !matchesCategory) {
+                return [];
+            }
+
             return stocks
                 .filter((stock: any) => selectedWarehouseFilter === 'all' || String(stock?.warehouse?.location || '') === selectedWarehouseFilter)
                 .map((stock: any) => ({
@@ -249,7 +262,7 @@ const ProductLayout = () => {
                     __rowId: `${product.id}-${stock.warehouseId}`,
                 }));
         });
-    }, [products, selectedWarehouseFilter]);
+    }, [products, selectedWarehouseFilter, nameFilter, categoryFilter]);
 
     const ExportToExcel = () => {
         // تجهيز البيانات بشكل مقروء
@@ -334,7 +347,7 @@ const ProductLayout = () => {
 
     React.useEffect(() => {
         setPage(1);
-    }, [selectedWarehouseFilter]);
+    }, [selectedWarehouseFilter, nameFilter, categoryFilter]);
 
 
     return (
@@ -358,6 +371,41 @@ const ProductLayout = () => {
                     >
                         <FileDown size={18} />
                     </button>
+                </div>
+
+                <div className="mb-4 max-w-xs">
+                    <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
+                        بحث بالاسم
+                    </label>
+                    <input
+                        type="text"
+                        value={nameFilter}
+                        onChange={(e) => {
+                            setNameFilter(e.target.value);
+                            setPage(1);
+                        }}
+                        placeholder="اسم المنتج"
+                        className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    />
+                </div>
+
+                <div className="mb-4 max-w-xs">
+                    <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">
+                        عرض حسب التصنيف
+                    </label>
+                    <select
+                        value={categoryFilter}
+                        onChange={(e) => {
+                            setCategoryFilter(e.target.value);
+                            setPage(1);
+                        }}
+                        className="h-10 w-full border rounded-md px-3 bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    >
+                        <option value="all">كل التصنيفات</option>
+                        {categories.map((category: any) => (
+                            <option key={category.id} value={String(category.id)}>{category.name}</option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="mb-4 max-w-xs">

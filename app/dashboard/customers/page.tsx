@@ -92,13 +92,15 @@ const CustomrLayout: React.FC = () => {
   }>({ field: null, direction: "asc" });
 
   const [dateFilter, setDateFilter] = React.useState('فرصة جديدة');
+  const [genderFilter, setGenderFilter] = React.useState('الكل');
+  const [createdPreset, setCreatedPreset] = React.useState('month');
   const [createdFrom, setCreatedFrom] = React.useState("");
   const [createdTo, setCreatedTo] = React.useState("");
   const [alluser, setUsers] = React.useState<any[]>([])
   const importInputRef = React.useRef<HTMLInputElement | null>(null);
   const { user } = useAuth()
 
-  const filterCustomer = useCustomerFilters(customers, search, dateFilter, createdFrom, createdTo);
+  const filterCustomer = useCustomerFilters(customers, search, dateFilter, genderFilter, createdPreset, createdFrom, createdTo);
   const {
     selectedCustomers,
     setSelectedCustomers,
@@ -482,7 +484,7 @@ const CustomrLayout: React.FC = () => {
 
   React.useEffect(() => {
     setPage(1);
-  }, [search, dateFilter, createdFrom, createdTo, viewMode]);
+  }, [search, dateFilter, genderFilter, createdPreset, createdFrom, createdTo, viewMode]);
 
   const visibleCustomers = React.useMemo(() => {
     return filterCustomer.filter((customer) => {
@@ -825,6 +827,10 @@ const CustomrLayout: React.FC = () => {
         setSearch={setSearch}
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}
+        genderFilter={genderFilter}
+        setGenderFilter={setGenderFilter}
+        createdPreset={createdPreset}
+        setCreatedPreset={setCreatedPreset}
         createdFrom={createdFrom}
         setCreatedFrom={setCreatedFrom}
         createdTo={createdTo}

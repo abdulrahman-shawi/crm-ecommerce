@@ -5,6 +5,10 @@ type CustomersFiltersProps = {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   dateFilter: string;
   setDateFilter: React.Dispatch<React.SetStateAction<string>>;
+  genderFilter: string;
+  setGenderFilter: React.Dispatch<React.SetStateAction<string>>;
+  createdPreset: string;
+  setCreatedPreset: React.Dispatch<React.SetStateAction<string>>;
   createdFrom: string;
   setCreatedFrom: React.Dispatch<React.SetStateAction<string>>;
   createdTo: string;
@@ -24,6 +28,10 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
   setSearch,
   dateFilter,
   setDateFilter,
+  genderFilter,
+  setGenderFilter,
+  createdPreset,
+  setCreatedPreset,
   createdFrom,
   setCreatedFrom,
   createdTo,
@@ -57,6 +65,48 @@ export const CustomersFilters: React.FC<CustomersFiltersProps> = ({
             </button>
           ))}
         </div>
+
+        <div className="flex gap-2 items-center">
+          <select
+            value={genderFilter}
+            onChange={(e) => setGenderFilter(e.target.value)}
+            className="h-11 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 px-3"
+          >
+            <option value="الكل">الجنس: الكل</option>
+            <option value="ذكر">ذكر</option>
+            <option value="أنثى">أنثى</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+        <select
+          value={createdPreset}
+          onChange={(e) => setCreatedPreset(e.target.value)}
+          className="h-11 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 px-3"
+        >
+          <option value="today">اليوم</option>
+          <option value="last7">آخر 7 أيام</option>
+          <option value="month">هذا الشهر</option>
+          <option value="custom">مخصص</option>
+        </select>
+
+        {createdPreset === "custom" && (
+          <>
+            <input
+              type="date"
+              value={createdFrom}
+              onChange={(e) => setCreatedFrom(e.target.value)}
+              className="h-11 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 px-3"
+            />
+            <input
+              type="date"
+              value={createdTo}
+              onChange={(e) => setCreatedTo(e.target.value)}
+              className="h-11 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 px-3"
+            />
+          </>
+        )}
       </div>
     </div>
   );
