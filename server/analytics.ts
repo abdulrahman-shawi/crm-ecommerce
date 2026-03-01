@@ -736,22 +736,67 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
     const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
     const createdAtFilter = buildOrderDateWhere(dateFilter);
 
-    const topUsersGrouped = await prisma.order.groupBy({
-      by: ['userId'],
+    const revenueOrders = await prisma.order.findMany({
       where: {
         userId: { not: null },
         status: { in: statusWhitelist },
         ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       },
-      _count: { id: true },
-      _sum: { finalAmount: true },
-      orderBy: {
-        _sum: { finalAmount: 'desc' }
+      select: {
+        id: true,
+        userId: true,
+        orderNumber: true,
+        finalAmount: true,
+        status: true,
+        createdAt: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        },
+        customer: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            discount: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+              }
+            }
+          }
+        }
       },
-      take: 10
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
-    const userIds = topUsersGrouped.map(u => u.userId).filter(Boolean) as string[];
+    const salesByUser = new Map<string, number>();
+    const deliveredOrdersByUser = new Map<string, number>();
+
+    for (const order of revenueOrders) {
+      if (!order.userId) continue;
+      const amountUSD = getOrderAmountFromItemsInUSD(order);
+      const currentSales = salesByUser.get(order.userId) || 0;
+      salesByUser.set(order.userId, currentSales + amountUSD);
+
+      const currentDelivered = deliveredOrdersByUser.get(order.userId) || 0;
+      deliveredOrdersByUser.set(order.userId, currentDelivered + 1);
+    }
+
+    const userIds = Array.from(salesByUser.keys());
+    if (userIds.length === 0) {
+      return { success: true, data: [] };
+    }
 
     const allOrdersCounts = await Promise.all(
       userIds.map(async (id) => ({
@@ -779,60 +824,30 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
       }
     });
 
-    const orders = await prisma.order.findMany({
-      where: {
-        userId: { in: userIds },
-        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
-      },
-      select: {
-        id: true,
-        userId: true,
-        orderNumber: true,
-        finalAmount: true,
-        status: true,
-        createdAt: true,
-        customer: {
-          select: {
-            id: true,
-            name: true,
-          }
-        },
-        items: {
-          select: {
-            id: true,
-            // quantity: true,
-            price: true,
-            discount: true,
-            product: {
-              select: {
-                id: true,
-                name: true,
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+    const finalData = userIds
+      .map((id) => {
+        const userInfo = userDetails.find((u) => u.id === id);
+        const userOrders = revenueOrders
+          .filter((order) => order.userId === id)
+          .map((order) => ({
+            ...order,
+            orderAmountUSD: getOrderAmountFromItemsInUSD(order),
+          }));
+        const totalOrdersAll = allOrdersCountByUser.get(id) || 0;
+        const deliveredOrders = deliveredOrdersByUser.get(id) || 0;
 
-    const finalData = topUsersGrouped.map(group => {
-      const userInfo = userDetails.find(u => u.id === group.userId);
-      const userOrders = orders.filter(order => order.userId === group.userId);
-      const totalOrdersAll = allOrdersCountByUser.get(String(group.userId)) || 0;
-      const deliveredOrders = group._count.id || 0;
-
-      return {
-        userId: group.userId,
-        name: userInfo?.username || "مستخدم غير معروف",
-        totalOrders: totalOrdersAll,
-        totalOrdersAll,
-        deliveredOrders,
-        totalSalesAmount: Number(group._sum.finalAmount || 0),
-        orders: userOrders
-      };
-    });
+        return {
+          userId: id,
+          name: userInfo?.username || "مستخدم غير معروف",
+          totalOrders: totalOrdersAll,
+          totalOrdersAll,
+          deliveredOrders,
+          totalSalesAmount: salesByUser.get(id) || 0,
+          orders: userOrders
+        };
+      })
+      .sort((a, b) => b.totalSalesAmount - a.totalSalesAmount)
+      .slice(0, 10);
 
     return { success: true, data: finalData };
   } catch (error) {

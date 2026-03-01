@@ -39,6 +39,8 @@ type StatusSummary = {
   failedReturnCount: number;
 };
 
+const TURKEY_EXCHANGE_RATE = 44;
+
 const toInputDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -66,6 +68,11 @@ const formatUSD = (value: number | undefined | null) =>
     maximumFractionDigits: 3,
   });
 
+const normalizeToUSD = (amount: number, warehouseLocation?: string | null) => {
+  const numericAmount = Number(amount || 0);
+  return String(warehouseLocation || "").trim() === "تركيا" ? numericAmount / TURKEY_EXCHANGE_RATE : numericAmount;
+};
+
 const COLORS = ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
 
 const AnalyticPage: React.FC = () => {
@@ -73,6 +80,8 @@ const AnalyticPage: React.FC = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [selectedStatus, setSelectedStatus] = React.useState<any>(null);
+  const [selectedTopUser, setSelectedTopUser] = React.useState<any>(null);
+  const [expandedOrderId, setExpandedOrderId] = React.useState<number | null>(null);
 
   const [result, setResult] = React.useState<{ success: boolean; data: any[]; summary?: StatusSummary }>({
     success: true,
@@ -258,6 +267,97 @@ const AnalyticPage: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedTopUser && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[110] p-4"
+          onClick={() => {
+            setSelectedTopUser(null);
+            setExpandedOrderId(null);
+          }}
+        >
+          <div
+            className="bg-white dark:bg-slate-900 rounded-xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 rounded-t-xl">
+              <div>
+                <h3 className="font-bold text-lg text-slate-800 dark:text-white">طلبات الموظف: {selectedTopUser.name}</h3>
+                <p className="text-sm text-slate-500">إجمالي المبيعات: {formatUSD(selectedTopUser.totalSalesAmount)}$</p>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedTopUser(null);
+                  setExpandedOrderId(null);
+                }}
+                className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto p-4 space-y-3">
+              {(selectedTopUser.orders || []).map((order: any) => {
+                const isExpanded = expandedOrderId === Number(order.id);
+
+                return (
+                  <div key={order.id} className="rounded-lg border border-slate-200 dark:border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedOrderId((prev) => (prev === Number(order.id) ? null : Number(order.id)))}
+                      className="w-full p-3 text-right hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">#{order.orderNumber}</span>
+                        <span className="text-xs text-slate-500">{new Date(order.createdAt).toLocaleDateString("ar-EG")}</span>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between text-xs">
+                        <span className="text-slate-500">{order.customer?.name || "بدون عميل"}</span>
+                        <span className="font-bold text-emerald-600">{formatUSD(order.orderAmountUSD)} $</span>
+                      </div>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="border-t border-slate-200 dark:border-slate-700 p-3 bg-slate-50/70 dark:bg-slate-900/40">
+                        <div className="mb-2 text-xs font-bold text-slate-500">المنتجات المباعة في هذا الطلب</div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-right border-collapse">
+                            <thead>
+                              <tr className="text-[11px] font-bold text-slate-500 border-b border-slate-200 dark:border-slate-700">
+                                <th className="py-2 px-2">المنتج</th>
+                                <th className="py-2 px-2">الكمية</th>
+                                <th className="py-2 px-2">السعر (USD)</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                              {(order.items || []).map((item: any) => {
+                                const netUnitPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
+                                const unitPriceUSD = normalizeToUSD(netUnitPrice, order.warehouse?.location);
+
+                                return (
+                                  <tr key={item.id}>
+                                    <td className="py-2 px-2 text-sm text-slate-700 dark:text-slate-200">{item.product?.name || "منتج"}</td>
+                                    <td className="py-2 px-2 text-sm text-blue-600 font-bold">{Number(item.quantity || 0).toLocaleString()}</td>
+                                    <td className="py-2 px-2 text-sm text-emerald-600 font-bold">{formatUSD(unitPriceUSD)} $</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {(!selectedTopUser.orders || selectedTopUser.orders.length === 0) && (
+                <div className="text-sm text-center text-slate-400 italic">لا توجد طلبات لهذا الموظف</div>
+              )}
             </div>
           </div>
         </div>
@@ -498,7 +598,15 @@ const AnalyticPage: React.FC = () => {
           <DynamicCard.Header title="المستخدمين الأكثر مبيعاً" description="المستخدمين الذين حققوا أعلى مبيعات" icon={<Trophy size={20} className="text-green-500" />} />
           <DynamicCard.Content className="space-y-3">
             {topSellingUsers.data?.map((userRow: any, index: number) => (
-              <div key={String(userRow.userId || index)} className="p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                key={String(userRow.userId || index)}
+                onClick={() => {
+                  setSelectedTopUser(userRow);
+                  setExpandedOrderId(null);
+                }}
+                className="w-full text-right p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 hover:ring-2 hover:ring-blue-500/20 transition-all"
+              >
                 <div className="flex justify-between items-center gap-3 text-right">
                   <div className="flex items-center gap-3 overflow-hidden">
                     <div className="w-6 h-6 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 text-xs font-bold">{index + 1}</div>
@@ -518,7 +626,7 @@ const AnalyticPage: React.FC = () => {
                   <span className="text-xs text-slate-500">إجمالي المبيعات</span>
                   <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{formatUSD(Number(userRow.totalSalesAmount) || 0)} $</span>
                 </div>
-              </div>
+              </button>
             ))}
           </DynamicCard.Content>
         </DynamicCard>
