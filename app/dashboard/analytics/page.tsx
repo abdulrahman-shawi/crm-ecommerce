@@ -19,6 +19,29 @@ import { TrendingUp, TrendingDown, Package, Users, X, MapPin, Award, Trophy } fr
 import * as React from 'react';
 import { set } from 'zod';
 
+type OrderFilterPreset = 'this_month' | 'last_month' | 'custom';
+
+const toInputDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const getPresetDateRange = (preset: OrderFilterPreset) => {
+    const now = new Date();
+
+    if (preset === 'this_month') {
+        const start = new Date(now.getFullYear(), now.getMonth(), 1);
+        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        return { startDate: toInputDate(start), endDate: toInputDate(end) };
+    }
+
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0);
+    return { startDate: toInputDate(start), endDate: toInputDate(end) };
+};
+
 const AnalyticPage: React.FC = () => {
     // تحديد الحالة المختارة لفتح المودال
     const [selectedStatus, setSelectedStatus] = React.useState<any>(null);
@@ -48,11 +71,30 @@ const AnalyticPage: React.FC = () => {
     const [timelineData, setTimelineData] = React.useState<any[]>([]); // 
     const [loading, setLoading] = React.useState(true);
     const [msgTimeline, setMsgTimeline] = React.useState<{ success: boolean, data: any[] }>({ success: true, data: [] });
+    const [orderFilterPreset, setOrderFilterPreset] = React.useState<OrderFilterPreset>('this_month');
+    const [customStartDate, setCustomStartDate] = React.useState('');
+    const [customEndDate, setCustomEndDate] = React.useState('');
     const { user } = useAuth();
+
+    const isInvalidCustomRange = orderFilterPreset === 'custom'
+        && Boolean(customStartDate)
+        && Boolean(customEndDate)
+        && new Date(customStartDate) > new Date(customEndDate);
+
+    const orderDateFilter = React.useMemo(() => {
+        if (orderFilterPreset === 'custom') {
+            return {
+                startDate: customStartDate || undefined,
+                endDate: customEndDate || undefined,
+            };
+        }
+        return getPresetDateRange(orderFilterPreset);
+    }, [orderFilterPreset, customStartDate, customEndDate]);
 
     React.useEffect(() => {
         const fetchAllData = async () => {
             if (!user?.id) return;
+            if (isInvalidCustomRange) return;
             setLoading(true);
             try {
                 // تنفيذ جميع الطلبات بالتوازي لتحسين الأداء
@@ -61,32 +103,26 @@ const AnalyticPage: React.FC = () => {
                     resMsg,
                     resCountry,
                     resTopCust,
-                    resTopSale,
-                    resLowStock,
                     resTopUsers,
-                    // resTimeline,
-                    // resMsgTimeline
+                    resTimeline,
+                    resMsgTimeline
                 ] = await Promise.all([
-                    GetSalesByStatusAction(user.id),
+                    GetSalesByStatusAction(user.id, orderDateFilter),
                     GetCustomerInteractions(user.id),
-                    GetSalesByCity(user.id),
+                    GetSalesByCity(user.id, orderDateFilter),
                     GetTopCustomers(user.id),
-                    // GetBestSellingProducts(),
-                    // GetLowStockProducts(),
                     GetTopSellingUsersByPermission(user.id),
-                    GetSalesTimelineAction(user.id),
-                    GetCustomerAcquisitionMonth(user.id) // طلب إضافي لبيانات التفاعل الزم
+                    GetSalesTimelineAction(user.id, orderDateFilter),
+                    GetCustomerAcquisitionMonth(user.id)
                 ]);
 
                 setResult(resStatus as any);
                 setMsg(resMsg as any);
                 setCountry(resCountry as any);
                 setTopCustomer(resTopCust as any);
-                setTopSale(resTopSale as any);
-                setLowStock(resLowStock as any);
                 setTopSellingUsers(resTopUsers as any);
-                // setTimelineData(resTimeline.data || []); // تأكد من التعامل مع الحالة التي قد لا تحتوي على بيانات
-                // setMsgTimeline(resMsgTimeline as any);
+                setTimelineData((resTimeline as any)?.data || []);
+                setMsgTimeline(resMsgTimeline as any);
             } catch (error) {
                 console.error("Error fetching analytics:", error);
             } finally {
@@ -95,7 +131,7 @@ const AnalyticPage: React.FC = () => {
         };
 
         fetchAllData();
-    }, [user?.id]);
+    }, [user?.id, orderDateFilter, isInvalidCustomRange]);
 
     const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
@@ -172,6 +208,49 @@ const AnalyticPage: React.FC = () => {
     const showTopUsersChart = loading || topUsersData.length > 0;
     return (
         <div className="p-8 relative">
+            <div className="mb-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40">
+                <div className="flex flex-col md:flex-row md:items-end gap-4">
+                    <div className="flex flex-col gap-1 min-w-[220px]">
+                        <label className="text-xs font-bold text-slate-500">عرض الطلبات حسب الفترة</label>
+                        <select
+                            value={orderFilterPreset}
+                            onChange={(e) => setOrderFilterPreset(e.target.value as OrderFilterPreset)}
+                            className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                        >
+                            <option value="this_month">هذا الشهر</option>
+                            <option value="last_month">الشهر الماضي</option>
+                            <option value="custom">مخصص</option>
+                        </select>
+                    </div>
+
+                    {orderFilterPreset === 'custom' && (
+                        <>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-bold text-slate-500">من تاريخ</label>
+                                <input
+                                    type="date"
+                                    value={customStartDate}
+                                    onChange={(e) => setCustomStartDate(e.target.value)}
+                                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-bold text-slate-500">إلى تاريخ</label>
+                                <input
+                                    type="date"
+                                    value={customEndDate}
+                                    onChange={(e) => setCustomEndDate(e.target.value)}
+                                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {isInvalidCustomRange && (
+                    <p className="mt-2 text-xs text-red-500 font-bold">تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
+                )}
+            </div>
 
             {/* الشباك المنبثق (Modal) لتفاصيل الطلبات */}
             {selectedStatus && (
@@ -575,8 +654,8 @@ const AnalyticPage: React.FC = () => {
                     className='mt-6'
                 >
                     <DynamicCard.Header
-                        title="المبيعات حسب الدول"
-                        description="توزيع جغرافي للمبيعات"
+                        title="الطلبات حسب بلد المستودع"
+                        description="تجميع الطلبات والمبالغ بحسب بلد المستودع"
                         icon={<TrendingUp size={20} />}
                     />
                     <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -604,8 +683,8 @@ const AnalyticPage: React.FC = () => {
                     className="mt-6"
                 >
                     <DynamicCard.Header
-                        title="توزيع المبيعات جغرافياً"
-                        description="تحليل المبيعات بناءً على المدن أو الدول"
+                        title="توزيع الطلبات حسب بلد المستودع"
+                        description="تحليل إجمالي الطلبات حسب مواقع المستودعات"
                         icon={<MapPin size={20} className="text-cyan-500" />}
                     />
                     <DynamicCard.Content className="h-[350px] w-full">

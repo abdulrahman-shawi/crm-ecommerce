@@ -12,8 +12,36 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "معلق / نقص معلومات", "فشل التسليم مرتجع"];
 
+type OrderDateFilter = {
+  startDate?: string;
+  endDate?: string;
+};
+
+const buildOrderDateWhere = (dateFilter?: OrderDateFilter) => {
+  const startDate = dateFilter?.startDate ? new Date(dateFilter.startDate) : undefined;
+  const endDate = dateFilter?.endDate ? new Date(dateFilter.endDate) : undefined;
+
+  if (startDate && Number.isNaN(startDate.getTime())) return undefined;
+  if (endDate && Number.isNaN(endDate.getTime())) return undefined;
+
+  if (startDate) {
+    startDate.setHours(0, 0, 0, 0);
+  }
+
+  if (endDate) {
+    endDate.setHours(23, 59, 59, 999);
+  }
+
+  if (!startDate && !endDate) return undefined;
+
+  return {
+    ...(startDate ? { gte: startDate } : {}),
+    ...(endDate ? { lte: endDate } : {}),
+  };
+};
+
 // src/actions/analytics.ts
-export async function GetSalesByStatusAction(userId: string) {
+export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -23,7 +51,11 @@ export async function GetSalesByStatusAction(userId: string) {
     if (!user) return { success: false, error: "User not found" };
 
     const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
-    const whereClause = canViewAll ? {} : { userId: userId };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const whereClause = {
+      ...(canViewAll ? {} : { userId: userId }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
 
     const orders = await prisma.order.findMany({
       where: whereClause,
@@ -96,7 +128,7 @@ export async function GetSalesByStatusAction(userId: string) {
   }
 }
 
-export async function GetSalesTimelineAction(userId: string) {
+export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -106,7 +138,11 @@ export async function GetSalesTimelineAction(userId: string) {
     if (!user) return { success: false, error: "User not found" };
 
     const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
-    const whereClause = canViewAll ? {} : { userId: userId };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const whereClause = {
+      ...(canViewAll ? {} : { userId: userId }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
 
     const orders = await prisma.order.findMany({
       where: whereClause,
@@ -263,7 +299,7 @@ export async function GetTopCustomers(userId: string) {
   }
 }
 
-export async function GetSalesByCity(userId: string) {
+export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -271,17 +307,44 @@ export async function GetSalesByCity(userId: string) {
     });
     
     const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
-    const whereClause = canViewAll ? {} : { userId: userId };
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const whereClause = {
+      ...(canViewAll ? {} : { userId: userId }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
 
-    const citySales = await prisma.order.groupBy({
-      by: ['country'],
+    const orders = await prisma.order.findMany({
       where: whereClause,
-      _count: { id: true },
-      _sum: { finalAmount: true },
-      orderBy: {
-        _sum: { finalAmount: 'desc' }
+      select: {
+        finalAmount: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
       }
     });
+
+    const groupedByWarehouseCountry = orders.reduce((acc, order) => {
+      const warehouseCountry = String(order.warehouse?.location || "غير محدد").trim() || "غير محدد";
+
+      if (!acc[warehouseCountry]) {
+        acc[warehouseCountry] = {
+          country: warehouseCountry,
+          _count: { id: 0 },
+          _sum: { finalAmount: 0 },
+        };
+      }
+
+      acc[warehouseCountry]._count.id += 1;
+      acc[warehouseCountry]._sum.finalAmount += Number(order.finalAmount || 0);
+      return acc;
+    }, {} as Record<string, { country: string; _count: { id: number }; _sum: { finalAmount: number } }>);
+
+    const citySales = Object.values(groupedByWarehouseCountry).sort(
+      (a, b) => (b._sum.finalAmount || 0) - (a._sum.finalAmount || 0)
+    );
+
     return { success: true, data: citySales };
   } catch (error) {
     return { success: false, data: [] };
