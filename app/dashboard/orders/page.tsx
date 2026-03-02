@@ -70,6 +70,32 @@ interface OrderCustomerProps {
 
 const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
 
+const getMonthKey = (dateValue: Date | string | number) => {
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return "";
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    return `${date.getFullYear()}-${month}`;
+};
+
+const getCurrentMonthKey = () => getMonthKey(new Date());
+
+const formatPhoneForInvoice = (phoneValue?: string | null) => {
+    const raw = String(phoneValue || "").trim();
+    if (!raw) return "";
+
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length === 12 && digits.startsWith("963")) {
+        return `+${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)} ${digits.slice(9, 12)}`;
+    }
+
+    if (digits.length === 10 && digits.startsWith("0")) {
+        const normalized = `963${digits.slice(1)}`;
+        return `+${normalized.slice(0, 3)} ${normalized.slice(3, 6)} ${normalized.slice(6, 9)} ${normalized.slice(9, 12)}`;
+    }
+
+    return raw;
+};
+
 const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [products, setProduct] = React.useState<any[]>([])
     const [customers, setCustomers] = React.useState<any[]>([])
@@ -146,7 +172,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const customerName = data?.customer?.name || 'غير محدد';
         const paymentMethodText = data?.paymentMethod || '-';
         const receiverName = data?.receiverName || 'غير محدد';
-        const receiverPhone = Array.isArray(data?.receiverPhone) ? data.receiverPhone.filter(Boolean).join(' - ') : (data?.receiverPhone || 'لم يسجل');
+        const receiverPhone = Array.isArray(data?.receiverPhone)
+            ? data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ')
+            : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل');
         const country = data?.country || '-';
         const city = data?.city || 'لم يسجل';
         const municipality = data?.municipality || 'لم يسجل';
@@ -451,6 +479,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     // أضف هذه الأسطر إذا كانت غير موجودة
 const [warehouseLocation, setWarehouseLocation] = React.useState(""); 
 const [searchQuery, setSearchQuery] = React.useState("");
+    const [monthFilterType, setMonthFilterType] = React.useState<"current" | "custom">("current");
+    const [customMonth, setCustomMonth] = React.useState<string>("");
     const filterOrder = React.useMemo(() => {
     if (!user) return [];
 
@@ -503,10 +533,18 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
         // --- فلتر المستودع المختار من الواجهة (Dropdown) ---
         const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
-        
-        return matchesLocation;
+        if (!matchesLocation) return false;
+
+        const activeMonth = monthFilterType === "current"
+            ? getCurrentMonthKey()
+            : (customMonth || getCurrentMonthKey());
+
+        const orderMonth = getMonthKey(order.createdAt);
+        if (!activeMonth || !orderMonth || orderMonth !== activeMonth) return false;
+
+        return true;
     });
-}, [orders, user, searchQuery, warehouseLocation]);
+}, [orders, user, searchQuery, warehouseLocation, monthFilterType, customMonth]);
 
     const statusOptions = [
         "طلب جديد",
@@ -870,6 +908,26 @@ const [searchQuery, setSearchQuery] = React.useState("");
         <option value="سوريا">سوريا</option>
         <option value="تركيا">تركيا</option>
     </select>
+
+    <div className="w-full md:w-auto flex items-center gap-2">
+        <select
+            value={monthFilterType}
+            onChange={(e) => setMonthFilterType(e.target.value as "current" | "custom")}
+            className="w-full md:w-44 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
+        >
+            <option value="current">هذا الشهر</option>
+            <option value="custom">مخصص</option>
+        </select>
+
+        {monthFilterType === "custom" && (
+            <input
+                type="month"
+                value={customMonth}
+                onChange={(e) => setCustomMonth(e.target.value)}
+                className="w-full md:w-44 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
+            />
+        )}
+    </div>
 </div>
             <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3 mb-6">
                 {statusOptions.map((status) => (
@@ -1118,7 +1176,13 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <p>المحافظة:{data.city ? ` - ${data.city}` : 'لم يسجل'}</p>
                                 <p>المنظقة: {data.municipality ? ` - ${data.municipality}` : 'لم يسجل'}</p>
                                 <p>العنوان: {data.fullAddress || 'لم يسجل'}</p>
-                                <p>رقم التواصل: {data.receiverPhone.join(" - ") || 'لم يسجل'}</p>
+                                <p>
+                                    رقم التواصل: {
+                                        Array.isArray(data?.receiverPhone)
+                                            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(" - ") || 'لم يسجل')
+                                            : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل')
+                                    }
+                                </p>
                                 {
                                     data.googleMapsLink && (
                                         <div className="">

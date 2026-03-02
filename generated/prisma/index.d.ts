@@ -88,6 +88,11 @@ export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
  * 
  */
 export type TrakingCompany = $Result.DefaultSelection<Prisma.$TrakingCompanyPayload>
+/**
+ * Model GeneralSetting
+ * 
+ */
+export type GeneralSetting = $Result.DefaultSelection<Prisma.$GeneralSettingPayload>
 
 /**
  * Enums
@@ -388,6 +393,16 @@ export class PrismaClient<
     * ```
     */
   get trakingCompany(): Prisma.TrakingCompanyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.generalSetting`: Exposes CRUD operations for the **GeneralSetting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GeneralSettings
+    * const generalSettings = await prisma.generalSetting.findMany()
+    * ```
+    */
+  get generalSetting(): Prisma.GeneralSettingDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -836,7 +851,8 @@ export namespace Prisma {
     Message: 'Message',
     Order: 'Order',
     OrderItem: 'OrderItem',
-    TrakingCompany: 'TrakingCompany'
+    TrakingCompany: 'TrakingCompany',
+    GeneralSetting: 'GeneralSetting'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -852,7 +868,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "message" | "order" | "orderItem" | "trakingCompany"
+      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "message" | "order" | "orderItem" | "trakingCompany" | "generalSetting"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1966,6 +1982,80 @@ export namespace Prisma {
           }
         }
       }
+      GeneralSetting: {
+        payload: Prisma.$GeneralSettingPayload<ExtArgs>
+        fields: Prisma.GeneralSettingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GeneralSettingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GeneralSettingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          findFirst: {
+            args: Prisma.GeneralSettingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GeneralSettingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          findMany: {
+            args: Prisma.GeneralSettingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>[]
+          }
+          create: {
+            args: Prisma.GeneralSettingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          createMany: {
+            args: Prisma.GeneralSettingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GeneralSettingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>[]
+          }
+          delete: {
+            args: Prisma.GeneralSettingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          update: {
+            args: Prisma.GeneralSettingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          deleteMany: {
+            args: Prisma.GeneralSettingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GeneralSettingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GeneralSettingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>[]
+          }
+          upsert: {
+            args: Prisma.GeneralSettingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GeneralSettingPayload>
+          }
+          aggregate: {
+            args: Prisma.GeneralSettingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGeneralSetting>
+          }
+          groupBy: {
+            args: Prisma.GeneralSettingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GeneralSettingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GeneralSettingCountArgs<ExtArgs>
+            result: $Utils.Optional<GeneralSettingCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2089,6 +2179,7 @@ export namespace Prisma {
     order?: OrderOmit
     orderItem?: OrderItemOmit
     trakingCompany?: TrakingCompanyOmit
+    generalSetting?: GeneralSettingOmit
   }
 
   /* Types for Logging */
@@ -6462,6 +6553,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    googleLink: string | null
     categoryId: number | null
     createdAt: Date | null
   }
@@ -6470,6 +6562,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    googleLink: string | null
     categoryId: number | null
     createdAt: Date | null
   }
@@ -6478,6 +6571,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    googleLink: number
     categoryId: number
     createdAt: number
     _all: number
@@ -6498,6 +6592,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    googleLink?: true
     categoryId?: true
     createdAt?: true
   }
@@ -6506,6 +6601,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    googleLink?: true
     categoryId?: true
     createdAt?: true
   }
@@ -6514,6 +6610,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    googleLink?: true
     categoryId?: true
     createdAt?: true
     _all?: true
@@ -6609,6 +6706,7 @@ export namespace Prisma {
     id: number
     name: string
     description: string | null
+    googleLink: string | null
     categoryId: number | null
     createdAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -6636,6 +6734,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
@@ -6651,6 +6750,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -6660,6 +6760,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -6669,11 +6770,12 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "categoryId" | "createdAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -6704,6 +6806,7 @@ export namespace Prisma {
       id: number
       name: string
       description: string | null
+      googleLink: string | null
       categoryId: number | null
       createdAt: Date
     }, ExtArgs["result"]["product"]>
@@ -7138,6 +7241,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Product", 'Int'>
     readonly name: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
+    readonly googleLink: FieldRef<"Product", 'String'>
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
   }
@@ -20476,6 +20580,1078 @@ export namespace Prisma {
 
 
   /**
+   * Model GeneralSetting
+   */
+
+  export type AggregateGeneralSetting = {
+    _count: GeneralSettingCountAggregateOutputType | null
+    _avg: GeneralSettingAvgAggregateOutputType | null
+    _sum: GeneralSettingSumAggregateOutputType | null
+    _min: GeneralSettingMinAggregateOutputType | null
+    _max: GeneralSettingMaxAggregateOutputType | null
+  }
+
+  export type GeneralSettingAvgAggregateOutputType = {
+    id: number | null
+    usdToTryRate: number | null
+  }
+
+  export type GeneralSettingSumAggregateOutputType = {
+    id: number | null
+    usdToTryRate: number | null
+  }
+
+  export type GeneralSettingMinAggregateOutputType = {
+    id: number | null
+    siteName: string | null
+    companyEmail: string | null
+    companyPhone: string | null
+    siteCurrency: string | null
+    usdToTryRate: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GeneralSettingMaxAggregateOutputType = {
+    id: number | null
+    siteName: string | null
+    companyEmail: string | null
+    companyPhone: string | null
+    siteCurrency: string | null
+    usdToTryRate: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GeneralSettingCountAggregateOutputType = {
+    id: number
+    siteName: number
+    companyEmail: number
+    companyPhone: number
+    siteCurrency: number
+    usdToTryRate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GeneralSettingAvgAggregateInputType = {
+    id?: true
+    usdToTryRate?: true
+  }
+
+  export type GeneralSettingSumAggregateInputType = {
+    id?: true
+    usdToTryRate?: true
+  }
+
+  export type GeneralSettingMinAggregateInputType = {
+    id?: true
+    siteName?: true
+    companyEmail?: true
+    companyPhone?: true
+    siteCurrency?: true
+    usdToTryRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GeneralSettingMaxAggregateInputType = {
+    id?: true
+    siteName?: true
+    companyEmail?: true
+    companyPhone?: true
+    siteCurrency?: true
+    usdToTryRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GeneralSettingCountAggregateInputType = {
+    id?: true
+    siteName?: true
+    companyEmail?: true
+    companyPhone?: true
+    siteCurrency?: true
+    usdToTryRate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GeneralSettingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GeneralSetting to aggregate.
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GeneralSettings to fetch.
+     */
+    orderBy?: GeneralSettingOrderByWithRelationInput | GeneralSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GeneralSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GeneralSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GeneralSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GeneralSettings
+    **/
+    _count?: true | GeneralSettingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GeneralSettingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GeneralSettingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GeneralSettingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GeneralSettingMaxAggregateInputType
+  }
+
+  export type GetGeneralSettingAggregateType<T extends GeneralSettingAggregateArgs> = {
+        [P in keyof T & keyof AggregateGeneralSetting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGeneralSetting[P]>
+      : GetScalarType<T[P], AggregateGeneralSetting[P]>
+  }
+
+
+
+
+  export type GeneralSettingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GeneralSettingWhereInput
+    orderBy?: GeneralSettingOrderByWithAggregationInput | GeneralSettingOrderByWithAggregationInput[]
+    by: GeneralSettingScalarFieldEnum[] | GeneralSettingScalarFieldEnum
+    having?: GeneralSettingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GeneralSettingCountAggregateInputType | true
+    _avg?: GeneralSettingAvgAggregateInputType
+    _sum?: GeneralSettingSumAggregateInputType
+    _min?: GeneralSettingMinAggregateInputType
+    _max?: GeneralSettingMaxAggregateInputType
+  }
+
+  export type GeneralSettingGroupByOutputType = {
+    id: number
+    siteName: string | null
+    companyEmail: string | null
+    companyPhone: string | null
+    siteCurrency: string | null
+    usdToTryRate: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: GeneralSettingCountAggregateOutputType | null
+    _avg: GeneralSettingAvgAggregateOutputType | null
+    _sum: GeneralSettingSumAggregateOutputType | null
+    _min: GeneralSettingMinAggregateOutputType | null
+    _max: GeneralSettingMaxAggregateOutputType | null
+  }
+
+  type GetGeneralSettingGroupByPayload<T extends GeneralSettingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GeneralSettingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GeneralSettingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GeneralSettingGroupByOutputType[P]>
+            : GetScalarType<T[P], GeneralSettingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GeneralSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    siteName?: boolean
+    companyEmail?: boolean
+    companyPhone?: boolean
+    siteCurrency?: boolean
+    usdToTryRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["generalSetting"]>
+
+  export type GeneralSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    siteName?: boolean
+    companyEmail?: boolean
+    companyPhone?: boolean
+    siteCurrency?: boolean
+    usdToTryRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["generalSetting"]>
+
+  export type GeneralSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    siteName?: boolean
+    companyEmail?: boolean
+    companyPhone?: boolean
+    siteCurrency?: boolean
+    usdToTryRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["generalSetting"]>
+
+  export type GeneralSettingSelectScalar = {
+    id?: boolean
+    siteName?: boolean
+    companyEmail?: boolean
+    companyPhone?: boolean
+    siteCurrency?: boolean
+    usdToTryRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GeneralSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "siteName" | "companyEmail" | "companyPhone" | "siteCurrency" | "usdToTryRate" | "createdAt" | "updatedAt", ExtArgs["result"]["generalSetting"]>
+
+  export type $GeneralSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GeneralSetting"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      siteName: string | null
+      companyEmail: string | null
+      companyPhone: string | null
+      siteCurrency: string | null
+      usdToTryRate: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["generalSetting"]>
+    composites: {}
+  }
+
+  type GeneralSettingGetPayload<S extends boolean | null | undefined | GeneralSettingDefaultArgs> = $Result.GetResult<Prisma.$GeneralSettingPayload, S>
+
+  type GeneralSettingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GeneralSettingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GeneralSettingCountAggregateInputType | true
+    }
+
+  export interface GeneralSettingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GeneralSetting'], meta: { name: 'GeneralSetting' } }
+    /**
+     * Find zero or one GeneralSetting that matches the filter.
+     * @param {GeneralSettingFindUniqueArgs} args - Arguments to find a GeneralSetting
+     * @example
+     * // Get one GeneralSetting
+     * const generalSetting = await prisma.generalSetting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GeneralSettingFindUniqueArgs>(args: SelectSubset<T, GeneralSettingFindUniqueArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GeneralSetting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GeneralSettingFindUniqueOrThrowArgs} args - Arguments to find a GeneralSetting
+     * @example
+     * // Get one GeneralSetting
+     * const generalSetting = await prisma.generalSetting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GeneralSettingFindUniqueOrThrowArgs>(args: SelectSubset<T, GeneralSettingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GeneralSetting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingFindFirstArgs} args - Arguments to find a GeneralSetting
+     * @example
+     * // Get one GeneralSetting
+     * const generalSetting = await prisma.generalSetting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GeneralSettingFindFirstArgs>(args?: SelectSubset<T, GeneralSettingFindFirstArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GeneralSetting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingFindFirstOrThrowArgs} args - Arguments to find a GeneralSetting
+     * @example
+     * // Get one GeneralSetting
+     * const generalSetting = await prisma.generalSetting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GeneralSettingFindFirstOrThrowArgs>(args?: SelectSubset<T, GeneralSettingFindFirstOrThrowArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GeneralSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GeneralSettings
+     * const generalSettings = await prisma.generalSetting.findMany()
+     * 
+     * // Get first 10 GeneralSettings
+     * const generalSettings = await prisma.generalSetting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const generalSettingWithIdOnly = await prisma.generalSetting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GeneralSettingFindManyArgs>(args?: SelectSubset<T, GeneralSettingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GeneralSetting.
+     * @param {GeneralSettingCreateArgs} args - Arguments to create a GeneralSetting.
+     * @example
+     * // Create one GeneralSetting
+     * const GeneralSetting = await prisma.generalSetting.create({
+     *   data: {
+     *     // ... data to create a GeneralSetting
+     *   }
+     * })
+     * 
+     */
+    create<T extends GeneralSettingCreateArgs>(args: SelectSubset<T, GeneralSettingCreateArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GeneralSettings.
+     * @param {GeneralSettingCreateManyArgs} args - Arguments to create many GeneralSettings.
+     * @example
+     * // Create many GeneralSettings
+     * const generalSetting = await prisma.generalSetting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GeneralSettingCreateManyArgs>(args?: SelectSubset<T, GeneralSettingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GeneralSettings and returns the data saved in the database.
+     * @param {GeneralSettingCreateManyAndReturnArgs} args - Arguments to create many GeneralSettings.
+     * @example
+     * // Create many GeneralSettings
+     * const generalSetting = await prisma.generalSetting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GeneralSettings and only return the `id`
+     * const generalSettingWithIdOnly = await prisma.generalSetting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GeneralSettingCreateManyAndReturnArgs>(args?: SelectSubset<T, GeneralSettingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GeneralSetting.
+     * @param {GeneralSettingDeleteArgs} args - Arguments to delete one GeneralSetting.
+     * @example
+     * // Delete one GeneralSetting
+     * const GeneralSetting = await prisma.generalSetting.delete({
+     *   where: {
+     *     // ... filter to delete one GeneralSetting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GeneralSettingDeleteArgs>(args: SelectSubset<T, GeneralSettingDeleteArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GeneralSetting.
+     * @param {GeneralSettingUpdateArgs} args - Arguments to update one GeneralSetting.
+     * @example
+     * // Update one GeneralSetting
+     * const generalSetting = await prisma.generalSetting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GeneralSettingUpdateArgs>(args: SelectSubset<T, GeneralSettingUpdateArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GeneralSettings.
+     * @param {GeneralSettingDeleteManyArgs} args - Arguments to filter GeneralSettings to delete.
+     * @example
+     * // Delete a few GeneralSettings
+     * const { count } = await prisma.generalSetting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GeneralSettingDeleteManyArgs>(args?: SelectSubset<T, GeneralSettingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GeneralSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GeneralSettings
+     * const generalSetting = await prisma.generalSetting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GeneralSettingUpdateManyArgs>(args: SelectSubset<T, GeneralSettingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GeneralSettings and returns the data updated in the database.
+     * @param {GeneralSettingUpdateManyAndReturnArgs} args - Arguments to update many GeneralSettings.
+     * @example
+     * // Update many GeneralSettings
+     * const generalSetting = await prisma.generalSetting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GeneralSettings and only return the `id`
+     * const generalSettingWithIdOnly = await prisma.generalSetting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GeneralSettingUpdateManyAndReturnArgs>(args: SelectSubset<T, GeneralSettingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GeneralSetting.
+     * @param {GeneralSettingUpsertArgs} args - Arguments to update or create a GeneralSetting.
+     * @example
+     * // Update or create a GeneralSetting
+     * const generalSetting = await prisma.generalSetting.upsert({
+     *   create: {
+     *     // ... data to create a GeneralSetting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GeneralSetting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GeneralSettingUpsertArgs>(args: SelectSubset<T, GeneralSettingUpsertArgs<ExtArgs>>): Prisma__GeneralSettingClient<$Result.GetResult<Prisma.$GeneralSettingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GeneralSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingCountArgs} args - Arguments to filter GeneralSettings to count.
+     * @example
+     * // Count the number of GeneralSettings
+     * const count = await prisma.generalSetting.count({
+     *   where: {
+     *     // ... the filter for the GeneralSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends GeneralSettingCountArgs>(
+      args?: Subset<T, GeneralSettingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GeneralSettingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GeneralSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GeneralSettingAggregateArgs>(args: Subset<T, GeneralSettingAggregateArgs>): Prisma.PrismaPromise<GetGeneralSettingAggregateType<T>>
+
+    /**
+     * Group by GeneralSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GeneralSettingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GeneralSettingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GeneralSettingGroupByArgs['orderBy'] }
+        : { orderBy?: GeneralSettingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GeneralSettingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGeneralSettingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GeneralSetting model
+   */
+  readonly fields: GeneralSettingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GeneralSetting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GeneralSettingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GeneralSetting model
+   */
+  interface GeneralSettingFieldRefs {
+    readonly id: FieldRef<"GeneralSetting", 'Int'>
+    readonly siteName: FieldRef<"GeneralSetting", 'String'>
+    readonly companyEmail: FieldRef<"GeneralSetting", 'String'>
+    readonly companyPhone: FieldRef<"GeneralSetting", 'String'>
+    readonly siteCurrency: FieldRef<"GeneralSetting", 'String'>
+    readonly usdToTryRate: FieldRef<"GeneralSetting", 'Float'>
+    readonly createdAt: FieldRef<"GeneralSetting", 'DateTime'>
+    readonly updatedAt: FieldRef<"GeneralSetting", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GeneralSetting findUnique
+   */
+  export type GeneralSettingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which GeneralSetting to fetch.
+     */
+    where: GeneralSettingWhereUniqueInput
+  }
+
+  /**
+   * GeneralSetting findUniqueOrThrow
+   */
+  export type GeneralSettingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which GeneralSetting to fetch.
+     */
+    where: GeneralSettingWhereUniqueInput
+  }
+
+  /**
+   * GeneralSetting findFirst
+   */
+  export type GeneralSettingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which GeneralSetting to fetch.
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GeneralSettings to fetch.
+     */
+    orderBy?: GeneralSettingOrderByWithRelationInput | GeneralSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GeneralSettings.
+     */
+    cursor?: GeneralSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GeneralSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GeneralSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GeneralSettings.
+     */
+    distinct?: GeneralSettingScalarFieldEnum | GeneralSettingScalarFieldEnum[]
+  }
+
+  /**
+   * GeneralSetting findFirstOrThrow
+   */
+  export type GeneralSettingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which GeneralSetting to fetch.
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GeneralSettings to fetch.
+     */
+    orderBy?: GeneralSettingOrderByWithRelationInput | GeneralSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GeneralSettings.
+     */
+    cursor?: GeneralSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GeneralSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GeneralSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GeneralSettings.
+     */
+    distinct?: GeneralSettingScalarFieldEnum | GeneralSettingScalarFieldEnum[]
+  }
+
+  /**
+   * GeneralSetting findMany
+   */
+  export type GeneralSettingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which GeneralSettings to fetch.
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GeneralSettings to fetch.
+     */
+    orderBy?: GeneralSettingOrderByWithRelationInput | GeneralSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GeneralSettings.
+     */
+    cursor?: GeneralSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GeneralSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GeneralSettings.
+     */
+    skip?: number
+    distinct?: GeneralSettingScalarFieldEnum | GeneralSettingScalarFieldEnum[]
+  }
+
+  /**
+   * GeneralSetting create
+   */
+  export type GeneralSettingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * The data needed to create a GeneralSetting.
+     */
+    data: XOR<GeneralSettingCreateInput, GeneralSettingUncheckedCreateInput>
+  }
+
+  /**
+   * GeneralSetting createMany
+   */
+  export type GeneralSettingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GeneralSettings.
+     */
+    data: GeneralSettingCreateManyInput | GeneralSettingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GeneralSetting createManyAndReturn
+   */
+  export type GeneralSettingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * The data used to create many GeneralSettings.
+     */
+    data: GeneralSettingCreateManyInput | GeneralSettingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GeneralSetting update
+   */
+  export type GeneralSettingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * The data needed to update a GeneralSetting.
+     */
+    data: XOR<GeneralSettingUpdateInput, GeneralSettingUncheckedUpdateInput>
+    /**
+     * Choose, which GeneralSetting to update.
+     */
+    where: GeneralSettingWhereUniqueInput
+  }
+
+  /**
+   * GeneralSetting updateMany
+   */
+  export type GeneralSettingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GeneralSettings.
+     */
+    data: XOR<GeneralSettingUpdateManyMutationInput, GeneralSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which GeneralSettings to update
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * Limit how many GeneralSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GeneralSetting updateManyAndReturn
+   */
+  export type GeneralSettingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * The data used to update GeneralSettings.
+     */
+    data: XOR<GeneralSettingUpdateManyMutationInput, GeneralSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which GeneralSettings to update
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * Limit how many GeneralSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GeneralSetting upsert
+   */
+  export type GeneralSettingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * The filter to search for the GeneralSetting to update in case it exists.
+     */
+    where: GeneralSettingWhereUniqueInput
+    /**
+     * In case the GeneralSetting found by the `where` argument doesn't exist, create a new GeneralSetting with this data.
+     */
+    create: XOR<GeneralSettingCreateInput, GeneralSettingUncheckedCreateInput>
+    /**
+     * In case the GeneralSetting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GeneralSettingUpdateInput, GeneralSettingUncheckedUpdateInput>
+  }
+
+  /**
+   * GeneralSetting delete
+   */
+  export type GeneralSettingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+    /**
+     * Filter which GeneralSetting to delete.
+     */
+    where: GeneralSettingWhereUniqueInput
+  }
+
+  /**
+   * GeneralSetting deleteMany
+   */
+  export type GeneralSettingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GeneralSettings to delete
+     */
+    where?: GeneralSettingWhereInput
+    /**
+     * Limit how many GeneralSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GeneralSetting without action
+   */
+  export type GeneralSettingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GeneralSetting
+     */
+    select?: GeneralSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GeneralSetting
+     */
+    omit?: GeneralSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -20563,6 +21739,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    googleLink: 'googleLink',
     categoryId: 'categoryId',
     createdAt: 'createdAt'
   };
@@ -20727,6 +21904,20 @@ export namespace Prisma {
   };
 
   export type TrakingCompanyScalarFieldEnum = (typeof TrakingCompanyScalarFieldEnum)[keyof typeof TrakingCompanyScalarFieldEnum]
+
+
+  export const GeneralSettingScalarFieldEnum: {
+    id: 'id',
+    siteName: 'siteName',
+    companyEmail: 'companyEmail',
+    companyPhone: 'companyPhone',
+    siteCurrency: 'siteCurrency',
+    usdToTryRate: 'usdToTryRate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GeneralSettingScalarFieldEnum = (typeof GeneralSettingScalarFieldEnum)[keyof typeof GeneralSettingScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -21228,6 +22419,7 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     description?: StringNullableFilter<"Product"> | string | null
+    googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     orderItems?: OrderItemListRelationFilter
@@ -21242,6 +22434,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    googleLink?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
@@ -21259,6 +22452,7 @@ export namespace Prisma {
     NOT?: ProductWhereInput | ProductWhereInput[]
     name?: StringFilter<"Product"> | string
     description?: StringNullableFilter<"Product"> | string | null
+    googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     orderItems?: OrderItemListRelationFilter
@@ -21273,6 +22467,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    googleLink?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -21289,6 +22484,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Product"> | number
     name?: StringWithAggregatesFilter<"Product"> | string
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    googleLink?: StringNullableWithAggregatesFilter<"Product"> | string | null
     categoryId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -22149,6 +23345,75 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"TrakingCompany"> | Date | string
   }
 
+  export type GeneralSettingWhereInput = {
+    AND?: GeneralSettingWhereInput | GeneralSettingWhereInput[]
+    OR?: GeneralSettingWhereInput[]
+    NOT?: GeneralSettingWhereInput | GeneralSettingWhereInput[]
+    id?: IntFilter<"GeneralSetting"> | number
+    siteName?: StringNullableFilter<"GeneralSetting"> | string | null
+    companyEmail?: StringNullableFilter<"GeneralSetting"> | string | null
+    companyPhone?: StringNullableFilter<"GeneralSetting"> | string | null
+    siteCurrency?: StringNullableFilter<"GeneralSetting"> | string | null
+    usdToTryRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    createdAt?: DateTimeFilter<"GeneralSetting"> | Date | string
+    updatedAt?: DateTimeFilter<"GeneralSetting"> | Date | string
+  }
+
+  export type GeneralSettingOrderByWithRelationInput = {
+    id?: SortOrder
+    siteName?: SortOrderInput | SortOrder
+    companyEmail?: SortOrderInput | SortOrder
+    companyPhone?: SortOrderInput | SortOrder
+    siteCurrency?: SortOrderInput | SortOrder
+    usdToTryRate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GeneralSettingWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: GeneralSettingWhereInput | GeneralSettingWhereInput[]
+    OR?: GeneralSettingWhereInput[]
+    NOT?: GeneralSettingWhereInput | GeneralSettingWhereInput[]
+    siteName?: StringNullableFilter<"GeneralSetting"> | string | null
+    companyEmail?: StringNullableFilter<"GeneralSetting"> | string | null
+    companyPhone?: StringNullableFilter<"GeneralSetting"> | string | null
+    siteCurrency?: StringNullableFilter<"GeneralSetting"> | string | null
+    usdToTryRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    createdAt?: DateTimeFilter<"GeneralSetting"> | Date | string
+    updatedAt?: DateTimeFilter<"GeneralSetting"> | Date | string
+  }, "id">
+
+  export type GeneralSettingOrderByWithAggregationInput = {
+    id?: SortOrder
+    siteName?: SortOrderInput | SortOrder
+    companyEmail?: SortOrderInput | SortOrder
+    companyPhone?: SortOrderInput | SortOrder
+    siteCurrency?: SortOrderInput | SortOrder
+    usdToTryRate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GeneralSettingCountOrderByAggregateInput
+    _avg?: GeneralSettingAvgOrderByAggregateInput
+    _max?: GeneralSettingMaxOrderByAggregateInput
+    _min?: GeneralSettingMinOrderByAggregateInput
+    _sum?: GeneralSettingSumOrderByAggregateInput
+  }
+
+  export type GeneralSettingScalarWhereWithAggregatesInput = {
+    AND?: GeneralSettingScalarWhereWithAggregatesInput | GeneralSettingScalarWhereWithAggregatesInput[]
+    OR?: GeneralSettingScalarWhereWithAggregatesInput[]
+    NOT?: GeneralSettingScalarWhereWithAggregatesInput | GeneralSettingScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"GeneralSetting"> | number
+    siteName?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
+    companyEmail?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
+    companyPhone?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
+    siteCurrency?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
+    usdToTryRate?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"GeneralSetting"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GeneralSetting"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -22603,6 +23868,7 @@ export namespace Prisma {
   export type ProductCreateInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -22616,6 +23882,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -22628,6 +23895,7 @@ export namespace Prisma {
   export type ProductUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -22641,6 +23909,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -22654,6 +23923,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
   }
@@ -22661,6 +23931,7 @@ export namespace Prisma {
   export type ProductUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22668,6 +23939,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23555,6 +24827,80 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type GeneralSettingCreateInput = {
+    siteName?: string | null
+    companyEmail?: string | null
+    companyPhone?: string | null
+    siteCurrency?: string | null
+    usdToTryRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GeneralSettingUncheckedCreateInput = {
+    id?: number
+    siteName?: string | null
+    companyEmail?: string | null
+    companyPhone?: string | null
+    siteCurrency?: string | null
+    usdToTryRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GeneralSettingUpdateInput = {
+    siteName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GeneralSettingUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    siteName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GeneralSettingCreateManyInput = {
+    id?: number
+    siteName?: string | null
+    companyEmail?: string | null
+    companyPhone?: string | null
+    siteCurrency?: string | null
+    usdToTryRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GeneralSettingUpdateManyMutationInput = {
+    siteName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GeneralSettingUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    siteName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -24071,6 +25417,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
   }
@@ -24084,6 +25431,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
   }
@@ -24092,6 +25440,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
   }
@@ -24736,6 +26085,49 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type GeneralSettingCountOrderByAggregateInput = {
+    id?: SortOrder
+    siteName?: SortOrder
+    companyEmail?: SortOrder
+    companyPhone?: SortOrder
+    siteCurrency?: SortOrder
+    usdToTryRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GeneralSettingAvgOrderByAggregateInput = {
+    id?: SortOrder
+    usdToTryRate?: SortOrder
+  }
+
+  export type GeneralSettingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    siteName?: SortOrder
+    companyEmail?: SortOrder
+    companyPhone?: SortOrder
+    siteCurrency?: SortOrder
+    usdToTryRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GeneralSettingMinOrderByAggregateInput = {
+    id?: SortOrder
+    siteName?: SortOrder
+    companyEmail?: SortOrder
+    companyPhone?: SortOrder
+    siteCurrency?: SortOrder
+    usdToTryRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GeneralSettingSumOrderByAggregateInput = {
+    id?: SortOrder
+    usdToTryRate?: SortOrder
   }
 
   export type OrderCreateNestedManyWithoutUserInput = {
@@ -26841,6 +28233,7 @@ export namespace Prisma {
   export type ProductCreateWithoutCategoryInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -26853,6 +28246,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
@@ -26894,6 +28288,7 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     description?: StringNullableFilter<"Product"> | string | null
+    googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
   }
@@ -27351,6 +28746,7 @@ export namespace Prisma {
   export type ProductCreateWithoutStocksInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -27363,6 +28759,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -27414,6 +28811,7 @@ export namespace Prisma {
   export type ProductUpdateWithoutStocksInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -27426,6 +28824,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -27467,6 +28866,7 @@ export namespace Prisma {
   export type ProductCreateWithoutStockMovementsInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -27479,6 +28879,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -27575,6 +28976,7 @@ export namespace Prisma {
   export type ProductUpdateWithoutStockMovementsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -27587,6 +28989,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -27842,6 +29245,7 @@ export namespace Prisma {
   export type ProductCreateWithoutTargetProductsInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -27854,6 +29258,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -27914,6 +29319,7 @@ export namespace Prisma {
   export type ProductUpdateWithoutTargetProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -27926,6 +29332,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -27937,6 +29344,7 @@ export namespace Prisma {
   export type ProductCreateWithoutImagesInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -27949,6 +29357,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -27976,6 +29385,7 @@ export namespace Prisma {
   export type ProductUpdateWithoutImagesInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -27988,6 +29398,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -28710,6 +30121,7 @@ export namespace Prisma {
   export type ProductCreateWithoutOrderItemsInput = {
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -28722,6 +30134,7 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
@@ -28813,6 +30226,7 @@ export namespace Prisma {
   export type ProductUpdateWithoutOrderItemsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -28825,6 +30239,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
@@ -29181,12 +30596,14 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    googleLink?: string | null
     createdAt?: Date | string
   }
 
   export type ProductUpdateWithoutCategoryInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -29199,6 +30616,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
@@ -29211,6 +30629,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -185,6 +185,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  googleLink: 'googleLink',
   categoryId: 'categoryId',
   createdAt: 'createdAt'
 };
@@ -315,6 +316,17 @@ exports.Prisma.TrakingCompanyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GeneralSettingScalarFieldEnum = {
+  id: 'id',
+  siteName: 'siteName',
+  companyEmail: 'companyEmail',
+  companyPhone: 'companyPhone',
+  siteCurrency: 'siteCurrency',
+  usdToTryRate: 'usdToTryRate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -358,7 +370,8 @@ exports.Prisma.ModelName = {
   Message: 'Message',
   Order: 'Order',
   OrderItem: 'OrderItem',
-  TrakingCompany: 'TrakingCompany'
+  TrakingCompany: 'TrakingCompany',
+  GeneralSetting: 'GeneralSetting'
 };
 
 /**
