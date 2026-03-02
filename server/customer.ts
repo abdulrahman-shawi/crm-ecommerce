@@ -61,29 +61,22 @@ export async function AssignUsers(customerId: string, userIds: string[]) {
 
 export async function createmessage(msg: string, customerId: string, userId: string) {
   try {
-    // نستخدم $transaction لضمان سلامة البيانات
     const result = await prisma.$transaction(async (tx) => {
-      
-      // نتحقق إذا كان هذا أول رسالة للعميل
-      const messageCount = await tx.message.count({
+      const ordersCount = await tx.order.count({
         where: { customerId }
       });
 
-      // إذا كانت هناك رسائل سابقة، نقوم بتحديث الحالة
-      if (messageCount === 0) {
-        await tx.customer.update({
-          where: { id: customerId },
-          data: { status: "جاري المتابعة" }
-        });
-      }
-
-      // إنشاء الرسالة الجديدة
       const newMessage = await tx.message.create({
         data: {
           message: msg,
           customerId,
           userId
         }
+      });
+
+      await tx.customer.update({
+        where: { id: customerId },
+        data: { status: ordersCount > 0 ? "تم البيع" : "جاري المتابعة" }
       });
 
       return newMessage;
@@ -172,12 +165,37 @@ export async function updateCustomer(data:any , customer:any) {
 }
 
 export async function UpdateStusa(customer:any , status:any) {
+  const requestedStatus = String(status || "").trim();
+
+  if (requestedStatus === "فرصة جديدة") {
+    const ordersCount = await prisma.order.count({
+      where: { customerId: customer }
+    });
+
+    if (ordersCount > 0) {
+      const stusas = await prisma.customer.update({
+        where: {
+          id: customer
+        },
+        data: {
+          status: "تم البيع"
+        }
+      });
+
+      return {
+        success: true,
+        data: stusas,
+        message: "لا يمكن تحويل العميل إلى فرصة جديدة لوجود طلبات، تم ضبط الحالة إلى تم البيع"
+      };
+    }
+  }
+
   const stusas = await prisma.customer.update({
     where:{
       id:customer
     },
     data:{
-      status:status
+      status:requestedStatus
     }
   })
 

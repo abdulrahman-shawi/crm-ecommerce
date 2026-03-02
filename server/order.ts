@@ -133,12 +133,10 @@ export async function createOrder(data: any, items: any[], user: any) {
                 }
             }
 
-            if (existingOrdersCount === 0 || isSoldOrderStatus(data.status)) {
-                await tx.customer.update({
-                    where: { id: data.customerId },
-                    data: { status: "تم البيع" }
-                });
-            }
+            await tx.customer.update({
+                where: { id: data.customerId },
+                data: { status: "تم البيع" }
+            });
 
             return newOrder;
         });
