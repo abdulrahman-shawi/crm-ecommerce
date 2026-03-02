@@ -25,6 +25,9 @@ export default function GeneralSettingsPage() {
   const [form, setForm] = React.useState<FormState>(initialForm);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
+  const [exporting, setExporting] = React.useState(false);
+  const [importing, setImporting] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleChange = (key: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -81,6 +84,78 @@ export default function GeneralSettingsPage() {
     } finally {
       toast.dismiss(loadingToast);
       setSaving(false);
+    }
+  };
+
+  const downloadDataFile = (blob: Blob, filePrefix: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const now = new Date();
+    const fileName = `${filePrefix}-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}.json`;
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExport = async (filePrefix: string) => {
+    setExporting(true);
+    const loadingToast = toast.loading("جاري تصدير البيانات...");
+
+    try {
+      const response = await fetch("/api/settings/data-transfer", { method: "GET" });
+      if (!response.ok) {
+        throw new Error("فشل في تصدير البيانات");
+      }
+
+      const blob = await response.blob();
+      downloadDataFile(blob, filePrefix);
+      toast.success("تم تصدير البيانات بنجاح");
+    } catch (error) {
+      toast.error("تعذر تصدير البيانات");
+    } finally {
+      toast.dismiss(loadingToast);
+      setExporting(false);
+    }
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setImporting(true);
+    const loadingToast = toast.loading("جاري استيراد البيانات...");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("replace", "true");
+
+      const response = await fetch("/api/settings/data-transfer", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || "فشل في استيراد البيانات");
+      }
+
+      toast.success("تم استيراد البيانات بنجاح");
+      await loadData();
+    } catch (error) {
+      toast.error("تعذر استيراد البيانات");
+    } finally {
+      toast.dismiss(loadingToast);
+      setImporting(false);
     }
   };
 
@@ -161,6 +236,31 @@ export default function GeneralSettingsPage() {
         <Button onClick={handleSave} disabled={loading || saving}>
           {saving ? "جاري الحفظ..." : "حفظ الإعدادات"}
         </Button>
+      </div>
+
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4">
+        <h2 className="text-lg font-bold text-gray-800 dark:text-white">النسخ الاحتياطي والبيانات</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-300">يمكنك تصدير نسخة احتياطية كاملة أو استيراد ملف بيانات سابق.</p>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json"
+          className="hidden"
+          onChange={handleImportFile}
+        />
+
+        <div className="flex flex-wrap gap-3">
+          <Button onClick={() => handleExport("backup")} disabled={exporting || importing || loading}>
+            {exporting ? "جاري التصدير..." : "أخذ نسخة احتياطية"}
+          </Button>
+          <Button onClick={() => handleExport("export")} disabled={exporting || importing || loading}>
+            {exporting ? "جاري التصدير..." : "تصدير البيانات"}
+          </Button>
+          <Button onClick={handleImportClick} disabled={exporting || importing || loading}>
+            {importing ? "جاري الاستيراد..." : "استيراد البيانات"}
+          </Button>
+        </div>
       </div>
     </div>
   );
