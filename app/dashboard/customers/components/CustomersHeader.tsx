@@ -63,7 +63,7 @@ export const CustomersHeader: React.FC<CustomersHeaderProps> = ({
                 <input
                   ref={importInputRef}
                   type="file"
-                  accept=".xlsx,.xls"
+                  accept=".xlsx,.xls,.csv"
                   onChange={onImportFile}
                   className="hidden"
                 />
