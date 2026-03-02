@@ -658,7 +658,7 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
     const employeeIds = employees.map((employee) => employee.id);
 
     const communicationGroups = await prisma.message.groupBy({
-      by: ["userId", "customerId"],
+      by: ["userId"],
       where: {
         userId: { in: employeeIds },
         createdAt: {
@@ -666,12 +666,14 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
           lte: periodRange.end,
         },
       },
+      _count: {
+        _all: true,
+      },
     });
 
     const communicatedCustomersByUser = new Map<string, number>();
     communicationGroups.forEach((item) => {
-      const previous = communicatedCustomersByUser.get(item.userId) || 0;
-      communicatedCustomersByUser.set(item.userId, previous + 1);
+      communicatedCustomersByUser.set(item.userId, item._count._all || 0);
     });
 
     const newCustomers = await prisma.customer.findMany({
