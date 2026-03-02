@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     try {
         const session = cookies().get("skynova")?.value;
