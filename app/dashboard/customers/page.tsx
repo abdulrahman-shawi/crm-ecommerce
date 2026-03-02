@@ -255,6 +255,67 @@ const CustomrLayout: React.FC = () => {
       .filter((value) => value.length > 0);
   };
 
+  const getCellValueByAliases = (row: Record<string, unknown>, aliases: string[]) => {
+    const normalizedRowEntries = Object.entries(row).map(([key, value]) => [String(key || "").trim().toLowerCase(), value] as const);
+
+    for (const alias of aliases) {
+      const normalizedAlias = String(alias || "").trim().toLowerCase();
+      const hit = normalizedRowEntries.find(([key]) => key === normalizedAlias);
+      if (hit && String(hit[1] ?? "").trim() !== "") {
+        return hit[1];
+      }
+    }
+
+    return "";
+  };
+
+  const isExcelErrorToken = (value: string) => {
+    const normalized = String(value || "").trim().toUpperCase();
+    return normalized.startsWith("#") && (
+      normalized.includes("NAME") ||
+      normalized.includes("VALUE") ||
+      normalized.includes("REF") ||
+      normalized.includes("NUM") ||
+      normalized.includes("DIV") ||
+      normalized.includes("N/A") ||
+      normalized.includes("NULL")
+    );
+  };
+
+  const extractPhonesFromRow = (row: Record<string, unknown>) => {
+    const candidates: string[] = [];
+
+    const primaryPhone = getCellValueByAliases(row, [
+      "رقم الهاتف",
+      "الهاتف",
+      "phone",
+      "phone number",
+      "mobile",
+      "الجوال",
+    ]);
+
+    if (String(primaryPhone ?? "").trim()) {
+      candidates.push(String(primaryPhone));
+    }
+
+    for (let index = 1; index <= 10; index += 1) {
+      const v = getCellValueByAliases(row, [
+        `رقم الهاتف ${index}`,
+        `الهاتف ${index}`,
+        `phone ${index}`,
+        `mobile ${index}`,
+      ]);
+      if (String(v ?? "").trim()) {
+        candidates.push(String(v));
+      }
+    }
+
+    const excelErrorInAnyPhoneCell = candidates.some((value) => isExcelErrorToken(String(value)));
+    const normalizedPhones = normalizePhoneList(candidates.join(","));
+
+    return { normalizedPhones, excelErrorInAnyPhoneCell };
+  };
+
   const onSubmit = async (data: CustomerFormValues) => {
     const loading = toast.loading(editId ? "جاري تحديث العميل" : "جاري إضافة العميل")
     if (editId) {
@@ -407,31 +468,38 @@ const CustomrLayout: React.FC = () => {
       const workbook = XLSX.read(buffer, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as any[];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as Record<string, unknown>[];
+
+      if (!rows.length) {
+        toast.error("الملف فارغ أو لا يحتوي بيانات قابلة للاستيراد");
+        return;
+      }
 
       let successCount = 0;
       let failedCount = 0;
+      const failedReasons: string[] = [];
 
-      for (const row of rows) {
-        const name = String(row["اسم العميل"] || "").trim();
-        const phoneRaw = String(row["رقم الهاتف"] || "").trim();
-        const country = String(row["الدولة"] || "").trim();
+      for (let index = 0; index < rows.length; index += 1) {
+        const row = rows[index] || {};
+        const rowNumber = index + 2;
 
-        if (!name || !phoneRaw) {
+        const name = String(getCellValueByAliases(row, ["اسم العميل", "الاسم", "name", "customer name"]) || "").trim();
+        const country = String(getCellValueByAliases(row, ["الدولة", "البلد", "country"]) || "").trim();
+        const { normalizedPhones, excelErrorInAnyPhoneCell } = extractPhonesFromRow(row);
+
+        if (!name || normalizedPhones.length === 0) {
           failedCount += 1;
-          continue;
-        }
-
-        const phoneArray = normalizePhoneList(phoneRaw);
-
-        if (phoneArray.length === 0) {
-          failedCount += 1;
+          if (excelErrorInAnyPhoneCell) {
+            failedReasons.push(`السطر ${rowNumber}: رقم الهاتف مكتوب بصيغة سببت خطأ Excel. اكتب الرقم كنص: '+963988...' أو غيّر تنسيق الخلية إلى Text`);
+          } else {
+            failedReasons.push(`السطر ${rowNumber}: الاسم أو الهاتف مفقود`);
+          }
           continue;
         }
 
         const payload = {
           name,
-          phone: phoneArray,
+          phone: normalizedPhones,
           country,
           countryCode: "",
           city: "",
@@ -442,6 +510,7 @@ const CustomrLayout: React.FC = () => {
           successCount += 1;
         } else {
           failedCount += 1;
+          failedReasons.push(`السطر ${rowNumber}: ${res.error || "فشل إنشاء العميل"}`);
         }
       }
 
@@ -450,11 +519,14 @@ const CustomrLayout: React.FC = () => {
       }
       if (failedCount > 0) {
         toast.error(`تعذر استيراد ${failedCount} عميل`);
+        const preview = failedReasons.slice(0, 3);
+        preview.forEach((reason) => toast.error(reason));
       }
 
       await getData();
     } catch (error) {
-      toast.error("فشل استيراد الملف");
+      const message = error instanceof Error ? error.message : "فشل استيراد الملف";
+      toast.error(message || "فشل استيراد الملف");
     } finally {
       toast.dismiss(loading);
     }
