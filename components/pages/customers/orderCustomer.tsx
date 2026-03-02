@@ -1,5 +1,6 @@
 import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
+import { getGeneralSettings } from "@/server/general-settings";
 import { createOrder } from "@/server/order";
 import { useOrderStore } from "@/store/customer";
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,6 +20,26 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
   const [paymentMethod, setPaymentMethod] = React.useState("عند الاستلام");
   // حقل سعر الصرف عند اختيار تركيا
   const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState(DEFAULT_TURKEY_EXCHANGE_RATE);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const loadExchangeRate = async () => {
+      try {
+        const res = await getGeneralSettings();
+        const rate = Number(res?.data?.usdToTryRate || 0);
+        if (isMounted && rate > 0) {
+          setTurkeyExchangeRate(rate);
+        }
+      } catch (error) {
+      }
+    };
+
+    loadExchangeRate();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // بيانات المستلم والعنوان
   const [receiverName, setReceiverName] = React.useState("");
@@ -411,10 +432,6 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                     setItems([{ productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
                     setSearchQueries({});
                     setShowDropdown({});
-                    // إعادة سعر الصرف الافتراضي عند تغيير البلد
-                    if (e.target.value === "تركيا") {
-                      setTurkeyExchangeRate(DEFAULT_TURKEY_EXCHANGE_RATE);
-                    }
                   }}
                   className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                 >
@@ -432,9 +449,9 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                     min={1}
                     step={0.01}
                     value={turkeyExchangeRate}
-                    onChange={e => setTurkeyExchangeRate(Number(e.target.value) || DEFAULT_TURKEY_EXCHANGE_RATE)}
+                    readOnly
                     className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                    placeholder="مثلاً: 32.5"
+                    placeholder="من الإعدادات العامة"
                   />
                 </div>
               )}

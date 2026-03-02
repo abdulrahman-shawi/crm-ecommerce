@@ -5,23 +5,38 @@ import { hasPermission, isAdmin } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/auth";
 
-const TURKEY_EXCHANGE_RATE = 44;
-const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | null) => {
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
+const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
   const value = Number(amount || 0);
-  return String(warehouseLocation || "").trim() === "تركيا" ? value / TURKEY_EXCHANGE_RATE : value;
+  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : DEFAULT_TURKEY_EXCHANGE_RATE;
+  return String(warehouseLocation || "").trim() === "تركيا" ? value / safeRate : value;
 };
-const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "معلق / نقص معلومات", "فشل التسليم مرتجع"];
+const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
+
+const getTurkeyExchangeRateFromSettings = async () => {
+  try {
+    const settings = await prisma.generalSetting.findFirst({
+      orderBy: { id: "asc" },
+      select: { usdToTryRate: true },
+    });
+
+    const rate = Number(settings?.usdToTryRate || 0);
+    return rate > 0 ? rate : DEFAULT_TURKEY_EXCHANGE_RATE;
+  } catch (error) {
+    return DEFAULT_TURKEY_EXCHANGE_RATE;
+  }
+};
 
 const getOrderAmountFromItemsInUSD = (order: {
   finalAmount?: number | null;
   discount?: number | null;
   warehouse?: { location?: string | null } | null;
   items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
-}) => {
+}, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
   const items = Array.isArray(order.items) ? order.items : [];
 
   if (items.length === 0) {
-    return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location);
+    return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location, exchangeRate);
   }
 
   const itemsTotal = items.reduce((sum, item) => {
@@ -35,7 +50,7 @@ const getOrderAmountFromItemsInUSD = (order: {
 
   const globalDiscount = Math.max(0, Number(order.discount || 0));
   const finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
-  return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location);
+  return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location, exchangeRate);
 };
 
 type OrderDateFilter = {
@@ -95,6 +110,7 @@ const buildPeriodRange = (period: EmployeeReportPeriod) => {
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderDateFilter) {
   try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { permission: true }
@@ -139,7 +155,7 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
     let failedReturnCount = 0;
 
     orders.forEach(order => {
-      const orderAmountUSD = getOrderAmountFromItemsInUSD(order);
+      const orderAmountUSD = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
 
       if (!statusGroups[order.status]) {
         statusGroups[order.status] = {
@@ -165,7 +181,6 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
         lostRevenue += orderAmountUSD;
       } else if (order.status === "معلق / نقص معلومات") {
         missingInfoCount++;
-        lostRevenue += orderAmountUSD;
       } else if (order.status === "فشل التسليم مرتجع") {
         failedReturnCount++;
         lostRevenue += orderAmountUSD;
@@ -194,6 +209,7 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
 
 export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderDateFilter) {
   try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { permission: true }
@@ -234,7 +250,7 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
     const timeline: Record<string, any> = {};
 
     orders.forEach(order => {
-      const orderAmountUSD = getOrderAmountFromItemsInUSD(order);
+      const orderAmountUSD = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
       const date = new Date(order.createdAt);
       const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
 
@@ -729,6 +745,7 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
 
 export async function GetTopSellingUsersByPermission(userId: string, dateFilter?: OrderDateFilter) {
   try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { permission: true }
@@ -739,13 +756,13 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
     const canViewEmployees = isAdmin(user) || Boolean(user.permission?.viewEmployees);
     if (!canViewEmployees) return { success: true, data: [] };
 
-    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+    const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
     const createdAtFilter = buildOrderDateWhere(dateFilter);
 
     const revenueOrders = await prisma.order.findMany({
       where: {
         userId: { not: null },
-        status: { in: statusWhitelist },
+        status: { notIn: statusBlacklist },
         ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       },
       select: {
@@ -792,7 +809,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
 
     for (const order of revenueOrders) {
       if (!order.userId) continue;
-      const amountUSD = getOrderAmountFromItemsInUSD(order);
+      const amountUSD = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
       const currentSales = salesByUser.get(order.userId) || 0;
       salesByUser.set(order.userId, currentSales + amountUSD);
 
@@ -838,7 +855,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
           .filter((order) => order.userId === id)
           .map((order) => ({
             ...order,
-            orderAmountUSD: getOrderAmountFromItemsInUSD(order),
+            orderAmountUSD: getOrderAmountFromItemsInUSD(order, turkeyExchangeRate),
           }));
         const totalOrdersAll = allOrdersCountByUser.get(id) || 0;
         const deliveredOrders = deliveredOrdersByUser.get(id) || 0;
@@ -865,6 +882,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
 
 export async function GetUserTargetProgress(userId: string, monthKey?: string) {
   try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const session = cookies().get("skynova")?.value;
     const decoded = session ? await decrypt(session) : null;
     const scopedUserId = decoded?.userId || userId;
@@ -895,7 +913,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
           }
         });
 
-    const statusWhitelist = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+    const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
 
     const monthRange = (() => {
       if (!monthKey) return null;
@@ -912,7 +930,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     const revenueOrders = await prisma.order.findMany({
       where: {
         userId: scopedUserId,
-        status: { in: statusWhitelist },
+        status: { notIn: statusBlacklist },
         ...(monthRange
           ? {
               createdAt: {
@@ -945,7 +963,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       where: {
         order: {
           ...(canViewAllTargets ? {} : { userId: scopedUserId }),
-          status: { in: statusWhitelist },
+          status: { notIn: statusBlacklist },
           ...(monthRange
             ? {
                 createdAt: {
@@ -980,7 +998,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     const deliveredOrdersCount = await prisma.order.count({
       where: {
         userId: scopedUserId,
-        status: { in: statusWhitelist },
+        status: { notIn: statusBlacklist },
         ...(monthRange
           ? {
               createdAt: {
@@ -1025,7 +1043,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const orderGlobalDiscount = Math.max(0, Number(item.order?.discount || 0));
       const discountShare = orderRawTotal > 0 ? (rawLineAmount / orderRawTotal) * orderGlobalDiscount : 0;
       const adjustedLineAmount = Math.max(0, rawLineAmount - discountShare);
-      const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location);
+      const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, turkeyExchangeRate);
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
@@ -1096,7 +1114,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     });
 
     const totalSalesAmount = revenueOrders.reduce((sum, order) => {
-      const converted = getOrderAmountFromItemsInUSD(order);
+      const converted = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
       return sum + converted;
     }, 0);
     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);

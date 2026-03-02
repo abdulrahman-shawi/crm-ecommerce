@@ -3,6 +3,7 @@
 import * as React from "react";
 import DynamicCard from "@/components/ui/dynamicCard";
 import { useAuth } from "@/context/AuthContext";
+import { getGeneralSettings } from "@/server/general-settings";
 import {
   GetBestSellingProducts,
   GetCustomerAcquisitionMonth,
@@ -39,7 +40,7 @@ type StatusSummary = {
   failedReturnCount: number;
 };
 
-const TURKEY_EXCHANGE_RATE = 44;
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const toInputDate = (date: Date) => {
   const year = date.getFullYear();
@@ -68,9 +69,10 @@ const formatUSD = (value: number | undefined | null) =>
     maximumFractionDigits: 3,
   });
 
-const normalizeToUSD = (amount: number, warehouseLocation?: string | null) => {
+const normalizeToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
   const numericAmount = Number(amount || 0);
-  return String(warehouseLocation || "").trim() === "تركيا" ? numericAmount / TURKEY_EXCHANGE_RATE : numericAmount;
+  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : DEFAULT_TURKEY_EXCHANGE_RATE;
+  return String(warehouseLocation || "").trim() === "تركيا" ? numericAmount / safeRate : numericAmount;
 };
 
 const COLORS = ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
@@ -102,6 +104,7 @@ const AnalyticPage: React.FC = () => {
   const [customStartDate, setCustomStartDate] = React.useState("");
   const [customEndDate, setCustomEndDate] = React.useState("");
   const [employeeReportPeriod, setEmployeeReportPeriod] = React.useState<EmployeeReportPeriod>("month");
+  const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState<number>(DEFAULT_TURKEY_EXCHANGE_RATE);
 
   const isInvalidCustomRange =
     orderFilterPreset === "custom" &&
@@ -119,6 +122,21 @@ const AnalyticPage: React.FC = () => {
 
     return getPresetDateRange(orderFilterPreset);
   }, [orderFilterPreset, customStartDate, customEndDate]);
+
+  React.useEffect(() => {
+    const loadExchangeRate = async () => {
+      try {
+        const res = await getGeneralSettings();
+        const rate = Number(res?.data?.usdToTryRate || 0);
+        if (rate > 0) {
+          setTurkeyExchangeRate(rate);
+        }
+      } catch (error) {
+      }
+    };
+
+    loadExchangeRate();
+  }, []);
 
   React.useEffect(() => {
     const fetchAllData = async () => {
@@ -336,7 +354,7 @@ const AnalyticPage: React.FC = () => {
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                               {(order.items || []).map((item: any) => {
                                 const netUnitPrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
-                                const unitPriceUSD = normalizeToUSD(netUnitPrice, order.warehouse?.location);
+                                const unitPriceUSD = normalizeToUSD(netUnitPrice, order.warehouse?.location, turkeyExchangeRate);
 
                                 return (
                                   <tr key={item.id}>
