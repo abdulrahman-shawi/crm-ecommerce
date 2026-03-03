@@ -501,6 +501,14 @@ const CustomrLayout: React.FC = () => {
     return startsWithPlus ? `+${digits}` : digits;
   };
 
+  const normalizePhoneForInput = (value: string) => {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return "";
+    const digits = trimmed.replace(/\D/g, "");
+    if (!digits) return "";
+    return `+${digits}`;
+  };
+
   const normalizePhoneList = (input: unknown) => {
     const rawValues = Array.isArray(input)
       ? input
@@ -1443,7 +1451,13 @@ const CustomrLayout: React.FC = () => {
           }}
                                   className="PhoneInputCustom"
                                   numberInputProps={{
-                                    className: "w-full bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    className: "w-full bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all",
+                                    onPaste: (event: React.ClipboardEvent<HTMLInputElement>) => {
+                                      event.preventDefault();
+                                      const pasted = event.clipboardData.getData("text");
+                                      const normalized = normalizePhoneForInput(pasted);
+                                      if (normalized) onChange(normalized);
+                                    }
                                   }}
                                 />
                               )}

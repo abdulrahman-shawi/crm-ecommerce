@@ -79,6 +79,12 @@ const getMonthKey = (dateValue: Date | string | number) => {
 
 const getCurrentMonthKey = () => getMonthKey(new Date());
 
+const getPreviousMonthKey = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    return getMonthKey(date);
+};
+
 const formatPhoneForInvoice = (phoneValue?: string | null) => {
     const raw = String(phoneValue || "").trim();
     if (!raw) return "";
@@ -479,7 +485,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     // أضف هذه الأسطر إذا كانت غير موجودة
 const [warehouseLocation, setWarehouseLocation] = React.useState(""); 
 const [searchQuery, setSearchQuery] = React.useState("");
-    const [monthFilterType, setMonthFilterType] = React.useState<"current" | "custom">("current");
+    const [monthFilterType, setMonthFilterType] = React.useState<"all" | "previous" | "current" | "custom">("current");
     const [customMonth, setCustomMonth] = React.useState<string>("");
     const filterOrder = React.useMemo(() => {
     if (!user) return [];
@@ -535,12 +541,16 @@ const [searchQuery, setSearchQuery] = React.useState("");
         const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
         if (!matchesLocation) return false;
 
-        const activeMonth = monthFilterType === "current"
-            ? getCurrentMonthKey()
-            : (customMonth || getCurrentMonthKey());
+        if (monthFilterType !== "all") {
+            const activeMonth = monthFilterType === "current"
+                ? getCurrentMonthKey()
+                : monthFilterType === "previous"
+                    ? getPreviousMonthKey()
+                    : (customMonth || getCurrentMonthKey());
 
-        const orderMonth = getMonthKey(order.createdAt);
-        if (!activeMonth || !orderMonth || orderMonth !== activeMonth) return false;
+            const orderMonth = getMonthKey(order.createdAt);
+            if (!activeMonth || !orderMonth || orderMonth !== activeMonth) return false;
+        }
 
         return true;
     });
@@ -912,9 +922,11 @@ const [searchQuery, setSearchQuery] = React.useState("");
     <div className="w-full md:w-auto flex items-center gap-2">
         <select
             value={monthFilterType}
-            onChange={(e) => setMonthFilterType(e.target.value as "current" | "custom")}
+            onChange={(e) => setMonthFilterType(e.target.value as "all" | "previous" | "current" | "custom")}
             className="w-full md:w-44 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
         >
+            <option value="all">إظهار الكل</option>
+            <option value="previous">الشهر الماضي</option>
             <option value="current">هذا الشهر</option>
             <option value="custom">مخصص</option>
         </select>
