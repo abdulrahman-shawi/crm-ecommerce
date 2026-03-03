@@ -3,7 +3,7 @@ import { DataTable } from '@/components/shared/DataTable';
 import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
-import { hasPermission, isAdmin } from '@/lib/utils';
+import { formatPhoneForDisplay, hasPermission, isAdmin } from '@/lib/utils';
 import { getCustomer } from '@/server/customer';
 import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, updateStaus } from '@/server/order';
 import { getProduct } from '@/server/product';
@@ -1242,8 +1242,8 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <p>
                                     رقم التواصل: <span dir="rtl">{
                                         Array.isArray(data?.receiverPhone)
-                                            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(" - ") || 'لم يسجل')
-                                            : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل')
+                                            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)).join(" - ") || 'لم يسجل')
+                                            : (formatPhoneForDisplay(data?.receiverPhone) || 'لم يسجل')
                                     }</span>
                                 </p>
                                 <p>شركة الشحن: {getOrderShippingName(data)}</p>
