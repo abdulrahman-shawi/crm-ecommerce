@@ -1331,7 +1331,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <span className="text-lg md:text-xl font-black">الإجمالي النهائي</span>
                                 <div className="text-right">
                                     <span className="text-2xl md:text-3xl font-black italic tracking-tighter">
-                                        {finalAmount.toLocaleString() + data.shipping.price}
+                                        {(finalAmount + data.shipping.price).toLocaleString()}
                                     </span>
                                     <span className="text-sm font-bold mr-1"> {currencySymbol}</span>
                                 </div>
