@@ -10,7 +10,6 @@ import { Edit, Trash2 } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import z from "zod";
-import { error } from 'console';
 import { FormInput } from "@/components/ui/form-input";
 
 const shippingSchema = z.object({
