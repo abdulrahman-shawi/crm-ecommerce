@@ -1240,7 +1240,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <p>المنظقة: {data.municipality ? ` - ${data.municipality}` : 'لم يسجل'}</p>
                                 <p>العنوان: {data.fullAddress || 'لم يسجل'}</p>
                                 <p>
-                                    رقم التواصل: <span dir="rtl">{
+                                    رقم التواصل: <span dir="ltr">{
                                         Array.isArray(data?.receiverPhone)
                                             ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)).join(" - ") || 'لم يسجل')
                                             : (formatPhoneForDisplay(data?.receiverPhone) || 'لم يسجل')
