@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Edit, Trash2 } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
-import z from "zod";
+import z, { set } from "zod";
 import { FormInput } from "@/components/ui/form-input";
 
 const shippingSchema = z.object({
@@ -48,7 +48,8 @@ export default function ShippingPage() {
     const handleEdit = (data: any) => {
         setEditId(data.id);
         setFormData({
-            name: data.name
+            name: data.name,
+            price: data.price
         });
         setIsOpen(true);
     }
@@ -95,6 +96,7 @@ export default function ShippingPage() {
             toast.dismiss(loadingToast);
             // قم بإعادة جلب بيانات شركات الشحن لتحديث القائمة
             getData();
+            setIsOpen(false);
         }
     };
 
