@@ -273,6 +273,7 @@ exports.Prisma.MessageScalarFieldEnum = {
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
+  usdToTryRateAtOrder: 'usdToTryRateAtOrder',
   totalAmount: 'totalAmount',
   discount: 'discount',
   finalAmount: 'finalAmount',
@@ -281,6 +282,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   receiverPhone: 'receiverPhone',
   country: 'country',
   city: 'city',
+  invoiceImage: 'invoiceImage',
   municipality: 'municipality',
   fullAddress: 'fullAddress',
   deliveryNotes: 'deliveryNotes',
@@ -293,6 +295,23 @@ exports.Prisma.OrderScalarFieldEnum = {
   customerId: 'customerId',
   userId: 'userId',
   warehouseId: 'warehouseId',
+  shippingId: 'shippingId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExpenseScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ShippingScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -369,6 +388,8 @@ exports.Prisma.ModelName = {
   Customer: 'Customer',
   Message: 'Message',
   Order: 'Order',
+  Expense: 'Expense',
+  shipping: 'shipping',
   OrderItem: 'OrderItem',
   TrakingCompany: 'TrakingCompany',
   GeneralSetting: 'GeneralSetting'

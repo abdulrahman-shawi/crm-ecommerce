@@ -13,6 +13,15 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
 
+const resolveOrderExchangeRate = (
+  orderLike: { usdToTryRateAtOrder?: number | null },
+  fallbackExchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE
+) => {
+  const snapshotRate = Number(orderLike?.usdToTryRateAtOrder || 0);
+  if (snapshotRate > 0) return snapshotRate;
+  return DEFAULT_TURKEY_EXCHANGE_RATE;
+};
+
 const getTurkeyExchangeRateFromSettings = async () => {
   try {
     const settings = await prisma.generalSetting.findFirst({
@@ -30,13 +39,15 @@ const getTurkeyExchangeRateFromSettings = async () => {
 const getOrderAmountFromItemsInUSD = (order: {
   finalAmount?: number | null;
   discount?: number | null;
+  usdToTryRateAtOrder?: number | null;
   warehouse?: { location?: string | null } | null;
   items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
 }, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
+  const effectiveRate = resolveOrderExchangeRate(order, exchangeRate);
   const items = Array.isArray(order.items) ? order.items : [];
 
   if (items.length === 0) {
-    return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location, exchangeRate);
+    return normalizeOrderAmountToUSD(Number(order.finalAmount || 0), order.warehouse?.location, effectiveRate);
   }
 
   const itemsTotal = items.reduce((sum, item) => {
@@ -50,7 +61,7 @@ const getOrderAmountFromItemsInUSD = (order: {
 
   const globalDiscount = Math.max(0, Number(order.discount || 0));
   const finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
-  return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location, exchangeRate);
+  return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location, effectiveRate);
 };
 
 type OrderDateFilter = {
@@ -231,6 +242,7 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
         createdAt: true,
         finalAmount: true,
         discount: true,
+        usdToTryRateAtOrder: true,
         warehouse: {
           select: {
             location: true,
@@ -434,6 +446,7 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
       where: whereClause,
       select: {
         finalAmount: true,
+        usdToTryRateAtOrder: true,
         warehouse: {
           select: {
             location: true,
@@ -454,10 +467,11 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
       }
 
       acc[warehouseCountry]._count.id += 1;
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
       acc[warehouseCountry]._sum.finalAmount += normalizeOrderAmountToUSD(
         Number(order.finalAmount || 0),
         order.warehouse?.location,
-        turkeyExchangeRate
+        effectiveRate
       );
       return acc;
     }, {} as Record<string, { country: string; _count: { id: number }; _sum: { finalAmount: number } }>);
@@ -778,6 +792,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
         orderNumber: true,
         finalAmount: true,
         discount: true,
+        usdToTryRateAtOrder: true,
         status: true,
         createdAt: true,
         warehouse: {
@@ -951,6 +966,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         userId: true,
         finalAmount: true,
         discount: true,
+        usdToTryRateAtOrder: true,
         items: {
           select: {
             quantity: true,
@@ -991,6 +1007,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
           select: {
             userId: true,
             discount: true,
+            usdToTryRateAtOrder: true,
             createdAt: true,
             warehouse: {
               select: {
@@ -1050,7 +1067,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const orderGlobalDiscount = Math.max(0, Number(item.order?.discount || 0));
       const discountShare = orderRawTotal > 0 ? (rawLineAmount / orderRawTotal) * orderGlobalDiscount : 0;
       const adjustedLineAmount = Math.max(0, rawLineAmount - discountShare);
-      const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, turkeyExchangeRate);
+      const effectiveRate = resolveOrderExchangeRate(item.order, turkeyExchangeRate);
+      const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, effectiveRate);
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);

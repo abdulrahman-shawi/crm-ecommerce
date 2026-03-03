@@ -324,6 +324,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       receiverName,
       receiverPhone,
       stockCountry,
+      usdToTryRateAtOrder: stockCountry === "تركيا" ? Number(turkeyExchangeRate) : null,
       country,
       city,
       municipality,

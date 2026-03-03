@@ -196,6 +196,10 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setCity(initialData.city || "");
     setamount(initialData?.amount)
     setamountBank(initialData?.amountBank)
+    const savedRate = Number(initialData?.usdToTryRateAtOrder || 0);
+    if (savedRate > 0) {
+      setTurkeyExchangeRate(savedRate);
+    }
     setMunicipality(initialData.municipality || "");
     setFullAddress(initialData.fullAddress || "");
     setPaymentMethod(initialData.paymentMethod || "عند الاستلام");
@@ -347,6 +351,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
       receiverName,
       receiverPhone,
       stockCountry,
+      usdToTryRateAtOrder: stockCountry === "تركيا" ? Number(turkeyExchangeRate) : null,
       country,
       city,
       municipality,

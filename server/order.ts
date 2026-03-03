@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma"
 
 const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم التسليم", "مدفوعة"]);
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
 
@@ -59,6 +60,11 @@ export async function createOrder(data: any, items: any[], user: any) {
                 throw new Error("يرجى اختيار بلد المخزون");
             }
 
+            const inputExchangeRate = Number(data.usdToTryRateAtOrder || 0);
+            const usdToTryRateAtOrder = stockCountry === "تركيا"
+                ? (inputExchangeRate > 0 ? inputExchangeRate : DEFAULT_TURKEY_EXCHANGE_RATE)
+                : null;
+
             const orderWarehouse = await tx.warehouse.findFirst({
                 where: { location: stockCountry },
                 orderBy: { id: "asc" },
@@ -69,6 +75,7 @@ export async function createOrder(data: any, items: any[], user: any) {
             const newOrder = await tx.order.create({
                 data: {
                     orderNumber,
+                    usdToTryRateAtOrder,
                     totalAmount: data.grandTotal + data.overallDiscount,
                     discount: data.overallDiscount,
                     finalAmount: data.grandTotal,
@@ -160,6 +167,15 @@ export async function updateOrder(data: any, id: any, items: any) {
 
         return await prisma.$transaction(async (tx) => {
             const stockCountry = String(data.stockCountry || oldOrder.warehouse?.location || "").trim();
+            const oldOrderSavedRate = Number((oldOrder as any)?.usdToTryRateAtOrder || 0);
+            const inputExchangeRate = Number(data.usdToTryRateAtOrder || 0);
+            const usdToTryRateAtOrder = stockCountry === "تركيا"
+                ? (inputExchangeRate > 0
+                    ? inputExchangeRate
+                    : (oldOrderSavedRate > 0
+                        ? oldOrderSavedRate
+                        : DEFAULT_TURKEY_EXCHANGE_RATE))
+                : null;
 
             const orderWarehouse = stockCountry
                 ? await tx.warehouse.findFirst({
@@ -192,6 +208,7 @@ export async function updateOrder(data: any, id: any, items: any) {
             const updatedOrder = await tx.order.update({
                 where: { id },
                 data: {
+                    usdToTryRateAtOrder,
                     totalAmount: data.grandTotal + data.overallDiscount,
                     discount: data.overallDiscount,
                     finalAmount: data.grandTotal,

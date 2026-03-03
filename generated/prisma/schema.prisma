@@ -222,34 +222,55 @@ model Message {
 }
 
 model Order {
-  id              Int         @id @default(autoincrement())
-  orderNumber     String      @unique
-  totalAmount     Float
-  discount        Float       @default(0)
-  finalAmount     Float
-  paymentMethod   String
-  receiverName    String?
-  receiverPhone   String[]
-  country         String?
-  city            String?
-  municipality    String?
-  fullAddress     String?
-  deliveryNotes   String?
-  googleMapsLink  String?
-  amount          String?
-  amountBank      String?
-  deliveryMethod  String?
-  additionalNotes String?
-  status          String      @default("PENDING")
-  customerId      String
-  userId          String?
-  warehouseId     Int?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  customer        Customer    @relation(fields: [customerId], references: [id])
-  user            User?       @relation(fields: [userId], references: [id])
-  items           OrderItem[]
-  warehouse       Warehouse?  @relation(fields: [warehouseId], references: [id])
+  id                  Int         @id @default(autoincrement())
+  orderNumber         String      @unique
+  usdToTryRateAtOrder Float?
+  totalAmount         Float
+  discount            Float       @default(0)
+  finalAmount         Float
+  paymentMethod       String
+  receiverName        String?
+  receiverPhone       String[]
+  country             String?
+  city                String?
+  invoiceImage        String?
+  municipality        String?
+  fullAddress         String?
+  deliveryNotes       String?
+  googleMapsLink      String?
+  amount              String?
+  amountBank          String?
+  deliveryMethod      String?
+  additionalNotes     String?
+  status              String      @default("PENDING")
+  customerId          String
+  userId              String?
+  warehouseId         Int?
+  shippingId          Int?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  customer            Customer    @relation(fields: [customerId], references: [id])
+  user                User?       @relation(fields: [userId], references: [id])
+  items               OrderItem[]
+  warehouse           Warehouse?  @relation(fields: [warehouseId], references: [id])
+  shipping            shipping?   @relation(fields: [shippingId], references: [id])
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  amount      Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model shipping {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
 }
 
 model OrderItem {
