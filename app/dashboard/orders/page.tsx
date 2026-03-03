@@ -345,8 +345,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">${currencySymbol}</span></span>
                     </div>
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#475569;">
-                        <span>طريقة التسليم:</span>
-                        <span>${deliveryMethodText}</span>
+                        <span>طريقة الدفع:</span>
+                        <span> ${paymentMethodText}</span>
                     </div>
                 </div>
             </div>
@@ -1337,8 +1337,8 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 </div>
                             </div>
                             <div className="flex justify-between px-4 md:px-6 text-slate-700 dark:text-slate-200 font-bold text-sm">
-                                <span>طريقة التسليم:</span>
-                                <span>{getOrderDeliveryMethod(data)}</span>
+                                <span>طريقة الدفع:</span>
+                                <span>{data.paymentMethod}</span>
                             </div>
                         </div>
                     </div>

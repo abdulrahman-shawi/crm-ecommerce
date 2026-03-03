@@ -721,16 +721,6 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 mr-2">طريقة التسليم</label>
-                <input
-                  type="text"
-                  value={deliveryMethod}
-                  onChange={(e) => setDeliveryMethod(e.target.value)}
-                  placeholder="مثال: مندوب - شركة شحن"
-                  className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                />
-              </div>
-              <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
               </div>
