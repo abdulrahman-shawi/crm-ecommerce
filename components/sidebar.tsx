@@ -8,7 +8,8 @@ import {
   Settings2,
   RollerCoasterIcon,
   Download,
-  Warehouse
+  Warehouse,
+  Truck
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -110,7 +111,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
   (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
   { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
-
+  (user && isAdmin(user)) &&
+  { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
 ].filter(Boolean) // هذا السطر هو الأهم: يقوم بحذف أي قيمة false من المصفوفة
     },
     {
