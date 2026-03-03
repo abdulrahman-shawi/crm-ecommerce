@@ -69,6 +69,17 @@ interface OrderCustomerProps {
 }
 
 const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
+const getOrderExchangeRate = (orderLike: any) => {
+    const savedRate = Number(orderLike?.usdToTryRateAtOrder || 0);
+    return savedRate > 0 ? savedRate : 44;
+};
+const getOrderShippingName = (orderLike: any) => String(orderLike?.shipping?.name || "").trim() || "غير محدد";
+const getOrderShippingPrice = (orderLike: any) => {
+    const shippingBasePrice = Number(orderLike?.shipping?.price || 0);
+    const isTurkeyWarehouse = String(orderLike?.warehouse?.location || "").trim() === "تركيا";
+    return isTurkeyWarehouse ? shippingBasePrice * getOrderExchangeRate(orderLike) : shippingBasePrice;
+};
+const getOrderDeliveryMethod = (orderLike: any) => String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
 
 const getMonthKey = (dateValue: Date | string | number) => {
     const date = new Date(dateValue);
@@ -89,17 +100,26 @@ const formatPhoneForInvoice = (phoneValue?: string | null) => {
     const raw = String(phoneValue || "").trim();
     if (!raw) return "";
 
-    const digits = raw.replace(/\D/g, "");
-    if (digits.length === 12 && digits.startsWith("963")) {
-        return `+${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)} ${digits.slice(9, 12)}`;
+    if (raw.startsWith("+")) {
+        const plusMatch = raw.match(/^\+(\d{1,4})(.*)$/);
+        if (plusMatch) {
+            const countryCode = plusMatch[1];
+            const remaining = plusMatch[2].replace(/^[\s-]+/, "") || "-";
+            return `+${countryCode} - ${remaining}`;
+        }
     }
 
-    if (digits.length === 10 && digits.startsWith("0")) {
-        const normalized = `963${digits.slice(1)}`;
-        return `+${normalized.slice(0, 3)} ${normalized.slice(3, 6)} ${normalized.slice(6, 9)} ${normalized.slice(9, 12)}`;
+    if (raw.startsWith("00")) {
+        const normalized = `+${raw.slice(2)}`;
+        const zeroMatch = normalized.match(/^\+(\d{1,4})(.*)$/);
+        if (zeroMatch) {
+            const countryCode = zeroMatch[1];
+            const remaining = zeroMatch[2].replace(/^[\s-]+/, "") || "-";
+            return `+${countryCode} - ${remaining}`;
+        }
     }
 
-    return raw;
+    return raw.replace(/\s+/g, " ");
 };
 
 const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
@@ -115,6 +135,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [items, setItems] = React.useState([
         { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
     ]);
+    
     const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
     const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
     const [overallDiscount, setOverallDiscount] = React.useState(0);
@@ -177,6 +198,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US') : '-';
         const customerName = data?.customer?.name || 'غير محدد';
         const paymentMethodText = data?.paymentMethod || '-';
+        const deliveryMethodText = getOrderDeliveryMethod(data);
+        const shippingName = getOrderShippingName(data);
+        const shippingPrice = getOrderShippingPrice(data);
         const receiverName = data?.receiverName || 'غير محدد';
         const receiverPhone = Array.isArray(data?.receiverPhone)
             ? data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ')
@@ -260,7 +284,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <div>المحافظة: ${city}</div>
                         <div>المنظقة: ${municipality}</div>
                         <div>العنوان: ${fullAddress}</div>
-                        <div>رقم التواصل: ${receiverPhone}</div>
+                        <div>رقم التواصل: <span dir="rtl">${receiverPhone}</span></div>
                         ${mapLink ? `<div>رابط الخريطة: ${mapLink}</div>` : ''}
                     </div>
                 </div>
@@ -290,6 +314,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <span>المجموع الفرعي:</span>
                         <span>${formatMoney(subtotal)} ${currencySymbol}</span>
                     </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#0f172a;">
+                        <span>شركة الشحن:</span>
+                        <span>${shippingName}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
+                        <span>سعر الشحنة:</span>
+                        <span>${formatMoney(shippingPrice)} ${currencySymbol}</span>
+                    </div>
                     ${totalDiscount > 0 ? `
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
                         <span>الخصم الممنوح:</span>
@@ -311,6 +343,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <div style="display:flex;justify-content:space-between;align-items:center;background:#2563eb;color:#ffffff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 24px rgba(37,99,235,0.2);">
                         <span style="font-size:14px;font-weight:900;">الإجمالي النهائي</span>
                         <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">${currencySymbol}</span></span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#475569;">
+                        <span>طريقة التسليم:</span>
+                        <span>${deliveryMethodText}</span>
                     </div>
                 </div>
             </div>
@@ -444,8 +480,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "البلدية": order.municipality,
                 "العنوان الكامل": order.fullAddress,
                 "رابط الخريطة": order.googleMapsLink,
-                "طريقة التوصيل": order.deliveryMethod,
-                "شركة الشحن": order.shippingCompany,
+                "طريقة التوصيل": getOrderDeliveryMethod(order),
+                "شركة الشحن": getOrderShippingName(order),
+                "سعر الشحن": getOrderShippingPrice(order),
                 "كود التتبع": order.trackingCode,
                 "ملاحظات التوصيل": order.deliveryNotes,
                 "بواسطة الموظف": order.user?.name || "Admin",
@@ -1016,6 +1053,20 @@ const [searchQuery, setSearchQuery] = React.useState("");
                         )
                     },
                     {
+                        header: "شركة الشحن",
+                        accessor: (e: any) => (
+                            <span className="font-bold text-slate-700 dark:text-slate-200">{getOrderShippingName(e)}</span>
+                        )
+                    },
+                    {
+                        header: "سعر الشحنة",
+                        accessor: (e: any) => (
+                            <span className="font-black text-violet-600">
+                                {getOrderShippingPrice(e).toLocaleString()} {getOrderCurrencySymbol(e)}
+                            </span>
+                        )
+                    },
+                    {
                         header: "المدينة",
                         accessor: (e: any) => (
                             <span className="font-bold text-gray-600 dark:text-gray-300">
@@ -1189,12 +1240,14 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <p>المنظقة: {data.municipality ? ` - ${data.municipality}` : 'لم يسجل'}</p>
                                 <p>العنوان: {data.fullAddress || 'لم يسجل'}</p>
                                 <p>
-                                    رقم التواصل: {
+                                    رقم التواصل: <span dir="rtl">{
                                         Array.isArray(data?.receiverPhone)
                                             ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(" - ") || 'لم يسجل')
                                             : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل')
-                                    }
+                                    }</span>
                                 </p>
+                                <p>شركة الشحن: {getOrderShippingName(data)}</p>
+                                <p>سعر الشحنة: {getOrderShippingPrice(data).toLocaleString()} {currencySymbol}</p>
                                 {
                                     data.googleMapsLink && (
                                         <div className="">
@@ -1248,6 +1301,11 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <span>{subtotal.toLocaleString()} {currencySymbol}</span>
                             </div>
 
+                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
+                                <span>سعر الشحنة:</span>
+                                <span>{getOrderShippingPrice(data).toLocaleString()} {currencySymbol}</span>
+                            </div>
+
                             {totalDiscount > 0 && (
                                 <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
                                     <span>الخصم الممنوح:</span>
@@ -1277,6 +1335,10 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                     </span>
                                     <span className="text-sm font-bold mr-1"> {currencySymbol}</span>
                                 </div>
+                            </div>
+                            <div className="flex justify-between px-4 md:px-6 text-slate-700 dark:text-slate-200 font-bold text-sm">
+                                <span>طريقة التسليم:</span>
+                                <span>{getOrderDeliveryMethod(data)}</span>
                             </div>
                         </div>
                     </div>

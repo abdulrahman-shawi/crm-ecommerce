@@ -2,6 +2,7 @@ import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
 import { getGeneralSettings } from "@/server/general-settings";
 import { createOrder, updateOrder } from "@/server/order";
+import { getshipping } from "@/server/shipping";
 import { useOrderStore } from "@/store/customer";
 import { AnimatePresence, motion } from "framer-motion";
 import { Save, Trash2 } from "lucide-react";
@@ -36,6 +37,25 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     };
 
     loadExchangeRate();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const loadShipping = async () => {
+      try {
+        const res = await getshipping();
+        if (isMounted && res?.success) {
+          setShipping(Array.isArray(res.data) ? res.data : []);
+        }
+      } catch (error) {
+      }
+    };
+
+    loadShipping();
     return () => {
       isMounted = false;
     };
@@ -139,6 +159,9 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
   const [amount, setamount] = React.useState("");
   const [amountBank, setamountBank] = React.useState("");
   const [googleMapsLink, setGoogleMapsLink] = React.useState("");
+  const [shipping, setShipping] = React.useState<any[]>([]);
+  const [shippingId, setShippingId] = React.useState<string>("");
+  const [deliveryMethod, setDeliveryMethod] = React.useState("");
 
   const [customerSearchQuery, setCustomerSearchQuery] = React.useState("");
   const [showCustomerDropdown, setShowCustomerDropdown] = React.useState(false);
@@ -196,6 +219,8 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setCity(initialData.city || "");
     setamount(initialData?.amount)
     setamountBank(initialData?.amountBank)
+    setShippingId(initialData?.shippingId ? String(initialData.shippingId) : "");
+    setDeliveryMethod(initialData?.deliveryMethod || "");
     const savedRate = Number(initialData?.usdToTryRateAtOrder || 0);
     if (savedRate > 0) {
       setTurkeyExchangeRate(savedRate);
@@ -287,6 +312,8 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setamount("");
     setamountBank("");
     setGoogleMapsLink("");
+    setShippingId("");
+    setDeliveryMethod("");
     setDeliveryNotes("");
     setAdditionalNotes("");
   };
@@ -357,6 +384,8 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
       municipality,
       fullAddress,
       googleMapsLink,
+      shippingId: shippingId || null,
+      deliveryMethod,
       amount,
       amountBank: Number(grandTotal - Number(amount)),
       deliveryNotes,
@@ -706,6 +735,29 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
 
             {/* القسم الثالث: الشحن والملاحظات */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 mr-2">شركة الشحن</label>
+                <select
+                  value={shippingId}
+                  onChange={(e) => setShippingId(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                >
+                  <option value="">اختر شركة الشحن</option>
+                  {shipping.map((s: any) => (
+                    <option key={s.id} value={String(s.id)}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 mr-2">طريقة التسليم</label>
+                <input
+                  type="text"
+                  value={deliveryMethod}
+                  onChange={(e) => setDeliveryMethod(e.target.value)}
+                  placeholder="مثال: مندوب - شركة شحن"
+                  className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                />
+              </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />

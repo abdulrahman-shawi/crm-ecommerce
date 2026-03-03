@@ -12,6 +12,7 @@ export async function getOrders() {
         orderBy:{createdAt:"desc"},
         include:{
             warehouse:true,
+            shipping:true,
             user:{
                 include:{
                     orders:true
@@ -38,6 +39,7 @@ export async function getOrdersByUser(userId: any) {
         orderBy: { createdAt: "desc" },
         include: {
             warehouse: true,
+            shipping: true,
             items: { include: { product: true } },
             customer: true
         }
@@ -64,6 +66,7 @@ export async function createOrder(data: any, items: any[], user: any) {
             const usdToTryRateAtOrder = stockCountry === "تركيا"
                 ? (inputExchangeRate > 0 ? inputExchangeRate : DEFAULT_TURKEY_EXCHANGE_RATE)
                 : null;
+            const shippingId = Number(data.shippingId || 0);
 
             const orderWarehouse = await tx.warehouse.findFirst({
                 where: { location: stockCountry },
@@ -97,6 +100,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
                     user: { connect: { id: user } },
+                    ...(shippingId > 0 ? { shipping: { connect: { id: shippingId } } } : {}),
                     ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
                         create: items.map((item: any) => ({
@@ -176,6 +180,7 @@ export async function updateOrder(data: any, id: any, items: any) {
                         ? oldOrderSavedRate
                         : DEFAULT_TURKEY_EXCHANGE_RATE))
                 : null;
+            const shippingId = Number(data.shippingId || 0);
 
             const orderWarehouse = stockCountry
                 ? await tx.warehouse.findFirst({
@@ -226,6 +231,9 @@ export async function updateOrder(data: any, id: any, items: any) {
                     deliveryMethod: data.deliveryMethod,
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
+                    shipping: shippingId > 0
+                        ? { connect: { id: shippingId } }
+                        : { disconnect: true },
                     ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
                         deleteMany: {}, // حذف العناصر السابقة
