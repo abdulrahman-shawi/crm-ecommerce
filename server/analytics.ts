@@ -417,6 +417,7 @@ export async function GetTopCustomers(userId: string, dateFilter?: OrderDateFilt
 
 export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilter) {
   try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { permission: true }
@@ -453,7 +454,11 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
       }
 
       acc[warehouseCountry]._count.id += 1;
-      acc[warehouseCountry]._sum.finalAmount += Number(order.finalAmount || 0);
+      acc[warehouseCountry]._sum.finalAmount += normalizeOrderAmountToUSD(
+        Number(order.finalAmount || 0),
+        order.warehouse?.location,
+        turkeyExchangeRate
+      );
       return acc;
     }, {} as Record<string, { country: string; _count: { id: number }; _sum: { finalAmount: number } }>);
 
