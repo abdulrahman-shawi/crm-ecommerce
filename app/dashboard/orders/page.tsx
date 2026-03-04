@@ -452,7 +452,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const canInlineEditShipping = React.useMemo(() => {
         if (!user) return false;
         if (isAdmin(user)) return true;
-        return String(user?.permission?.roleName || "").trim() === "المستودع";
+        return String(user?.permission?.roleName || "").trim().includes("مستودع");
     }, [user]);
 
     const addNewItem = () => {
