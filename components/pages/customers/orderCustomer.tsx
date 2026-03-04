@@ -608,13 +608,13 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 <label className="text-xs font-bold text-slate-500">أرقام هواتف المستلم</label>
 
                 {receiverPhone.map((phone: any, index: any) => (
-                  <div key={index} className="flex gap-2">
+                  <div key={index} className="flex w-full items-start gap-2">
                     <PhoneInput
                       international
                       placeholder="Enter phone number"
                       value={phone}
                       withCountryCallingCode
-                      className="w-full bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="w-full min-w-0 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                       onChange={(value) => { // القيمة هنا هي الرقم مباشرة وليست e
                         const newPhones = [...receiverPhone];
                         newPhones[index] = value; // نضع القيمة مباشرة

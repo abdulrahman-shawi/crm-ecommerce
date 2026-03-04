@@ -133,6 +133,29 @@ const ProductLayout = () => {
     const [categoryFilter, setCategoryFilter] = React.useState<string>('all');
     const { user } = useAuth()
     const PAGE_SIZE = 10;
+
+    const isAdminUser = user?.accountType === "ADMIN";
+    const canAccessSyria = user?.permission?.accessSyria === true;
+    const canAccessTurkey = user?.permission?.accessTurkey === true;
+
+    const hasLocationAccess = React.useCallback((location: string) => {
+        const normalizedLocation = String(location || '').trim();
+
+        if (isAdminUser) {
+            return true;
+        }
+
+        if (normalizedLocation === 'سوريا') {
+            return canAccessSyria;
+        }
+
+        if (normalizedLocation === 'تركيا') {
+            return canAccessTurkey;
+        }
+
+        return false;
+    }, [isAdminUser, canAccessSyria, canAccessTurkey]);
+
     React.useEffect(() => {
         getallcategory().then(setCategories).catch(console.error);
         getProduct().then((products) => {
@@ -144,14 +167,21 @@ const ProductLayout = () => {
     }, []);
 
     const locationOptions = React.useMemo(() => {
-        return Array.from(
-            new Set(
-                warehouses
-                    .map((warehouse: any) => String(warehouse?.location || '').trim())
-                    .filter((location: string) => location.length > 0)
-            )
-        );
-    }, [warehouses]);
+        const visibleLocations = products.flatMap((product: any) => {
+            const stocks = Array.isArray(product?.stocks) ? product.stocks : [];
+            return stocks
+                .map((stock: any) => String(stock?.warehouse?.location || '').trim())
+                .filter((location: string) => location.length > 0 && hasLocationAccess(location));
+        });
+
+        return Array.from(new Set(visibleLocations));
+    }, [products, hasLocationAccess]);
+
+    React.useEffect(() => {
+        if (selectedWarehouseFilter !== 'all' && !locationOptions.includes(selectedWarehouseFilter)) {
+            setSelectedWarehouseFilter('all');
+        }
+    }, [selectedWarehouseFilter, locationOptions]);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -255,14 +285,22 @@ const ProductLayout = () => {
             }
 
             return stocks
-                .filter((stock: any) => selectedWarehouseFilter === 'all' || String(stock?.warehouse?.location || '') === selectedWarehouseFilter)
+                .filter((stock: any) => {
+                    const stockLocation = String(stock?.warehouse?.location || '').trim();
+
+                    if (!hasLocationAccess(stockLocation)) {
+                        return false;
+                    }
+
+                    return selectedWarehouseFilter === 'all' || stockLocation === selectedWarehouseFilter;
+                })
                 .map((stock: any) => ({
                     ...product,
                     __stock: stock,
                     __rowId: `${product.id}-${stock.warehouseId}`,
                 }));
         });
-    }, [products, selectedWarehouseFilter, nameFilter, categoryFilter]);
+    }, [products, selectedWarehouseFilter, nameFilter, categoryFilter, hasLocationAccess]);
 
     const ExportToExcel = () => {
         // تجهيز البيانات بشكل مقروء
