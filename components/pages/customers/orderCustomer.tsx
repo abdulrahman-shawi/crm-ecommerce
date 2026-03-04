@@ -707,19 +707,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
 
             {/* القسم الثالث: الشحن والملاحظات */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 mr-2">شركة الشحن</label>
-                <select
-                  value={shippingId}
-                  onChange={(e) => setShippingId(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold"
-                >
-                  <option value="">اختر شركة الشحن</option>
-                  {shipping.map((s: any) => (
-                    <option key={s.id} value={String(s.id)}>{s.name}</option>
-                  ))}
-                </select>
-              </div>
+
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 mr-2">عنوان التسليم التفصيلي</label>
                 <input type="text" value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 p-3.5 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500 font-bold" />

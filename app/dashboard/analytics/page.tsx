@@ -29,7 +29,7 @@ import {
 import { MapPin, Package, TrendingDown, TrendingUp, Trophy, Users, X } from "lucide-react";
 
 type OrderFilterPreset = "this_month" | "last_month" | "custom";
-type EmployeeReportPeriod = "day" | "week" | "month";
+type EmployeeReportPeriod = "day" | "week" | "month" | "custom";
 
 type StatusSummary = {
   totalRevenue: number;
@@ -99,11 +99,15 @@ const AnalyticPage: React.FC = () => {
     success: true,
     data: [],
   });
+  const [employeeReportLoading, setEmployeeReportLoading] = React.useState(true);
 
   const [orderFilterPreset, setOrderFilterPreset] = React.useState<OrderFilterPreset>("this_month");
   const [customStartDate, setCustomStartDate] = React.useState("");
   const [customEndDate, setCustomEndDate] = React.useState("");
   const [employeeReportPeriod, setEmployeeReportPeriod] = React.useState<EmployeeReportPeriod>("month");
+  const [employeeCustomStartDate, setEmployeeCustomStartDate] = React.useState("");
+  const [employeeCustomEndDate, setEmployeeCustomEndDate] = React.useState("");
+  const [warehouseLocationFilter, setWarehouseLocationFilter] = React.useState<"all" | "سوريا" | "تركيا">("all");
   const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState<number>(DEFAULT_TURKEY_EXCHANGE_RATE);
 
   const isInvalidCustomRange =
@@ -113,15 +117,39 @@ const AnalyticPage: React.FC = () => {
     new Date(customStartDate) > new Date(customEndDate);
 
   const orderDateFilter = React.useMemo(() => {
+    const warehouseLocation = warehouseLocationFilter === "all" ? undefined : warehouseLocationFilter;
+
     if (orderFilterPreset === "custom") {
       return {
         startDate: customStartDate || undefined,
         endDate: customEndDate || undefined,
+        warehouseLocation,
       };
     }
 
-    return getPresetDateRange(orderFilterPreset);
-  }, [orderFilterPreset, customStartDate, customEndDate]);
+    return {
+      ...getPresetDateRange(orderFilterPreset),
+      warehouseLocation,
+    };
+  }, [orderFilterPreset, customStartDate, customEndDate, warehouseLocationFilter]);
+
+  const employeeReportFilter = React.useMemo(() => {
+    if (employeeReportPeriod === "custom") {
+      return {
+        period: "custom" as const,
+        startDate: employeeCustomStartDate || undefined,
+        endDate: employeeCustomEndDate || undefined,
+      };
+    }
+
+    return { period: employeeReportPeriod };
+  }, [employeeReportPeriod, employeeCustomStartDate, employeeCustomEndDate]);
+
+  const isInvalidEmployeeCustomRange =
+    employeeReportPeriod === "custom" &&
+    Boolean(employeeCustomStartDate) &&
+    Boolean(employeeCustomEndDate) &&
+    new Date(employeeCustomStartDate) > new Date(employeeCustomEndDate);
 
   React.useEffect(() => {
     const loadExchangeRate = async () => {
@@ -140,7 +168,7 @@ const AnalyticPage: React.FC = () => {
 
   React.useEffect(() => {
     const fetchAllData = async () => {
-      if (!user?.id || isInvalidCustomRange) return;
+      if (!user?.id || isInvalidCustomRange || isInvalidEmployeeCustomRange) return;
 
       setLoading(true);
       try {
@@ -152,7 +180,6 @@ const AnalyticPage: React.FC = () => {
           resTopUsers,
           resTimeline,
           resMsgTimeline,
-          resEmployeeReport,
         ] = await Promise.all([
           GetSalesByStatusAction(user.id, orderDateFilter),
           GetSalesByCity(user.id, orderDateFilter),
@@ -161,7 +188,6 @@ const AnalyticPage: React.FC = () => {
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
           GetSalesTimelineAction(user.id, orderDateFilter),
           GetCustomerAcquisitionMonth(user.id, orderDateFilter),
-          GetEmployeeCustomerReport(user.id, employeeReportPeriod),
         ]);
 
         setResult(resStatus as any);
@@ -171,7 +197,6 @@ const AnalyticPage: React.FC = () => {
         setTopSellingUsers(resTopUsers as any);
         setTimelineData((resTimeline as any)?.data || []);
         setMsgTimeline(resMsgTimeline as any);
-        setEmployeeCustomerReport(resEmployeeReport as any);
       } catch (error) {
         console.error("Error fetching analytics:", error);
       } finally {
@@ -180,11 +205,29 @@ const AnalyticPage: React.FC = () => {
     };
 
     fetchAllData();
-  }, [user?.id, orderDateFilter, employeeReportPeriod, isInvalidCustomRange]);
+  }, [user?.id, orderDateFilter, isInvalidCustomRange, isInvalidEmployeeCustomRange]);
+
+  React.useEffect(() => {
+    const fetchEmployeeReport = async () => {
+      if (!user?.id || isInvalidEmployeeCustomRange) return;
+
+      setEmployeeReportLoading(true);
+      try {
+        const resEmployeeReport = await GetEmployeeCustomerReport(user.id, employeeReportFilter);
+        setEmployeeCustomerReport(resEmployeeReport as any);
+      } catch (error) {
+        console.error("Error fetching employee report:", error);
+      } finally {
+        setEmployeeReportLoading(false);
+      }
+    };
+
+    fetchEmployeeReport();
+  }, [user?.id, employeeReportFilter, isInvalidEmployeeCustomRange]);
 
   const cityData =
     country.data?.map((item: any) => ({
-      name: item.country || "غير محدد",
+      name: item.location || "غير محدد",
       value: item._sum?.finalAmount || 0,
       count: item._count?.id || 0,
     })) || [];
@@ -196,7 +239,7 @@ const AnalyticPage: React.FC = () => {
   const showTopProducts = loading || (topSale.data?.length || 0) > 0;
   const showLowStock = loading || (lowStock.data?.length || 0) > 0;
   const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
-  const showEmployeeCustomerReport = loading || (employeeCustomerReport.data?.length || 0) > 0;
+  const showEmployeeCustomerReport = employeeReportLoading || (employeeCustomerReport.data?.length || 0) > 0;
 
   return (
     <div className="p-8 relative">
@@ -237,10 +280,26 @@ const AnalyticPage: React.FC = () => {
               </div>
             </>
           )}
+
+          <div className="flex flex-col gap-1 min-w-[220px]">
+            <label className="text-xs font-bold text-slate-500">دولة المستودع</label>
+            <select
+              value={warehouseLocationFilter}
+              onChange={(e) => setWarehouseLocationFilter(e.target.value as "all" | "سوريا" | "تركيا")}
+              className="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+            >
+              <option value="all">كل المستودعات</option>
+              <option value="سوريا">مستودعات سوريا</option>
+              <option value="تركيا">مستودعات تركيا</option>
+            </select>
+          </div>
         </div>
 
         {isInvalidCustomRange && (
           <p className="mt-2 text-xs text-red-500 font-bold">تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
+        )}
+        {isInvalidEmployeeCustomRange && (
+          <p className="mt-2 text-xs text-red-500 font-bold">فلتر تقرير الموظفين: تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
         )}
       </div>
 
@@ -491,9 +550,9 @@ const AnalyticPage: React.FC = () => {
           <DynamicCard.Header title="الطلبات حسب بلد المستودع" description="تجميع الطلبات والمبالغ بحسب بلد المستودع" icon={<TrendingUp size={20} />} />
           <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {country.data?.map((item: any) => (
-              <div key={item.country} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
+              <div key={item.location} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
                 <div className="flex flex-col justify-center">
-                  <span className="font-semibold text-slate-700 dark:text-slate-200">{item.country || "غير محدد"}</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">{item.location || "غير محدد"}</span>
                   <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
                 </div>
                 <span className="text-green-600 dark:text-green-400 font-bold text-lg">{formatUSD(item._sum?.finalAmount)}$</span>
@@ -523,9 +582,9 @@ const AnalyticPage: React.FC = () => {
 
       {showEmployeeCustomerReport && (
         <DynamicCard
-          isLoading={loading}
+          isLoading={employeeReportLoading}
           isError={!employeeCustomerReport.success}
-          isEmpty={!loading && employeeCustomerReport.data?.length === 0}
+          isEmpty={!employeeReportLoading && employeeCustomerReport.data?.length === 0}
           variant="glass"
           className="mt-6"
         >
@@ -546,9 +605,33 @@ const AnalyticPage: React.FC = () => {
                   <option value="day">اليوم</option>
                   <option value="week">الأسبوع</option>
                   <option value="month">الشهر</option>
+                  <option value="custom">مخصص</option>
                 </select>
               </div>
             </div>
+
+            {employeeReportPeriod === "custom" && (
+              <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-500">من تاريخ</label>
+                  <input
+                    type="date"
+                    value={employeeCustomStartDate}
+                    onChange={(e) => setEmployeeCustomStartDate(e.target.value)}
+                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-500">إلى تاريخ</label>
+                  <input
+                    type="date"
+                    value={employeeCustomEndDate}
+                    onChange={(e) => setEmployeeCustomEndDate(e.target.value)}
+                    className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="overflow-x-auto">
               <table className="w-full text-right border-collapse">

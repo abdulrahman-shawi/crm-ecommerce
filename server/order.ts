@@ -1,11 +1,39 @@
 'use server'
 
+import { decrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma"
+import { cookies } from "next/headers";
 
 const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم التسليم", "مدفوعة"]);
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
+const WAREHOUSE_ROLE_NAME = "المستودع";
+
+async function getCurrentSessionUser() {
+    try {
+        const session = cookies().get("skynova")?.value;
+        if (!session) return null;
+
+        const decoded = await decrypt(session);
+        if (!decoded?.userId) return null;
+
+        return await prisma.user.findUnique({
+            where: { id: String(decoded.userId) },
+            include: { permission: true },
+        });
+    } catch {
+        return null;
+    }
+}
+
+function canManageOrderShipping(user: any) {
+    if (!user) return false;
+    if (user.accountType === "ADMIN") return true;
+
+    const roleName = String(user?.permission?.roleName || "").trim();
+    return roleName === WAREHOUSE_ROLE_NAME;
+}
 
 export async function getOrders() {
     const order = await prisma.order.findMany({
@@ -349,6 +377,74 @@ export async function deleteOrder(id: any) {
             success: false, 
             error: error.message || "حدث خطأ أثناء محاولة حذف الطلب" 
         };
+    }
+}
+
+export async function updateOrderShippingFromTable(orderId: number, shippingId: number | null, shippingPrice: number) {
+    try {
+        const user = await getCurrentSessionUser();
+        if (!canManageOrderShipping(user)) {
+            return { success: false, error: "غير مصرح لك بتعديل بيانات الشحن" };
+        }
+
+        const parsedOrderId = Number(orderId);
+        const parsedShippingId = Number(shippingId || 0);
+        const parsedShippingPrice = Number(shippingPrice || 0);
+
+        if (!Number.isInteger(parsedOrderId) || parsedOrderId <= 0) {
+            return { success: false, error: "معرّف الطلب غير صالح" };
+        }
+
+        if (Number.isNaN(parsedShippingPrice) || parsedShippingPrice < 0) {
+            return { success: false, error: "سعر الشحن غير صالح" };
+        }
+
+        const existingOrder = await prisma.order.findUnique({
+            where: { id: parsedOrderId },
+            select: { id: true },
+        });
+
+        if (!existingOrder) {
+            return { success: false, error: "الطلب غير موجود" };
+        }
+
+        if (parsedShippingId <= 0) {
+            const updated = await prisma.order.update({
+                where: { id: parsedOrderId },
+                data: { shipping: { disconnect: true } },
+                include: { shipping: true, warehouse: true },
+            });
+            return { success: true, data: updated };
+        }
+
+        const shipping = await prisma.shipping.findUnique({
+            where: { id: parsedShippingId },
+            select: { id: true, price: true },
+        });
+
+        if (!shipping) {
+            return { success: false, error: "شركة الشحن غير موجودة" };
+        }
+
+        if (Number(shipping.price) !== parsedShippingPrice) {
+            await prisma.shipping.update({
+                where: { id: parsedShippingId },
+                data: { price: parsedShippingPrice },
+            });
+        }
+
+        const updatedOrder = await prisma.order.update({
+            where: { id: parsedOrderId },
+            data: {
+                shipping: { connect: { id: parsedShippingId } },
+            },
+            include: { shipping: true, warehouse: true },
+        });
+
+        return { success: true, data: updatedOrder };
+    } catch (error) {
+        console.error("Update Order Shipping Error:", error);
+        return { success: false, error: "حدث خطأ أثناء تعديل بيانات الشحن" };
     }
 }
 

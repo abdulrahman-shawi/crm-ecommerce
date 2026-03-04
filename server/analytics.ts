@@ -67,9 +67,16 @@ const getOrderAmountFromItemsInUSD = (order: {
 type OrderDateFilter = {
   startDate?: string;
   endDate?: string;
+  warehouseLocation?: "سوريا" | "تركيا";
 };
 
-type EmployeeReportPeriod = "day" | "week" | "month";
+type EmployeeReportPeriod = "day" | "week" | "month" | "custom";
+
+type EmployeeReportFilter = {
+  period?: EmployeeReportPeriod;
+  startDate?: string;
+  endDate?: string;
+};
 
 const buildOrderDateWhere = (dateFilter?: OrderDateFilter) => {
   const startDate = dateFilter?.startDate ? new Date(dateFilter.startDate) : undefined;
@@ -92,6 +99,12 @@ const buildOrderDateWhere = (dateFilter?: OrderDateFilter) => {
     ...(startDate ? { gte: startDate } : {}),
     ...(endDate ? { lte: endDate } : {}),
   };
+};
+
+const buildWarehouseScope = (warehouseLocation?: string) => {
+  const normalized = String(warehouseLocation || "").trim();
+  if (normalized !== "سوريا" && normalized !== "تركيا") return undefined;
+  return { warehouse: { location: normalized } };
 };
 
 const buildPeriodRange = (period: EmployeeReportPeriod) => {
@@ -118,6 +131,31 @@ const buildPeriodRange = (period: EmployeeReportPeriod) => {
   return { start, end };
 };
 
+const buildEmployeeRange = (filter?: EmployeeReportFilter) => {
+  const period = filter?.period || "month";
+  if (period !== "custom") {
+    return buildPeriodRange(period);
+  }
+
+  const start = filter?.startDate ? new Date(filter.startDate) : null;
+  const end = filter?.endDate ? new Date(filter.endDate) : null;
+
+  if (!start || Number.isNaN(start.getTime()) || !end || Number.isNaN(end.getTime())) {
+    return buildPeriodRange("month");
+  }
+
+  const normalizedStart = new Date(start);
+  const normalizedEnd = new Date(end);
+  normalizedStart.setHours(0, 0, 0, 0);
+  normalizedEnd.setHours(23, 59, 59, 999);
+
+  if (normalizedStart > normalizedEnd) {
+    return buildPeriodRange("month");
+  }
+
+  return { start: normalizedStart, end: normalizedEnd };
+};
+
 // src/actions/analytics.ts
 export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderDateFilter) {
   try {
@@ -131,9 +169,11 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
 
     const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
     const whereClause = {
       ...(canViewAll ? {} : { userId: userId }),
       ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+      ...(warehouseScope ? warehouseScope : {}),
     };
 
     const orders = await prisma.order.findMany({
@@ -230,9 +270,11 @@ export async function GetSalesTimelineAction(userId: string, dateFilter?: OrderD
 
     const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
     const whereClause = {
       ...(canViewAll ? {} : { userId: userId }),
       ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+      ...(warehouseScope ? warehouseScope : {}),
     };
 
     const orders = await prisma.order.findMany({
@@ -437,9 +479,11 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
     
     const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
     const whereClause = {
       ...(canViewAll ? {} : { userId: userId }),
       ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+      ...(warehouseScope ? warehouseScope : {}),
     };
 
     const orders = await prisma.order.findMany({
@@ -460,7 +504,7 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
 
       if (!acc[warehouseCountry]) {
         acc[warehouseCountry] = {
-          country: warehouseCountry,
+          location: warehouseCountry,
           _count: { id: 0 },
           _sum: { finalAmount: 0 },
         };
@@ -474,7 +518,7 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
         effectiveRate
       );
       return acc;
-    }, {} as Record<string, { country: string; _count: { id: number }; _sum: { finalAmount: number } }>);
+    }, {} as Record<string, { location: string; _count: { id: number }; _sum: { finalAmount: number } }>);
 
     const citySales = Object.values(groupedByWarehouseCountry).sort(
       (a, b) => (b._sum.finalAmount || 0) - (a._sum.finalAmount || 0)
@@ -547,6 +591,7 @@ export async function GetBestSellingProducts(userId: string, dateFilter?: OrderD
 
     const canViewAllOrders = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
 
     const bestSellers = await prisma.orderItem.groupBy({
       by: ['productId'],
@@ -554,6 +599,7 @@ export async function GetBestSellingProducts(userId: string, dateFilter?: OrderD
         order: {
           ...(canViewAllOrders ? {} : { userId: userId }),
           ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+          ...(warehouseScope ? warehouseScope : {}),
         },
       },
       _sum: {
@@ -645,7 +691,7 @@ export async function GetTopSellingUsers() {
   return { success: true, data: [] };
 }
 
-export async function GetEmployeeCustomerReport(userId: string, period: EmployeeReportPeriod = "month") {
+export async function GetEmployeeCustomerReport(userId: string, periodOrFilter: EmployeeReportPeriod | EmployeeReportFilter = "month") {
   try {
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
@@ -657,7 +703,12 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
     const canViewEmployees = isAdmin(currentUser) || Boolean(currentUser.permission?.viewEmployees);
     if (!canViewEmployees) return { success: true, data: [] };
 
-    const periodRange = buildPeriodRange(period);
+    const normalizedFilter: EmployeeReportFilter =
+      typeof periodOrFilter === "string"
+        ? { period: periodOrFilter }
+        : (periodOrFilter || { period: "month" });
+
+    const periodRange = buildEmployeeRange(normalizedFilter);
     const deliveredStatuses = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
     const employees = await prisma.user.findMany({
@@ -739,6 +790,26 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
       deliveredCustomersByUser.set(item.userId, previous + 1);
     });
 
+    const createdOrdersByUserRows = await prisma.order.groupBy({
+      by: ["userId"],
+      where: {
+        userId: { in: employeeIds },
+        createdAt: {
+          gte: periodRange.start,
+          lte: periodRange.end,
+        },
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    const createdOrdersByUser = new Map<string, number>();
+    createdOrdersByUserRows.forEach((row) => {
+      if (!row.userId) return;
+      createdOrdersByUser.set(row.userId, row._count.id || 0);
+    });
+
     const data = employees
       .map((employee) => ({
         userId: employee.id,
@@ -746,6 +817,7 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
         communicatedCustomers: communicatedCustomersByUser.get(employee.id) || 0,
         addedCustomers: addedCustomersByUser.get(employee.id) || 0,
         deliveredCustomers: deliveredCustomersByUser.get(employee.id) || 0,
+        createdOrders: createdOrdersByUser.get(employee.id) || 0,
       }))
       .sort((a, b) => b.deliveredCustomers - a.deliveredCustomers);
 
@@ -755,7 +827,7 @@ export async function GetEmployeeCustomerReport(userId: string, period: Employee
       range: {
         startDate: periodRange.start,
         endDate: periodRange.end,
-        period,
+        period: normalizedFilter.period || "month",
       }
     };
   } catch (error) {
@@ -779,12 +851,14 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
 
     const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
     const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
 
     const revenueOrders = await prisma.order.findMany({
       where: {
         userId: { not: null },
         status: { notIn: statusBlacklist },
         ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+        ...(warehouseScope ? warehouseScope : {}),
       },
       select: {
         id: true,
@@ -851,6 +925,7 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
           where: {
             userId: id,
             ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+            ...(warehouseScope ? warehouseScope : {}),
           },
         }),
       }))
@@ -1163,5 +1238,60 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
   } catch (error) {
     console.error("Error in GetUserTargetProgress:", error);
     return { success: false, data: [], error: "Internal Server Error" };
+  }
+}
+
+export async function GetEmployeeActivitySummary(userId: string, filter: EmployeeReportFilter = { period: "month" }) {
+  try {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, username: true },
+    });
+
+    if (!currentUser) {
+      return { success: false, error: "User not found", data: null };
+    }
+
+    const periodRange = buildEmployeeRange(filter);
+
+    const [messagesCount, ordersCount, addedCustomersCount] = await Promise.all([
+      prisma.message.count({
+        where: {
+          userId,
+          createdAt: { gte: periodRange.start, lte: periodRange.end },
+        },
+      }),
+      prisma.order.count({
+        where: {
+          userId,
+          createdAt: { gte: periodRange.start, lte: periodRange.end },
+        },
+      }),
+      prisma.customer.count({
+        where: {
+          createdAt: { gte: periodRange.start, lte: periodRange.end },
+          users: { some: { id: userId } },
+        },
+      }),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        userId,
+        userName: currentUser.username,
+        communicatedMessages: messagesCount,
+        createdOrders: ordersCount,
+        addedCustomers: addedCustomersCount,
+      },
+      range: {
+        startDate: periodRange.start,
+        endDate: periodRange.end,
+        period: filter.period || "month",
+      },
+    };
+  } catch (error) {
+    console.error("Error in GetEmployeeActivitySummary:", error);
+    return { success: false, data: null, error: "Internal Server Error" };
   }
 }

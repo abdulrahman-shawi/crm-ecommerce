@@ -1122,6 +1122,7 @@ const CustomrLayout: React.FC = () => {
             onChange={(e) => setCreatedPreset(e.target.value)}
             className="h-11 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 px-3"
           >
+            <option value="all">الكل</option>
             <option value="today">اليوم</option>
             <option value="last7">آخر 7 أيام</option>
             <option value="month">هذا الشهر</option>

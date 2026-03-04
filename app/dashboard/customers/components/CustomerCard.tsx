@@ -38,7 +38,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
   return (
     <div
       onClick={() => onOpenCustomer(customer)}
-      className={`group border ${customer.orders.length === 1 ? `border-pink-500` : customer.orders.length >= 2 ? "border-purple-500" : "border-transparent"
+      className={`group border ${customer.orders.length === 1 ? `border-pink-700` : customer.orders.length >= 2 ? "border-purple-500" : "border-transparent"
         } relative bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer`}
     >
       <div className="absolute top-4 right-6 z-10">

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { GetUserTargetProgress } from '@/server/analytics';
+import { GetEmployeeActivitySummary, GetUserTargetProgress } from '@/server/analytics';
 import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, updateUserTarget } from '@/server/user';
 import { getProduct } from '@/server/product';
 import toast from 'react-hot-toast';
@@ -11,6 +11,18 @@ const DashboardPage: React.FunctionComponent = () => {
   const { user } = useAuth();
   const canManageTargets = user?.accountType === "ADMIN";
   const [loading, setLoading] = React.useState(false);
+  const [activityFilterPreset, setActivityFilterPreset] = React.useState<"day" | "week" | "month" | "custom">("month");
+  const [activityCustomStartDate, setActivityCustomStartDate] = React.useState<string>("");
+  const [activityCustomEndDate, setActivityCustomEndDate] = React.useState<string>("");
+  const [activitySummary, setActivitySummary] = React.useState<{
+    success: boolean;
+    data: {
+      communicatedMessages: number;
+      createdOrders: number;
+      addedCustomers: number;
+      userName?: string;
+    } | null;
+  }>({ success: true, data: null });
   const [targetProgress, setTargetProgress] = React.useState<{
     success: boolean;
     data: Array<{
@@ -64,6 +76,24 @@ const DashboardPage: React.FunctionComponent = () => {
     { productId: "", requiredQty: 1, rewardValue: 0 },
   ]);
   const [creatingTarget, setCreatingTarget] = React.useState(false);
+
+  const isInvalidActivityCustomRange =
+    activityFilterPreset === "custom" &&
+    Boolean(activityCustomStartDate) &&
+    Boolean(activityCustomEndDate) &&
+    new Date(activityCustomStartDate) > new Date(activityCustomEndDate);
+
+  const activityFilter = React.useMemo(() => {
+    if (activityFilterPreset === "custom") {
+      return {
+        period: "custom" as const,
+        startDate: activityCustomStartDate || undefined,
+        endDate: activityCustomEndDate || undefined,
+      };
+    }
+
+    return { period: activityFilterPreset };
+  }, [activityFilterPreset, activityCustomStartDate, activityCustomEndDate]);
 
   const sumNumbers = (values?: number[] | null) =>
     Array.isArray(values) ? values.reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
@@ -416,6 +446,16 @@ const DashboardPage: React.FunctionComponent = () => {
   }, [user?.id, selectedMonth]);
 
   React.useEffect(() => {
+    const fetchActivitySummary = async () => {
+      if (!user?.id || isInvalidActivityCustomRange) return;
+      const res = await GetEmployeeActivitySummary(user.id, activityFilter);
+      setActivitySummary((res as any) || { success: false, data: null });
+    };
+
+    fetchActivitySummary();
+  }, [user?.id, activityFilter, isInvalidActivityCustomRange]);
+
+  React.useEffect(() => {
     getProduct().then(setProducts).catch(() => setProducts([]));
   }, []);
 
@@ -438,6 +478,72 @@ const DashboardPage: React.FunctionComponent = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-white">لوحة التحكم</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">متابعة التاركت حسب المنتج</p>
+      </div>
+
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white">نشاطك مع العملاء</h2>
+            <p className="text-xs text-slate-500">عدد الرسائل والطلبات والعملاء المضافين حسب الفترة</p>
+          </div>
+          <div className="flex flex-col gap-2 md:flex-row md:items-end">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-500">الفترة</label>
+              <select
+                value={activityFilterPreset}
+                onChange={(e) => setActivityFilterPreset(e.target.value as "day" | "week" | "month" | "custom")}
+                className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+              >
+                <option value="day">اليوم</option>
+                <option value="week">الأسبوع</option>
+                <option value="month">الشهر</option>
+                <option value="custom">مخصص</option>
+              </select>
+            </div>
+
+            {activityFilterPreset === "custom" && (
+              <>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-500">من تاريخ</label>
+                  <input
+                    type="date"
+                    value={activityCustomStartDate}
+                    onChange={(e) => setActivityCustomStartDate(e.target.value)}
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-500">إلى تاريخ</label>
+                  <input
+                    type="date"
+                    value={activityCustomEndDate}
+                    onChange={(e) => setActivityCustomEndDate(e.target.value)}
+                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {isInvalidActivityCustomRange && (
+          <p className="mt-2 text-xs font-bold text-red-500">تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
+        )}
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+            <div className="text-xs font-semibold text-slate-500">الرسائل المتواصَل بها</div>
+            <div className="mt-1 text-2xl font-black text-blue-600">{Number(activitySummary.data?.communicatedMessages || 0).toLocaleString()}</div>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+            <div className="text-xs font-semibold text-slate-500">الطلبات المُنشأة بواسطتك</div>
+            <div className="mt-1 text-2xl font-black text-emerald-600">{Number(activitySummary.data?.createdOrders || 0).toLocaleString()}</div>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+            <div className="text-xs font-semibold text-slate-500">العملاء المضافون</div>
+            <div className="mt-1 text-2xl font-black text-violet-600">{Number(activitySummary.data?.addedCustomers || 0).toLocaleString()}</div>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
