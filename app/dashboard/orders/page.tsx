@@ -608,42 +608,13 @@ const [searchQuery, setSearchQuery] = React.useState("");
     const filterOrder = React.useMemo(() => {
     if (!user) return [];
 
-    // 1. استخراج الصلاحيات من جدول Permission (حسب Prisma Schema)
-    const permissions = user.permission || {};
-    const isAdminUser = user.accountType === "ADMIN"; // التحقق المباشر من الرتبة
-    const canAccessSyria = permissions.accessSyria === true;
-    const canAccessTurkey = permissions.accessTurkey === true;
-    const viewOrder = permissions.viewOrders === true;
+    const isAdminUser = user.accountType === "ADMIN";
 
     return orders.filter((order: any) => {
         const isOwner = order.userId === user.id;
-        const orderLocation = String(order.warehouse?.location || "").trim();
 
-        // --- منطق السماح بالرؤية (Visibility Logic) ---
-        let hasAccess = false;
-
-        // أ - شرط صلاحية المنطقة (الأولوية القصوى)
-        // إذا كان الطلب في سوريا والمستخدم لديه صلاحية سوريا، يراه (سواء كان أدمن أو لا)
-        if (orderLocation === "سوريا" && canAccessSyria) {
-            hasAccess = true;
-        } 
-        // إذا كان الطلب في تركيا والمستخدم لديه صلاحية تركيا، يراه
-        else if (orderLocation === "تركيا" && canAccessTurkey) {
-            hasAccess = true;
-        }
-        // ب - شرط الأدمن (لرؤية الطلبات التي ليس لها مستودع محدد أو في مناطق أخرى)
-        else if (isAdminUser) {
-            hasAccess = true;
-        }else if(viewOrder){
-            hasAccess = true;
-        }
-        // ج - شرط صاحب الطلب
-        else if (isOwner) {
-            hasAccess = true;
-        }
-
-        // إذا لم يتحقق أي شرط مما سبق، يتم حجب الطلب
-        if (!hasAccess) return false;
+        // غير الأدمن يرى طلباته فقط
+        if (!isAdminUser && !isOwner) return false;
 
         // --- فلتر البحث النصي ---
         const query = searchQuery.trim().toLowerCase();
