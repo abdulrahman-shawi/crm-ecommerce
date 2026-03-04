@@ -82,6 +82,23 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       </div>
     ), { duration: 5000, position: "top-center" });
   };
+
+  const hasWarehouseAccess = Boolean(user?.permission?.accessTurkey || user?.permission?.accessSyria);
+
+  const canShowProductsInSidebar = user && (
+    isAdmin(user) ||
+    (hasWarehouseAccess
+      ? Boolean(user?.permission?.viewProducts)
+      : hasAnyPermission(user, ["viewProducts", "addProducts", "editProducts", "deleteProducts"]))
+  );
+
+  const canShowOrdersInSidebar = user && (
+    isAdmin(user) ||
+    (hasWarehouseAccess
+      ? Boolean(user?.permission?.viewOrders)
+      : hasAnyPermission(user, ["viewOrders", "editOrders", "deleteOrders"]))
+  );
+
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = user ? [
     {
@@ -99,7 +116,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Receipt, label: "الأقسام", href: "/dashboard/categories" },
         (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
         { icon: Warehouse, label: "المستودعات", href: "/dashboard/inventories" },
-        (user && hasAnyPermission(user, ["viewProducts", "addProducts", "editProducts", "deleteProducts"])) &&
+        canShowProductsInSidebar &&
         { icon: Box, label: "المنتجات", href: "/dashboard/products" },
         (user && isAdmin(user)) &&
         { icon: Box, label: "حركات المخزون", href: "/dashboard/move-product" },
@@ -107,11 +124,11 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Users, label: "السجلات", href: "/dashboard/customers" },
         (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&
   { icon: Users, label: "العملاء", href: "/dashboard/customers-complated" },
-          (user && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
+          ((user) && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
           { icon: PieChart, label: "المصاريف الثابتة", href: "/dashboard/expenses" },
   
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
-  (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
+  canShowOrdersInSidebar &&
   { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
