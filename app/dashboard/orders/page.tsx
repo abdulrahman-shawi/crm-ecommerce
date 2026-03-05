@@ -71,9 +71,10 @@ interface OrderCustomerProps {
 const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
 const getOrderShippingName = (orderLike: any) => String(orderLike?.shipping?.name || "").trim() || "غير محدد";
 const getOrderShippingPrice = (orderLike: any) => {
-    return Number(orderLike?.shippingPrice ?? orderLike?.shipping?.price || 0);
+    return Number((orderLike?.shippingPrice ?? orderLike?.shipping?.price) || 0);
 };
 const getOrderDeliveryMethod = (orderLike: any) => String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
+
 
 const getMonthKey = (dateValue: Date | string | number) => {
     const date = new Date(dateValue);
@@ -531,7 +532,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const draftMap: Record<number, { shippingId: number; price: number }> = {};
         for (const currentOrder of orders) {
             const currentShippingId = Number(currentOrder?.shipping?.id || 0);
-            const currentShippingPrice = Number(currentOrder?.shippingPrice ?? currentOrder?.shipping?.price || 0);
+            const currentShippingPrice = Number((currentOrder?.shippingPrice ?? currentOrder?.shipping?.price) || 0);
             draftMap[currentOrder.id] = {
                 shippingId: currentShippingId,
                 price: currentShippingPrice,
@@ -559,7 +560,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         const rowDraft = shippingDrafts[orderId] || {
             shippingId: Number(orderRow?.shipping?.id || 0),
-            price: Number(orderRow?.shippingPrice ?? orderRow?.shipping?.price || 0),
+            price: Number((orderRow?.shippingPrice ?? orderRow?.shipping?.price) || 0),
         };
 
         const selectedShippingId = Number(rowDraft.shippingId || 0);
@@ -1131,7 +1132,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
                             const rowDraft = shippingDrafts[e.id] || {
                                 shippingId: Number(e?.shipping?.id || 0),
-                                price: Number(e?.shippingPrice ?? e?.shipping?.price || 0),
+                                price: Number((e?.shippingPrice ?? e?.shipping?.price) || 0),
                             };
                             const isSaving = Boolean(shippingSavingByOrder[e.id]);
 
@@ -1172,12 +1173,12 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
                             const rowDraft = shippingDrafts[e.id] || {
                                 shippingId: Number(e?.shipping?.id || 0),
-                                price: Number(e?.shippingPrice ?? e?.shipping?.price || 0),
+                                price: Number((e?.shippingPrice ?? e?.shipping?.price) || 0),
                             };
                             const isSaving = Boolean(shippingSavingByOrder[e.id]);
                             const hasChanges =
                                 Number(rowDraft.shippingId || 0) !== Number(e?.shipping?.id || 0) ||
-                                Number(rowDraft.price || 0) !== Number(e?.shippingPrice ?? e?.shipping?.price || 0);
+                                Number(rowDraft.price || 0) !== Number((e?.shippingPrice ?? e?.shipping?.price) || 0);
 
                             return (
                                 <div className="flex items-center gap-2">
