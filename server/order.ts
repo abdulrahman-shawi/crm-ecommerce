@@ -71,13 +71,18 @@ export async function getOrders() {
     }
 
     const isAdminUser = currentUser.accountType === "ADMIN";
+    const isWarehouseUser = isWarehouseRole(currentUser);
     const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
-    const canAccessWarehouseOrders = allowedWarehouseLocations.length > 0;
+    const canAccessWarehouseOrders = isWarehouseRole(currentUser) && allowedWarehouseLocations.length > 0;
 
     const where: any = {};
 
     if (!isAdminUser) {
-        if (canAccessWarehouseOrders) {
+        if (isWarehouseUser) {
+            if (!canAccessWarehouseOrders) {
+                return { success: true, data: [] };
+            }
+
             where.warehouse = {
                 location: {
                     in: allowedWarehouseLocations,
