@@ -225,6 +225,7 @@ model Order {
   id              Int         @id @default(autoincrement())
   orderNumber     String      @unique
   usdToTryRateAtOrder Float?
+  shippingPrice   Float?
   totalAmount     Float
   discount        Float       @default(0)
   finalAmount     Float

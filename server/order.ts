@@ -159,6 +159,9 @@ export async function createOrder(data: any, items: any[], user: any) {
                 ? (inputExchangeRate > 0 ? inputExchangeRate : DEFAULT_TURKEY_EXCHANGE_RATE)
                 : null;
             const shippingId = Number(data.shippingId || 0);
+            const selectedShipping = shippingId > 0
+                ? await tx.shipping.findUnique({ where: { id: shippingId }, select: { price: true } })
+                : null;
 
             const orderWarehouse = await tx.warehouse.findFirst({
                 where: { location: stockCountry },
@@ -192,6 +195,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
                     user: { connect: { id: user } },
+                    shippingPrice: selectedShipping ? Number(selectedShipping.price || 0) : null,
                     ...(shippingId > 0 ? { shipping: { connect: { id: shippingId } } } : {}),
                     ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
@@ -273,6 +277,9 @@ export async function updateOrder(data: any, id: any, items: any) {
                         : DEFAULT_TURKEY_EXCHANGE_RATE))
                 : null;
             const shippingId = Number(data.shippingId || 0);
+            const selectedShipping = shippingId > 0
+                ? await tx.shipping.findUnique({ where: { id: shippingId }, select: { price: true } })
+                : null;
 
             const orderWarehouse = stockCountry
                 ? await tx.warehouse.findFirst({
@@ -323,6 +330,7 @@ export async function updateOrder(data: any, id: any, items: any) {
                     deliveryMethod: data.deliveryMethod,
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
+                    shippingPrice: selectedShipping ? Number(selectedShipping.price || 0) : null,
                     shipping: shippingId > 0
                         ? { connect: { id: shippingId } }
                         : { disconnect: true },
@@ -475,7 +483,10 @@ export async function updateOrderShippingFromTable(orderId: number, shippingId: 
         if (parsedShippingId <= 0) {
             const updated = await prisma.order.update({
                 where: { id: parsedOrderId },
-                data: { shipping: { disconnect: true } },
+                data: {
+                    shipping: { disconnect: true },
+                    shippingPrice: null,
+                },
                 include: { shipping: true, warehouse: true },
             });
             return { success: true, data: updated };
@@ -483,24 +494,18 @@ export async function updateOrderShippingFromTable(orderId: number, shippingId: 
 
         const shipping = await prisma.shipping.findUnique({
             where: { id: parsedShippingId },
-            select: { id: true, price: true },
+            select: { id: true },
         });
 
         if (!shipping) {
             return { success: false, error: "شركة الشحن غير موجودة" };
         }
 
-        if (Number(shipping.price) !== parsedShippingPrice) {
-            await prisma.shipping.update({
-                where: { id: parsedShippingId },
-                data: { price: parsedShippingPrice },
-            });
-        }
-
         const updatedOrder = await prisma.order.update({
             where: { id: parsedOrderId },
             data: {
                 shipping: { connect: { id: parsedShippingId } },
+                shippingPrice: parsedShippingPrice,
             },
             include: { shipping: true, warehouse: true },
         });
