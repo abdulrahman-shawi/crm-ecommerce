@@ -69,15 +69,9 @@ interface OrderCustomerProps {
 }
 
 const getOrderCurrencySymbol = (orderLike: any) => String(orderLike?.warehouse?.location || "").trim() === "تركيا" ? "₺" : "$";
-const getOrderExchangeRate = (orderLike: any) => {
-    const savedRate = Number(orderLike?.usdToTryRateAtOrder || 0);
-    return savedRate > 0 ? savedRate : 44;
-};
 const getOrderShippingName = (orderLike: any) => String(orderLike?.shipping?.name || "").trim() || "غير محدد";
 const getOrderShippingPrice = (orderLike: any) => {
-    const shippingBasePrice = Number(orderLike?.shipping?.price || 0);
-    const isTurkeyWarehouse = String(orderLike?.warehouse?.location || "").trim() === "تركيا";
-    return isTurkeyWarehouse ? shippingBasePrice * getOrderExchangeRate(orderLike) : shippingBasePrice;
+    return Number(orderLike?.shipping?.price || 0);
 };
 const getOrderDeliveryMethod = (orderLike: any) => String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
 
