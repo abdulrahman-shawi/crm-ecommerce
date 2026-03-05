@@ -609,12 +609,13 @@ const [searchQuery, setSearchQuery] = React.useState("");
     if (!user) return [];
 
     const isAdminUser = user.accountType === "ADMIN";
-    const isWarehouseUser = String(user?.permission?.roleName || "").trim().includes("مستودع");
+    const canViewOrders = isAdminUser || user?.permission?.viewOrders === true;
 
     const allowedWarehouseLocations = [
         user?.permission?.accessSyria === true ? "سوريا" : null,
         user?.permission?.accessTurkey === true ? "تركيا" : null,
     ].filter(Boolean) as string[];
+    const canAccessWarehouseOrders = allowedWarehouseLocations.length > 0;
 
     const normalizeWarehouseLocation = (location?: string | null) => {
         const normalized = String(location || "").trim().toLowerCase();
@@ -624,8 +625,10 @@ const [searchQuery, setSearchQuery] = React.useState("");
     };
 
     return orders.filter((order: any) => {
+        if (!canViewOrders) return false;
+
         if (!isAdminUser) {
-            if (isWarehouseUser) {
+            if (canAccessWarehouseOrders) {
                 const orderLocation = normalizeWarehouseLocation(order?.warehouse?.location);
                 if (!allowedWarehouseLocations.includes(orderLocation)) return false;
             } else {

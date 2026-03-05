@@ -8,7 +8,7 @@ const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم الت�
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
-const WAREHOUSE_ROLE_NAME = "المستودع";
+const WAREHOUSE_ROLE_NAME = "مستودع";
 
 const normalizeWarehouseLocation = (location?: string | null) => {
     const value = String(location || "").trim().toLowerCase();
@@ -22,6 +22,12 @@ const normalizeWarehouseLocation = (location?: string | null) => {
 function isWarehouseRole(user: any) {
     const roleName = String(user?.permission?.roleName || "").trim();
     return roleName.includes(WAREHOUSE_ROLE_NAME);
+}
+
+function canViewOrders(user: any) {
+    if (!user) return false;
+    if (user.accountType === "ADMIN") return true;
+    return Boolean(user?.permission?.viewOrders);
 }
 
 function getAllowedWarehouseLocations(user: any) {
@@ -60,18 +66,18 @@ export async function getOrders() {
         return { success: false, error: "غير مصرح لك بعرض الطلبات" };
     }
 
+    if (!canViewOrders(currentUser)) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
     const isAdminUser = currentUser.accountType === "ADMIN";
-    const isWarehouseUser = isWarehouseRole(currentUser);
     const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
+    const canAccessWarehouseOrders = allowedWarehouseLocations.length > 0;
 
     const where: any = {};
 
     if (!isAdminUser) {
-        if (isWarehouseUser) {
-            if (allowedWarehouseLocations.length === 0) {
-                return { success: true, data: [] };
-            }
-
+        if (canAccessWarehouseOrders) {
             where.warehouse = {
                 location: {
                     in: allowedWarehouseLocations,
@@ -103,7 +109,7 @@ export async function getOrders() {
     })
 
     const normalizedOrders = order.filter((currentOrder) => {
-        if (!isWarehouseUser || isAdminUser) return true;
+        if (!canAccessWarehouseOrders || isAdminUser) return true;
         const location = normalizeWarehouseLocation(currentOrder?.warehouse?.location);
         return allowedWarehouseLocations.includes(location);
     });
