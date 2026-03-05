@@ -522,7 +522,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const res = await getOrders()
         if (res.success) {
             console.log(res.data)
-            setorders(res.data)
+            setorders(res.data || [])
         }
     }
 
@@ -609,12 +609,30 @@ const [searchQuery, setSearchQuery] = React.useState("");
     if (!user) return [];
 
     const isAdminUser = user.accountType === "ADMIN";
+    const isWarehouseUser = String(user?.permission?.roleName || "").trim().includes("مستودع");
+
+    const allowedWarehouseLocations = [
+        user?.permission?.accessSyria === true ? "سوريا" : null,
+        user?.permission?.accessTurkey === true ? "تركيا" : null,
+    ].filter(Boolean) as string[];
+
+    const normalizeWarehouseLocation = (location?: string | null) => {
+        const normalized = String(location || "").trim().toLowerCase();
+        if (normalized === "syria" || normalized === "سوريا") return "سوريا";
+        if (normalized === "turkey" || normalized === "تركيا") return "تركيا";
+        return String(location || "").trim();
+    };
 
     return orders.filter((order: any) => {
-        const isOwner = order.userId === user.id;
-
-        // غير الأدمن يرى طلباته فقط
-        if (!isAdminUser && !isOwner) return false;
+        if (!isAdminUser) {
+            if (isWarehouseUser) {
+                const orderLocation = normalizeWarehouseLocation(order?.warehouse?.location);
+                if (!allowedWarehouseLocations.includes(orderLocation)) return false;
+            } else {
+                const isOwner = order.userId === user.id;
+                if (!isOwner) return false;
+            }
+        }
 
         // --- فلتر البحث النصي ---
         const query = searchQuery.trim().toLowerCase();

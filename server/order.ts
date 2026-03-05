@@ -10,6 +10,27 @@ const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
 const WAREHOUSE_ROLE_NAME = "المستودع";
 
+const normalizeWarehouseLocation = (location?: string | null) => {
+    const value = String(location || "").trim().toLowerCase();
+    if (!value) return "";
+
+    if (value === "سوريا" || value === "syria") return "سوريا";
+    if (value === "تركيا" || value === "turkey") return "تركيا";
+    return String(location || "").trim();
+};
+
+function isWarehouseRole(user: any) {
+    const roleName = String(user?.permission?.roleName || "").trim();
+    return roleName.includes(WAREHOUSE_ROLE_NAME);
+}
+
+function getAllowedWarehouseLocations(user: any) {
+    const locations: string[] = [];
+    if (user?.permission?.accessSyria === true) locations.push("سوريا");
+    if (user?.permission?.accessTurkey === true) locations.push("تركيا");
+    return locations;
+}
+
 async function getCurrentSessionUser() {
     try {
         const session = cookies().get("skynova")?.value;
@@ -30,13 +51,39 @@ async function getCurrentSessionUser() {
 function canManageOrderShipping(user: any) {
     if (!user) return false;
     if (user.accountType === "ADMIN") return true;
-
-    const roleName = String(user?.permission?.roleName || "").trim();
-    return roleName === WAREHOUSE_ROLE_NAME;
+    return isWarehouseRole(user);
 }
 
 export async function getOrders() {
+    const currentUser = await getCurrentSessionUser();
+    if (!currentUser) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
+    const isAdminUser = currentUser.accountType === "ADMIN";
+    const isWarehouseUser = isWarehouseRole(currentUser);
+    const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
+
+    const where: any = {};
+
+    if (!isAdminUser) {
+        if (isWarehouseUser) {
+            if (allowedWarehouseLocations.length === 0) {
+                return { success: true, data: [] };
+            }
+
+            where.warehouse = {
+                location: {
+                    in: allowedWarehouseLocations,
+                },
+            };
+        } else {
+            where.userId = currentUser.id;
+        }
+    }
+
     const order = await prisma.order.findMany({
+        where,
         orderBy:{createdAt:"desc"},
         include:{
             warehouse:true,
@@ -55,7 +102,13 @@ export async function getOrders() {
         }
     })
 
-    return {success:true , data:order}
+    const normalizedOrders = order.filter((currentOrder) => {
+        if (!isWarehouseUser || isAdminUser) return true;
+        const location = normalizeWarehouseLocation(currentOrder?.warehouse?.location);
+        return allowedWarehouseLocations.includes(location);
+    });
+
+    return {success:true , data:normalizedOrders}
 }
 
 export async function getOrdersByUser(userId: any) {
