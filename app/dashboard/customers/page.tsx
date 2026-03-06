@@ -429,6 +429,8 @@ const CustomrLayout: React.FC = () => {
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
         "عدد الطلبات": customer.orders?.length || 0,
         "آخر رسالة": lastMessage,
+        "الجنس" : customer.gender ||  "غير محدد",
+        "الفئة العمرية" : customer.age || "غير محدد",
         "الموظفين المسؤولين": customer.users?.map((u: any) => u.username).join(', ') || "غير معين",
       };
     });
