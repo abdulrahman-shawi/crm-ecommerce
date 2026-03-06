@@ -276,6 +276,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   usdToTryRateAtOrder: 'usdToTryRateAtOrder',
   shippingPrice: 'shippingPrice',
+  moneyTransferCommission: 'moneyTransferCommission',
+  otherCommissions: 'otherCommissions',
   totalAmount: 'totalAmount',
   discount: 'discount',
   finalAmount: 'finalAmount',

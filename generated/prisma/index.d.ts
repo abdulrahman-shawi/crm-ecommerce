@@ -17262,6 +17262,8 @@ export namespace Prisma {
     id: number | null
     usdToTryRateAtOrder: number | null
     shippingPrice: number | null
+    moneyTransferCommission: number | null
+    otherCommissions: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -17273,6 +17275,8 @@ export namespace Prisma {
     id: number | null
     usdToTryRateAtOrder: number | null
     shippingPrice: number | null
+    moneyTransferCommission: number | null
+    otherCommissions: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -17285,6 +17289,8 @@ export namespace Prisma {
     orderNumber: string | null
     usdToTryRateAtOrder: number | null
     shippingPrice: number | null
+    moneyTransferCommission: number | null
+    otherCommissions: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -17315,6 +17321,8 @@ export namespace Prisma {
     orderNumber: string | null
     usdToTryRateAtOrder: number | null
     shippingPrice: number | null
+    moneyTransferCommission: number | null
+    otherCommissions: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -17345,6 +17353,8 @@ export namespace Prisma {
     orderNumber: number
     usdToTryRateAtOrder: number
     shippingPrice: number
+    moneyTransferCommission: number
+    otherCommissions: number
     totalAmount: number
     discount: number
     finalAmount: number
@@ -17377,6 +17387,8 @@ export namespace Prisma {
     id?: true
     usdToTryRateAtOrder?: true
     shippingPrice?: true
+    moneyTransferCommission?: true
+    otherCommissions?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -17388,6 +17400,8 @@ export namespace Prisma {
     id?: true
     usdToTryRateAtOrder?: true
     shippingPrice?: true
+    moneyTransferCommission?: true
+    otherCommissions?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -17400,6 +17414,8 @@ export namespace Prisma {
     orderNumber?: true
     usdToTryRateAtOrder?: true
     shippingPrice?: true
+    moneyTransferCommission?: true
+    otherCommissions?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -17430,6 +17446,8 @@ export namespace Prisma {
     orderNumber?: true
     usdToTryRateAtOrder?: true
     shippingPrice?: true
+    moneyTransferCommission?: true
+    otherCommissions?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -17460,6 +17478,8 @@ export namespace Prisma {
     orderNumber?: true
     usdToTryRateAtOrder?: true
     shippingPrice?: true
+    moneyTransferCommission?: true
+    otherCommissions?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -17578,6 +17598,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder: number | null
     shippingPrice: number | null
+    moneyTransferCommission: number | null
+    otherCommissions: number | null
     totalAmount: number
     discount: number
     finalAmount: number
@@ -17628,6 +17650,8 @@ export namespace Prisma {
     orderNumber?: boolean
     usdToTryRateAtOrder?: boolean
     shippingPrice?: boolean
+    moneyTransferCommission?: boolean
+    otherCommissions?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -17665,6 +17689,8 @@ export namespace Prisma {
     orderNumber?: boolean
     usdToTryRateAtOrder?: boolean
     shippingPrice?: boolean
+    moneyTransferCommission?: boolean
+    otherCommissions?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -17700,6 +17726,8 @@ export namespace Prisma {
     orderNumber?: boolean
     usdToTryRateAtOrder?: boolean
     shippingPrice?: boolean
+    moneyTransferCommission?: boolean
+    otherCommissions?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -17735,6 +17763,8 @@ export namespace Prisma {
     orderNumber?: boolean
     usdToTryRateAtOrder?: boolean
     shippingPrice?: boolean
+    moneyTransferCommission?: boolean
+    otherCommissions?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -17761,7 +17791,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -17797,6 +17827,8 @@ export namespace Prisma {
       orderNumber: string
       usdToTryRateAtOrder: number | null
       shippingPrice: number | null
+      moneyTransferCommission: number | null
+      otherCommissions: number | null
       totalAmount: number
       discount: number
       finalAmount: number
@@ -18253,6 +18285,8 @@ export namespace Prisma {
     readonly orderNumber: FieldRef<"Order", 'String'>
     readonly usdToTryRateAtOrder: FieldRef<"Order", 'Float'>
     readonly shippingPrice: FieldRef<"Order", 'Float'>
+    readonly moneyTransferCommission: FieldRef<"Order", 'Float'>
+    readonly otherCommissions: FieldRef<"Order", 'Float'>
     readonly totalAmount: FieldRef<"Order", 'Float'>
     readonly discount: FieldRef<"Order", 'Float'>
     readonly finalAmount: FieldRef<"Order", 'Float'>
@@ -24379,6 +24413,8 @@ export namespace Prisma {
     orderNumber: 'orderNumber',
     usdToTryRateAtOrder: 'usdToTryRateAtOrder',
     shippingPrice: 'shippingPrice',
+    moneyTransferCommission: 'moneyTransferCommission',
+    otherCommissions: 'otherCommissions',
     totalAmount: 'totalAmount',
     discount: 'discount',
     finalAmount: 'finalAmount',
@@ -25623,6 +25659,8 @@ export namespace Prisma {
     orderNumber?: StringFilter<"Order"> | string
     usdToTryRateAtOrder?: FloatNullableFilter<"Order"> | number | null
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
+    moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
+    otherCommissions?: FloatNullableFilter<"Order"> | number | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -25659,6 +25697,8 @@ export namespace Prisma {
     orderNumber?: SortOrder
     usdToTryRateAtOrder?: SortOrderInput | SortOrder
     shippingPrice?: SortOrderInput | SortOrder
+    moneyTransferCommission?: SortOrderInput | SortOrder
+    otherCommissions?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -25698,6 +25738,8 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     usdToTryRateAtOrder?: FloatNullableFilter<"Order"> | number | null
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
+    moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
+    otherCommissions?: FloatNullableFilter<"Order"> | number | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -25734,6 +25776,8 @@ export namespace Prisma {
     orderNumber?: SortOrder
     usdToTryRateAtOrder?: SortOrderInput | SortOrder
     shippingPrice?: SortOrderInput | SortOrder
+    moneyTransferCommission?: SortOrderInput | SortOrder
+    otherCommissions?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -25773,6 +25817,8 @@ export namespace Prisma {
     orderNumber?: StringWithAggregatesFilter<"Order"> | string
     usdToTryRateAtOrder?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     shippingPrice?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    moneyTransferCommission?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    otherCommissions?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     totalAmount?: FloatWithAggregatesFilter<"Order"> | number
     discount?: FloatWithAggregatesFilter<"Order"> | number
     finalAmount?: FloatWithAggregatesFilter<"Order"> | number
@@ -27220,6 +27266,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -27252,6 +27300,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -27283,6 +27333,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -27315,6 +27367,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -27347,6 +27401,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -27377,6 +27433,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -27404,6 +27462,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -28742,6 +28802,8 @@ export namespace Prisma {
     orderNumber?: SortOrder
     usdToTryRateAtOrder?: SortOrder
     shippingPrice?: SortOrder
+    moneyTransferCommission?: SortOrder
+    otherCommissions?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -28772,6 +28834,8 @@ export namespace Prisma {
     id?: SortOrder
     usdToTryRateAtOrder?: SortOrder
     shippingPrice?: SortOrder
+    moneyTransferCommission?: SortOrder
+    otherCommissions?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -28784,6 +28848,8 @@ export namespace Prisma {
     orderNumber?: SortOrder
     usdToTryRateAtOrder?: SortOrder
     shippingPrice?: SortOrder
+    moneyTransferCommission?: SortOrder
+    otherCommissions?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -28814,6 +28880,8 @@ export namespace Prisma {
     orderNumber?: SortOrder
     usdToTryRateAtOrder?: SortOrder
     shippingPrice?: SortOrder
+    moneyTransferCommission?: SortOrder
+    otherCommissions?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -28843,6 +28911,8 @@ export namespace Prisma {
     id?: SortOrder
     usdToTryRateAtOrder?: SortOrder
     shippingPrice?: SortOrder
+    moneyTransferCommission?: SortOrder
+    otherCommissions?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -30763,6 +30833,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -30794,6 +30866,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -31161,6 +31235,8 @@ export namespace Prisma {
     orderNumber?: StringFilter<"Order"> | string
     usdToTryRateAtOrder?: FloatNullableFilter<"Order"> | number | null
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
+    moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
+    otherCommissions?: FloatNullableFilter<"Order"> | number | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -31848,6 +31924,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -31879,6 +31957,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -32677,6 +32757,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -32708,6 +32790,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33404,6 +33488,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33435,6 +33521,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33491,6 +33579,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33522,6 +33612,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33598,6 +33690,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -33629,6 +33723,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -33712,6 +33808,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -33829,6 +33927,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -33860,6 +33960,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -33891,6 +33993,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34340,6 +34444,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -34402,6 +34508,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34433,6 +34541,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34464,6 +34574,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34552,6 +34664,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -34589,6 +34703,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34620,6 +34736,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34651,6 +34769,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34797,6 +34917,8 @@ export namespace Prisma {
     orderNumber: string
     usdToTryRateAtOrder?: number | null
     shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -34826,6 +34948,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34857,6 +34981,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34888,6 +35014,8 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number

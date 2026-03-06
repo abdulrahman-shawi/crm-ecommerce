@@ -7,7 +7,6 @@ import { formatPhoneForDisplay, hasPermission, isAdmin } from '@/lib/utils';
 import { getCustomer } from '@/server/customer';
 import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, updateOrderShippingFromTable, updateStaus } from '@/server/order';
 import { getProduct } from '@/server/product';
-import { getshipping } from '@/server/shipping';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Pencil, Plus, Printer, Save, Search, Trash, Trash2, X } from 'lucide-react';
 import * as React from 'react';
@@ -121,9 +120,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [products, setProduct] = React.useState<any[]>([])
     const [customers, setCustomers] = React.useState<any[]>([])
     const [orders, setorders] = React.useState<any[]>([])
-    const [shippingCompanies, setShippingCompanies] = React.useState<any[]>([])
-    const [shippingDrafts, setShippingDrafts] = React.useState<Record<number, { shippingId: number; price: number }>>({})
-    const [shippingSavingByOrder, setShippingSavingByOrder] = React.useState<Record<number, boolean>>({})
     const [order, setorder] = React.useState<any>({})
     const [isOpen, setIsOpen] = React.useState(false);
     const [isOpenorder, setisOpenorder] = React.useState(false);
@@ -162,6 +158,15 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [showCustomerDropdown, setShowCustomerDropdown] = React.useState(false);
     const [deliveryNotes, setDeliveryNotes] = React.useState("");
     const [additionalNotes, setAdditionalNotes] = React.useState("");
+    const [isShippingModalOpen, setIsShippingModalOpen] = React.useState(false);
+    const [shippingModalSaving, setShippingModalSaving] = React.useState(false);
+    const [shippingTargetOrder, setShippingTargetOrder] = React.useState<any>(null);
+    const [shippingForm, setShippingForm] = React.useState({
+        shippingCompanyName: "",
+        shippingPrice: "0",
+        moneyTransferCommission: "0",
+        otherCommissions: "0",
+    });
     const subTotal = items.reduce((sum, i) => sum + i.total, 0);
     const grandTotal = subTotal - overallDiscount;
     const remainingAmount = Math.max(0, Number(grandTotal) - Number(amount || 0));
@@ -521,76 +526,73 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         }
     }
 
-    const loadShippingCompanies = async () => {
-        const res = await getshipping();
-        if (res.success) {
-            setShippingCompanies(res.data || []);
-        }
-    };
-
-    React.useEffect(() => {
-        const draftMap: Record<number, { shippingId: number; price: number }> = {};
-        for (const currentOrder of orders) {
-            const currentShippingId = Number(currentOrder?.shipping?.id || 0);
-            const currentShippingPrice = Number((currentOrder?.shippingPrice ?? currentOrder?.shipping?.price) || 0);
-            draftMap[currentOrder.id] = {
-                shippingId: currentShippingId,
-                price: currentShippingPrice,
-            };
-        }
-        setShippingDrafts(draftMap);
-    }, [orders]);
-
-    const handleShippingDraftChange = (orderId: number, nextDraft: Partial<{ shippingId: number; price: number }>) => {
-        setShippingDrafts((prev) => {
-            const prevRow = prev[orderId] || { shippingId: 0, price: 0 };
-            return {
-                ...prev,
-                [orderId]: {
-                    shippingId: nextDraft.shippingId ?? prevRow.shippingId,
-                    price: nextDraft.price ?? prevRow.price,
-                },
-            };
+    const openShippingModal = (orderRow: any) => {
+        setShippingTargetOrder(orderRow);
+        setShippingForm({
+            shippingCompanyName: String(orderRow?.shipping?.name || ""),
+            shippingPrice: String(Number((orderRow?.shippingPrice ?? orderRow?.shipping?.price) || 0)),
+            moneyTransferCommission: String(Number(orderRow?.moneyTransferCommission || 0)),
+            otherCommissions: String(Number(orderRow?.otherCommissions || 0)),
         });
+        setIsShippingModalOpen(true);
     };
 
-    const handleSaveShippingDraft = async (orderRow: any) => {
-        const orderId = Number(orderRow?.id || 0);
-        if (!orderId) return;
-
-        const rowDraft = shippingDrafts[orderId] || {
-            shippingId: Number(orderRow?.shipping?.id || 0),
-            price: Number((orderRow?.shippingPrice ?? orderRow?.shipping?.price) || 0),
-        };
-
-        const selectedShippingId = Number(rowDraft.shippingId || 0);
-        const selectedPrice = Number(rowDraft.price || 0);
-
-        if (selectedShippingId <= 0) {
-            toast.error("يرجى اختيار شركة الشحن أولاً");
+    const handleSaveShippingModal = async () => {
+        const orderId = Number(shippingTargetOrder?.id || 0);
+        if (!orderId) {
+            toast.error("معرف الطلب غير صالح");
             return;
         }
 
-        if (Number.isNaN(selectedPrice) || selectedPrice < 0) {
-            toast.error("سعر الشحن غير صالح");
+        const shippingCompanyName = String(shippingForm.shippingCompanyName || "").trim();
+        const shippingPrice = Number(shippingForm.shippingPrice || 0);
+        const moneyTransferCommission = Number(shippingForm.moneyTransferCommission || 0);
+        const otherCommissions = Number(shippingForm.otherCommissions || 0);
+
+        if (!shippingCompanyName) {
+            toast.error("يرجى إدخال اسم شركة الشحن");
             return;
         }
 
-        setShippingSavingByOrder((prev) => ({ ...prev, [orderId]: true }));
-        const loadingToast = toast.loading("جاري تحديث شركة الشحن وسعرها...");
+        if (Number.isNaN(shippingPrice) || shippingPrice < 0) {
+            toast.error("سعر الشحنة غير صالح");
+            return;
+        }
+
+        if (Number.isNaN(moneyTransferCommission) || moneyTransferCommission < 0) {
+            toast.error("عمولة تحويل الأموال غير صالحة");
+            return;
+        }
+
+        if (Number.isNaN(otherCommissions) || otherCommissions < 0) {
+            toast.error("العمولات الأخرى غير صالحة");
+            return;
+        }
+
+        setShippingModalSaving(true);
+        const loadingToast = toast.loading("جاري حفظ بيانات الشحن والعمولات...");
 
         try {
-            const result = await updateOrderShippingFromTable(orderId, selectedShippingId, selectedPrice);
+            const result = await updateOrderShippingFromTable(
+                orderId,
+                shippingCompanyName,
+                shippingPrice,
+                moneyTransferCommission,
+                otherCommissions,
+            );
+
             if (result.success) {
-                toast.success("تم تحديث بيانات الشحن بنجاح");
-                await Promise.all([Order(), loadShippingCompanies()]);
+                toast.success("تم حفظ بيانات الشحن والعمولات");
+                setIsShippingModalOpen(false);
+                setShippingTargetOrder(null);
+                await Order();
             } else {
-                toast.error(result.error || "تعذر تحديث بيانات الشحن");
+                toast.error(result.error || "تعذر حفظ بيانات الشحن والعمولات");
             }
         } catch {
-            toast.error("حدث خطأ أثناء تعديل بيانات الشحن");
+            toast.error("حدث خطأ أثناء حفظ بيانات الشحن والعمولات");
         } finally {
-            setShippingSavingByOrder((prev) => ({ ...prev, [orderId]: false }));
+            setShippingModalSaving(false);
             toast.dismiss(loadingToast);
         }
     };
@@ -815,7 +817,6 @@ const [searchQuery, setSearchQuery] = React.useState("");
     React.useEffect(() => {
         getAlluser();
         Order();
-        loadShippingCompanies();
         getProduct().then((products) => {
             setProduct(products);
         }).catch(console.error);
@@ -944,6 +945,11 @@ const [searchQuery, setSearchQuery] = React.useState("");
                 setorder(data);
                 setIsOpen(true);
             }
+        },
+        canInlineEditShipping && {
+            label: "بيانات الشحن",
+            icon: <Save size={14} />,
+            onClick: (data: any) => openShippingModal(data)
         },
         (user && hasPermission(user, "deleteOrders")) && {
             label: "حذف",
@@ -1124,86 +1130,6 @@ const [searchQuery, setSearchQuery] = React.useState("");
                         )
                     },
                     {
-                        header: "شركة الشحن",
-                        accessor: (e: any) => {
-                            if (!canInlineEditShipping) {
-                                return <span className="font-bold text-slate-700 dark:text-slate-200">{getOrderShippingName(e)}</span>;
-                            }
-
-                            const rowDraft = shippingDrafts[e.id] || {
-                                shippingId: Number(e?.shipping?.id || 0),
-                                price: Number((e?.shippingPrice ?? e?.shipping?.price) || 0),
-                            };
-                            const isSaving = Boolean(shippingSavingByOrder[e.id]);
-
-                            return (
-                                <select
-                                    className="w-[170px] p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900"
-                                    value={rowDraft.shippingId || ""}
-                                    onChange={(event) => {
-                                        const nextShippingId = Number(event.target.value || 0);
-                                        const selectedShipping = shippingCompanies.find((company: any) => company.id === nextShippingId);
-                                        handleShippingDraftChange(e.id, {
-                                            shippingId: nextShippingId,
-                                            price: Number(selectedShipping?.price || 0),
-                                        });
-                                    }}
-                                    disabled={isSaving}
-                                >
-                                    <option value="">اختر شركة</option>
-                                    {shippingCompanies.map((company: any) => (
-                                        <option key={company.id} value={company.id}>
-                                            {company.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            );
-                        }
-                    },
-                    {
-                        header: "سعر الشحنة",
-                        accessor: (e: any) => {
-                            if (!canInlineEditShipping) {
-                                return (
-                                    <span className="font-black text-violet-600">
-                                        {getOrderShippingPrice(e).toLocaleString()} {getOrderCurrencySymbol(e)}
-                                    </span>
-                                );
-                            }
-
-                            const rowDraft = shippingDrafts[e.id] || {
-                                shippingId: Number(e?.shipping?.id || 0),
-                                price: Number((e?.shippingPrice ?? e?.shipping?.price) || 0),
-                            };
-                            const isSaving = Boolean(shippingSavingByOrder[e.id]);
-                            const hasChanges =
-                                Number(rowDraft.shippingId || 0) !== Number(e?.shipping?.id || 0) ||
-                                Number(rowDraft.price || 0) !== Number((e?.shippingPrice ?? e?.shipping?.price) || 0);
-
-                            return (
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        step="0.01"
-                                        className="w-28 rounded-md border border-slate-300 bg-white p-1 text-center text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                                        value={Number(rowDraft.price || 0)}
-                                        onChange={(event) => handleShippingDraftChange(e.id, { price: Number(event.target.value || 0) })}
-                                        disabled={isSaving}
-                                    />
-                                    <Button
-                                        type="button"
-                                        className="h-8 px-3 text-xs"
-                                        onClick={() => handleSaveShippingDraft(e)}
-                                        disabled={!hasChanges || isSaving}
-                                    >
-                                        حفظ
-                                    </Button>
-                                </div>
-                            );
-                        }
-                    },
-                    {
                         header: "المدينة",
                         accessor: (e: any) => (
                             <span className="font-bold text-gray-600 dark:text-gray-300">
@@ -1269,6 +1195,93 @@ const [searchQuery, setSearchQuery] = React.useState("");
 
             <AppModal size='full' isOpen={isOpenorder} onClose={() => setisOpenorder(false)} title='ملخص الطلب' >
                 <ViewOrder data={order} products={products} onSharePdf={shareOrderPdfToCustomerWhatsApp} />
+            </AppModal>
+
+            <AppModal
+                size='md'
+                isOpen={isShippingModalOpen}
+                onClose={() => {
+                    if (shippingModalSaving) return;
+                    setIsShippingModalOpen(false);
+                    setShippingTargetOrder(null);
+                }}
+                title='بيانات الشحن والعمولات'
+                description={shippingTargetOrder ? `الطلب #${shippingTargetOrder.orderNumber}` : undefined}
+                footer={(
+                    <>
+                        <Button
+                            type='button'
+                            variant='outline'
+                            onClick={() => {
+                                setIsShippingModalOpen(false);
+                                setShippingTargetOrder(null);
+                            }}
+                            disabled={shippingModalSaving}
+                        >
+                            إلغاء
+                        </Button>
+                        <Button
+                            type='button'
+                            onClick={handleSaveShippingModal}
+                            disabled={shippingModalSaving}
+                        >
+                            {shippingModalSaving ? "جاري الحفظ..." : "حفظ"}
+                        </Button>
+                    </>
+                )}
+            >
+                <div className="grid grid-cols-1 gap-4">
+                    <div>
+                        <label className="block text-sm font-bold mb-2">اسم شركة الشحن</label>
+                        <input
+                            type="text"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            value={shippingForm.shippingCompanyName}
+                            onChange={(e) => setShippingForm((prev) => ({ ...prev, shippingCompanyName: e.target.value }))}
+                            disabled={shippingModalSaving}
+                            placeholder="مثال: شركة الشحن السريع"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold mb-2">سعر الشحنة</label>
+                        <input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            value={shippingForm.shippingPrice}
+                            onChange={(e) => setShippingForm((prev) => ({ ...prev, shippingPrice: e.target.value }))}
+                            disabled={shippingModalSaving}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold mb-2">عمولة تحويل الأموال</label>
+                        <input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            value={shippingForm.moneyTransferCommission}
+                            onChange={(e) => setShippingForm((prev) => ({ ...prev, moneyTransferCommission: e.target.value }))}
+                            disabled={shippingModalSaving}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold mb-2">عمولات أخرى</label>
+                        <input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            value={shippingForm.otherCommissions}
+                            onChange={(e) => setShippingForm((prev) => ({ ...prev, otherCommissions: e.target.value }))}
+                            disabled={shippingModalSaving}
+                        />
+                    </div>
+                </div>
             </AppModal>
 
             {/* مودال إنشاء وتعديل الطلب */}

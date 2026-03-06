@@ -229,6 +229,8 @@ model Order {
   orderNumber     String      @unique
   usdToTryRateAtOrder Float?
   shippingPrice   Float?
+  moneyTransferCommission Float? @default(0)
+  otherCommissions Float? @default(0)
   totalAmount     Float
   discount        Float       @default(0)
   finalAmount     Float
