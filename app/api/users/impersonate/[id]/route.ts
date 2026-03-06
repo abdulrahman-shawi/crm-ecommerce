@@ -10,8 +10,8 @@ interface RouteContext {
 }
 
 /**
- * Returns an employee profile for admin impersonation in a separate tab.
- * Only ADMIN accounts are allowed to use this endpoint.
+ * Returns an employee profile for authorized dashboard switching in a separate tab.
+ * ADMIN can open all users. Non-admin can open only linked users (parentId === currentUser.id).
  */
 export async function GET(_: Request, context: RouteContext) {
   try {
@@ -26,7 +26,7 @@ export async function GET(_: Request, context: RouteContext) {
       select: { id: true, accountType: true },
     });
 
-    if (!currentUser || currentUser.accountType !== "ADMIN") {
+    if (!currentUser) {
       return NextResponse.json({ success: false, error: "ليس لديك صلاحية" }, { status: 403 });
     }
 
@@ -42,6 +42,14 @@ export async function GET(_: Request, context: RouteContext) {
 
     if (!targetUser) {
       return NextResponse.json({ success: false, error: "المستخدم غير موجود" }, { status: 404 });
+    }
+
+    const canAccessAll = currentUser.accountType === "ADMIN";
+    const isSelf = targetUser.id === currentUser.id;
+    const isLinkedSubordinate = String(targetUser.parentId || "") === String(currentUser.id);
+
+    if (!canAccessAll && !isSelf && !isLinkedSubordinate) {
+      return NextResponse.json({ success: false, error: "ليس لديك صلاحية" }, { status: 403 });
     }
 
     return NextResponse.json({ success: true, data: targetUser }, { status: 200 });

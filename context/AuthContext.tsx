@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isImpersonating, setIsImpersonating] = useState(false);
 
   /**
-   * Resolves the effective user for this tab by applying optional admin impersonation.
+    * Resolves the effective user for this tab by applying optional impersonation.
    */
   const resolveEffectiveUser = async (currentUser: User | null): Promise<User | null> => {
     if (!currentUser) {
@@ -33,11 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const url = new URL(window.location.href);
     const asUserFromUrl = url.searchParams.get('asUser');
-
-    if (currentUser.accountType !== 'ADMIN') {
-      window.sessionStorage.removeItem(IMPERSONATION_KEY);
-      return currentUser;
-    }
 
     if (asUserFromUrl === 'me') {
       window.sessionStorage.removeItem(IMPERSONATION_KEY);
@@ -83,7 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await userData.json();
       const currentUser = (data?.data || null) as User | null;
 
-      if (typeof window !== 'undefined' && currentUser?.accountType === 'ADMIN') {
+      if (typeof window !== 'undefined' && currentUser) {
         const targetUserId = window.sessionStorage.getItem(IMPERSONATION_KEY);
         setIsImpersonating(Boolean(targetUserId && targetUserId !== currentUser.id));
       } else {
