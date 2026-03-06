@@ -384,7 +384,10 @@ const UserManagement: React.FunctionComponent = () => {
           {
             header: "الاسم",
             accessor: (row: any) => {
-              const canImpersonate = user?.accountType === "ADMIN" && row?.id && row?.id !== user?.id;
+              // الادمن يرى جميع لوحات التحكم، وغير الادمن يرى فقط لوحات المستخدمين المرتبطين به.
+              const isAdmin = user?.accountType === "ADMIN";
+              const isLinkedUser = String(row?.parentId || "") === String(user?.id || "");
+              const canImpersonate = Boolean(user) && (isAdmin || isLinkedUser);
               if (!canImpersonate) return row?.username;
 
               return (

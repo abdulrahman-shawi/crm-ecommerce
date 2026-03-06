@@ -133,7 +133,8 @@ exports.Prisma.UserScalarFieldEnum = {
   wage: 'wage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  permissionId: 'permissionId'
+  permissionId: 'permissionId',
+  parentId: 'parentId'
 };
 
 exports.Prisma.PermissionScalarFieldEnum = {
