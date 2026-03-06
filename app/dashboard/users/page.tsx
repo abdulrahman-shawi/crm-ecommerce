@@ -433,8 +433,36 @@ const UserManagement: React.FunctionComponent = () => {
 };
   const selectClasses = `w-full p-3 rounded-md border transition-all outline-none bg-white border-gray-300 text-gray-900 dark:bg-[#0f172a] dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-500/50`;
 
+  /**
+   * يحدد هل يحق للمستخدم الحالي إدارة تاركت هذا الصف.
+   */
+  const canManageTargetForRow = (row: any) => {
+    if (!user) return false;
+    if (user.accountType === "ADMIN") return true;
+    return String(row?.parentId || "") === String(user?.id || "");
+  };
+
+  const canManageAnyTargets = React.useMemo(() => {
+    if (!user) return false;
+    if (user.accountType === "ADMIN") return true;
+    return users.some((row: any) => String(row?.parentId || "") === String(user?.id || ""));
+  }, [user, users]);
+
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
+    (user && canManageAnyTargets) && {
+      label: "إدارة التاركت",
+      icon: <Plus size={14} />,
+      onClick: (data: any) => {
+        if (!canManageTargetForRow(data)) {
+          toast.error("يمكنك إدارة التاركت للموظفين المرتبطين بك فقط");
+          return;
+        }
+
+        const hasExistingTarget = Array.isArray(data?.targets) && data.targets.length > 0;
+        openTargetModal(hasExistingTarget ? "edit" : "assign", data);
+      }
+    },
     (user && hasPermission(user, "editEmployees")) && {
       label: "تعديل",
       icon: <Mail size={14} />,

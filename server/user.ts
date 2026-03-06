@@ -483,13 +483,23 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
 
 export async function deleteSalesTargetRow(targetId: string, rowIndex: number) {
   try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
     const target = await prisma.userTarget.findUnique({
       where: { id: targetId },
-      select: { salesTargetValue: true, salesRewardValue: true }
+      select: { id: true, userId: true, salesTargetValue: true, salesRewardValue: true }
     });
 
     if (!target) {
       return { success: false, error: "التاركت غير موجود" };
+    }
+
+    const canManage = await canManageTargetForUser(currentUser, target.userId);
+    if (!canManage) {
+      return { success: false, error: "يمكنك حذف التاركتات للموظفين المرتبطين بك فقط" };
     }
 
     const targetValues = Array.isArray(target.salesTargetValue) ? [...target.salesTargetValue] : [];
@@ -519,6 +529,25 @@ export async function deleteSalesTargetRow(targetId: string, rowIndex: number) {
 
 export async function deleteProductTargetRow(targetId: string, productId: number) {
   try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const target = await prisma.userTarget.findUnique({
+      where: { id: targetId },
+      select: { id: true, userId: true }
+    });
+
+    if (!target) {
+      return { success: false, error: "التاركت غير موجود" };
+    }
+
+    const canManage = await canManageTargetForUser(currentUser, target.userId);
+    if (!canManage) {
+      return { success: false, error: "يمكنك حذف التاركتات للموظفين المرتبطين بك فقط" };
+    }
+
     await prisma.targetProduct.deleteMany({
       where: {
         targetId,
