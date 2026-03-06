@@ -60,6 +60,24 @@ function canManageOrderShipping(user: any) {
     return isWarehouseRole(user);
 }
 
+/**
+ * ترجع قائمة معرفات المستخدمين ضمن نطاق المستخدم الحالي:
+ * نفسه + الموظفون المرتبطون به مباشرة عبر parentId.
+ */
+async function getScopedUserIds(userId: string) {
+    const rows = await prisma.user.findMany({
+        where: {
+            OR: [
+                { id: userId },
+                { parentId: userId },
+            ],
+        },
+        select: { id: true },
+    });
+
+    return rows.map((row) => row.id);
+}
+
 export async function getOrders() {
     const currentUser = await getCurrentSessionUser();
     if (!currentUser) {
@@ -89,7 +107,10 @@ export async function getOrders() {
                 },
             };
         } else {
-            where.userId = currentUser.id;
+            const scopedUserIds = await getScopedUserIds(currentUser.id);
+            where.userId = {
+                in: scopedUserIds.length > 0 ? scopedUserIds : [currentUser.id],
+            };
         }
     }
 
