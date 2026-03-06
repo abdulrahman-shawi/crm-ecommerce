@@ -131,6 +131,18 @@ const UserManagement: React.FunctionComponent = () => {
   );
 
   /**
+   * يجلب الموظفين المرتبطين حاليًا بمسؤول محدد من بيانات parentId.
+   */
+  const getLinkedEmployeesByManager = React.useCallback((managerId: string) => {
+    const normalizedManagerId = String(managerId || "").trim();
+    if (!normalizedManagerId) return [] as string[];
+
+    return nonAdminUsers
+      .filter((row: any) => String(row?.parentId || "") === normalizedManagerId)
+      .map((row: any) => String(row.id));
+  }, [nonAdminUsers]);
+
+  /**
    * Opens a new dashboard tab impersonating the selected employee without replacing current admin session.
    */
   const openEmployeeView = (employeeId: string) => {
@@ -567,8 +579,9 @@ const UserManagement: React.FunctionComponent = () => {
               className={selectClasses}
               value={assignManagerId}
               onChange={(e) => {
-                setAssignManagerId(e.target.value);
-                setSelectedEmployeeIds([]);
+                const nextManagerId = String(e.target.value || "");
+                setAssignManagerId(nextManagerId);
+                setSelectedEmployeeIds(getLinkedEmployeesByManager(nextManagerId));
               }}
               disabled={assignSaving}
             >
