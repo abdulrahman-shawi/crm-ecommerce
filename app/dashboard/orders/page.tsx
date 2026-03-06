@@ -7,6 +7,7 @@ import { formatPhoneForDisplay, hasPermission, isAdmin } from '@/lib/utils';
 import { getCustomer } from '@/server/customer';
 import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, updateOrderShippingFromTable, updateStaus } from '@/server/order';
 import { getProduct } from '@/server/product';
+import { getshipping } from '@/server/shipping';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Pencil, Plus, Printer, Save, Search, Trash, Trash2, X } from 'lucide-react';
 import * as React from 'react';
@@ -120,6 +121,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [products, setProduct] = React.useState<any[]>([])
     const [customers, setCustomers] = React.useState<any[]>([])
     const [orders, setorders] = React.useState<any[]>([])
+    const [shippingCompanies, setShippingCompanies] = React.useState<any[]>([])
     const [order, setorder] = React.useState<any>({})
     const [isOpen, setIsOpen] = React.useState(false);
     const [isOpenorder, setisOpenorder] = React.useState(false);
@@ -449,11 +451,24 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const { user } = useAuth()
 
-    const canInlineEditShipping = React.useMemo(() => {
+    const canManageOrderShippingUi = React.useMemo(() => {
         if (!user) return false;
         if (isAdmin(user)) return true;
         return String(user?.permission?.roleName || "").trim().includes("مستودع");
     }, [user]);
+
+    const shippingCompanyOptions = React.useMemo(() => {
+        const normalized = shippingCompanies
+            .map((company: any) => String(company?.name || "").trim())
+            .filter(Boolean);
+
+        const currentName = String(shippingForm.shippingCompanyName || "").trim();
+        if (currentName && !normalized.includes(currentName)) {
+            return [currentName, ...normalized];
+        }
+
+        return normalized;
+    }, [shippingCompanies, shippingForm.shippingCompanyName]);
 
     const addNewItem = () => {
         setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
@@ -523,6 +538,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         if (res.success) {
             console.log(res.data)
             setorders(res.data || [])
+        }
+    }
+
+    const loadShippingCompanies = async () => {
+        const res = await getshipping();
+        if (res.success) {
+            setShippingCompanies(Array.isArray(res.data) ? res.data : []);
         }
     }
 
@@ -817,6 +839,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
     React.useEffect(() => {
         getAlluser();
         Order();
+        loadShippingCompanies();
         getProduct().then((products) => {
             setProduct(products);
         }).catch(console.error);
@@ -946,7 +969,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
                 setIsOpen(true);
             }
         },
-        canInlineEditShipping && {
+        canManageOrderShippingUi && {
             label: "بيانات الشحن",
             icon: <Save size={14} />,
             onClick: (data: any) => openShippingModal(data)
@@ -1232,24 +1255,27 @@ const [searchQuery, setSearchQuery] = React.useState("");
             >
                 <div className="grid grid-cols-1 gap-4">
                     <div>
-                        <label className="block text-sm font-bold mb-2">اسم شركة الشحن</label>
-                        <input
-                            type="text"
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                        <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">اسم شركة الشحن</label>
+                        <select
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2"
                             value={shippingForm.shippingCompanyName}
                             onChange={(e) => setShippingForm((prev) => ({ ...prev, shippingCompanyName: e.target.value }))}
                             disabled={shippingModalSaving}
-                            placeholder="مثال: شركة الشحن السريع"
-                        />
+                        >
+                            <option value="">اختر شركة الشحن</option>
+                            {shippingCompanyOptions.map((name: string) => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold mb-2">سعر الشحنة</label>
+                        <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">سعر الشحنة</label>
                         <input
                             type="number"
                             min={0}
                             step="0.01"
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-3 py-2"
                             value={shippingForm.shippingPrice}
                             onChange={(e) => setShippingForm((prev) => ({ ...prev, shippingPrice: e.target.value }))}
                             disabled={shippingModalSaving}
@@ -1257,12 +1283,12 @@ const [searchQuery, setSearchQuery] = React.useState("");
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold mb-2">عمولة تحويل الأموال</label>
+                        <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">عمولة تحويل الأموال</label>
                         <input
                             type="number"
                             min={0}
                             step="0.01"
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-3 py-2"
                             value={shippingForm.moneyTransferCommission}
                             onChange={(e) => setShippingForm((prev) => ({ ...prev, moneyTransferCommission: e.target.value }))}
                             disabled={shippingModalSaving}
@@ -1270,12 +1296,12 @@ const [searchQuery, setSearchQuery] = React.useState("");
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold mb-2">عمولات أخرى</label>
+                        <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">عمولات أخرى</label>
                         <input
                             type="number"
                             min={0}
                             step="0.01"
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-3 py-2"
                             value={shippingForm.otherCommissions}
                             onChange={(e) => setShippingForm((prev) => ({ ...prev, otherCommissions: e.target.value }))}
                             disabled={shippingModalSaving}
