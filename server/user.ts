@@ -166,6 +166,134 @@ export async function updateUserWage(id: string, wage: number) {
   }
 }
 
+type AssignManagerPayload = {
+  managerId: string;
+  employeeIds: string[];
+};
+
+/**
+ * تتحقق من الجلسة الحالية وتعيد المستخدم إذا كان Admin.
+ */
+async function getCurrentAdminUser() {
+  const session = cookies().get("skynova")?.value;
+  if (!session) return null;
+
+  const decoded = await decrypt(session);
+  if (!decoded?.userId) return null;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: String(decoded.userId) },
+    select: { id: true, accountType: true },
+  });
+
+  if (!currentUser || currentUser.accountType !== "ADMIN") {
+    return null;
+  }
+
+  return currentUser;
+}
+
+/**
+ * تعيين موظف مسؤول (Manager) على عدة موظفين دفعة واحدة عبر parentId.
+ * هذه العملية متاحة فقط لحسابات Admin.
+ */
+export async function assignManagerToEmployees(payload: AssignManagerPayload) {
+  try {
+    const adminUser = await getCurrentAdminUser();
+    if (!adminUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const managerId = String(payload?.managerId || "").trim();
+    const employeeIds = Array.from(
+      new Set((payload?.employeeIds || []).map((id) => String(id || "").trim()).filter(Boolean))
+    );
+
+    if (!managerId) {
+      return { success: false, error: "يرجى اختيار الموظف المسؤول" };
+    }
+
+    if (employeeIds.length === 0) {
+      return { success: false, error: "يرجى اختيار موظف واحد على الأقل" };
+    }
+
+    if (employeeIds.includes(managerId)) {
+      return { success: false, error: "لا يمكن تعيين الموظف مسؤولًا عن نفسه" };
+    }
+
+    const manager = await prisma.user.findUnique({
+      where: { id: managerId },
+      select: { id: true, accountType: true },
+    });
+
+    if (!manager || manager.accountType === "ADMIN") {
+      return { success: false, error: "المسؤول المحدد غير صالح" };
+    }
+
+    const updated = await prisma.user.updateMany({
+      where: {
+        id: { in: employeeIds },
+        accountType: { not: "ADMIN" },
+      },
+      data: {
+        parentId: managerId,
+      },
+    });
+
+    return {
+      success: true,
+      data: {
+        managerId,
+        updatedCount: updated.count,
+      },
+    };
+  } catch (error) {
+    console.error("Assign Manager Error:", error);
+    return { success: false, error: "فشل في تعيين الموظفين" };
+  }
+}
+
+/**
+ * فك ارتباط مجموعة موظفين من المسؤول الحالي (parentId = null).
+ * هذه العملية متاحة فقط لحسابات Admin.
+ */
+export async function unassignManagerFromEmployees(employeeIdsInput: string[]) {
+  try {
+    const adminUser = await getCurrentAdminUser();
+    if (!adminUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const employeeIds = Array.from(
+      new Set((employeeIdsInput || []).map((id) => String(id || "").trim()).filter(Boolean))
+    );
+
+    if (employeeIds.length === 0) {
+      return { success: false, error: "يرجى اختيار موظف واحد على الأقل" };
+    }
+
+    const updated = await prisma.user.updateMany({
+      where: {
+        id: { in: employeeIds },
+        accountType: { not: "ADMIN" },
+      },
+      data: {
+        parentId: null,
+      },
+    });
+
+    return {
+      success: true,
+      data: {
+        updatedCount: updated.count,
+      },
+    };
+  } catch (error) {
+    console.error("Unassign Manager Error:", error);
+    return { success: false, error: "فشل في فك الارتباط" };
+  }
+}
+
 export async function deleteuser(id: string) {
   try {
     await prisma.user.delete({ where: { id: id } });

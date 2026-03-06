@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { createUserTarget, deleteuser, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { assignManagerToEmployees, createUserTarget, deleteuser, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
@@ -55,6 +55,10 @@ const UserManagement: React.FunctionComponent = () => {
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
   const [targetUser, setTargetUser] = React.useState<any>(null);
   const [editTargetId, setEditTargetId] = React.useState<string | null>(null);
+  const [isAssignManagerOpen, setIsAssignManagerOpen] = React.useState(false);
+  const [assignManagerId, setAssignManagerId] = React.useState<string>('');
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = React.useState<string[]>([]);
+  const [assignSaving, setAssignSaving] = React.useState(false);
   const [salesTargetValue, setSalesTargetValue] = React.useState<string>('');
   const [salesRewardValue, setSalesRewardValue] = React.useState<string>('');
   const [targetItems, setTargetItems] = React.useState<Array<{
@@ -116,12 +120,113 @@ const UserManagement: React.FunctionComponent = () => {
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
 
+  const nonAdminUsers = React.useMemo(
+    () => users.filter((row: any) => row?.accountType !== "ADMIN"),
+    [users]
+  );
+
+  const assignableEmployees = React.useMemo(
+    () => nonAdminUsers.filter((row: any) => String(row?.id || "") !== String(assignManagerId || "")),
+    [nonAdminUsers, assignManagerId]
+  );
+
   /**
    * Opens a new dashboard tab impersonating the selected employee without replacing current admin session.
    */
   const openEmployeeView = (employeeId: string) => {
     if (!employeeId) return;
     window.open(`/dashboard?asUser=${employeeId}`, '_blank', 'noopener,noreferrer');
+  };
+
+  /**
+   * يفتح نافذة التعيين الجماعي ويعيد تهيئة الاختيارات.
+   */
+  const openAssignManagerModal = () => {
+    setAssignManagerId('');
+    setSelectedEmployeeIds([]);
+    setIsAssignManagerOpen(true);
+  };
+
+  /**
+   * يضيف أو يزيل الموظف من الاختيار المتعدد.
+   */
+  const toggleEmployeeSelection = (employeeId: string, checked: boolean) => {
+    setSelectedEmployeeIds((prev) => {
+      if (checked) {
+        return prev.includes(employeeId) ? prev : [...prev, employeeId];
+      }
+      return prev.filter((id) => id !== employeeId);
+    });
+  };
+
+  /**
+   * يحفظ تعيين موظف مسؤول على عدة موظفين دفعة واحدة.
+   */
+  const handleAssignManager = async () => {
+    if (!assignManagerId) {
+      toast.error("يرجى اختيار الموظف المسؤول");
+      return;
+    }
+
+    if (selectedEmployeeIds.length === 0) {
+      toast.error("يرجى اختيار موظف واحد على الأقل");
+      return;
+    }
+
+    setAssignSaving(true);
+    const loadingToast = toast.loading("جاري حفظ التعيين...");
+    try {
+      const res = await assignManagerToEmployees({
+        managerId: assignManagerId,
+        employeeIds: selectedEmployeeIds,
+      });
+
+      if (res?.success) {
+        toast.success("تم تعيين المسؤول بنجاح");
+        setIsAssignManagerOpen(false);
+        setAssignManagerId('');
+        setSelectedEmployeeIds([]);
+        getAlluser();
+      } else {
+        toast.error(res?.error || "فشل في تعيين المسؤول");
+      }
+    } catch (error) {
+      toast.error("فشل في تعيين المسؤول");
+    } finally {
+      setAssignSaving(false);
+      toast.dismiss(loadingToast);
+    }
+  };
+
+  /**
+   * يفك ارتباط مجموعة موظفين من أي مسؤول حالي دفعة واحدة.
+   */
+  const handleUnassignManager = async () => {
+    if (selectedEmployeeIds.length === 0) {
+      toast.error("يرجى اختيار موظف واحد على الأقل");
+      return;
+    }
+
+    setAssignSaving(true);
+    const loadingToast = toast.loading("جاري فك الارتباط...");
+    try {
+      const res = await unassignManagerFromEmployees(selectedEmployeeIds);
+
+      if (res?.success) {
+        toast.success("تم فك الارتباط بنجاح");
+        setIsAssignManagerOpen(false);
+        setAssignManagerId('');
+        setSelectedEmployeeIds([]);
+        getAlluser();
+      } else {
+        toast.error(res?.error || "فشل في فك الارتباط");
+      }
+    } catch (error) {
+      toast.error("فشل في فك الارتباط");
+    } finally {
+      setAssignSaving(false);
+      toast.dismiss(loadingToast);
+    }
   };
 
   const handleClose = () => {
@@ -368,11 +473,21 @@ const UserManagement: React.FunctionComponent = () => {
     <div className="p-4" dir="rtl">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة المستخدمين</h1>
-        {user && hasPermission(user, "addEmployees") && (
-          <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white px-6">
-          إضافة مستخدم جديد
-        </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {user?.accountType === "ADMIN" && (
+            <Button
+              onClick={openAssignManagerModal}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6"
+            >
+              تعيين مسؤول لموظفين
+            </Button>
+          )}
+          {user && hasPermission(user, "addEmployees") && (
+            <Button onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white px-6">
+            إضافة مستخدم جديد
+          </Button>
+          )}
+        </div>
       </div>
       <DataTable data={users} 
        totalCount={users.length} // لنفترض وجود 150 عميل في الداتا بيز
@@ -439,6 +554,74 @@ const UserManagement: React.FunctionComponent = () => {
 
         ]
       } />
+
+      <AppModal
+        title="تعيين موظف مسؤول لعدة موظفين"
+        isOpen={isAssignManagerOpen}
+        onClose={() => setIsAssignManagerOpen(false)}
+      >
+        <div className="p-4 grid gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold dark:text-slate-300">الموظف المسؤول</label>
+            <select
+              className={selectClasses}
+              value={assignManagerId}
+              onChange={(e) => {
+                setAssignManagerId(e.target.value);
+                setSelectedEmployeeIds([]);
+              }}
+              disabled={assignSaving}
+            >
+              <option value="">اختر الموظف المسؤول...</option>
+              {nonAdminUsers.map((row: any) => (
+                <option key={row.id} value={row.id}>{row.username}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold dark:text-slate-300">الموظفون المراد ربطهم / فك ارتباطهم</label>
+            <div className="max-h-64 overflow-auto rounded-md border border-slate-200 dark:border-slate-700 p-2 grid gap-2">
+              {assignableEmployees.length === 0 && (
+                <div className="text-sm text-slate-500">لا يوجد موظفون متاحون للتعيين.</div>
+              )}
+              {assignableEmployees.map((employee: any) => {
+                const employeeId = String(employee.id);
+                const checked = selectedEmployeeIds.includes(employeeId);
+                return (
+                  <label key={employeeId} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4"
+                      checked={checked}
+                      onChange={(e) => toggleEmployeeSelection(employeeId, e.target.checked)}
+                      disabled={assignSaving || !assignManagerId}
+                    />
+                    <span>{employee.username}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button
+              onClick={handleUnassignManager}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={assignSaving || selectedEmployeeIds.length === 0}
+            >
+              فك الارتباط
+            </Button>
+            <Button
+              onClick={handleAssignManager}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={assignSaving || !assignManagerId || selectedEmployeeIds.length === 0}
+            >
+              حفظ التعيين
+            </Button>
+          </div>
+        </div>
+      </AppModal>
 
       <AppModal
         title={editId ? "تعديل بيانات المستخدم" : "إضافة مستخدم جديد"}
