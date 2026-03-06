@@ -1,9 +1,36 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs"; //
 import { NextRequest } from 'next/server';
+import { cookies } from "next/headers";
+import { decrypt } from "@/lib/auth";
 export async function GET(req :NextRequest) {
     try {
+    const session = cookies().get("skynova")?.value;
+    if (!session) {
+      return new Response(JSON.stringify({ success: false, error: "غير مصرح" }), { status: 401 });
+    }
+
+    const decoded = await decrypt(session);
+    const currentUser = await prisma.user.findUnique({
+      where: { id: String(decoded.userId) },
+      select: { id: true, accountType: true },
+    });
+
+    if (!currentUser) {
+      return new Response(JSON.stringify({ success: false, error: "غير مصرح" }), { status: 401 });
+    }
+
+    const whereClause = currentUser.accountType === "ADMIN"
+      ? undefined
+      : {
+          OR: [
+            { id: currentUser.id },
+            { parentId: currentUser.id },
+          ],
+        };
+
     const users = await prisma.user.findMany({
+      ...(whereClause ? { where: whereClause } : {}),
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
         targets: {
