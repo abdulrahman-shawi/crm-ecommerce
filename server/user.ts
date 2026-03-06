@@ -172,19 +172,45 @@ type AssignManagerPayload = {
 };
 
 /**
- * تتحقق من الجلسة الحالية وتعيد المستخدم إذا كان Admin.
+ * تجلب المستخدم الحالي من الجلسة مع معلومات أساسية للتحقق من الصلاحيات.
  */
-async function getCurrentAdminUser() {
+async function getCurrentSessionUserBasic() {
   const session = cookies().get("skynova")?.value;
   if (!session) return null;
 
   const decoded = await decrypt(session);
   if (!decoded?.userId) return null;
 
-  const currentUser = await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { id: String(decoded.userId) },
     select: { id: true, accountType: true },
   });
+}
+
+/**
+ * يتحقق هل المستخدم الحالي مخوّل لإدارة تاركت مستخدم آخر.
+ * - Admin: مسموح دائمًا.
+ * - غير Admin: مسموح فقط للموظفين المرتبطين به مباشرة عبر parentId.
+ */
+async function canManageTargetForUser(currentUser: { id: string; accountType: string }, targetUserId: string) {
+  if (currentUser.accountType === "ADMIN") return true;
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: String(targetUserId) },
+    select: { id: true, parentId: true, accountType: true },
+  });
+
+  if (!targetUser) return false;
+  if (targetUser.accountType === "ADMIN") return false;
+
+  return String(targetUser.parentId || "") === String(currentUser.id);
+}
+
+/**
+ * تتحقق من الجلسة الحالية وتعيد المستخدم إذا كان Admin.
+ */
+async function getCurrentAdminUser() {
+  const currentUser = await getCurrentSessionUserBasic();
 
   if (!currentUser || currentUser.accountType !== "ADMIN") {
     return null;
@@ -358,6 +384,16 @@ const toNumberArray = (value: unknown): number[] => {
 
 export async function createUserTarget(payload: UserTargetInput) {
   try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const canManage = await canManageTargetForUser(currentUser, payload.userId);
+    if (!canManage) {
+      return { success: false, error: "يمكنك إضافة التاركت للموظفين المرتبطين بك فقط" };
+    }
+
     const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
     const endDate = payload.endDate ? new Date(payload.endDate) : null;
     const target = await prisma.userTarget.create({
@@ -392,6 +428,25 @@ export async function createUserTarget(payload: UserTargetInput) {
 
 export async function updateUserTarget(targetId: string, payload: Omit<UserTargetInput, "userId">) {
   try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const existingTarget = await prisma.userTarget.findUnique({
+      where: { id: targetId },
+      select: { id: true, userId: true },
+    });
+
+    if (!existingTarget) {
+      return { success: false, error: "التاركت غير موجود" };
+    }
+
+    const canManage = await canManageTargetForUser(currentUser, existingTarget.userId);
+    if (!canManage) {
+      return { success: false, error: "يمكنك تعديل التاركتات للموظفين المرتبطين بك فقط" };
+    }
+
     const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
     const endDate = payload.endDate === "" ? null : payload.endDate ? new Date(payload.endDate) : undefined;
     const target = await prisma.userTarget.update({
