@@ -190,7 +190,6 @@ export async function createOrder(data: any, items: any[], user: any) {
             const selectedShipping = shippingId > 0
                 ? await tx.shipping.findUnique({ where: { id: shippingId }, select: { price: true } })
                 : null;
-            const manualCreatedAt = parseOptionalDate(data?.manualCreatedAt);
 
             const orderWarehouse = await tx.warehouse.findFirst({
                 where: { location: stockCountry },
@@ -225,7 +224,6 @@ export async function createOrder(data: any, items: any[], user: any) {
                     customer: { connect: { id: data.customerId } },
                     user: { connect: { id: user } },
                     shippingPrice: selectedShipping ? Number(selectedShipping.price || 0) : null,
-                    ...(manualCreatedAt ? { manualCreatedAt } : {}),
                     ...(shippingId > 0 ? { shipping: { connect: { id: shippingId } } } : {}),
                     ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {

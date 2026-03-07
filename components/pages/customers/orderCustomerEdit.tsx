@@ -180,6 +180,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
   const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
   const { user } = useAuth()
   const isAdminUser = user?.accountType === "ADMIN";
+  const isEditMode = Boolean(editId);
 
   const isTurkeyStock = stockCountry === "تركيا";
   const currencySymbol = isTurkeyStock ? "₺" : "$";
@@ -405,7 +406,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
       grandTotal: Number(grandTotal),
       overallDiscount: Number(overallDiscount),
       subTotal: Number(subTotal),
-      ...(isAdminUser ? { manualCreatedAt: manualCreatedAt || null } : {})
+      ...(isAdminUser && isEditMode ? { manualCreatedAt: manualCreatedAt || null } : {})
     };
 
     try {
@@ -524,7 +525,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
                   />
                 </div>
               )}
-              {isAdminUser && (
+              {isAdminUser && isEditMode && (
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-500 mr-2">تاريخ الإنشاء (اختياري)</label>
                   <input
