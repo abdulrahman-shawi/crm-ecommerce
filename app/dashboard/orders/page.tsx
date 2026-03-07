@@ -337,22 +337,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <span>المجموع الفرعي:</span>
                         <span>${formatMoney(subtotal)} ${currencySymbol}</span>
                     </div>
-                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#0f172a;">
-                        <span>شركة الشحن:</span>
-                        <span>${shippingName}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
-                        <span>سعر الشحنة:</span>
-                        <span>${formatMoney(shippingPrice)} ${currencySymbol}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
-                        <span>عمولة تحويل الأموال:</span>
-                        <span>${formatMoney(moneyTransferCommission)} ${currencySymbol}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
-                        <span>عمولات أخرى:</span>
-                        <span>${formatMoney(otherCommissions)} ${currencySymbol}</span>
-                    </div>
                     ${totalDiscount > 0 ? `
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
                         <span>الخصم الممنوح:</span>
