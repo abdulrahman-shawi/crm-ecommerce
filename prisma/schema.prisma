@@ -16,6 +16,7 @@ model User {
   avatar                 String?
   accountType            AccountType     @default(STAFF)
   password               String
+
   salesCommissionPercent Float           @default(0)
   wage                   Int             @default(0)
   createdAt              DateTime        @default(now())
@@ -236,6 +237,7 @@ model Order {
   discount        Float       @default(0)
   finalAmount     Float
   paymentMethod   String
+  pay             String?
   receiverName    String?
   receiverPhone   String[]
   country         String?
