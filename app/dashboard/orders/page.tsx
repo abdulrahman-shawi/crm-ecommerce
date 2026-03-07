@@ -566,12 +566,44 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         importInputRef.current?.click();
     };
 
-    const handleImportFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        toast.success(`تم اختيار الملف: ${file.name}`);
-        event.target.value = "";
+        const allowedExtensions = ["xlsx", "xls", "csv"];
+        const extension = String(file.name.split(".").pop() || "").toLowerCase();
+        if (!allowedExtensions.includes(extension)) {
+            toast.error("صيغة الملف غير مدعومة. استخدم xlsx أو xls أو csv");
+            event.target.value = "";
+            return;
+        }
+
+        const loading = toast.loading("جارٍ استيراد الملف...");
+        try {
+            const buffer = await file.arrayBuffer();
+            const workbook = XLSX.read(buffer, { type: "array" });
+            const firstSheetName = workbook.SheetNames?.[0];
+
+            if (!firstSheetName) {
+                toast.error("تعذر قراءة الملف: لا توجد أوراق بيانات");
+                return;
+            }
+
+            const sheet = workbook.Sheets[firstSheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as Record<string, unknown>[];
+
+            if (!rows.length) {
+                toast.error("فشل الاستيراد: الملف فارغ أو لا يحتوي بيانات قابلة للقراءة");
+                return;
+            }
+
+            toast.success(`نجح الاستيراد: تمت قراءة ${rows.length} سجل من الملف ${file.name}`);
+        } catch (error) {
+            toast.error("فشل الاستيراد: تعذر قراءة الملف");
+        } finally {
+            toast.dismiss(loading);
+            event.target.value = "";
+        }
     };
 
     const getAlluser = async () => {
@@ -1087,7 +1119,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
                         <Upload size={20} />
                     </button>
                     <button
-                        onClick={() => exportAllOrdersToExcel(orders)}
+                        onClick={() => exportAllOrdersToExcel(visibleOrders)}
                         className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-none"
                         title="تصدير الطلبات"
                     >
