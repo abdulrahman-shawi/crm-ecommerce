@@ -19,6 +19,13 @@ const normalizeWarehouseLocation = (location?: string | null) => {
     return String(location || "").trim();
 };
 
+const parseOptionalDate = (value: any) => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return date;
+};
+
 function isWarehouseRole(user: any) {
     const roleName = String(user?.permission?.roleName || "").trim();
     return roleName.includes(WAREHOUSE_ROLE_NAME);
@@ -183,6 +190,7 @@ export async function createOrder(data: any, items: any[], user: any) {
             const selectedShipping = shippingId > 0
                 ? await tx.shipping.findUnique({ where: { id: shippingId }, select: { price: true } })
                 : null;
+            const manualCreatedAt = parseOptionalDate(data?.manualCreatedAt);
 
             const orderWarehouse = await tx.warehouse.findFirst({
                 where: { location: stockCountry },
@@ -217,6 +225,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                     customer: { connect: { id: data.customerId } },
                     user: { connect: { id: user } },
                     shippingPrice: selectedShipping ? Number(selectedShipping.price || 0) : null,
+                    ...(manualCreatedAt ? { manualCreatedAt } : {}),
                     ...(shippingId > 0 ? { shipping: { connect: { id: shippingId } } } : {}),
                     ...(orderWarehouse ? { warehouse: { connect: { id: orderWarehouse.id } } } : {}),
                     items: {
@@ -301,6 +310,7 @@ export async function updateOrder(data: any, id: any, items: any) {
             const selectedShipping = shippingId > 0
                 ? await tx.shipping.findUnique({ where: { id: shippingId }, select: { price: true } })
                 : null;
+            const manualCreatedAt = parseOptionalDate(data?.manualCreatedAt);
 
             const orderWarehouse = stockCountry
                 ? await tx.warehouse.findFirst({
@@ -352,6 +362,7 @@ export async function updateOrder(data: any, id: any, items: any) {
                     deliveryNotes: data.deliveryNotes,
                     customer: { connect: { id: data.customerId } },
                     shippingPrice: selectedShipping ? Number(selectedShipping.price || 0) : null,
+                    manualCreatedAt,
                     shipping: shippingId > 0
                         ? { connect: { id: shippingId } }
                         : { disconnect: true },

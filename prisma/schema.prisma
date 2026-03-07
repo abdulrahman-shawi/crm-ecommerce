@@ -257,6 +257,7 @@ model Order {
   warehouseId     Int?
   shippingId      Int?
   createdAt       DateTime    @default(now())
+  manualCreatedAt DateTime?
   updatedAt       DateTime    @updatedAt
   customer        Customer    @relation(fields: [customerId], references: [id])
   user            User?       @relation(fields: [userId], references: [id])
@@ -269,6 +270,7 @@ model Expense {
   id          Int       @id @default(autoincrement())
   type        ExpenseType @default(DAILY)
   amount      Float
+  salaryBaseWage Float?
   description String?
   currency    ExpenseCurrency?
   paidFromOffice PaidFromOffice?

@@ -87,6 +87,7 @@ const getOrderTotalShippingExpenses = (orderLike: any) => {
     return shippingPrice + moneyTransferCommission + otherCommissions;
 };
 const getOrderDeliveryMethod = (orderLike: any) => String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
+const getOrderDisplayDate = (orderLike: any) => orderLike?.manualCreatedAt || orderLike?.createdAt;
 
 
 const getMonthKey = (dateValue: Date | string | number) => {
@@ -211,7 +212,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const buildOrderPdfFile = async (data: any) => {
         const currencySymbol = getOrderCurrencySymbol(data);
         const invoiceNo = data?.orderNumber || '-';
-        const createdAt = data?.createdAt ? new Date(data.createdAt).toLocaleDateString('en-US') : '-';
+        const createdAt = getOrderDisplayDate(data)
+            ? new Date(getOrderDisplayDate(data)).toLocaleDateString('en-US')
+            : '-';
         const customerName = data?.customer?.name || 'غير محدد';
         const paymentMethodText = data?.paymentMethod || '-';
         const deliveryMethodText = getOrderDeliveryMethod(data);
@@ -385,14 +388,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         document.body.appendChild(wrapper);
         const canvas = await html2canvas(wrapper, {
-            scale: 2,
+            scale: 1.3,
             useCORS: true,
             backgroundColor: '#ffffff',
         });
         document.body.removeChild(wrapper);
 
-        const imgData = canvas.toDataURL('image/png');
-        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const imgData = canvas.toDataURL('image/jpeg', 0.72);
+        const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const imageHeight = (canvas.height * pageWidth) / canvas.width;
@@ -400,13 +403,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         let heightLeft = imageHeight;
         let position = 0;
 
-        doc.addImage(imgData, 'PNG', 0, position, pageWidth, imageHeight);
+        doc.addImage(imgData, 'JPEG', 0, position, pageWidth, imageHeight, undefined, 'FAST');
         heightLeft -= pageHeight;
 
         while (heightLeft > 0) {
             position = heightLeft - imageHeight;
             doc.addPage();
-            doc.addImage(imgData, 'PNG', 0, position, pageWidth, imageHeight);
+            doc.addImage(imgData, 'JPEG', 0, position, pageWidth, imageHeight, undefined, 'FAST');
             heightLeft -= pageHeight;
         }
 
@@ -514,7 +517,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
             return {
                 "رقم المرجع": order.orderNumber,
-                "تاريخ الإنشاء": new Date(order.createdAt).toLocaleString('ar-EG'),
+                "تاريخ الإنشاء": new Date(getOrderDisplayDate(order)).toLocaleString('ar-EG'),
                 "حالة الطلب": order.status,
                 "اسم العميل": order.customer?.name,
                 // هاتف العميل على شكل أرييه بعد تقسيمه، أو نص بديل إذا لم يكن موجودًا
@@ -714,7 +717,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
                     ? getPreviousMonthKey()
                     : (customMonth || getCurrentMonthKey());
 
-            const orderMonth = getMonthKey(order.createdAt);
+            const orderMonth = getMonthKey(getOrderDisplayDate(order));
             if (!activeMonth || !orderMonth || orderMonth !== activeMonth) return false;
         }
 
@@ -1254,7 +1257,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
                     },
                     {
                         header: "تاريخ الإنشاء",
-                        accessor: (e: any) => new Date(e.createdAt).toLocaleDateString('ar-EG', {
+                        accessor: (e: any) => new Date(getOrderDisplayDate(e)).toLocaleDateString('ar-EG', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
@@ -1449,7 +1452,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                         </div>
                         <div className="text-left space-y-1 text-xs md:text-sm text-slate-500 font-bold">
                             <p>رقم الفاتورة: <span className="text-slate-900 dark:text-white font-mono">#{data.orderNumber}</span></p>
-                            <p>تاريخ الإصدار: <span className="text-slate-900 dark:text-white">{data.createdAt instanceof Date ? data.createdAt.toLocaleDateString('ar-EG') : String(data.createdAt)}</span></p>
+                            <p>تاريخ الإصدار: <span className="text-slate-900 dark:text-white">{new Date(getOrderDisplayDate(data)).toLocaleDateString('ar-EG')}</span></p>
                         </div>
                     </div>
 
@@ -1636,7 +1639,7 @@ function ViewOrderCustomer({ orders }: { orders: any[] }) {
                                     {expandedOrderId === order.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                 </p>
                                 <div className="flex items-center gap-3 text-[11px] font-bold text-slate-400">
-                                    <span className="flex items-center gap-1">📅 {new Date(order.createdAt).toLocaleDateString('ar-EG')}</span>
+                                    <span className="flex items-center gap-1">📅 {new Date(getOrderDisplayDate(order)).toLocaleDateString('ar-EG')}</span>
                                     <span className="flex items-center gap-1">👤 بواسطة: {order.user?.name || 'Admin'}</span>
                                 </div>
                             </div>

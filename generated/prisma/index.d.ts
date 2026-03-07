@@ -17370,6 +17370,7 @@ export namespace Prisma {
     discount: number | null
     finalAmount: number | null
     paymentMethod: string | null
+    pay: string | null
     receiverName: string | null
     country: string | null
     city: string | null
@@ -17388,6 +17389,7 @@ export namespace Prisma {
     warehouseId: number | null
     shippingId: number | null
     createdAt: Date | null
+    manualCreatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -17402,6 +17404,7 @@ export namespace Prisma {
     discount: number | null
     finalAmount: number | null
     paymentMethod: string | null
+    pay: string | null
     receiverName: string | null
     country: string | null
     city: string | null
@@ -17420,6 +17423,7 @@ export namespace Prisma {
     warehouseId: number | null
     shippingId: number | null
     createdAt: Date | null
+    manualCreatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -17434,6 +17438,7 @@ export namespace Prisma {
     discount: number
     finalAmount: number
     paymentMethod: number
+    pay: number
     receiverName: number
     receiverPhone: number
     country: number
@@ -17453,6 +17458,7 @@ export namespace Prisma {
     warehouseId: number
     shippingId: number
     createdAt: number
+    manualCreatedAt: number
     updatedAt: number
     _all: number
   }
@@ -17495,6 +17501,7 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    pay?: true
     receiverName?: true
     country?: true
     city?: true
@@ -17513,6 +17520,7 @@ export namespace Prisma {
     warehouseId?: true
     shippingId?: true
     createdAt?: true
+    manualCreatedAt?: true
     updatedAt?: true
   }
 
@@ -17527,6 +17535,7 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    pay?: true
     receiverName?: true
     country?: true
     city?: true
@@ -17545,6 +17554,7 @@ export namespace Prisma {
     warehouseId?: true
     shippingId?: true
     createdAt?: true
+    manualCreatedAt?: true
     updatedAt?: true
   }
 
@@ -17559,6 +17569,7 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    pay?: true
     receiverName?: true
     receiverPhone?: true
     country?: true
@@ -17578,6 +17589,7 @@ export namespace Prisma {
     warehouseId?: true
     shippingId?: true
     createdAt?: true
+    manualCreatedAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -17679,6 +17691,7 @@ export namespace Prisma {
     discount: number
     finalAmount: number
     paymentMethod: string
+    pay: string | null
     receiverName: string | null
     receiverPhone: string[]
     country: string | null
@@ -17698,6 +17711,7 @@ export namespace Prisma {
     warehouseId: number | null
     shippingId: number | null
     createdAt: Date
+    manualCreatedAt: Date | null
     updatedAt: Date
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -17731,6 +17745,7 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    pay?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -17750,6 +17765,7 @@ export namespace Prisma {
     warehouseId?: boolean
     shippingId?: boolean
     createdAt?: boolean
+    manualCreatedAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -17770,6 +17786,7 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    pay?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -17789,6 +17806,7 @@ export namespace Prisma {
     warehouseId?: boolean
     shippingId?: boolean
     createdAt?: boolean
+    manualCreatedAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -17807,6 +17825,7 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    pay?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -17826,6 +17845,7 @@ export namespace Prisma {
     warehouseId?: boolean
     shippingId?: boolean
     createdAt?: boolean
+    manualCreatedAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -17844,6 +17864,7 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    pay?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -17863,10 +17884,11 @@ export namespace Prisma {
     warehouseId?: boolean
     shippingId?: boolean
     createdAt?: boolean
+    manualCreatedAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "pay" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "manualCreatedAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -17908,6 +17930,7 @@ export namespace Prisma {
       discount: number
       finalAmount: number
       paymentMethod: string
+      pay: string | null
       receiverName: string | null
       receiverPhone: string[]
       country: string | null
@@ -17927,6 +17950,7 @@ export namespace Prisma {
       warehouseId: number | null
       shippingId: number | null
       createdAt: Date
+      manualCreatedAt: Date | null
       updatedAt: Date
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -18366,6 +18390,7 @@ export namespace Prisma {
     readonly discount: FieldRef<"Order", 'Float'>
     readonly finalAmount: FieldRef<"Order", 'Float'>
     readonly paymentMethod: FieldRef<"Order", 'String'>
+    readonly pay: FieldRef<"Order", 'String'>
     readonly receiverName: FieldRef<"Order", 'String'>
     readonly receiverPhone: FieldRef<"Order", 'String[]'>
     readonly country: FieldRef<"Order", 'String'>
@@ -18385,6 +18410,7 @@ export namespace Prisma {
     readonly warehouseId: FieldRef<"Order", 'Int'>
     readonly shippingId: FieldRef<"Order", 'Int'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
+    readonly manualCreatedAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
   }
     
@@ -18896,17 +18922,20 @@ export namespace Prisma {
   export type ExpenseAvgAggregateOutputType = {
     id: number | null
     amount: number | null
+    salaryBaseWage: number | null
   }
 
   export type ExpenseSumAggregateOutputType = {
     id: number | null
     amount: number | null
+    salaryBaseWage: number | null
   }
 
   export type ExpenseMinAggregateOutputType = {
     id: number | null
     type: $Enums.ExpenseType | null
     amount: number | null
+    salaryBaseWage: number | null
     description: string | null
     currency: $Enums.ExpenseCurrency | null
     paidFromOffice: $Enums.PaidFromOffice | null
@@ -18920,6 +18949,7 @@ export namespace Prisma {
     id: number | null
     type: $Enums.ExpenseType | null
     amount: number | null
+    salaryBaseWage: number | null
     description: string | null
     currency: $Enums.ExpenseCurrency | null
     paidFromOffice: $Enums.PaidFromOffice | null
@@ -18933,6 +18963,7 @@ export namespace Prisma {
     id: number
     type: number
     amount: number
+    salaryBaseWage: number
     description: number
     currency: number
     paidFromOffice: number
@@ -18947,17 +18978,20 @@ export namespace Prisma {
   export type ExpenseAvgAggregateInputType = {
     id?: true
     amount?: true
+    salaryBaseWage?: true
   }
 
   export type ExpenseSumAggregateInputType = {
     id?: true
     amount?: true
+    salaryBaseWage?: true
   }
 
   export type ExpenseMinAggregateInputType = {
     id?: true
     type?: true
     amount?: true
+    salaryBaseWage?: true
     description?: true
     currency?: true
     paidFromOffice?: true
@@ -18971,6 +19005,7 @@ export namespace Prisma {
     id?: true
     type?: true
     amount?: true
+    salaryBaseWage?: true
     description?: true
     currency?: true
     paidFromOffice?: true
@@ -18984,6 +19019,7 @@ export namespace Prisma {
     id?: true
     type?: true
     amount?: true
+    salaryBaseWage?: true
     description?: true
     currency?: true
     paidFromOffice?: true
@@ -19084,6 +19120,7 @@ export namespace Prisma {
     id: number
     type: $Enums.ExpenseType
     amount: number
+    salaryBaseWage: number | null
     description: string | null
     currency: $Enums.ExpenseCurrency | null
     paidFromOffice: $Enums.PaidFromOffice | null
@@ -19116,6 +19153,7 @@ export namespace Prisma {
     id?: boolean
     type?: boolean
     amount?: boolean
+    salaryBaseWage?: boolean
     description?: boolean
     currency?: boolean
     paidFromOffice?: boolean
@@ -19130,6 +19168,7 @@ export namespace Prisma {
     id?: boolean
     type?: boolean
     amount?: boolean
+    salaryBaseWage?: boolean
     description?: boolean
     currency?: boolean
     paidFromOffice?: boolean
@@ -19144,6 +19183,7 @@ export namespace Prisma {
     id?: boolean
     type?: boolean
     amount?: boolean
+    salaryBaseWage?: boolean
     description?: boolean
     currency?: boolean
     paidFromOffice?: boolean
@@ -19158,6 +19198,7 @@ export namespace Prisma {
     id?: boolean
     type?: boolean
     amount?: boolean
+    salaryBaseWage?: boolean
     description?: boolean
     currency?: boolean
     paidFromOffice?: boolean
@@ -19167,7 +19208,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "amount" | "description" | "currency" | "paidFromOffice" | "employeeId" | "scheduledDate" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "amount" | "salaryBaseWage" | "description" | "currency" | "paidFromOffice" | "employeeId" | "scheduledDate" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
   export type ExpenseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employee?: boolean | Expense$employeeArgs<ExtArgs>
   }
@@ -19187,6 +19228,7 @@ export namespace Prisma {
       id: number
       type: $Enums.ExpenseType
       amount: number
+      salaryBaseWage: number | null
       description: string | null
       currency: $Enums.ExpenseCurrency | null
       paidFromOffice: $Enums.PaidFromOffice | null
@@ -19621,6 +19663,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Expense", 'Int'>
     readonly type: FieldRef<"Expense", 'ExpenseType'>
     readonly amount: FieldRef<"Expense", 'Float'>
+    readonly salaryBaseWage: FieldRef<"Expense", 'Float'>
     readonly description: FieldRef<"Expense", 'String'>
     readonly currency: FieldRef<"Expense", 'ExpenseCurrency'>
     readonly paidFromOffice: FieldRef<"Expense", 'PaidFromOffice'>
@@ -24641,6 +24684,7 @@ export namespace Prisma {
     discount: 'discount',
     finalAmount: 'finalAmount',
     paymentMethod: 'paymentMethod',
+    pay: 'pay',
     receiverName: 'receiverName',
     receiverPhone: 'receiverPhone',
     country: 'country',
@@ -24660,6 +24704,7 @@ export namespace Prisma {
     warehouseId: 'warehouseId',
     shippingId: 'shippingId',
     createdAt: 'createdAt',
+    manualCreatedAt: 'manualCreatedAt',
     updatedAt: 'updatedAt'
   };
 
@@ -24670,6 +24715,7 @@ export namespace Prisma {
     id: 'id',
     type: 'type',
     amount: 'amount',
+    salaryBaseWage: 'salaryBaseWage',
     description: 'description',
     currency: 'currency',
     paidFromOffice: 'paidFromOffice',
@@ -25937,6 +25983,7 @@ export namespace Prisma {
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
     paymentMethod?: StringFilter<"Order"> | string
+    pay?: StringNullableFilter<"Order"> | string | null
     receiverName?: StringNullableFilter<"Order"> | string | null
     receiverPhone?: StringNullableListFilter<"Order">
     country?: StringNullableFilter<"Order"> | string | null
@@ -25956,6 +26003,7 @@ export namespace Prisma {
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -25975,6 +26023,7 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    pay?: SortOrderInput | SortOrder
     receiverName?: SortOrderInput | SortOrder
     receiverPhone?: SortOrder
     country?: SortOrderInput | SortOrder
@@ -25994,6 +26043,7 @@ export namespace Prisma {
     warehouseId?: SortOrderInput | SortOrder
     shippingId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    manualCreatedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -26016,6 +26066,7 @@ export namespace Prisma {
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
     paymentMethod?: StringFilter<"Order"> | string
+    pay?: StringNullableFilter<"Order"> | string | null
     receiverName?: StringNullableFilter<"Order"> | string | null
     receiverPhone?: StringNullableListFilter<"Order">
     country?: StringNullableFilter<"Order"> | string | null
@@ -26035,6 +26086,7 @@ export namespace Prisma {
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -26054,6 +26106,7 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    pay?: SortOrderInput | SortOrder
     receiverName?: SortOrderInput | SortOrder
     receiverPhone?: SortOrder
     country?: SortOrderInput | SortOrder
@@ -26073,6 +26126,7 @@ export namespace Prisma {
     warehouseId?: SortOrderInput | SortOrder
     shippingId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    manualCreatedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -26095,6 +26149,7 @@ export namespace Prisma {
     discount?: FloatWithAggregatesFilter<"Order"> | number
     finalAmount?: FloatWithAggregatesFilter<"Order"> | number
     paymentMethod?: StringWithAggregatesFilter<"Order"> | string
+    pay?: StringNullableWithAggregatesFilter<"Order"> | string | null
     receiverName?: StringNullableWithAggregatesFilter<"Order"> | string | null
     receiverPhone?: StringNullableListFilter<"Order">
     country?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -26114,6 +26169,7 @@ export namespace Prisma {
     warehouseId?: IntNullableWithAggregatesFilter<"Order"> | number | null
     shippingId?: IntNullableWithAggregatesFilter<"Order"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    manualCreatedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
 
@@ -26124,6 +26180,7 @@ export namespace Prisma {
     id?: IntFilter<"Expense"> | number
     type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatFilter<"Expense"> | number
+    salaryBaseWage?: FloatNullableFilter<"Expense"> | number | null
     description?: StringNullableFilter<"Expense"> | string | null
     currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
     paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
@@ -26138,6 +26195,7 @@ export namespace Prisma {
     id?: SortOrder
     type?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     currency?: SortOrderInput | SortOrder
     paidFromOffice?: SortOrderInput | SortOrder
@@ -26155,6 +26213,7 @@ export namespace Prisma {
     NOT?: ExpenseWhereInput | ExpenseWhereInput[]
     type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatFilter<"Expense"> | number
+    salaryBaseWage?: FloatNullableFilter<"Expense"> | number | null
     description?: StringNullableFilter<"Expense"> | string | null
     currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
     paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
@@ -26169,6 +26228,7 @@ export namespace Prisma {
     id?: SortOrder
     type?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     currency?: SortOrderInput | SortOrder
     paidFromOffice?: SortOrderInput | SortOrder
@@ -26190,6 +26250,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Expense"> | number
     type?: EnumExpenseTypeWithAggregatesFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatWithAggregatesFilter<"Expense"> | number
+    salaryBaseWage?: FloatNullableWithAggregatesFilter<"Expense"> | number | null
     description?: StringNullableWithAggregatesFilter<"Expense"> | string | null
     currency?: EnumExpenseCurrencyNullableWithAggregatesFilter<"Expense"> | $Enums.ExpenseCurrency | null
     paidFromOffice?: EnumPaidFromOfficeNullableWithAggregatesFilter<"Expense"> | $Enums.PaidFromOffice | null
@@ -27576,6 +27637,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -27591,6 +27653,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
@@ -27610,6 +27673,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -27629,6 +27693,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -27643,6 +27708,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27658,6 +27724,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
@@ -27677,6 +27744,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27696,6 +27764,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -27711,6 +27780,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -27730,6 +27800,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -27743,6 +27814,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27758,6 +27830,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -27772,6 +27845,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27791,12 +27865,14 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExpenseCreateInput = {
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -27810,6 +27886,7 @@ export namespace Prisma {
     id?: number
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -27822,6 +27899,7 @@ export namespace Prisma {
   export type ExpenseUpdateInput = {
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -27835,6 +27913,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -27848,6 +27927,7 @@ export namespace Prisma {
     id?: number
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -27860,6 +27940,7 @@ export namespace Prisma {
   export type ExpenseUpdateManyMutationInput = {
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -27872,6 +27953,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -29156,6 +29238,7 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    pay?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
     country?: SortOrder
@@ -29175,6 +29258,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     shippingId?: SortOrder
     createdAt?: SortOrder
+    manualCreatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -29202,6 +29286,7 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    pay?: SortOrder
     receiverName?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -29220,6 +29305,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     shippingId?: SortOrder
     createdAt?: SortOrder
+    manualCreatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -29234,6 +29320,7 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    pay?: SortOrder
     receiverName?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -29252,6 +29339,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     shippingId?: SortOrder
     createdAt?: SortOrder
+    manualCreatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -29309,6 +29397,7 @@ export namespace Prisma {
     id?: SortOrder
     type?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrder
     description?: SortOrder
     currency?: SortOrder
     paidFromOffice?: SortOrder
@@ -29321,12 +29410,14 @@ export namespace Prisma {
   export type ExpenseAvgOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrder
   }
 
   export type ExpenseMaxOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrder
     description?: SortOrder
     currency?: SortOrder
     paidFromOffice?: SortOrder
@@ -29340,6 +29431,7 @@ export namespace Prisma {
     id?: SortOrder
     type?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrder
     description?: SortOrder
     currency?: SortOrder
     paidFromOffice?: SortOrder
@@ -29352,6 +29444,7 @@ export namespace Prisma {
   export type ExpenseSumOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+    salaryBaseWage?: SortOrder
   }
 
   export type EnumExpenseTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -31378,6 +31471,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -31393,6 +31487,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
@@ -31411,6 +31506,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -31429,6 +31525,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -31632,6 +31729,7 @@ export namespace Prisma {
   export type ExpenseCreateWithoutEmployeeInput = {
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -31644,6 +31742,7 @@ export namespace Prisma {
     id?: number
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -31815,6 +31914,7 @@ export namespace Prisma {
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
     paymentMethod?: StringFilter<"Order"> | string
+    pay?: StringNullableFilter<"Order"> | string | null
     receiverName?: StringNullableFilter<"Order"> | string | null
     receiverPhone?: StringNullableListFilter<"Order">
     country?: StringNullableFilter<"Order"> | string | null
@@ -31834,6 +31934,7 @@ export namespace Prisma {
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     updatedAt?: DateTimeFilter<"Order"> | Date | string
   }
 
@@ -32045,6 +32146,7 @@ export namespace Prisma {
     id?: IntFilter<"Expense"> | number
     type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatFilter<"Expense"> | number
+    salaryBaseWage?: FloatNullableFilter<"Expense"> | number | null
     description?: StringNullableFilter<"Expense"> | string | null
     currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
     paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
@@ -32538,6 +32640,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -32553,6 +32656,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
@@ -32571,6 +32675,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -32589,6 +32694,7 @@ export namespace Prisma {
     userId?: string | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -33379,6 +33485,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -33394,6 +33501,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
@@ -33412,6 +33520,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -33430,6 +33539,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -34228,6 +34338,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -34243,6 +34354,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
@@ -34261,6 +34373,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -34279,6 +34392,7 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -34319,6 +34433,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -34334,6 +34449,7 @@ export namespace Prisma {
     additionalNotes?: string | null
     status?: string
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
@@ -34352,6 +34468,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -34371,6 +34488,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -34430,6 +34548,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34445,6 +34564,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
@@ -34463,6 +34583,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34482,6 +34603,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -34548,6 +34670,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -34566,6 +34689,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -34591,6 +34715,7 @@ export namespace Prisma {
     id?: number
     type?: $Enums.ExpenseType
     amount: number
+    salaryBaseWage?: number | null
     description?: string | null
     currency?: $Enums.ExpenseCurrency | null
     paidFromOffice?: $Enums.PaidFromOffice | null
@@ -34681,6 +34806,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34696,6 +34822,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -34714,6 +34841,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34732,6 +34860,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -34747,6 +34876,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34765,6 +34895,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -34882,6 +35013,7 @@ export namespace Prisma {
   export type ExpenseUpdateWithoutEmployeeInput = {
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -34894,6 +35026,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -34906,6 +35039,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
+    salaryBaseWage?: NullableFloatFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
     paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
@@ -35235,6 +35369,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -35253,6 +35388,7 @@ export namespace Prisma {
     userId?: string | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -35299,6 +35435,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35314,6 +35451,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
@@ -35332,6 +35470,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35350,6 +35489,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -35365,6 +35505,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35383,6 +35524,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -35455,6 +35597,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -35473,6 +35616,7 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -35494,6 +35638,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35509,6 +35654,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -35527,6 +35673,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35545,6 +35692,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -35560,6 +35708,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35578,6 +35727,7 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -35710,6 +35860,7 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    pay?: string | null
     receiverName?: string | null
     receiverPhone?: OrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -35728,6 +35879,7 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     createdAt?: Date | string
+    manualCreatedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -35741,6 +35893,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35756,6 +35909,7 @@ export namespace Prisma {
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
@@ -35774,6 +35928,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35792,6 +35947,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -35807,6 +35963,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35825,6 +35982,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -148,11 +148,19 @@ export async function createExpense(data: any) {
                 return { success: false, error: "الموظف غير موجود" };
             }
 
-            const salaryAmount = Number(employee.wage || 0);
+            const salaryAmount = Number.isFinite(Number(data?.amount))
+                ? Number(data.amount)
+                : Number(employee.wage || 0);
+
+            if (salaryAmount < 0) {
+                return { success: false, error: "قيمة الراتب المصروف غير صالحة" };
+            }
+
             const res = await prisma.expense.create({
                 data: {
                     type,
                     amount: salaryAmount,
+                    salaryBaseWage: Number(employee.wage || 0),
                     description: description || `راتب الموظف: ${employee.username}`,
                     employeeId: employee.id,
                     currency: null,
@@ -225,6 +233,7 @@ export async function updateExpense(id: number, data: any) {
         let payload: any = {
             type,
             amount: amountInput,
+            salaryBaseWage: null,
             description,
             currency: null,
             paidFromOffice: null,
@@ -253,6 +262,7 @@ export async function updateExpense(id: number, data: any) {
                 description,
                 currency,
                 paidFromOffice,
+                salaryBaseWage: null,
             };
         }
 
@@ -271,9 +281,18 @@ export async function updateExpense(id: number, data: any) {
                 return { success: false, error: "الموظف غير موجود" };
             }
 
+            const salaryAmount = Number.isFinite(Number(data?.amount))
+                ? Number(data.amount)
+                : Number(employee.wage || 0);
+
+            if (salaryAmount < 0) {
+                return { success: false, error: "قيمة الراتب المصروف غير صالحة" };
+            }
+
             payload = {
                 ...payload,
-                amount: Number(employee.wage || 0),
+                amount: salaryAmount,
+                salaryBaseWage: Number(employee.wage || 0),
                 description: description || `راتب الموظف: ${employee.username}`,
                 employeeId: employee.id,
             };
@@ -288,6 +307,7 @@ export async function updateExpense(id: number, data: any) {
                 ...payload,
                 description,
                 scheduledDate: parseScheduledDate(data?.scheduledDate) || new Date(),
+                salaryBaseWage: null,
             };
         }
 

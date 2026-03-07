@@ -21,6 +21,7 @@ const expenseSchema = z.object({
   paidFromOffice: z.enum(["TURKEY", "SYRIA"]).optional(),
   employeeId: z.string().optional(),
   scheduledDate: z.string().optional(),
+  salaryBaseWage: z.coerce.number().optional(),
 });
 
 const expenseTypeLabels: Record<string, string> = {
@@ -103,6 +104,7 @@ export default function ExpensesPage() {
       const payload: any = {
         type: normalizedType,
         amount: Number(data.amount || 0),
+          salaryBaseWage: Number(data.salaryBaseWage || 0),
         description: String(data.description || "").trim() || null,
         currency: data.currency || null,
         paidFromOffice: data.paidFromOffice || null,
@@ -126,7 +128,10 @@ export default function ExpensesPage() {
         if (!payload.employeeId) {
           throw new Error("يرجى اختيار الموظف");
         }
-        payload.amount = Number(selectedEmployee?.wage || 0);
+        payload.salaryBaseWage = Number(selectedEmployee?.wage || 0);
+        if (Number(payload.amount) <= 0) {
+          payload.amount = Number(selectedEmployee?.wage || 0);
+        }
         payload.description = payload.description || (selectedEmployee ? `راتب الموظف: ${selectedEmployee.username}` : null);
       }
 
@@ -163,6 +168,7 @@ export default function ExpensesPage() {
     setFormData({
       type: expenseType,
       amount: Number(item.amount || 0),
+      salaryBaseWage: Number(item.salaryBaseWage || item.employee?.wage || 0),
       description: item.description || "",
       currency: item.currency || undefined,
       paidFromOffice: item.paidFromOffice || undefined,
@@ -230,6 +236,7 @@ export default function ExpensesPage() {
     return {
       type: activeType,
       amount: 0,
+      salaryBaseWage: 0,
       description: "",
       currency: "SYP",
       paidFromOffice: "SYRIA",
@@ -306,6 +313,7 @@ export default function ExpensesPage() {
             actions={actions.length ? actions : undefined}
             columns={[
               { header: "الموظف", accessor: (row: any) => <span className="font-bold">{row.employee?.username || "-"}</span> },
+              { header: "الراتب الثابت", accessor: (row: any) => <span className="font-bold text-slate-600">{Number(row.salaryBaseWage || row.employee?.wage || 0).toLocaleString()}</span> },
               { header: "الراتب", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
               { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
               {
@@ -373,7 +381,11 @@ export default function ExpensesPage() {
 
               React.useEffect(() => {
                 if (type === "STAFF_SALARY") {
-                  setValue("amount", Number(selectedEmployee?.wage || 0), { shouldValidate: true });
+                  setValue("salaryBaseWage", Number(selectedEmployee?.wage || 0), { shouldValidate: true });
+                  const currentAmount = Number(watch("amount") || 0);
+                  if (currentAmount <= 0) {
+                    setValue("amount", Number(selectedEmployee?.wage || 0), { shouldValidate: true });
+                  }
                 }
               }, [type, selectedEmployee, setValue]);
 
@@ -453,11 +465,20 @@ export default function ExpensesPage() {
 
                       <FormInput
                         className="text-gray-800 dark:text-white"
-                        label="الراتب"
+                        label="الراتب الثابت (من جدول الموظف)"
                         type="number"
                         step="0.01"
                         readOnly
                         value={Number(selectedEmployee?.wage || 0)}
+                      />
+
+                      <FormInput
+                        className="text-gray-800 dark:text-white"
+                        label="الراتب المصروف (قابل للتعديل)"
+                        type="number"
+                        step="0.01"
+                        {...register("amount", { valueAsNumber: true })}
+                        error={errors.amount?.message as string}
                       />
 
                       <FormInput

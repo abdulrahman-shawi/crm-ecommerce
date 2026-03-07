@@ -13,6 +13,13 @@ import PhoneInput from 'react-phone-number-input'
 // سعر صرف الدولار مقابل الليرة التركية (يتم تحديثه من المستخدم عند اختيار تركيا)
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
+const formatDateForInput = (dateLike?: string | Date | null) => {
+  if (!dateLike) return "";
+  const date = new Date(dateLike);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+};
+
 export default function OrderCustomerEdit({ initialData, customers, customerId, products, isOpenOrder, setEditId, setCustomerId, setisOpenOrder, editId, getData }: { initialData?: any, customers: any, customerId: any, products: any, isOpenOrder: any, setEditId: any, setCustomerId: any, setisOpenOrder: any, editId: any, getData: any }) {
   // ...existing code...
   const [items, setItems] = React.useState([
@@ -168,9 +175,11 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
   const [deliveryNotes, setDeliveryNotes] = React.useState("");
   const [overallDiscount, setOverallDiscount] = React.useState(0);
   const [additionalNotes, setAdditionalNotes] = React.useState("");
+  const [manualCreatedAt, setManualCreatedAt] = React.useState("");
   const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
   const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
   const { user } = useAuth()
+  const isAdminUser = user?.accountType === "ADMIN";
 
   const isTurkeyStock = stockCountry === "تركيا";
   const currencySymbol = isTurkeyStock ? "₺" : "$";
@@ -230,6 +239,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setPaymentMethod(initialData.paymentMethod || "عند الاستلام");
     setOverallDiscount(initialData.overallDiscount || 0);
     setStatus(initialData.status || "طلب جديد");
+    setManualCreatedAt(formatDateForInput(initialData?.manualCreatedAt || initialData?.createdAt));
   } else if (!initialData && isOpenOrder) {
     // تصفير الحقول عند إضافة طلب جديد
     resetForm();
@@ -316,6 +326,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setDeliveryMethod("");
     setDeliveryNotes("");
     setAdditionalNotes("");
+    setManualCreatedAt("");
   };
   const handleSubmit = async () => {
     // التحقق الأولي
@@ -393,7 +404,8 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
       additionalNotes,
       grandTotal: Number(grandTotal),
       overallDiscount: Number(overallDiscount),
-      subTotal: Number(subTotal)
+      subTotal: Number(subTotal),
+      ...(isAdminUser ? { manualCreatedAt: manualCreatedAt || null } : {})
     };
 
     try {
@@ -509,6 +521,17 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
                     readOnly
                     className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                     placeholder="من الإعدادات العامة"
+                  />
+                </div>
+              )}
+              {isAdminUser && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 mr-2">تاريخ الإنشاء (اختياري)</label>
+                  <input
+                    type="date"
+                    value={manualCreatedAt}
+                    onChange={(e) => setManualCreatedAt(e.target.value)}
+                    className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                   />
                 </div>
               )}

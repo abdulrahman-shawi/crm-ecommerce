@@ -282,6 +282,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   discount: 'discount',
   finalAmount: 'finalAmount',
   paymentMethod: 'paymentMethod',
+  pay: 'pay',
   receiverName: 'receiverName',
   receiverPhone: 'receiverPhone',
   country: 'country',
@@ -301,6 +302,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   warehouseId: 'warehouseId',
   shippingId: 'shippingId',
   createdAt: 'createdAt',
+  manualCreatedAt: 'manualCreatedAt',
   updatedAt: 'updatedAt'
 };
 
@@ -308,6 +310,7 @@ exports.Prisma.ExpenseScalarFieldEnum = {
   id: 'id',
   type: 'type',
   amount: 'amount',
+  salaryBaseWage: 'salaryBaseWage',
   description: 'description',
   currency: 'currency',
   paidFromOffice: 'paidFromOffice',
