@@ -170,6 +170,7 @@ export async function getOrdersByUser(userId: any) {
 export async function createOrder(data: any, items: any[], user: any) {
     try {
         const orderNumber = `ORD-${Date.now()}`;
+        const manualCreatedAt = parseOptionalDate(data?.manualCreatedAt);
 
         // استخدام Transaction لضمان سلامة البيانات
         const result = await prisma.$transaction(async (tx) => {
@@ -217,6 +218,7 @@ export async function createOrder(data: any, items: any[], user: any) {
                     municipality: data.municipality,
                     fullAddress: data.fullAddress,
                     googleMapsLink: data.googleMapsLink,
+                    manualCreatedAt,
                     amount: data.amount,
                     amountBank: String(data.amountBank),
                     deliveryMethod: data.deliveryMethod,

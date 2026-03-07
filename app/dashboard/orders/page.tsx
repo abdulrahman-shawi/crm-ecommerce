@@ -524,6 +524,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             return {
                 "رقم المرجع": order.orderNumber,
                 "تاريخ الإنشاء": new Date(getOrderDisplayDate(order)).toLocaleString('ar-EG'),
+                "تاريخ الإنشاء ISO": new Date(getOrderDisplayDate(order)).toISOString(),
                 "حالة الطلب": order.status,
                 "اسم العميل": order.customer?.name,
                 // هاتف العميل على شكل أرييه بعد تقسيمه، أو نص بديل إذا لم يكن موجودًا
@@ -604,6 +605,22 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const normalizeText = (value: unknown) => String(value || "").trim().toLowerCase();
 
+    const parseImportedDateValue = (value: unknown): string | null => {
+        if (value === undefined || value === null || value === "") return null;
+
+        if (typeof value === "number" && Number.isFinite(value)) {
+            const parsed = XLSX.SSF.parse_date_code(value);
+            if (parsed) {
+                const date = new Date(parsed.y, parsed.m - 1, parsed.d, parsed.H || 0, parsed.M || 0, Math.floor(parsed.S || 0));
+                if (!Number.isNaN(date.getTime())) return date.toISOString();
+            }
+        }
+
+        const date = new Date(String(value));
+        if (Number.isNaN(date.getTime())) return null;
+        return date.toISOString();
+    };
+
     const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -652,6 +669,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 const customerName = String(getCellValueByAliases(row, ["اسم العميل", "العميل", "customer", "customerName"]) || "").trim();
                 const statusValue = String(getCellValueByAliases(row, ["حالة الطلب", "status"]) || "طلب جديد").trim() || "طلب جديد";
                 const paymentMethodValue = String(getCellValueByAliases(row, ["طريقة الدفع", "paymentMethod"]) || "عند الاستلام").trim() || "عند الاستلام";
+                const manualCreatedAtValue = parseImportedDateValue(
+                    getCellValueByAliases(row, ["تاريخ الإنشاء ISO", "تاريخ الإنشاء", "manualCreatedAt", "createdAt"])
+                );
 
                 const countryValue = String(getCellValueByAliases(row, ["الدولة", "country"]) || "").trim();
                 const stockCountryValue = String(getCellValueByAliases(row, ["بلد المخزون", "stockCountry"]) || countryValue).trim();
@@ -793,6 +813,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     subTotal,
                     stockCountry: stockCountryValue,
                     shippingId: shippingMatch?.id || undefined,
+                    manualCreatedAt: manualCreatedAtValue,
                 };
 
                 const created = await createOrder(orderPayload, orderItems, user.id);
