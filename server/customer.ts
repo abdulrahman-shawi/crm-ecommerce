@@ -4,6 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { success } from "zod";
 
+const parseOptionalDate = (value: any) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+};
+
 export async function getCustomer() {
   const res = await prisma.customer.findMany({
     orderBy:{
@@ -110,6 +117,7 @@ export async function createCustomerAction(data: any, id: string) {
     }
 
     // 2. إذا لم يكن موجوداً، نقوم بالإضافة
+    const createdAtFromImport = parseOptionalDate(data?.createdAt || data?.manualCreatedAt);
     const newCustomer = await prisma.customer.create({
       data: {
         name: data.name,
@@ -123,6 +131,7 @@ export async function createCustomerAction(data: any, id: string) {
         rating: data.rating,
         source: data.source,
         country: data.country,
+        ...(createdAtFromImport ? { createdAt: createdAtFromImport } : {}),
         users: {
           connect: { id: id }
         },

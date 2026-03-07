@@ -277,6 +277,22 @@ const CustomrLayout: React.FC = () => {
     return "";
   };
 
+  const parseImportedDateValue = (value: unknown): string | null => {
+    if (value === undefined || value === null || value === "") return null;
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+      const parsed = XLSX.SSF.parse_date_code(value);
+      if (parsed) {
+        const date = new Date(parsed.y, parsed.m - 1, parsed.d, parsed.H || 0, parsed.M || 0, Math.floor(parsed.S || 0));
+        if (!Number.isNaN(date.getTime())) return date.toISOString();
+      }
+    }
+
+    const date = new Date(String(value));
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toISOString();
+  };
+
   const isExcelErrorToken = (value: string) => {
     const normalized = String(value || "").trim().toUpperCase();
     return normalized.startsWith("#") && (
@@ -427,6 +443,7 @@ const CustomrLayout: React.FC = () => {
         "الدولة": customer.country,
         "الحالة": customer.status,
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
+        "تاريخ التسجيل ISO": new Date(customer.createdAt).toISOString(),
         "عدد الطلبات": customer.orders?.length || 0,
         "آخر رسالة": lastMessage,
         "الجنس" : customer.gender ||  "غير محدد",
@@ -495,6 +512,9 @@ const CustomrLayout: React.FC = () => {
 
         const name = String(getCellValueByAliases(row, ["اسم العميل", "الاسم", "name", "customer name"]) || "").trim();
         const country = String(getCellValueByAliases(row, ["الدولة", "البلد", "country"]) || "").trim();
+        const createdAt = parseImportedDateValue(
+          getCellValueByAliases(row, ["تاريخ التسجيل ISO", "تاريخ التسجيل", "createdAt", "manualCreatedAt", "تاريخ الإنشاء"])
+        );
         const { normalizedPhones, excelErrorInAnyPhoneCell } = extractPhonesFromRow(row);
 
         if (!name || normalizedPhones.length === 0) {
@@ -513,6 +533,7 @@ const CustomrLayout: React.FC = () => {
           country,
           countryCode: "",
           city: "",
+          createdAt,
         };
 
         const res = await createCustomerAction(payload, user.id as string);

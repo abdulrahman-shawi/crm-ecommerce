@@ -616,7 +616,56 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             }
         }
 
-        const date = new Date(String(value));
+        const normalizeArabicDigits = (input: string) => {
+            const arabicIndic = "٠١٢٣٤٥٦٧٨٩";
+            const easternArabicIndic = "۰۱۲۳۴۵۶۷۸۹";
+            return input
+                .split("")
+                .map((ch) => {
+                    const index1 = arabicIndic.indexOf(ch);
+                    if (index1 >= 0) return String(index1);
+                    const index2 = easternArabicIndic.indexOf(ch);
+                    if (index2 >= 0) return String(index2);
+                    return ch;
+                })
+                .join("");
+        };
+
+        const rawText = String(value)
+            .replace(/[\u200E\u200F\u202A-\u202E]/g, "")
+            .trim();
+        const normalizedText = normalizeArabicDigits(rawText)
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const arabicDateMatch = normalizedText.match(
+            /^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:\s+(\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?\s*([AaPp]|AM|PM|ص|م)?)?$/i
+        );
+
+        if (arabicDateMatch) {
+            let day = Number(arabicDateMatch[1]);
+            let month = Number(arabicDateMatch[2]);
+            let year = Number(arabicDateMatch[3]);
+            let hour = Number(arabicDateMatch[4] || 0);
+            const minute = Number(arabicDateMatch[5] || 0);
+            const second = Number(arabicDateMatch[6] || 0);
+            const ampmToken = String(arabicDateMatch[7] || "").toLowerCase();
+
+            if (year < 100) year += 2000;
+
+            const isPm = ampmToken === "p" || ampmToken === "pm" || ampmToken === "م";
+            const isAm = ampmToken === "a" || ampmToken === "am" || ampmToken === "ص";
+
+            if (isPm && hour < 12) hour += 12;
+            if (isAm && hour === 12) hour = 0;
+
+            if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                const date = new Date(year, month - 1, day, hour, minute, second);
+                if (!Number.isNaN(date.getTime())) return date.toISOString();
+            }
+        }
+
+        const date = new Date(normalizedText);
         if (Number.isNaN(date.getTime())) return null;
         return date.toISOString();
     };

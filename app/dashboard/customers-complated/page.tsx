@@ -522,6 +522,36 @@ const CustomrLayout: React.FC = () => {
       .filter((value) => value.length > 0);
   };
 
+  const getCellValueByAliases = (row: Record<string, unknown>, aliases: string[]) => {
+    const normalizedRowEntries = Object.entries(row).map(([key, value]) => [String(key || "").trim().toLowerCase(), value] as const);
+
+    for (const alias of aliases) {
+      const normalizedAlias = String(alias || "").trim().toLowerCase();
+      const hit = normalizedRowEntries.find(([key]) => key === normalizedAlias);
+      if (hit && String(hit[1] ?? "").trim() !== "") {
+        return hit[1];
+      }
+    }
+
+    return "";
+  };
+
+  const parseImportedDateValue = (value: unknown): string | null => {
+    if (value === undefined || value === null || value === "") return null;
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+      const parsed = XLSX.SSF.parse_date_code(value);
+      if (parsed) {
+        const date = new Date(parsed.y, parsed.m - 1, parsed.d, parsed.H || 0, parsed.M || 0, Math.floor(parsed.S || 0));
+        if (!Number.isNaN(date.getTime())) return date.toISOString();
+      }
+    }
+
+    const date = new Date(String(value));
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toISOString();
+  };
+
   const onSubmit = async (data: CustomerFormValues) => {
     const loading = toast.loading(editId ? "جاري تحديث العميل" : "جاري إضافة العميل")
     if (editId) {
@@ -625,6 +655,7 @@ const CustomrLayout: React.FC = () => {
         "الدولة": customer.country,
         "الحالة": customer.status,
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
+        "تاريخ التسجيل ISO": new Date(customer.createdAt).toISOString(),
         "عدد الطلبات": customer.orders?.length || 0,
         "آخر رسالة": lastMessage,
         "الموظفين المسؤولين": customer.users?.map((u: any) => u.username).join(', ') || "غير معين",
@@ -680,9 +711,12 @@ const CustomrLayout: React.FC = () => {
       let failedCount = 0;
 
       for (const row of rows) {
-        const name = String(row["اسم العميل"] || "").trim();
-        const phoneRaw = String(row["رقم الهاتف"] || "").trim();
-        const country = String(row["الدولة"] || "").trim();
+        const name = String(getCellValueByAliases(row, ["اسم العميل", "الاسم", "name", "customer name"]) || "").trim();
+        const phoneRaw = String(getCellValueByAliases(row, ["رقم الهاتف", "الهاتف", "phone", "phone number", "mobile"]) || "").trim();
+        const country = String(getCellValueByAliases(row, ["الدولة", "البلد", "country"]) || "").trim();
+        const createdAt = parseImportedDateValue(
+          getCellValueByAliases(row, ["تاريخ التسجيل ISO", "تاريخ التسجيل", "createdAt", "manualCreatedAt", "تاريخ الإنشاء"])
+        );
 
         if (!name || !phoneRaw) {
           failedCount += 1;
@@ -702,6 +736,7 @@ const CustomrLayout: React.FC = () => {
           country,
           countryCode: "",
           city: "",
+          createdAt,
         };
 
         const res = await createCustomerAction(payload, user.id as string);
