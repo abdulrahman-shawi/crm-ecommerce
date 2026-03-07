@@ -237,7 +237,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const formatMoney = (value: any) => Number(value || 0).toLocaleString('en-US');
         const totalDiscount = Number(data?.discount || 0);
         const finalAmount = Number(data?.finalAmount || 0);
-        const invoiceGrandTotal = finalAmount + shippingTotalExpenses;
+        const invoiceGrandTotal = finalAmount;
         const subtotal = finalAmount + totalDiscount;
         const amountBank = Number(data?.amountBank || 0);
         const amount = Number(data?.amount || 0);
@@ -352,10 +352,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
                         <span>عمولات أخرى:</span>
                         <span>${formatMoney(otherCommissions)} ${currencySymbol}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#0f172a;">
-                        <span>إجمالي مصاريف الشحن:</span>
-                        <span>${formatMoney(shippingTotalExpenses)} ${currencySymbol}</span>
                     </div>
                     ${totalDiscount > 0 ? `
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
@@ -515,6 +511,15 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             const itemsSummary = order.items?.map((i: any) =>
                 `${i.product?.name || 'منتج'} (${i.quantity})`
             ).join(" - ");
+            const itemsStructured = JSON.stringify(
+                (Array.isArray(order.items) ? order.items : []).map((i: any) => ({
+                    productId: i.productId,
+                    name: i.product?.name || '',
+                    quantity: Number(i.quantity || 0),
+                    price: Number(i.price || 0),
+                    discount: Number(i.discount || 0),
+                }))
+            );
 
             return {
                 "رقم المرجع": order.orderNumber,
@@ -536,6 +541,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "المدينة": order.city,
                 "البلدية": order.municipality,
                 "العنوان الكامل": order.fullAddress,
+                "بلد المخزون": order?.warehouse?.location || order?.country || "",
                 "رابط الخريطة": order.googleMapsLink,
                 "طريقة التوصيل": getOrderDeliveryMethod(order),
                 "شركة الشحن": getOrderShippingName(order),
@@ -544,6 +550,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "عمولات أخرى": Number(order.otherCommissions || 0),
                 "إجمالي مصاريف الشحن": getOrderTotalShippingExpenses(order),
                 "المجموع الكلي مع الشحن": Number(order.finalAmount || 0) + getOrderTotalShippingExpenses(order),
+                "المنتجات (JSON)": itemsStructured,
                 "كود التتبع": order.trackingCode,
                 "ملاحظات التوصيل": order.deliveryNotes,
                 "بواسطة الموظف": order.user?.name || "Admin",
@@ -566,6 +573,37 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         importInputRef.current?.click();
     };
 
+    const getCellValueByAliases = (row: Record<string, unknown>, aliases: string[]) => {
+        for (const alias of aliases) {
+            const value = row[alias];
+            if (value !== undefined && value !== null && String(value).trim() !== "") {
+                return value;
+            }
+        }
+        return "";
+    };
+
+    const parseItemsFromSummary = (summary: string) => {
+        return String(summary || "")
+            .split(" - ")
+            .map((chunk) => chunk.trim())
+            .filter(Boolean)
+            .map((chunk) => {
+                const match = chunk.match(/(.+?)\s*\((\d+)\)$/);
+                if (!match) {
+                    return { name: chunk, quantity: 1 };
+                }
+
+                return {
+                    name: String(match[1] || "").trim(),
+                    quantity: Number(match[2] || 1),
+                };
+            })
+            .filter((item) => item.name && Number(item.quantity) > 0);
+    };
+
+    const normalizeText = (value: unknown) => String(value || "").trim().toLowerCase();
+
     const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -574,6 +612,12 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const extension = String(file.name.split(".").pop() || "").toLowerCase();
         if (!allowedExtensions.includes(extension)) {
             toast.error("صيغة الملف غير مدعومة. استخدم xlsx أو xls أو csv");
+            event.target.value = "";
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error("يجب تسجيل الدخول أولاً");
             event.target.value = "";
             return;
         }
@@ -597,7 +641,182 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 return;
             }
 
-            toast.success(`نجح الاستيراد: تمت قراءة ${rows.length} سجل من الملف ${file.name}`);
+            let successCount = 0;
+            let failedCount = 0;
+            const failedReasons: string[] = [];
+
+            for (let index = 0; index < rows.length; index += 1) {
+                const row = rows[index] || {};
+                const rowNumber = index + 2;
+
+                const customerName = String(getCellValueByAliases(row, ["اسم العميل", "العميل", "customer", "customerName"]) || "").trim();
+                const statusValue = String(getCellValueByAliases(row, ["حالة الطلب", "status"]) || "طلب جديد").trim() || "طلب جديد";
+                const paymentMethodValue = String(getCellValueByAliases(row, ["طريقة الدفع", "paymentMethod"]) || "عند الاستلام").trim() || "عند الاستلام";
+
+                const countryValue = String(getCellValueByAliases(row, ["الدولة", "country"]) || "").trim();
+                const stockCountryValue = String(getCellValueByAliases(row, ["بلد المخزون", "stockCountry"]) || countryValue).trim();
+                const cityValue = String(getCellValueByAliases(row, ["المدينة", "city"]) || "").trim();
+                const municipalityValue = String(getCellValueByAliases(row, ["البلدية", "municipality"]) || "").trim();
+                const fullAddressValue = String(getCellValueByAliases(row, ["العنوان الكامل", "address", "fullAddress"]) || "").trim();
+                const receiverNameValue = String(getCellValueByAliases(row, ["اسم المستلم", "receiverName"]) || customerName).trim();
+                const receiverPhoneRaw = String(getCellValueByAliases(row, ["هاتف المستلم", "receiverPhone", "phone"]) || "").trim();
+                const receiverPhoneValue = receiverPhoneRaw
+                    ? receiverPhoneRaw.split(/[-,،]/).map((p) => p.trim()).filter(Boolean)
+                    : [];
+
+                const deliveryNotesValue = String(getCellValueByAliases(row, ["ملاحظات التوصيل", "deliveryNotes"]) || "").trim();
+                const additionalNotesValue = String(getCellValueByAliases(row, ["ملاحظات إضافية", "additionalNotes"]) || "").trim();
+                const googleMapsLinkValue = String(getCellValueByAliases(row, ["رابط الخريطة", "googleMapsLink"]) || "").trim();
+                const shippingNameValue = String(getCellValueByAliases(row, ["شركة الشحن", "shipping"]) || "").trim();
+                const overallDiscountValue = Number(getCellValueByAliases(row, ["الخصم", "discount"]) || 0);
+
+                if (!customerName) {
+                    failedCount += 1;
+                    failedReasons.push(`السطر ${rowNumber}: اسم العميل مفقود`);
+                    continue;
+                }
+
+                if (!stockCountryValue) {
+                    failedCount += 1;
+                    failedReasons.push(`السطر ${rowNumber}: بلد المخزون مفقود`);
+                    continue;
+                }
+
+                const matchedCustomer = customers.find((customer: any) => normalizeText(customer?.name) === normalizeText(customerName));
+                if (!matchedCustomer?.id) {
+                    failedCount += 1;
+                    failedReasons.push(`السطر ${rowNumber}: العميل غير موجود بالنظام (${customerName})`);
+                    continue;
+                }
+
+                const structuredItemsRaw = String(getCellValueByAliases(row, ["المنتجات (JSON)", "itemsJson", "items"]) || "").trim();
+                let parsedItemsFromRow: Array<{ name: string; quantity: number; productId?: number; price?: number; discount?: number }> = [];
+
+                if (structuredItemsRaw) {
+                    try {
+                        const parsed = JSON.parse(structuredItemsRaw);
+                        if (Array.isArray(parsed)) {
+                            parsedItemsFromRow = parsed
+                                .map((item: any) => ({
+                                    name: String(item?.name || "").trim(),
+                                    quantity: Number(item?.quantity || 0),
+                                    productId: item?.productId ? Number(item.productId) : undefined,
+                                    price: item?.price !== undefined ? Number(item.price) : undefined,
+                                    discount: item?.discount !== undefined ? Number(item.discount) : undefined,
+                                }))
+                                .filter((item) => item.quantity > 0 && (item.name || item.productId));
+                        }
+                    } catch {
+                        parsedItemsFromRow = [];
+                    }
+                }
+
+                if (!parsedItemsFromRow.length) {
+                    const itemsSummary = String(getCellValueByAliases(row, ["المنتجات المشتراة", "itemsSummary"]) || "").trim();
+                    parsedItemsFromRow = parseItemsFromSummary(itemsSummary);
+                }
+
+                if (!parsedItemsFromRow.length) {
+                    failedCount += 1;
+                    failedReasons.push(`السطر ${rowNumber}: لا توجد منتجات صالحة للاستيراد`);
+                    continue;
+                }
+
+                const orderItems: any[] = [];
+                let itemResolveFailed = false;
+
+                for (const importedItem of parsedItemsFromRow) {
+                    const resolvedProduct = importedItem.productId
+                        ? products.find((product: any) => Number(product?.id) === Number(importedItem.productId))
+                        : products.find((product: any) => normalizeText(product?.name) === normalizeText(importedItem.name));
+
+                    if (!resolvedProduct?.id) {
+                        itemResolveFailed = true;
+                        failedReasons.push(`السطر ${rowNumber}: المنتج غير موجود (${importedItem.name || importedItem.productId})`);
+                        break;
+                    }
+
+                    const countryStock = Array.isArray(resolvedProduct?.stocks)
+                        ? resolvedProduct.stocks.find((stock: any) => normalizeText(stock?.warehouse?.location) === normalizeText(stockCountryValue))
+                        : null;
+                    const fallbackStock = Array.isArray(resolvedProduct?.stocks) ? resolvedProduct.stocks[0] : null;
+                    const effectiveStock = countryStock || fallbackStock;
+
+                    const basePrice = importedItem.price !== undefined && !Number.isNaN(importedItem.price)
+                        ? Number(importedItem.price)
+                        : Number(effectiveStock?.price || 0);
+                    const baseDiscount = importedItem.discount !== undefined && !Number.isNaN(importedItem.discount)
+                        ? Number(importedItem.discount)
+                        : Number(effectiveStock?.discount || 0);
+
+                    orderItems.push({
+                        productId: String(resolvedProduct.id),
+                        quantity: Number(importedItem.quantity || 1),
+                        price: basePrice,
+                        discount: baseDiscount,
+                    });
+                }
+
+                if (itemResolveFailed || !orderItems.length) {
+                    failedCount += 1;
+                    continue;
+                }
+
+                const subTotal = orderItems.reduce((sum, item) => {
+                    const effectivePrice = Math.max(0, Number(item.price || 0) - Number(item.discount || 0));
+                    return sum + (effectivePrice * Number(item.quantity || 0));
+                }, 0);
+                const overallDiscount = Number.isNaN(overallDiscountValue) ? 0 : Number(overallDiscountValue);
+                const grandTotal = Math.max(0, subTotal - overallDiscount);
+
+                const shippingMatch = shippingNameValue
+                    ? shippingCompanies.find((shipping: any) => normalizeText(shipping?.name) === normalizeText(shippingNameValue))
+                    : null;
+
+                const orderPayload = {
+                    customerId: matchedCustomer.id,
+                    status: statusValue,
+                    receiverName: receiverNameValue || customerName,
+                    receiverPhone: receiverPhoneValue,
+                    country: countryValue,
+                    city: cityValue,
+                    municipality: municipalityValue,
+                    fullAddress: fullAddressValue,
+                    googleMapsLink: googleMapsLinkValue,
+                    deliveryNotes: deliveryNotesValue,
+                    paymentMethod: paymentMethodValue,
+                    amount: "",
+                    amountBank: "",
+                    additionalNotes: additionalNotesValue,
+                    grandTotal,
+                    overallDiscount,
+                    subTotal,
+                    stockCountry: stockCountryValue,
+                    shippingId: shippingMatch?.id || undefined,
+                };
+
+                const created = await createOrder(orderPayload, orderItems, user.id);
+                if (created.success) {
+                    successCount += 1;
+                } else {
+                    failedCount += 1;
+                    failedReasons.push(`السطر ${rowNumber}: ${created.error || "فشل إنشاء الطلب"}`);
+                }
+            }
+
+            if (successCount > 0) {
+                await Order();
+                toast.success(`تم استيراد ${successCount} طلب بنجاح`);
+            }
+
+            if (failedCount > 0) {
+                toast.error(`تعذر استيراد ${failedCount} طلب`);
+                failedReasons.slice(0, 4).forEach((reason) => toast.error(reason));
+            }
+
+            if (successCount === 0 && failedCount === 0) {
+                toast.error("لم يتم استيراد أي طلب من الملف");
+            }
         } catch (error) {
             toast.error("فشل الاستيراد: تعذر قراءة الملف");
         } finally {
@@ -1541,11 +1760,6 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                             : (formatPhoneForDisplay(data?.receiverPhone) || 'لم يسجل')
                                     }</span>
                                 </p>
-                                <p>شركة الشحن: {getOrderShippingName(data)}</p>
-                                <p>سعر الشحنة: {shippingPrice.toLocaleString()} {currencySymbol}</p>
-                                <p>عمولة تحويل الأموال: {moneyTransferCommission.toLocaleString()} {currencySymbol}</p>
-                                <p>عمولات أخرى: {otherCommissions.toLocaleString()} {currencySymbol}</p>
-                                <p>إجمالي مصاريف الشحن: {totalShippingExpenses.toLocaleString()} {currencySymbol}</p>
                                 {
                                     data.googleMapsLink && (
                                         <div className="">
