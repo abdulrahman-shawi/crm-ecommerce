@@ -1867,22 +1867,6 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <span>{subtotal.toLocaleString()} {currencySymbol}</span>
                             </div>
 
-                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
-                                <span>سعر الشحنة:</span>
-                                <span>{shippingPrice.toLocaleString()} {currencySymbol}</span>
-                            </div>
-
-                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
-                                <span>عمولة تحويل الأموال:</span>
-                                <span>{moneyTransferCommission.toLocaleString()} {currencySymbol}</span>
-                            </div>
-
-                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
-                                <span>عمولات أخرى:</span>
-                                <span>{otherCommissions.toLocaleString()} {currencySymbol}</span>
-                            </div>
-
-
                             {totalDiscount > 0 && (
                                 <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
                                     <span>الخصم الممنوح:</span>
