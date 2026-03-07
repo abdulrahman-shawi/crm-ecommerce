@@ -29,6 +29,7 @@ model User {
   customers              Customer[]      @relation("CustomerToUser")
   message                Message[]
   targets                UserTarget[]
+  expenses               Expense[]
   stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
 }
 
@@ -264,10 +265,33 @@ model Order {
 
 model Expense {
   id          Int       @id @default(autoincrement())
+  type        ExpenseType @default(DAILY)
   amount      Float
   description String?
+  currency    ExpenseCurrency?
+  paidFromOffice PaidFromOffice?
+  employeeId  String?
+  scheduledDate DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  employee    User?     @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+enum ExpenseType {
+  DAILY
+  STAFF_SALARY
+  RENT
+}
+
+enum ExpenseCurrency {
+  SYP
+  TRY
+  USD
+}
+
+enum PaidFromOffice {
+  TURKEY
+  SYRIA
 }
 
 model shipping{

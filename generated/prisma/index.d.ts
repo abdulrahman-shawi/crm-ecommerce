@@ -119,6 +119,32 @@ export namespace $Enums {
 export type MovementType = (typeof MovementType)[keyof typeof MovementType]
 
 
+export const ExpenseType: {
+  DAILY: 'DAILY',
+  STAFF_SALARY: 'STAFF_SALARY',
+  RENT: 'RENT'
+};
+
+export type ExpenseType = (typeof ExpenseType)[keyof typeof ExpenseType]
+
+
+export const ExpenseCurrency: {
+  SYP: 'SYP',
+  TRY: 'TRY',
+  USD: 'USD'
+};
+
+export type ExpenseCurrency = (typeof ExpenseCurrency)[keyof typeof ExpenseCurrency]
+
+
+export const PaidFromOffice: {
+  TURKEY: 'TURKEY',
+  SYRIA: 'SYRIA'
+};
+
+export type PaidFromOffice = (typeof PaidFromOffice)[keyof typeof PaidFromOffice]
+
+
 export const AccountType: {
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
@@ -132,6 +158,18 @@ export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 export type MovementType = $Enums.MovementType
 
 export const MovementType: typeof $Enums.MovementType
+
+export type ExpenseType = $Enums.ExpenseType
+
+export const ExpenseType: typeof $Enums.ExpenseType
+
+export type ExpenseCurrency = $Enums.ExpenseCurrency
+
+export const ExpenseCurrency: typeof $Enums.ExpenseCurrency
+
+export type PaidFromOffice = $Enums.PaidFromOffice
+
+export const PaidFromOffice: typeof $Enums.PaidFromOffice
 
 export type AccountType = $Enums.AccountType
 
@@ -2447,6 +2485,7 @@ export namespace Prisma {
     customers: number
     message: number
     targets: number
+    expenses: number
     stockMovements: number
   }
 
@@ -2456,6 +2495,7 @@ export namespace Prisma {
     customers?: boolean | UserCountOutputTypeCountCustomersArgs
     message?: boolean | UserCountOutputTypeCountMessageArgs
     targets?: boolean | UserCountOutputTypeCountTargetsArgs
+    expenses?: boolean | UserCountOutputTypeCountExpensesArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
   }
 
@@ -2503,6 +2543,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserTargetWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExpenseWhereInput
   }
 
   /**
@@ -3118,6 +3165,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
+    expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3186,6 +3234,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
+    expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3208,6 +3257,7 @@ export namespace Prisma {
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       message: Prisma.$MessagePayload<ExtArgs>[]
       targets: Prisma.$UserTargetPayload<ExtArgs>[]
+      expenses: Prisma.$ExpensePayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3626,6 +3676,7 @@ export namespace Prisma {
     customers<T extends User$customersArgs<ExtArgs> = {}>(args?: Subset<T, User$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     message<T extends User$messageArgs<ExtArgs> = {}>(args?: Subset<T, User$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     targets<T extends User$targetsArgs<ExtArgs> = {}>(args?: Subset<T, User$targetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4221,6 +4272,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserTargetScalarFieldEnum | UserTargetScalarFieldEnum[]
+  }
+
+  /**
+   * User.expenses
+   */
+  export type User$expensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Expense
+     */
+    select?: ExpenseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Expense
+     */
+    omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    where?: ExpenseWhereInput
+    orderBy?: ExpenseOrderByWithRelationInput | ExpenseOrderByWithRelationInput[]
+    cursor?: ExpenseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExpenseScalarFieldEnum | ExpenseScalarFieldEnum[]
   }
 
   /**
@@ -18830,24 +18905,39 @@ export namespace Prisma {
 
   export type ExpenseMinAggregateOutputType = {
     id: number | null
+    type: $Enums.ExpenseType | null
     amount: number | null
     description: string | null
+    currency: $Enums.ExpenseCurrency | null
+    paidFromOffice: $Enums.PaidFromOffice | null
+    employeeId: string | null
+    scheduledDate: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ExpenseMaxAggregateOutputType = {
     id: number | null
+    type: $Enums.ExpenseType | null
     amount: number | null
     description: string | null
+    currency: $Enums.ExpenseCurrency | null
+    paidFromOffice: $Enums.PaidFromOffice | null
+    employeeId: string | null
+    scheduledDate: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ExpenseCountAggregateOutputType = {
     id: number
+    type: number
     amount: number
     description: number
+    currency: number
+    paidFromOffice: number
+    employeeId: number
+    scheduledDate: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -18866,24 +18956,39 @@ export namespace Prisma {
 
   export type ExpenseMinAggregateInputType = {
     id?: true
+    type?: true
     amount?: true
     description?: true
+    currency?: true
+    paidFromOffice?: true
+    employeeId?: true
+    scheduledDate?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ExpenseMaxAggregateInputType = {
     id?: true
+    type?: true
     amount?: true
     description?: true
+    currency?: true
+    paidFromOffice?: true
+    employeeId?: true
+    scheduledDate?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ExpenseCountAggregateInputType = {
     id?: true
+    type?: true
     amount?: true
     description?: true
+    currency?: true
+    paidFromOffice?: true
+    employeeId?: true
+    scheduledDate?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -18977,8 +19082,13 @@ export namespace Prisma {
 
   export type ExpenseGroupByOutputType = {
     id: number
+    type: $Enums.ExpenseType
     amount: number
     description: string | null
+    currency: $Enums.ExpenseCurrency | null
+    paidFromOffice: $Enums.PaidFromOffice | null
+    employeeId: string | null
+    scheduledDate: Date | null
     createdAt: Date
     updatedAt: Date
     _count: ExpenseCountAggregateOutputType | null
@@ -19004,45 +19114,84 @@ export namespace Prisma {
 
   export type ExpenseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    type?: boolean
     amount?: boolean
     description?: boolean
+    currency?: boolean
+    paidFromOffice?: boolean
+    employeeId?: boolean
+    scheduledDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    type?: boolean
     amount?: boolean
     description?: boolean
+    currency?: boolean
+    paidFromOffice?: boolean
+    employeeId?: boolean
+    scheduledDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    type?: boolean
     amount?: boolean
     description?: boolean
+    currency?: boolean
+    paidFromOffice?: boolean
+    employeeId?: boolean
+    scheduledDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectScalar = {
     id?: boolean
+    type?: boolean
     amount?: boolean
     description?: boolean
+    currency?: boolean
+    paidFromOffice?: boolean
+    employeeId?: boolean
+    scheduledDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "amount" | "description" | "currency" | "paidFromOffice" | "employeeId" | "scheduledDate" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+  export type ExpenseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
+  }
+  export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
+  }
+  export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | Expense$employeeArgs<ExtArgs>
+  }
 
   export type $ExpensePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Expense"
-    objects: {}
+    objects: {
+      employee: Prisma.$UserPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      type: $Enums.ExpenseType
       amount: number
       description: string | null
+      currency: $Enums.ExpenseCurrency | null
+      paidFromOffice: $Enums.PaidFromOffice | null
+      employeeId: string | null
+      scheduledDate: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["expense"]>
@@ -19439,6 +19588,7 @@ export namespace Prisma {
    */
   export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    employee<T extends Expense$employeeArgs<ExtArgs> = {}>(args?: Subset<T, Expense$employeeArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19469,8 +19619,13 @@ export namespace Prisma {
    */
   interface ExpenseFieldRefs {
     readonly id: FieldRef<"Expense", 'Int'>
+    readonly type: FieldRef<"Expense", 'ExpenseType'>
     readonly amount: FieldRef<"Expense", 'Float'>
     readonly description: FieldRef<"Expense", 'String'>
+    readonly currency: FieldRef<"Expense", 'ExpenseCurrency'>
+    readonly paidFromOffice: FieldRef<"Expense", 'PaidFromOffice'>
+    readonly employeeId: FieldRef<"Expense", 'String'>
+    readonly scheduledDate: FieldRef<"Expense", 'DateTime'>
     readonly createdAt: FieldRef<"Expense", 'DateTime'>
     readonly updatedAt: FieldRef<"Expense", 'DateTime'>
   }
@@ -19490,6 +19645,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where: ExpenseWhereUniqueInput
@@ -19508,6 +19667,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where: ExpenseWhereUniqueInput
@@ -19525,6 +19688,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * Filter, which Expense to fetch.
      */
@@ -19574,6 +19741,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where?: ExpenseWhereInput
@@ -19622,6 +19793,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expenses to fetch.
      */
     where?: ExpenseWhereInput
@@ -19665,6 +19840,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * The data needed to create a Expense.
      */
     data: XOR<ExpenseCreateInput, ExpenseUncheckedCreateInput>
@@ -19698,6 +19877,10 @@ export namespace Prisma {
      */
     data: ExpenseCreateManyInput | ExpenseCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -19712,6 +19895,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * The data needed to update a Expense.
      */
@@ -19764,6 +19951,10 @@ export namespace Prisma {
      * Limit how many Expenses to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -19778,6 +19969,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * The filter to search for the Expense to update in case it exists.
      */
@@ -19805,6 +20000,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter which Expense to delete.
      */
     where: ExpenseWhereUniqueInput
@@ -19825,6 +20024,25 @@ export namespace Prisma {
   }
 
   /**
+   * Expense.employee
+   */
+  export type Expense$employeeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Expense without action
    */
   export type ExpenseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19836,6 +20054,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
   }
 
 
@@ -24446,8 +24668,13 @@ export namespace Prisma {
 
   export const ExpenseScalarFieldEnum: {
     id: 'id',
+    type: 'type',
     amount: 'amount',
     description: 'description',
+    currency: 'currency',
+    paidFromOffice: 'paidFromOffice',
+    employeeId: 'employeeId',
+    scheduledDate: 'scheduledDate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -24623,6 +24850,48 @@ export namespace Prisma {
    */
   export type ListEnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ExpenseType'
+   */
+  export type EnumExpenseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExpenseType[]'
+   */
+  export type ListEnumExpenseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExpenseCurrency'
+   */
+  export type EnumExpenseCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseCurrency'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExpenseCurrency[]'
+   */
+  export type ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseCurrency[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaidFromOffice'
+   */
+  export type EnumPaidFromOfficeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidFromOffice'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaidFromOffice[]'
+   */
+  export type ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidFromOffice[]'>
+    
   /**
    * Deep Input Types
    */
@@ -24653,6 +24922,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
+    expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }
 
@@ -24678,6 +24948,7 @@ export namespace Prisma {
     customers?: CustomerOrderByRelationAggregateInput
     message?: MessageOrderByRelationAggregateInput
     targets?: UserTargetOrderByRelationAggregateInput
+    expenses?: ExpenseOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
   }
 
@@ -24706,6 +24977,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
+    expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }, "id" | "email">
 
@@ -25850,18 +26122,30 @@ export namespace Prisma {
     OR?: ExpenseWhereInput[]
     NOT?: ExpenseWhereInput | ExpenseWhereInput[]
     id?: IntFilter<"Expense"> | number
+    type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatFilter<"Expense"> | number
     description?: StringNullableFilter<"Expense"> | string | null
+    currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
+    paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
+    employeeId?: StringNullableFilter<"Expense"> | string | null
+    scheduledDate?: DateTimeNullableFilter<"Expense"> | Date | string | null
     createdAt?: DateTimeFilter<"Expense"> | Date | string
     updatedAt?: DateTimeFilter<"Expense"> | Date | string
+    employee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type ExpenseOrderByWithRelationInput = {
     id?: SortOrder
+    type?: SortOrder
     amount?: SortOrder
     description?: SortOrderInput | SortOrder
+    currency?: SortOrderInput | SortOrder
+    paidFromOffice?: SortOrderInput | SortOrder
+    employeeId?: SortOrderInput | SortOrder
+    scheduledDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    employee?: UserOrderByWithRelationInput
   }
 
   export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
@@ -25869,16 +26153,27 @@ export namespace Prisma {
     AND?: ExpenseWhereInput | ExpenseWhereInput[]
     OR?: ExpenseWhereInput[]
     NOT?: ExpenseWhereInput | ExpenseWhereInput[]
+    type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatFilter<"Expense"> | number
     description?: StringNullableFilter<"Expense"> | string | null
+    currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
+    paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
+    employeeId?: StringNullableFilter<"Expense"> | string | null
+    scheduledDate?: DateTimeNullableFilter<"Expense"> | Date | string | null
     createdAt?: DateTimeFilter<"Expense"> | Date | string
     updatedAt?: DateTimeFilter<"Expense"> | Date | string
+    employee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type ExpenseOrderByWithAggregationInput = {
     id?: SortOrder
+    type?: SortOrder
     amount?: SortOrder
     description?: SortOrderInput | SortOrder
+    currency?: SortOrderInput | SortOrder
+    paidFromOffice?: SortOrderInput | SortOrder
+    employeeId?: SortOrderInput | SortOrder
+    scheduledDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ExpenseCountOrderByAggregateInput
@@ -25893,8 +26188,13 @@ export namespace Prisma {
     OR?: ExpenseScalarWhereWithAggregatesInput[]
     NOT?: ExpenseScalarWhereWithAggregatesInput | ExpenseScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Expense"> | number
+    type?: EnumExpenseTypeWithAggregatesFilter<"Expense"> | $Enums.ExpenseType
     amount?: FloatWithAggregatesFilter<"Expense"> | number
     description?: StringNullableWithAggregatesFilter<"Expense"> | string | null
+    currency?: EnumExpenseCurrencyNullableWithAggregatesFilter<"Expense"> | $Enums.ExpenseCurrency | null
+    paidFromOffice?: EnumPaidFromOfficeNullableWithAggregatesFilter<"Expense"> | $Enums.PaidFromOffice | null
+    employeeId?: StringNullableWithAggregatesFilter<"Expense"> | string | null
+    scheduledDate?: DateTimeNullableWithAggregatesFilter<"Expense"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Expense"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Expense"> | Date | string
   }
@@ -26174,6 +26474,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -26197,6 +26498,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -26220,6 +26522,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -26243,6 +26546,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27491,54 +27795,88 @@ export namespace Prisma {
   }
 
   export type ExpenseCreateInput = {
+    type?: $Enums.ExpenseType
     amount: number
     description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    scheduledDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    employee?: UserCreateNestedOneWithoutExpensesInput
   }
 
   export type ExpenseUncheckedCreateInput = {
     id?: number
+    type?: $Enums.ExpenseType
     amount: number
     description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    employeeId?: string | null
+    scheduledDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ExpenseUpdateInput = {
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: UserUpdateOneWithoutExpensesNestedInput
   }
 
   export type ExpenseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExpenseCreateManyInput = {
     id?: number
+    type?: $Enums.ExpenseType
     amount: number
     description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    employeeId?: string | null
+    scheduledDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ExpenseUpdateManyMutationInput = {
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExpenseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27912,6 +28250,12 @@ export namespace Prisma {
     none?: UserTargetWhereInput
   }
 
+  export type ExpenseListRelationFilter = {
+    every?: ExpenseWhereInput
+    some?: ExpenseWhereInput
+    none?: ExpenseWhereInput
+  }
+
   export type StockMovementListRelationFilter = {
     every?: StockMovementWhereInput
     some?: StockMovementWhereInput
@@ -27940,6 +28284,10 @@ export namespace Prisma {
   }
 
   export type UserTargetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExpenseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -28936,10 +29284,36 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type EnumExpenseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseType | EnumExpenseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseTypeFilter<$PrismaModel> | $Enums.ExpenseType
+  }
+
+  export type EnumExpenseCurrencyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseCurrency | EnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel> | $Enums.ExpenseCurrency | null
+  }
+
+  export type EnumPaidFromOfficeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaidFromOffice | EnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel> | $Enums.PaidFromOffice | null
+  }
+
   export type ExpenseCountOrderByAggregateInput = {
     id?: SortOrder
+    type?: SortOrder
     amount?: SortOrder
     description?: SortOrder
+    currency?: SortOrder
+    paidFromOffice?: SortOrder
+    employeeId?: SortOrder
+    scheduledDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -28951,16 +29325,26 @@ export namespace Prisma {
 
   export type ExpenseMaxOrderByAggregateInput = {
     id?: SortOrder
+    type?: SortOrder
     amount?: SortOrder
     description?: SortOrder
+    currency?: SortOrder
+    paidFromOffice?: SortOrder
+    employeeId?: SortOrder
+    scheduledDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ExpenseMinOrderByAggregateInput = {
     id?: SortOrder
+    type?: SortOrder
     amount?: SortOrder
     description?: SortOrder
+    currency?: SortOrder
+    paidFromOffice?: SortOrder
+    employeeId?: SortOrder
+    scheduledDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -28968,6 +29352,36 @@ export namespace Prisma {
   export type ExpenseSumOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+  }
+
+  export type EnumExpenseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseType | EnumExpenseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseTypeWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExpenseTypeFilter<$PrismaModel>
+    _max?: NestedEnumExpenseTypeFilter<$PrismaModel>
+  }
+
+  export type EnumExpenseCurrencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseCurrency | EnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExpenseCurrencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseCurrency | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel>
+    _max?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel>
+  }
+
+  export type EnumPaidFromOfficeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaidFromOffice | EnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPaidFromOfficeNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaidFromOffice | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
+    _max?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
   }
 
   export type shippingCountOrderByAggregateInput = {
@@ -29181,6 +29595,13 @@ export namespace Prisma {
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
   }
 
+  export type ExpenseCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
+    createMany?: ExpenseCreateManyEmployeeInputEnvelope
+    connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+  }
+
   export type StockMovementCreateNestedManyWithoutUserInput = {
     create?: XOR<StockMovementCreateWithoutUserInput, StockMovementUncheckedCreateWithoutUserInput> | StockMovementCreateWithoutUserInput[] | StockMovementUncheckedCreateWithoutUserInput[]
     connectOrCreate?: StockMovementCreateOrConnectWithoutUserInput | StockMovementCreateOrConnectWithoutUserInput[]
@@ -29220,6 +29641,13 @@ export namespace Prisma {
     connectOrCreate?: UserTargetCreateOrConnectWithoutUserInput | UserTargetCreateOrConnectWithoutUserInput[]
     createMany?: UserTargetCreateManyUserInputEnvelope
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
+  }
+
+  export type ExpenseUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
+    createMany?: ExpenseCreateManyEmployeeInputEnvelope
+    connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
   }
 
   export type StockMovementUncheckedCreateNestedManyWithoutUserInput = {
@@ -29350,6 +29778,20 @@ export namespace Prisma {
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
   }
 
+  export type ExpenseUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
+    upsert?: ExpenseUpsertWithWhereUniqueWithoutEmployeeInput | ExpenseUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: ExpenseCreateManyEmployeeInputEnvelope
+    set?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    disconnect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    delete?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    update?: ExpenseUpdateWithWhereUniqueWithoutEmployeeInput | ExpenseUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: ExpenseUpdateManyWithWhereWithoutEmployeeInput | ExpenseUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
+  }
+
   export type StockMovementUpdateManyWithoutUserNestedInput = {
     create?: XOR<StockMovementCreateWithoutUserInput, StockMovementUncheckedCreateWithoutUserInput> | StockMovementCreateWithoutUserInput[] | StockMovementUncheckedCreateWithoutUserInput[]
     connectOrCreate?: StockMovementCreateOrConnectWithoutUserInput | StockMovementCreateOrConnectWithoutUserInput[]
@@ -29431,6 +29873,20 @@ export namespace Prisma {
     update?: UserTargetUpdateWithWhereUniqueWithoutUserInput | UserTargetUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserTargetUpdateManyWithWhereWithoutUserInput | UserTargetUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
+  }
+
+  export type ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
+    upsert?: ExpenseUpsertWithWhereUniqueWithoutEmployeeInput | ExpenseUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: ExpenseCreateManyEmployeeInputEnvelope
+    set?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    disconnect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    delete?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+    update?: ExpenseUpdateWithWhereUniqueWithoutEmployeeInput | ExpenseUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: ExpenseUpdateManyWithWhereWithoutEmployeeInput | ExpenseUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
   }
 
   export type StockMovementUncheckedUpdateManyWithoutUserNestedInput = {
@@ -30389,6 +30845,34 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutExpensesInput = {
+    create?: XOR<UserCreateWithoutExpensesInput, UserUncheckedCreateWithoutExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExpensesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumExpenseTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ExpenseType
+  }
+
+  export type NullableEnumExpenseCurrencyFieldUpdateOperationsInput = {
+    set?: $Enums.ExpenseCurrency | null
+  }
+
+  export type NullableEnumPaidFromOfficeFieldUpdateOperationsInput = {
+    set?: $Enums.PaidFromOffice | null
+  }
+
+  export type UserUpdateOneWithoutExpensesNestedInput = {
+    create?: XOR<UserCreateWithoutExpensesInput, UserUncheckedCreateWithoutExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExpensesInput
+    upsert?: UserUpsertWithoutExpensesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutExpensesInput, UserUpdateWithoutExpensesInput>, UserUncheckedUpdateWithoutExpensesInput>
+  }
+
   export type OrderCreateNestedManyWithoutShippingInput = {
     create?: XOR<OrderCreateWithoutShippingInput, OrderUncheckedCreateWithoutShippingInput> | OrderCreateWithoutShippingInput[] | OrderUncheckedCreateWithoutShippingInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutShippingInput | OrderCreateOrConnectWithoutShippingInput[]
@@ -30726,6 +31210,57 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumExpenseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseType | EnumExpenseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseTypeFilter<$PrismaModel> | $Enums.ExpenseType
+  }
+
+  export type NestedEnumExpenseCurrencyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseCurrency | EnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel> | $Enums.ExpenseCurrency | null
+  }
+
+  export type NestedEnumPaidFromOfficeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaidFromOffice | EnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel> | $Enums.PaidFromOffice | null
+  }
+
+  export type NestedEnumExpenseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseType | EnumExpenseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseType[] | ListEnumExpenseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseTypeWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExpenseTypeFilter<$PrismaModel>
+    _max?: NestedEnumExpenseTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumExpenseCurrencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseCurrency | EnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ExpenseCurrency[] | ListEnumExpenseCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumExpenseCurrencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseCurrency | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel>
+    _max?: NestedEnumExpenseCurrencyNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaidFromOfficeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaidFromOffice | EnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PaidFromOffice[] | ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPaidFromOfficeNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaidFromOffice | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
+    _max?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutSubordinatesInput = {
     id?: string
     username: string
@@ -30745,6 +31280,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -30767,6 +31303,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -30794,6 +31331,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -30816,6 +31354,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31090,6 +31629,39 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExpenseCreateWithoutEmployeeInput = {
+    type?: $Enums.ExpenseType
+    amount: number
+    description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    scheduledDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExpenseUncheckedCreateWithoutEmployeeInput = {
+    id?: number
+    type?: $Enums.ExpenseType
+    amount: number
+    description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    scheduledDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExpenseCreateOrConnectWithoutEmployeeInput = {
+    where: ExpenseWhereUniqueInput
+    create: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type ExpenseCreateManyEmployeeInputEnvelope = {
+    data: ExpenseCreateManyEmployeeInput | ExpenseCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StockMovementCreateWithoutUserInput = {
     id?: string
     quantity: number
@@ -31150,6 +31722,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -31172,6 +31745,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31448,6 +32022,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
   }
 
+  export type ExpenseUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: ExpenseWhereUniqueInput
+    update: XOR<ExpenseUpdateWithoutEmployeeInput, ExpenseUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type ExpenseUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: ExpenseWhereUniqueInput
+    data: XOR<ExpenseUpdateWithoutEmployeeInput, ExpenseUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type ExpenseUpdateManyWithWhereWithoutEmployeeInput = {
+    where: ExpenseScalarWhereInput
+    data: XOR<ExpenseUpdateManyMutationInput, ExpenseUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
+  export type ExpenseScalarWhereInput = {
+    AND?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
+    OR?: ExpenseScalarWhereInput[]
+    NOT?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
+    id?: IntFilter<"Expense"> | number
+    type?: EnumExpenseTypeFilter<"Expense"> | $Enums.ExpenseType
+    amount?: FloatFilter<"Expense"> | number
+    description?: StringNullableFilter<"Expense"> | string | null
+    currency?: EnumExpenseCurrencyNullableFilter<"Expense"> | $Enums.ExpenseCurrency | null
+    paidFromOffice?: EnumPaidFromOfficeNullableFilter<"Expense"> | $Enums.PaidFromOffice | null
+    employeeId?: StringNullableFilter<"Expense"> | string | null
+    scheduledDate?: DateTimeNullableFilter<"Expense"> | Date | string | null
+    createdAt?: DateTimeFilter<"Expense"> | Date | string
+    updatedAt?: DateTimeFilter<"Expense"> | Date | string
+  }
+
   export type StockMovementUpsertWithWhereUniqueWithoutUserInput = {
     where: StockMovementWhereUniqueInput
     update: XOR<StockMovementUpdateWithoutUserInput, StockMovementUncheckedUpdateWithoutUserInput>
@@ -31497,6 +32103,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -31519,6 +32126,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32267,6 +32875,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -32289,6 +32898,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -32393,6 +33003,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -32415,6 +33026,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -32436,6 +33048,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -32458,6 +33071,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32520,6 +33134,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -32542,6 +33157,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32847,6 +33463,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -32869,6 +33486,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33013,6 +33631,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -33035,6 +33654,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33122,6 +33742,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -33144,6 +33765,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33209,6 +33831,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -33231,6 +33854,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33387,6 +34011,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -33409,6 +34034,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33482,6 +34108,114 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutExpensesInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutExpensesInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutExpensesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutExpensesInput, UserUncheckedCreateWithoutExpensesInput>
+  }
+
+  export type UserUpsertWithoutExpensesInput = {
+    update: XOR<UserUpdateWithoutExpensesInput, UserUncheckedUpdateWithoutExpensesInput>
+    create: XOR<UserCreateWithoutExpensesInput, UserUncheckedCreateWithoutExpensesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutExpensesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutExpensesInput, UserUncheckedUpdateWithoutExpensesInput>
+  }
+
+  export type UserUpdateWithoutExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingInput = {
@@ -33853,6 +34587,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ExpenseCreateManyEmployeeInput = {
+    id?: number
+    type?: $Enums.ExpenseType
+    amount: number
+    description?: string | null
+    currency?: $Enums.ExpenseCurrency | null
+    paidFromOffice?: $Enums.PaidFromOffice | null
+    scheduledDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type StockMovementCreateManyUserInput = {
     id?: string
     productId: number
@@ -33882,6 +34628,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -33904,6 +34651,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34131,6 +34879,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ExpenseUpdateWithoutEmployeeInput = {
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
+    amount?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExpenseUncheckedUpdateWithoutEmployeeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
+    amount?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExpenseUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
+    amount?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableEnumExpenseCurrencyFieldUpdateOperationsInput | $Enums.ExpenseCurrency | null
+    paidFromOffice?: NullableEnumPaidFromOfficeFieldUpdateOperationsInput | $Enums.PaidFromOffice | null
+    scheduledDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StockMovementUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
@@ -34196,6 +34979,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -34218,6 +35002,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34815,6 +35600,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -34837,6 +35623,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 

@@ -306,8 +306,13 @@ exports.Prisma.OrderScalarFieldEnum = {
 
 exports.Prisma.ExpenseScalarFieldEnum = {
   id: 'id',
+  type: 'type',
   amount: 'amount',
   description: 'description',
+  currency: 'currency',
+  paidFromOffice: 'paidFromOffice',
+  employeeId: 'employeeId',
+  scheduledDate: 'scheduledDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -376,6 +381,23 @@ exports.MovementType = exports.$Enums.MovementType = {
   TRANSFER: 'TRANSFER',
   ADJUSTMENT: 'ADJUSTMENT',
   RETURN: 'RETURN'
+};
+
+exports.ExpenseType = exports.$Enums.ExpenseType = {
+  DAILY: 'DAILY',
+  STAFF_SALARY: 'STAFF_SALARY',
+  RENT: 'RENT'
+};
+
+exports.ExpenseCurrency = exports.$Enums.ExpenseCurrency = {
+  SYP: 'SYP',
+  TRY: 'TRY',
+  USD: 'USD'
+};
+
+exports.PaidFromOffice = exports.$Enums.PaidFromOffice = {
+  TURKEY: 'TURKEY',
+  SYRIA: 'SYRIA'
 };
 
 exports.Prisma.ModelName = {

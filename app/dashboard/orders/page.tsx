@@ -73,6 +73,19 @@ const getOrderShippingName = (orderLike: any) => String(orderLike?.shipping?.nam
 const getOrderShippingPrice = (orderLike: any) => {
     return Number((orderLike?.shippingPrice ?? orderLike?.shipping?.price) || 0);
 };
+const getOrderShippingCommissions = (orderLike: any) => {
+    const moneyTransferCommission = Number(orderLike?.moneyTransferCommission || 0);
+    const otherCommissions = Number(orderLike?.otherCommissions || 0);
+    return {
+        moneyTransferCommission,
+        otherCommissions,
+    };
+};
+const getOrderTotalShippingExpenses = (orderLike: any) => {
+    const shippingPrice = getOrderShippingPrice(orderLike);
+    const { moneyTransferCommission, otherCommissions } = getOrderShippingCommissions(orderLike);
+    return shippingPrice + moneyTransferCommission + otherCommissions;
+};
 const getOrderDeliveryMethod = (orderLike: any) => String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
 
 
@@ -204,6 +217,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const deliveryMethodText = getOrderDeliveryMethod(data);
         const shippingName = getOrderShippingName(data);
         const shippingPrice = getOrderShippingPrice(data);
+        const { moneyTransferCommission, otherCommissions } = getOrderShippingCommissions(data);
+        const shippingTotalExpenses = getOrderTotalShippingExpenses(data);
         const receiverName = data?.receiverName || 'غير محدد';
         const receiverPhone = Array.isArray(data?.receiverPhone)
             ? data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ')
@@ -218,6 +233,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const formatMoney = (value: any) => Number(value || 0).toLocaleString('en-US');
         const totalDiscount = Number(data?.discount || 0);
         const finalAmount = Number(data?.finalAmount || 0);
+        const invoiceGrandTotal = finalAmount + shippingTotalExpenses;
         const subtotal = finalAmount + totalDiscount;
         const amountBank = Number(data?.amountBank || 0);
         const amount = Number(data?.amount || 0);
@@ -325,6 +341,18 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <span>سعر الشحنة:</span>
                         <span>${formatMoney(shippingPrice)} ${currencySymbol}</span>
                     </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
+                        <span>عمولة تحويل الأموال:</span>
+                        <span>${formatMoney(moneyTransferCommission)} ${currencySymbol}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">
+                        <span>عمولات أخرى:</span>
+                        <span>${formatMoney(otherCommissions)} ${currencySymbol}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#0f172a;">
+                        <span>إجمالي مصاريف الشحن:</span>
+                        <span>${formatMoney(shippingTotalExpenses)} ${currencySymbol}</span>
+                    </div>
                     ${totalDiscount > 0 ? `
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#f43f5e;">
                         <span>الخصم الممنوح:</span>
@@ -345,7 +373,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     ` : ''}
                     <div style="display:flex;justify-content:space-between;align-items:center;background:#2563eb;color:#ffffff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 24px rgba(37,99,235,0.2);">
                         <span style="font-size:14px;font-weight:900;">الإجمالي النهائي</span>
-                        <span style="font-size:22px;font-weight:900;">${formatMoney(finalAmount)} <span style="font-size:12px;">${currencySymbol}</span></span>
+                        <span style="font-size:22px;font-weight:900;">${formatMoney(invoiceGrandTotal)} <span style="font-size:12px;">${currencySymbol}</span></span>
                     </div>
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#475569;">
                         <span>طريقة الدفع:</span>
@@ -508,6 +536,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "طريقة التوصيل": getOrderDeliveryMethod(order),
                 "شركة الشحن": getOrderShippingName(order),
                 "سعر الشحن": getOrderShippingPrice(order),
+                "عمولة تحويل الأموال": Number(order.moneyTransferCommission || 0),
+                "عمولات أخرى": Number(order.otherCommissions || 0),
+                "إجمالي مصاريف الشحن": getOrderTotalShippingExpenses(order),
+                "المجموع الكلي مع الشحن": Number(order.finalAmount || 0) + getOrderTotalShippingExpenses(order),
                 "كود التتبع": order.trackingCode,
                 "ملاحظات التوصيل": order.deliveryNotes,
                 "بواسطة الموظف": order.user?.name || "Admin",
@@ -1148,10 +1180,26 @@ const [searchQuery, setSearchQuery] = React.useState("");
                         }
                     },
                     {
-                        header: "قيمة الفاتورة",
+                        header: "المجموع الكلي",
                         accessor: (e: any) => (
                             <span className="font-black text-blue-600">
-                                {e.finalAmount?.toLocaleString()}  {getOrderCurrencySymbol(e)}
+                                {(Number(e.finalAmount || 0) + getOrderTotalShippingExpenses(e)).toLocaleString()} {getOrderCurrencySymbol(e)}
+                            </span>
+                        )
+                    },
+                    {
+                        header: "شركة الشحن",
+                        accessor: (e: any) => (
+                            <span className="font-bold text-slate-700 dark:text-slate-300">
+                                {getOrderShippingName(e)}
+                            </span>
+                        )
+                    },
+                    {
+                        header: "مصاريف الشحن",
+                        accessor: (e: any) => (
+                            <span className="font-black text-amber-600">
+                                {getOrderTotalShippingExpenses(e).toLocaleString()} {getOrderCurrencySymbol(e)}
                             </span>
                         )
                     },
@@ -1349,6 +1397,10 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
     const totalDiscount = Number(data.discount) || 0;
     const finalAmount = Number(data.finalAmount) || 0;
     const subtotal = finalAmount + totalDiscount;
+    const shippingPrice = getOrderShippingPrice(data);
+    const { moneyTransferCommission, otherCommissions } = getOrderShippingCommissions(data);
+    const totalShippingExpenses = getOrderTotalShippingExpenses(data);
+    const invoiceGrandTotal = Number(finalAmount) + Number(totalShippingExpenses);
 
     const getProductName = (productId: any) => {
         const product = products?.find((p: any) => p.id === productId);
@@ -1426,7 +1478,10 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                     }</span>
                                 </p>
                                 <p>شركة الشحن: {getOrderShippingName(data)}</p>
-                                <p>سعر الشحنة: {getOrderShippingPrice(data).toLocaleString()} {currencySymbol}</p>
+                                <p>سعر الشحنة: {shippingPrice.toLocaleString()} {currencySymbol}</p>
+                                <p>عمولة تحويل الأموال: {moneyTransferCommission.toLocaleString()} {currencySymbol}</p>
+                                <p>عمولات أخرى: {otherCommissions.toLocaleString()} {currencySymbol}</p>
+                                <p>إجمالي مصاريف الشحن: {totalShippingExpenses.toLocaleString()} {currencySymbol}</p>
                                 {
                                     data.googleMapsLink && (
                                         <div className="">
@@ -1482,7 +1537,22 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
 
                             <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
                                 <span>سعر الشحنة:</span>
-                                <span>{getOrderShippingPrice(data).toLocaleString()} {currencySymbol}</span>
+                                <span>{shippingPrice.toLocaleString()} {currencySymbol}</span>
+                            </div>
+
+                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
+                                <span>عمولة تحويل الأموال:</span>
+                                <span>{moneyTransferCommission.toLocaleString()} {currencySymbol}</span>
+                            </div>
+
+                            <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
+                                <span>عمولات أخرى:</span>
+                                <span>{otherCommissions.toLocaleString()} {currencySymbol}</span>
+                            </div>
+
+                            <div className="flex justify-between px-4 md:px-6 text-slate-700 dark:text-slate-200 font-bold text-sm">
+                                <span>إجمالي مصاريف الشحن:</span>
+                                <span>{totalShippingExpenses.toLocaleString()} {currencySymbol}</span>
                             </div>
 
                             {totalDiscount > 0 && (
@@ -1510,7 +1580,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <span className="text-lg md:text-xl font-black">الإجمالي النهائي</span>
                                 <div className="text-right">
                                     <span className="text-2xl md:text-3xl font-black italic tracking-tighter">
-                                        {(Number(finalAmount) + Number(getOrderShippingPrice(data) || 0)).toLocaleString()}
+                                        {invoiceGrandTotal.toLocaleString()}
                                     </span>
                                     <span className="text-sm font-bold mr-1"> {currencySymbol}</span>
                                 </div>
