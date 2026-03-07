@@ -1753,7 +1753,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
     const shippingPrice = getOrderShippingPrice(data);
     const { moneyTransferCommission, otherCommissions } = getOrderShippingCommissions(data);
     const totalShippingExpenses = getOrderTotalShippingExpenses(data);
-    const invoiceGrandTotal = Number(finalAmount) + Number(totalShippingExpenses);
+    const invoiceGrandTotal = Number(finalAmount);
 
     const getProductName = (productId: any) => {
         const product = products?.find((p: any) => p.id === productId);
@@ -1898,10 +1898,6 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                                 <span>{otherCommissions.toLocaleString()} {currencySymbol}</span>
                             </div>
 
-                            <div className="flex justify-between px-4 md:px-6 text-slate-700 dark:text-slate-200 font-bold text-sm">
-                                <span>إجمالي مصاريف الشحن:</span>
-                                <span>{totalShippingExpenses.toLocaleString()} {currencySymbol}</span>
-                            </div>
 
                             {totalDiscount > 0 && (
                                 <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
