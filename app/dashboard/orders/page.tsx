@@ -9,7 +9,7 @@ import { createOrder, deleteOrder, getOrders, getOrdersByUser, updateOrder, upda
 import { getProduct } from '@/server/product';
 import { getshipping } from '@/server/shipping';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Pencil, Plus, Printer, Save, Search, Trash, Trash2, X } from 'lucide-react';
+import { BarChart2, ChevronDown, ChevronUp, Download, Eye, Mail, Package, Pencil, Plus, Printer, Save, Search, Trash, Trash2, Upload, X } from 'lucide-react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { useReactToPrint } from 'react-to-print';
@@ -183,6 +183,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         moneyTransferCommission: "0",
         otherCommissions: "0",
     });
+    const importInputRef = React.useRef<HTMLInputElement | null>(null);
     const subTotal = items.reduce((sum, i) => sum + i.total, 0);
     const grandTotal = subTotal - overallDiscount;
     const remainingAmount = Math.max(0, Number(grandTotal) - Number(amount || 0));
@@ -559,6 +560,18 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         // تصدير الملف
         XLSX.writeFile(workbook, `Skynova_Full_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+    };
+
+    const handleImportClick = () => {
+        importInputRef.current?.click();
+    };
+
+    const handleImportFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        toast.success(`تم اختيار الملف: ${file.name}`);
+        event.target.value = "";
     };
 
     const getAlluser = async () => {
@@ -1058,13 +1071,29 @@ const [searchQuery, setSearchQuery] = React.useState("");
         <div className="">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة الطلبات</h1>
-
-                <button
-                    onClick={() => exportAllOrdersToExcel(orders)} // نمرر مصفوفة الطلبات التي لديك بالفعل
-                    className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-none"
-                >
-                    <Download size={20} />
-                </button>
+                <div className="flex items-center gap-2">
+                    <input
+                        ref={importInputRef}
+                        type="file"
+                        accept=".xlsx,.xls,.csv"
+                        onChange={handleImportFile}
+                        className="hidden"
+                    />
+                    <button
+                        onClick={handleImportClick}
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-200 dark:shadow-none"
+                        title="استيراد ملف"
+                    >
+                        <Upload size={20} />
+                    </button>
+                    <button
+                        onClick={() => exportAllOrdersToExcel(orders)}
+                        className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-none"
+                        title="تصدير الطلبات"
+                    >
+                        <Download size={20} />
+                    </button>
+                </div>
             </div>
             <div className="flex flex-col md:flex-row gap-4 mb-6 items-center justify-between">
     <div className="relative w-full md:w-96">
