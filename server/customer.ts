@@ -14,7 +14,7 @@ const parseOptionalDate = (value: any) => {
 export async function getCustomer() {
   const res = await prisma.customer.findMany({
     orderBy:{
-      name:"desc"
+      createdAt:"desc"
     },
     include:{
       users:true,

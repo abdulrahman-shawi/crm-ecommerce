@@ -1520,7 +1520,7 @@ const [searchQuery, setSearchQuery] = React.useState("");
                         header: "المجموع الكلي",
                         accessor: (e: any) => (
                             <span className="font-black text-blue-600">
-                                {(Number(e.finalAmount || 0) + getOrderTotalShippingExpenses(e)).toLocaleString()} {getOrderCurrencySymbol(e)}
+                                {(Number(e.finalAmount || 0))} {getOrderCurrencySymbol(e)}
                             </span>
                         )
                     },
