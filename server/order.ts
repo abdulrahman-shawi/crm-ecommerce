@@ -26,6 +26,17 @@ const parseOptionalDate = (value: any) => {
     return date;
 };
 
+const getOrderSortTimestamp = (orderLike: any) => {
+    const dateValue = orderLike?.manualCreatedAt || orderLike?.createdAt;
+    const parsed = new Date(dateValue);
+    if (Number.isNaN(parsed.getTime())) return 0;
+    return parsed.getTime();
+};
+
+const sortOrdersByDisplayDateDesc = <T extends { manualCreatedAt?: Date | null; createdAt?: Date | null }>(orders: T[]) => {
+    return [...orders].sort((a, b) => getOrderSortTimestamp(b) - getOrderSortTimestamp(a));
+};
+
 function isWarehouseRole(user: any) {
     const roleName = String(user?.permission?.roleName || "").trim();
     return roleName.includes(WAREHOUSE_ROLE_NAME);
@@ -147,7 +158,7 @@ export async function getOrders() {
         return allowedWarehouseLocations.includes(location);
     });
 
-    return {success:true , data:normalizedOrders}
+    return {success:true , data:sortOrdersByDisplayDateDesc(normalizedOrders)}
 }
 
 export async function getOrdersByUser(userId: any) {
@@ -164,7 +175,7 @@ export async function getOrdersByUser(userId: any) {
             customer: true
         }
     })
-    return { success: true, data: orders }
+    return { success: true, data: sortOrdersByDisplayDateDesc(orders) }
 }
 
 export async function createOrder(data: any, items: any[], user: any) {
