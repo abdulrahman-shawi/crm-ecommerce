@@ -69,6 +69,11 @@ export type ProductImage = $Result.DefaultSelection<Prisma.$ProductImagePayload>
  */
 export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
 /**
+ * Model Warranty
+ * 
+ */
+export type Warranty = $Result.DefaultSelection<Prisma.$WarrantyPayload>
+/**
  * Model Message
  * 
  */
@@ -119,6 +124,15 @@ export namespace $Enums {
 export type MovementType = (typeof MovementType)[keyof typeof MovementType]
 
 
+export const WarrantyType: {
+  REPLACEMENT: 'REPLACEMENT',
+  MAINTENANCE: 'MAINTENANCE',
+  DAMAGED: 'DAMAGED'
+};
+
+export type WarrantyType = (typeof WarrantyType)[keyof typeof WarrantyType]
+
+
 export const ExpenseType: {
   DAILY: 'DAILY',
   STAFF_SALARY: 'STAFF_SALARY',
@@ -158,6 +172,10 @@ export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 export type MovementType = $Enums.MovementType
 
 export const MovementType: typeof $Enums.MovementType
+
+export type WarrantyType = $Enums.WarrantyType
+
+export const WarrantyType: typeof $Enums.WarrantyType
 
 export type ExpenseType = $Enums.ExpenseType
 
@@ -401,6 +419,16 @@ export class PrismaClient<
     * ```
     */
   get customer(): Prisma.CustomerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.warranty`: Exposes CRUD operations for the **Warranty** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Warranties
+    * const warranties = await prisma.warranty.findMany()
+    * ```
+    */
+  get warranty(): Prisma.WarrantyDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.message`: Exposes CRUD operations for the **Message** model.
@@ -916,6 +944,7 @@ export namespace Prisma {
     TargetProduct: 'TargetProduct',
     ProductImage: 'ProductImage',
     Customer: 'Customer',
+    Warranty: 'Warranty',
     Message: 'Message',
     Order: 'Order',
     Expense: 'Expense',
@@ -938,7 +967,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting"
+      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1756,6 +1785,80 @@ export namespace Prisma {
           }
         }
       }
+      Warranty: {
+        payload: Prisma.$WarrantyPayload<ExtArgs>
+        fields: Prisma.WarrantyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WarrantyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WarrantyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          findFirst: {
+            args: Prisma.WarrantyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WarrantyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          findMany: {
+            args: Prisma.WarrantyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>[]
+          }
+          create: {
+            args: Prisma.WarrantyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          createMany: {
+            args: Prisma.WarrantyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WarrantyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>[]
+          }
+          delete: {
+            args: Prisma.WarrantyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          update: {
+            args: Prisma.WarrantyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          deleteMany: {
+            args: Prisma.WarrantyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WarrantyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WarrantyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>[]
+          }
+          upsert: {
+            args: Prisma.WarrantyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WarrantyPayload>
+          }
+          aggregate: {
+            args: Prisma.WarrantyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWarranty>
+          }
+          groupBy: {
+            args: Prisma.WarrantyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WarrantyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WarrantyCountArgs<ExtArgs>
+            result: $Utils.Optional<WarrantyCountAggregateOutputType> | number
+          }
+        }
+      }
       Message: {
         payload: Prisma.$MessagePayload<ExtArgs>
         fields: Prisma.MessageFieldRefs
@@ -2393,6 +2496,7 @@ export namespace Prisma {
     targetProduct?: TargetProductOmit
     productImage?: ProductImageOmit
     customer?: CustomerOmit
+    warranty?: WarrantyOmit
     message?: MessageOmit
     order?: OrderOmit
     expense?: ExpenseOmit
@@ -2632,6 +2736,8 @@ export namespace Prisma {
     targetProducts: number
     stocks: number
     stockMovements: number
+    warrantiesAsProduct: number
+    warrantiesAsReplacement: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2640,6 +2746,8 @@ export namespace Prisma {
     targetProducts?: boolean | ProductCountOutputTypeCountTargetProductsArgs
     stocks?: boolean | ProductCountOutputTypeCountStocksArgs
     stockMovements?: boolean | ProductCountOutputTypeCountStockMovementsArgs
+    warrantiesAsProduct?: boolean | ProductCountOutputTypeCountWarrantiesAsProductArgs
+    warrantiesAsReplacement?: boolean | ProductCountOutputTypeCountWarrantiesAsReplacementArgs
   }
 
   // Custom InputTypes
@@ -2688,6 +2796,20 @@ export namespace Prisma {
     where?: StockMovementWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountWarrantiesAsProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountWarrantiesAsReplacementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
+  }
+
 
   /**
    * Count Type WarehouseCountOutputType
@@ -2697,12 +2819,14 @@ export namespace Prisma {
     stocks: number
     orders: number
     movements: number
+    warranties: number
   }
 
   export type WarehouseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stocks?: boolean | WarehouseCountOutputTypeCountStocksArgs
     orders?: boolean | WarehouseCountOutputTypeCountOrdersArgs
     movements?: boolean | WarehouseCountOutputTypeCountMovementsArgs
+    warranties?: boolean | WarehouseCountOutputTypeCountWarrantiesArgs
   }
 
   // Custom InputTypes
@@ -2735,6 +2859,13 @@ export namespace Prisma {
    */
   export type WarehouseCountOutputTypeCountMovementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StockMovementWhereInput
+  }
+
+  /**
+   * WarehouseCountOutputType without action
+   */
+  export type WarehouseCountOutputTypeCountWarrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
   }
 
 
@@ -2777,12 +2908,14 @@ export namespace Prisma {
     orders: number
     users: number
     message: number
+    warranties: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     users?: boolean | CustomerCountOutputTypeCountUsersArgs
     message?: boolean | CustomerCountOutputTypeCountMessageArgs
+    warranties?: boolean | CustomerCountOutputTypeCountWarrantiesArgs
   }
 
   // Custom InputTypes
@@ -2815,6 +2948,13 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountWarrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
   }
 
 
@@ -7108,6 +7248,8 @@ export namespace Prisma {
     targetProducts?: boolean | Product$targetProductsArgs<ExtArgs>
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
+    warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    warrantiesAsReplacement?: boolean | Product$warrantiesAsReplacementArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -7148,6 +7290,8 @@ export namespace Prisma {
     targetProducts?: boolean | Product$targetProductsArgs<ExtArgs>
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
+    warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    warrantiesAsReplacement?: boolean | Product$warrantiesAsReplacementArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7166,6 +7310,8 @@ export namespace Prisma {
       targetProducts: Prisma.$TargetProductPayload<ExtArgs>[]
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      warrantiesAsProduct: Prisma.$WarrantyPayload<ExtArgs>[]
+      warrantiesAsReplacement: Prisma.$WarrantyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7574,6 +7720,8 @@ export namespace Prisma {
     targetProducts<T extends Product$targetProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$targetProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TargetProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stocks<T extends Product$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Product$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends Product$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    warrantiesAsProduct<T extends Product$warrantiesAsProductArgs<ExtArgs> = {}>(args?: Subset<T, Product$warrantiesAsProductArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    warrantiesAsReplacement<T extends Product$warrantiesAsReplacementArgs<ExtArgs> = {}>(args?: Subset<T, Product$warrantiesAsReplacementArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8144,6 +8292,54 @@ export namespace Prisma {
   }
 
   /**
+   * Product.warrantiesAsProduct
+   */
+  export type Product$warrantiesAsProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    cursor?: WarrantyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
+   * Product.warrantiesAsReplacement
+   */
+  export type Product$warrantiesAsReplacementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    cursor?: WarrantyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8363,6 +8559,7 @@ export namespace Prisma {
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
+    warranties?: boolean | Warehouse$warrantiesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
@@ -8395,6 +8592,7 @@ export namespace Prisma {
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
+    warranties?: boolean | Warehouse$warrantiesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WarehouseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8406,6 +8604,7 @@ export namespace Prisma {
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       movements: Prisma.$StockMovementPayload<ExtArgs>[]
+      warranties: Prisma.$WarrantyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8810,6 +9009,7 @@ export namespace Prisma {
     stocks<T extends Warehouse$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Warehouse$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movements<T extends Warehouse$movementsArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    warranties<T extends Warehouse$warrantiesArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$warrantiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9301,6 +9501,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * Warehouse.warranties
+   */
+  export type Warehouse$warrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    cursor?: WarrantyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
   }
 
   /**
@@ -15238,6 +15462,7 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
     message?: boolean | Customer$messageArgs<ExtArgs>
+    warranties?: boolean | Customer$warrantiesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -15297,6 +15522,7 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
     message?: boolean | Customer$messageArgs<ExtArgs>
+    warranties?: boolean | Customer$warrantiesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -15308,6 +15534,7 @@ export namespace Prisma {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
       message: Prisma.$MessagePayload<ExtArgs>[]
+      warranties: Prisma.$WarrantyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15721,6 +15948,7 @@ export namespace Prisma {
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Customer$usersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     message<T extends Customer$messageArgs<ExtArgs> = {}>(args?: Subset<T, Customer$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    warranties<T extends Customer$warrantiesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$warrantiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16224,6 +16452,30 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.warranties
+   */
+  export type Customer$warrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    cursor?: WarrantyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
    * Customer without action
    */
   export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16239,6 +16491,1271 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Warranty
+   */
+
+  export type AggregateWarranty = {
+    _count: WarrantyCountAggregateOutputType | null
+    _avg: WarrantyAvgAggregateOutputType | null
+    _sum: WarrantySumAggregateOutputType | null
+    _min: WarrantyMinAggregateOutputType | null
+    _max: WarrantyMaxAggregateOutputType | null
+  }
+
+  export type WarrantyAvgAggregateOutputType = {
+    productId: number | null
+    replacementProductId: number | null
+    warehouseId: number | null
+    quantity: number | null
+    maintenanceLaborCost: number | null
+    shippingCost: number | null
+  }
+
+  export type WarrantySumAggregateOutputType = {
+    productId: number | null
+    replacementProductId: number | null
+    warehouseId: number | null
+    quantity: number | null
+    maintenanceLaborCost: number | null
+    shippingCost: number | null
+  }
+
+  export type WarrantyMinAggregateOutputType = {
+    id: string | null
+    type: $Enums.WarrantyType | null
+    productId: number | null
+    replacementProductId: number | null
+    customerId: string | null
+    warehouseId: number | null
+    quantity: number | null
+    maintenanceLaborCost: number | null
+    shippingCost: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WarrantyMaxAggregateOutputType = {
+    id: string | null
+    type: $Enums.WarrantyType | null
+    productId: number | null
+    replacementProductId: number | null
+    customerId: string | null
+    warehouseId: number | null
+    quantity: number | null
+    maintenanceLaborCost: number | null
+    shippingCost: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WarrantyCountAggregateOutputType = {
+    id: number
+    type: number
+    productId: number
+    replacementProductId: number
+    customerId: number
+    warehouseId: number
+    quantity: number
+    maintenanceLaborCost: number
+    shippingCost: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WarrantyAvgAggregateInputType = {
+    productId?: true
+    replacementProductId?: true
+    warehouseId?: true
+    quantity?: true
+    maintenanceLaborCost?: true
+    shippingCost?: true
+  }
+
+  export type WarrantySumAggregateInputType = {
+    productId?: true
+    replacementProductId?: true
+    warehouseId?: true
+    quantity?: true
+    maintenanceLaborCost?: true
+    shippingCost?: true
+  }
+
+  export type WarrantyMinAggregateInputType = {
+    id?: true
+    type?: true
+    productId?: true
+    replacementProductId?: true
+    customerId?: true
+    warehouseId?: true
+    quantity?: true
+    maintenanceLaborCost?: true
+    shippingCost?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WarrantyMaxAggregateInputType = {
+    id?: true
+    type?: true
+    productId?: true
+    replacementProductId?: true
+    customerId?: true
+    warehouseId?: true
+    quantity?: true
+    maintenanceLaborCost?: true
+    shippingCost?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WarrantyCountAggregateInputType = {
+    id?: true
+    type?: true
+    productId?: true
+    replacementProductId?: true
+    customerId?: true
+    warehouseId?: true
+    quantity?: true
+    maintenanceLaborCost?: true
+    shippingCost?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WarrantyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Warranty to aggregate.
+     */
+    where?: WarrantyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Warranties to fetch.
+     */
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WarrantyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Warranties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Warranties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Warranties
+    **/
+    _count?: true | WarrantyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WarrantyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WarrantySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WarrantyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WarrantyMaxAggregateInputType
+  }
+
+  export type GetWarrantyAggregateType<T extends WarrantyAggregateArgs> = {
+        [P in keyof T & keyof AggregateWarranty]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWarranty[P]>
+      : GetScalarType<T[P], AggregateWarranty[P]>
+  }
+
+
+
+
+  export type WarrantyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithAggregationInput | WarrantyOrderByWithAggregationInput[]
+    by: WarrantyScalarFieldEnum[] | WarrantyScalarFieldEnum
+    having?: WarrantyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WarrantyCountAggregateInputType | true
+    _avg?: WarrantyAvgAggregateInputType
+    _sum?: WarrantySumAggregateInputType
+    _min?: WarrantyMinAggregateInputType
+    _max?: WarrantyMaxAggregateInputType
+  }
+
+  export type WarrantyGroupByOutputType = {
+    id: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId: number | null
+    customerId: string
+    warehouseId: number | null
+    quantity: number
+    maintenanceLaborCost: number | null
+    shippingCost: number | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WarrantyCountAggregateOutputType | null
+    _avg: WarrantyAvgAggregateOutputType | null
+    _sum: WarrantySumAggregateOutputType | null
+    _min: WarrantyMinAggregateOutputType | null
+    _max: WarrantyMaxAggregateOutputType | null
+  }
+
+  type GetWarrantyGroupByPayload<T extends WarrantyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WarrantyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WarrantyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WarrantyGroupByOutputType[P]>
+            : GetScalarType<T[P], WarrantyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WarrantySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    productId?: boolean
+    replacementProductId?: boolean
+    customerId?: boolean
+    warehouseId?: boolean
+    quantity?: boolean
+    maintenanceLaborCost?: boolean
+    shippingCost?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }, ExtArgs["result"]["warranty"]>
+
+  export type WarrantySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    productId?: boolean
+    replacementProductId?: boolean
+    customerId?: boolean
+    warehouseId?: boolean
+    quantity?: boolean
+    maintenanceLaborCost?: boolean
+    shippingCost?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }, ExtArgs["result"]["warranty"]>
+
+  export type WarrantySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    productId?: boolean
+    replacementProductId?: boolean
+    customerId?: boolean
+    warehouseId?: boolean
+    quantity?: boolean
+    maintenanceLaborCost?: boolean
+    shippingCost?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }, ExtArgs["result"]["warranty"]>
+
+  export type WarrantySelectScalar = {
+    id?: boolean
+    type?: boolean
+    productId?: boolean
+    replacementProductId?: boolean
+    customerId?: boolean
+    warehouseId?: boolean
+    quantity?: boolean
+    maintenanceLaborCost?: boolean
+    shippingCost?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WarrantyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "productId" | "replacementProductId" | "customerId" | "warehouseId" | "quantity" | "maintenanceLaborCost" | "shippingCost" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["warranty"]>
+  export type WarrantyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }
+  export type WarrantyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }
+  export type WarrantyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    replacementProduct?: boolean | Warranty$replacementProductArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+  }
+
+  export type $WarrantyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Warranty"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+      replacementProduct: Prisma.$ProductPayload<ExtArgs> | null
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      warehouse: Prisma.$WarehousePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: $Enums.WarrantyType
+      productId: number
+      replacementProductId: number | null
+      customerId: string
+      warehouseId: number | null
+      quantity: number
+      maintenanceLaborCost: number | null
+      shippingCost: number | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["warranty"]>
+    composites: {}
+  }
+
+  type WarrantyGetPayload<S extends boolean | null | undefined | WarrantyDefaultArgs> = $Result.GetResult<Prisma.$WarrantyPayload, S>
+
+  type WarrantyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WarrantyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WarrantyCountAggregateInputType | true
+    }
+
+  export interface WarrantyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Warranty'], meta: { name: 'Warranty' } }
+    /**
+     * Find zero or one Warranty that matches the filter.
+     * @param {WarrantyFindUniqueArgs} args - Arguments to find a Warranty
+     * @example
+     * // Get one Warranty
+     * const warranty = await prisma.warranty.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WarrantyFindUniqueArgs>(args: SelectSubset<T, WarrantyFindUniqueArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Warranty that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WarrantyFindUniqueOrThrowArgs} args - Arguments to find a Warranty
+     * @example
+     * // Get one Warranty
+     * const warranty = await prisma.warranty.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WarrantyFindUniqueOrThrowArgs>(args: SelectSubset<T, WarrantyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Warranty that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyFindFirstArgs} args - Arguments to find a Warranty
+     * @example
+     * // Get one Warranty
+     * const warranty = await prisma.warranty.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WarrantyFindFirstArgs>(args?: SelectSubset<T, WarrantyFindFirstArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Warranty that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyFindFirstOrThrowArgs} args - Arguments to find a Warranty
+     * @example
+     * // Get one Warranty
+     * const warranty = await prisma.warranty.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WarrantyFindFirstOrThrowArgs>(args?: SelectSubset<T, WarrantyFindFirstOrThrowArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Warranties that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Warranties
+     * const warranties = await prisma.warranty.findMany()
+     * 
+     * // Get first 10 Warranties
+     * const warranties = await prisma.warranty.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const warrantyWithIdOnly = await prisma.warranty.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WarrantyFindManyArgs>(args?: SelectSubset<T, WarrantyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Warranty.
+     * @param {WarrantyCreateArgs} args - Arguments to create a Warranty.
+     * @example
+     * // Create one Warranty
+     * const Warranty = await prisma.warranty.create({
+     *   data: {
+     *     // ... data to create a Warranty
+     *   }
+     * })
+     * 
+     */
+    create<T extends WarrantyCreateArgs>(args: SelectSubset<T, WarrantyCreateArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Warranties.
+     * @param {WarrantyCreateManyArgs} args - Arguments to create many Warranties.
+     * @example
+     * // Create many Warranties
+     * const warranty = await prisma.warranty.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WarrantyCreateManyArgs>(args?: SelectSubset<T, WarrantyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Warranties and returns the data saved in the database.
+     * @param {WarrantyCreateManyAndReturnArgs} args - Arguments to create many Warranties.
+     * @example
+     * // Create many Warranties
+     * const warranty = await prisma.warranty.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Warranties and only return the `id`
+     * const warrantyWithIdOnly = await prisma.warranty.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WarrantyCreateManyAndReturnArgs>(args?: SelectSubset<T, WarrantyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Warranty.
+     * @param {WarrantyDeleteArgs} args - Arguments to delete one Warranty.
+     * @example
+     * // Delete one Warranty
+     * const Warranty = await prisma.warranty.delete({
+     *   where: {
+     *     // ... filter to delete one Warranty
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WarrantyDeleteArgs>(args: SelectSubset<T, WarrantyDeleteArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Warranty.
+     * @param {WarrantyUpdateArgs} args - Arguments to update one Warranty.
+     * @example
+     * // Update one Warranty
+     * const warranty = await prisma.warranty.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WarrantyUpdateArgs>(args: SelectSubset<T, WarrantyUpdateArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Warranties.
+     * @param {WarrantyDeleteManyArgs} args - Arguments to filter Warranties to delete.
+     * @example
+     * // Delete a few Warranties
+     * const { count } = await prisma.warranty.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WarrantyDeleteManyArgs>(args?: SelectSubset<T, WarrantyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Warranties.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Warranties
+     * const warranty = await prisma.warranty.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WarrantyUpdateManyArgs>(args: SelectSubset<T, WarrantyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Warranties and returns the data updated in the database.
+     * @param {WarrantyUpdateManyAndReturnArgs} args - Arguments to update many Warranties.
+     * @example
+     * // Update many Warranties
+     * const warranty = await prisma.warranty.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Warranties and only return the `id`
+     * const warrantyWithIdOnly = await prisma.warranty.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WarrantyUpdateManyAndReturnArgs>(args: SelectSubset<T, WarrantyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Warranty.
+     * @param {WarrantyUpsertArgs} args - Arguments to update or create a Warranty.
+     * @example
+     * // Update or create a Warranty
+     * const warranty = await prisma.warranty.upsert({
+     *   create: {
+     *     // ... data to create a Warranty
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Warranty we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WarrantyUpsertArgs>(args: SelectSubset<T, WarrantyUpsertArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Warranties.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyCountArgs} args - Arguments to filter Warranties to count.
+     * @example
+     * // Count the number of Warranties
+     * const count = await prisma.warranty.count({
+     *   where: {
+     *     // ... the filter for the Warranties we want to count
+     *   }
+     * })
+    **/
+    count<T extends WarrantyCountArgs>(
+      args?: Subset<T, WarrantyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WarrantyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Warranty.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WarrantyAggregateArgs>(args: Subset<T, WarrantyAggregateArgs>): Prisma.PrismaPromise<GetWarrantyAggregateType<T>>
+
+    /**
+     * Group by Warranty.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WarrantyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WarrantyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WarrantyGroupByArgs['orderBy'] }
+        : { orderBy?: WarrantyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WarrantyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWarrantyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Warranty model
+   */
+  readonly fields: WarrantyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Warranty.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WarrantyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    replacementProduct<T extends Warranty$replacementProductArgs<ExtArgs> = {}>(args?: Subset<T, Warranty$replacementProductArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    warehouse<T extends Warranty$warehouseArgs<ExtArgs> = {}>(args?: Subset<T, Warranty$warehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Warranty model
+   */
+  interface WarrantyFieldRefs {
+    readonly id: FieldRef<"Warranty", 'String'>
+    readonly type: FieldRef<"Warranty", 'WarrantyType'>
+    readonly productId: FieldRef<"Warranty", 'Int'>
+    readonly replacementProductId: FieldRef<"Warranty", 'Int'>
+    readonly customerId: FieldRef<"Warranty", 'String'>
+    readonly warehouseId: FieldRef<"Warranty", 'Int'>
+    readonly quantity: FieldRef<"Warranty", 'Int'>
+    readonly maintenanceLaborCost: FieldRef<"Warranty", 'Float'>
+    readonly shippingCost: FieldRef<"Warranty", 'Float'>
+    readonly notes: FieldRef<"Warranty", 'String'>
+    readonly createdAt: FieldRef<"Warranty", 'DateTime'>
+    readonly updatedAt: FieldRef<"Warranty", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Warranty findUnique
+   */
+  export type WarrantyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter, which Warranty to fetch.
+     */
+    where: WarrantyWhereUniqueInput
+  }
+
+  /**
+   * Warranty findUniqueOrThrow
+   */
+  export type WarrantyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter, which Warranty to fetch.
+     */
+    where: WarrantyWhereUniqueInput
+  }
+
+  /**
+   * Warranty findFirst
+   */
+  export type WarrantyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter, which Warranty to fetch.
+     */
+    where?: WarrantyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Warranties to fetch.
+     */
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Warranties.
+     */
+    cursor?: WarrantyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Warranties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Warranties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Warranties.
+     */
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
+   * Warranty findFirstOrThrow
+   */
+  export type WarrantyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter, which Warranty to fetch.
+     */
+    where?: WarrantyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Warranties to fetch.
+     */
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Warranties.
+     */
+    cursor?: WarrantyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Warranties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Warranties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Warranties.
+     */
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
+   * Warranty findMany
+   */
+  export type WarrantyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter, which Warranties to fetch.
+     */
+    where?: WarrantyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Warranties to fetch.
+     */
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Warranties.
+     */
+    cursor?: WarrantyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Warranties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Warranties.
+     */
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
+   * Warranty create
+   */
+  export type WarrantyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Warranty.
+     */
+    data: XOR<WarrantyCreateInput, WarrantyUncheckedCreateInput>
+  }
+
+  /**
+   * Warranty createMany
+   */
+  export type WarrantyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Warranties.
+     */
+    data: WarrantyCreateManyInput | WarrantyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Warranty createManyAndReturn
+   */
+  export type WarrantyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * The data used to create many Warranties.
+     */
+    data: WarrantyCreateManyInput | WarrantyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Warranty update
+   */
+  export type WarrantyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Warranty.
+     */
+    data: XOR<WarrantyUpdateInput, WarrantyUncheckedUpdateInput>
+    /**
+     * Choose, which Warranty to update.
+     */
+    where: WarrantyWhereUniqueInput
+  }
+
+  /**
+   * Warranty updateMany
+   */
+  export type WarrantyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Warranties.
+     */
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyInput>
+    /**
+     * Filter which Warranties to update
+     */
+    where?: WarrantyWhereInput
+    /**
+     * Limit how many Warranties to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Warranty updateManyAndReturn
+   */
+  export type WarrantyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * The data used to update Warranties.
+     */
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyInput>
+    /**
+     * Filter which Warranties to update
+     */
+    where?: WarrantyWhereInput
+    /**
+     * Limit how many Warranties to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Warranty upsert
+   */
+  export type WarrantyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Warranty to update in case it exists.
+     */
+    where: WarrantyWhereUniqueInput
+    /**
+     * In case the Warranty found by the `where` argument doesn't exist, create a new Warranty with this data.
+     */
+    create: XOR<WarrantyCreateInput, WarrantyUncheckedCreateInput>
+    /**
+     * In case the Warranty was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WarrantyUpdateInput, WarrantyUncheckedUpdateInput>
+  }
+
+  /**
+   * Warranty delete
+   */
+  export type WarrantyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    /**
+     * Filter which Warranty to delete.
+     */
+    where: WarrantyWhereUniqueInput
+  }
+
+  /**
+   * Warranty deleteMany
+   */
+  export type WarrantyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Warranties to delete
+     */
+    where?: WarrantyWhereInput
+    /**
+     * Limit how many Warranties to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Warranty.replacementProduct
+   */
+  export type Warranty$replacementProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * Warranty.warehouse
+   */
+  export type Warranty$warehouseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warehouse
+     */
+    select?: WarehouseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warehouse
+     */
+    omit?: WarehouseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarehouseInclude<ExtArgs> | null
+    where?: WarehouseWhereInput
+  }
+
+  /**
+   * Warranty without action
+   */
+  export type WarrantyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
   }
 
 
@@ -24661,6 +26178,24 @@ export namespace Prisma {
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+  export const WarrantyScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    productId: 'productId',
+    replacementProductId: 'replacementProductId',
+    customerId: 'customerId',
+    warehouseId: 'warehouseId',
+    quantity: 'quantity',
+    maintenanceLaborCost: 'maintenanceLaborCost',
+    shippingCost: 'shippingCost',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WarrantyScalarFieldEnum = (typeof WarrantyScalarFieldEnum)[keyof typeof WarrantyScalarFieldEnum]
+
+
   export const MessageScalarFieldEnum: {
     id: 'id',
     message: 'message',
@@ -24895,6 +26430,20 @@ export namespace Prisma {
    * Reference to a field of type 'MovementType[]'
    */
   export type ListEnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WarrantyType'
+   */
+  export type EnumWarrantyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WarrantyType'>
+    
+
+
+  /**
+   * Reference to a field of type 'WarrantyType[]'
+   */
+  export type ListEnumWarrantyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WarrantyType[]'>
     
 
 
@@ -25342,6 +26891,8 @@ export namespace Prisma {
     targetProducts?: TargetProductListRelationFilter
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    warrantiesAsProduct?: WarrantyListRelationFilter
+    warrantiesAsReplacement?: WarrantyListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -25357,6 +26908,8 @@ export namespace Prisma {
     targetProducts?: TargetProductOrderByRelationAggregateInput
     stocks?: ProductStockOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    warrantiesAsProduct?: WarrantyOrderByRelationAggregateInput
+    warrantiesAsReplacement?: WarrantyOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -25375,6 +26928,8 @@ export namespace Prisma {
     targetProducts?: TargetProductListRelationFilter
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    warrantiesAsProduct?: WarrantyListRelationFilter
+    warrantiesAsReplacement?: WarrantyListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -25415,6 +26970,7 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
     movements?: StockMovementListRelationFilter
+    warranties?: WarrantyListRelationFilter
   }
 
   export type WarehouseOrderByWithRelationInput = {
@@ -25426,6 +26982,7 @@ export namespace Prisma {
     stocks?: ProductStockOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     movements?: StockMovementOrderByRelationAggregateInput
+    warranties?: WarrantyOrderByRelationAggregateInput
   }
 
   export type WarehouseWhereUniqueInput = Prisma.AtLeast<{
@@ -25440,6 +26997,7 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
     movements?: StockMovementListRelationFilter
+    warranties?: WarrantyListRelationFilter
   }, "id" | "name">
 
   export type WarehouseOrderByWithAggregationInput = {
@@ -25819,6 +27377,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     users?: UserListRelationFilter
     message?: MessageListRelationFilter
+    warranties?: WarrantyListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -25839,6 +27398,7 @@ export namespace Prisma {
     orders?: OrderOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
     message?: MessageOrderByRelationAggregateInput
+    warranties?: WarrantyOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -25862,6 +27422,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     users?: UserListRelationFilter
     message?: MessageListRelationFilter
+    warranties?: WarrantyListRelationFilter
   }, "id" | "name">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -25904,6 +27465,107 @@ export namespace Prisma {
     status?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
+  }
+
+  export type WarrantyWhereInput = {
+    AND?: WarrantyWhereInput | WarrantyWhereInput[]
+    OR?: WarrantyWhereInput[]
+    NOT?: WarrantyWhereInput | WarrantyWhereInput[]
+    id?: StringFilter<"Warranty"> | string
+    type?: EnumWarrantyTypeFilter<"Warranty"> | $Enums.WarrantyType
+    productId?: IntFilter<"Warranty"> | number
+    replacementProductId?: IntNullableFilter<"Warranty"> | number | null
+    customerId?: StringFilter<"Warranty"> | string
+    warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    quantity?: IntFilter<"Warranty"> | number
+    maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
+    shippingCost?: FloatNullableFilter<"Warranty"> | number | null
+    notes?: StringNullableFilter<"Warranty"> | string | null
+    createdAt?: DateTimeFilter<"Warranty"> | Date | string
+    updatedAt?: DateTimeFilter<"Warranty"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    replacementProduct?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+  }
+
+  export type WarrantyOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    productId?: SortOrder
+    replacementProductId?: SortOrderInput | SortOrder
+    customerId?: SortOrder
+    warehouseId?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrderInput | SortOrder
+    shippingCost?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+    replacementProduct?: ProductOrderByWithRelationInput
+    customer?: CustomerOrderByWithRelationInput
+    warehouse?: WarehouseOrderByWithRelationInput
+  }
+
+  export type WarrantyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WarrantyWhereInput | WarrantyWhereInput[]
+    OR?: WarrantyWhereInput[]
+    NOT?: WarrantyWhereInput | WarrantyWhereInput[]
+    type?: EnumWarrantyTypeFilter<"Warranty"> | $Enums.WarrantyType
+    productId?: IntFilter<"Warranty"> | number
+    replacementProductId?: IntNullableFilter<"Warranty"> | number | null
+    customerId?: StringFilter<"Warranty"> | string
+    warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    quantity?: IntFilter<"Warranty"> | number
+    maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
+    shippingCost?: FloatNullableFilter<"Warranty"> | number | null
+    notes?: StringNullableFilter<"Warranty"> | string | null
+    createdAt?: DateTimeFilter<"Warranty"> | Date | string
+    updatedAt?: DateTimeFilter<"Warranty"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    replacementProduct?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+  }, "id">
+
+  export type WarrantyOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    productId?: SortOrder
+    replacementProductId?: SortOrderInput | SortOrder
+    customerId?: SortOrder
+    warehouseId?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrderInput | SortOrder
+    shippingCost?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WarrantyCountOrderByAggregateInput
+    _avg?: WarrantyAvgOrderByAggregateInput
+    _max?: WarrantyMaxOrderByAggregateInput
+    _min?: WarrantyMinOrderByAggregateInput
+    _sum?: WarrantySumOrderByAggregateInput
+  }
+
+  export type WarrantyScalarWhereWithAggregatesInput = {
+    AND?: WarrantyScalarWhereWithAggregatesInput | WarrantyScalarWhereWithAggregatesInput[]
+    OR?: WarrantyScalarWhereWithAggregatesInput[]
+    NOT?: WarrantyScalarWhereWithAggregatesInput | WarrantyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Warranty"> | string
+    type?: EnumWarrantyTypeWithAggregatesFilter<"Warranty"> | $Enums.WarrantyType
+    productId?: IntWithAggregatesFilter<"Warranty"> | number
+    replacementProductId?: IntNullableWithAggregatesFilter<"Warranty"> | number | null
+    customerId?: StringWithAggregatesFilter<"Warranty"> | string
+    warehouseId?: IntNullableWithAggregatesFilter<"Warranty"> | number | null
+    quantity?: IntWithAggregatesFilter<"Warranty"> | number
+    maintenanceLaborCost?: FloatNullableWithAggregatesFilter<"Warranty"> | number | null
+    shippingCost?: FloatNullableWithAggregatesFilter<"Warranty"> | number | null
+    notes?: StringNullableWithAggregatesFilter<"Warranty"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Warranty"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Warranty"> | Date | string
   }
 
   export type MessageWhereInput = {
@@ -26991,6 +28653,8 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -27005,6 +28669,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUpdateInput = {
@@ -27018,6 +28684,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -27032,6 +28700,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -27067,6 +28737,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateInput = {
@@ -27078,6 +28749,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUpdateInput = {
@@ -27088,6 +28760,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateInput = {
@@ -27099,6 +28772,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseCreateManyInput = {
@@ -27453,6 +29127,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCustomerInput
     users?: UserCreateNestedManyWithoutCustomersInput
     message?: MessageCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -27473,6 +29148,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     users?: UserUncheckedCreateNestedManyWithoutCustomersInput
     message?: MessageUncheckedCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -27493,6 +29169,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     users?: UserUpdateManyWithoutCustomersNestedInput
     message?: MessageUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -27513,6 +29190,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     users?: UserUncheckedUpdateManyWithoutCustomersNestedInput
     message?: MessageUncheckedUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -27562,6 +29240,107 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyCreateInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
+    replacementProduct?: ProductCreateNestedOneWithoutWarrantiesAsReplacementInput
+    customer: CustomerCreateNestedOneWithoutWarrantiesInput
+    warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
+    replacementProduct?: ProductUpdateOneWithoutWarrantiesAsReplacementNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyCreateManyInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28736,6 +30515,12 @@ export namespace Prisma {
     none?: ProductStockWhereInput
   }
 
+  export type WarrantyListRelationFilter = {
+    every?: WarrantyWhereInput
+    some?: WarrantyWhereInput
+    none?: WarrantyWhereInput
+  }
+
   export type OrderItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -28749,6 +30534,10 @@ export namespace Prisma {
   }
 
   export type ProductStockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WarrantyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29174,9 +30963,126 @@ export namespace Prisma {
     rating?: SortOrder
   }
 
+  export type EnumWarrantyTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWarrantyTypeFilter<$PrismaModel> | $Enums.WarrantyType
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ProductNullableScalarRelationFilter = {
+    is?: ProductWhereInput | null
+    isNot?: ProductWhereInput | null
+  }
+
   export type CustomerScalarRelationFilter = {
     is?: CustomerWhereInput
     isNot?: CustomerWhereInput
+  }
+
+  export type WarehouseNullableScalarRelationFilter = {
+    is?: WarehouseWhereInput | null
+    isNot?: WarehouseWhereInput | null
+  }
+
+  export type WarrantyCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    productId?: SortOrder
+    replacementProductId?: SortOrder
+    customerId?: SortOrder
+    warehouseId?: SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrder
+    shippingCost?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WarrantyAvgOrderByAggregateInput = {
+    productId?: SortOrder
+    replacementProductId?: SortOrder
+    warehouseId?: SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrder
+    shippingCost?: SortOrder
+  }
+
+  export type WarrantyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    productId?: SortOrder
+    replacementProductId?: SortOrder
+    customerId?: SortOrder
+    warehouseId?: SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrder
+    shippingCost?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WarrantyMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    productId?: SortOrder
+    replacementProductId?: SortOrder
+    customerId?: SortOrder
+    warehouseId?: SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrder
+    shippingCost?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WarrantySumOrderByAggregateInput = {
+    productId?: SortOrder
+    replacementProductId?: SortOrder
+    warehouseId?: SortOrder
+    quantity?: SortOrder
+    maintenanceLaborCost?: SortOrder
+    shippingCost?: SortOrder
+  }
+
+  export type EnumWarrantyTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWarrantyTypeWithAggregatesFilter<$PrismaModel> | $Enums.WarrantyType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWarrantyTypeFilter<$PrismaModel>
+    _max?: NestedEnumWarrantyTypeFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type MessageCountOrderByAggregateInput = {
@@ -29204,22 +31110,6 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type WarehouseNullableScalarRelationFilter = {
-    is?: WarehouseWhereInput | null
-    isNot?: WarehouseWhereInput | null
   }
 
   export type ShippingNullableScalarRelationFilter = {
@@ -29354,22 +31244,6 @@ export namespace Prisma {
     finalAmount?: SortOrder
     warehouseId?: SortOrder
     shippingId?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumExpenseTypeFilter<$PrismaModel = never> = {
@@ -30125,6 +31999,20 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type WarrantyCreateNestedManyWithoutProductInput = {
+    create?: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput> | WarrantyCreateWithoutProductInput[] | WarrantyUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
+    createMany?: WarrantyCreateManyProductInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
+  export type WarrantyCreateNestedManyWithoutReplacementProductInput = {
+    create?: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput> | WarrantyCreateWithoutReplacementProductInput[] | WarrantyUncheckedCreateWithoutReplacementProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutReplacementProductInput | WarrantyCreateOrConnectWithoutReplacementProductInput[]
+    createMany?: WarrantyCreateManyReplacementProductInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -30158,6 +32046,20 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutProductInput | StockMovementCreateOrConnectWithoutProductInput[]
     createMany?: StockMovementCreateManyProductInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type WarrantyUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput> | WarrantyCreateWithoutProductInput[] | WarrantyUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
+    createMany?: WarrantyCreateManyProductInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
+  export type WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput = {
+    create?: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput> | WarrantyCreateWithoutReplacementProductInput[] | WarrantyUncheckedCreateWithoutReplacementProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutReplacementProductInput | WarrantyCreateOrConnectWithoutReplacementProductInput[]
+    createMany?: WarrantyCreateManyReplacementProductInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
   export type OrderItemUpdateManyWithoutProductNestedInput = {
@@ -30240,6 +32142,34 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type WarrantyUpdateManyWithoutProductNestedInput = {
+    create?: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput> | WarrantyCreateWithoutProductInput[] | WarrantyUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutProductInput | WarrantyUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: WarrantyCreateManyProductInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutProductInput | WarrantyUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutProductInput | WarrantyUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
+  export type WarrantyUpdateManyWithoutReplacementProductNestedInput = {
+    create?: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput> | WarrantyCreateWithoutReplacementProductInput[] | WarrantyUncheckedCreateWithoutReplacementProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutReplacementProductInput | WarrantyCreateOrConnectWithoutReplacementProductInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutReplacementProductInput | WarrantyUpsertWithWhereUniqueWithoutReplacementProductInput[]
+    createMany?: WarrantyCreateManyReplacementProductInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutReplacementProductInput | WarrantyUpdateWithWhereUniqueWithoutReplacementProductInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutReplacementProductInput | WarrantyUpdateManyWithWhereWithoutReplacementProductInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -30318,6 +32248,34 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type WarrantyUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput> | WarrantyCreateWithoutProductInput[] | WarrantyUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutProductInput | WarrantyUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: WarrantyCreateManyProductInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutProductInput | WarrantyUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutProductInput | WarrantyUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput = {
+    create?: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput> | WarrantyCreateWithoutReplacementProductInput[] | WarrantyUncheckedCreateWithoutReplacementProductInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutReplacementProductInput | WarrantyCreateOrConnectWithoutReplacementProductInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutReplacementProductInput | WarrantyUpsertWithWhereUniqueWithoutReplacementProductInput[]
+    createMany?: WarrantyCreateManyReplacementProductInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutReplacementProductInput | WarrantyUpdateWithWhereUniqueWithoutReplacementProductInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutReplacementProductInput | WarrantyUpdateManyWithWhereWithoutReplacementProductInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
   export type ProductStockCreateNestedManyWithoutWarehouseInput = {
     create?: XOR<ProductStockCreateWithoutWarehouseInput, ProductStockUncheckedCreateWithoutWarehouseInput> | ProductStockCreateWithoutWarehouseInput[] | ProductStockUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: ProductStockCreateOrConnectWithoutWarehouseInput | ProductStockCreateOrConnectWithoutWarehouseInput[]
@@ -30339,6 +32297,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type WarrantyCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput> | WarrantyCreateWithoutWarehouseInput[] | WarrantyUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutWarehouseInput | WarrantyCreateOrConnectWithoutWarehouseInput[]
+    createMany?: WarrantyCreateManyWarehouseInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
   export type ProductStockUncheckedCreateNestedManyWithoutWarehouseInput = {
     create?: XOR<ProductStockCreateWithoutWarehouseInput, ProductStockUncheckedCreateWithoutWarehouseInput> | ProductStockCreateWithoutWarehouseInput[] | ProductStockUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: ProductStockCreateOrConnectWithoutWarehouseInput | ProductStockCreateOrConnectWithoutWarehouseInput[]
@@ -30358,6 +32323,13 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutWarehouseInput | StockMovementCreateOrConnectWithoutWarehouseInput[]
     createMany?: StockMovementCreateManyWarehouseInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type WarrantyUncheckedCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput> | WarrantyCreateWithoutWarehouseInput[] | WarrantyUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutWarehouseInput | WarrantyCreateOrConnectWithoutWarehouseInput[]
+    createMany?: WarrantyCreateManyWarehouseInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
   export type ProductStockUpdateManyWithoutWarehouseNestedInput = {
@@ -30402,6 +32374,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type WarrantyUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput> | WarrantyCreateWithoutWarehouseInput[] | WarrantyUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutWarehouseInput | WarrantyCreateOrConnectWithoutWarehouseInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutWarehouseInput | WarrantyUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: WarrantyCreateManyWarehouseInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutWarehouseInput | WarrantyUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutWarehouseInput | WarrantyUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
   export type ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput = {
     create?: XOR<ProductStockCreateWithoutWarehouseInput, ProductStockUncheckedCreateWithoutWarehouseInput> | ProductStockCreateWithoutWarehouseInput[] | ProductStockUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: ProductStockCreateOrConnectWithoutWarehouseInput | ProductStockCreateOrConnectWithoutWarehouseInput[]
@@ -30442,6 +32428,20 @@ export namespace Prisma {
     update?: StockMovementUpdateWithWhereUniqueWithoutWarehouseInput | StockMovementUpdateWithWhereUniqueWithoutWarehouseInput[]
     updateMany?: StockMovementUpdateManyWithWhereWithoutWarehouseInput | StockMovementUpdateManyWithWhereWithoutWarehouseInput[]
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput> | WarrantyCreateWithoutWarehouseInput[] | WarrantyUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutWarehouseInput | WarrantyCreateOrConnectWithoutWarehouseInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutWarehouseInput | WarrantyUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: WarrantyCreateManyWarehouseInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutWarehouseInput | WarrantyUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutWarehouseInput | WarrantyUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutStocksInput = {
@@ -30682,6 +32682,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type WarrantyCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput> | WarrantyCreateWithoutCustomerInput[] | WarrantyUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutCustomerInput | WarrantyCreateOrConnectWithoutCustomerInput[]
+    createMany?: WarrantyCreateManyCustomerInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -30700,6 +32707,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutCustomerInput | MessageCreateOrConnectWithoutCustomerInput[]
     createMany?: MessageCreateManyCustomerInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type WarrantyUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput> | WarrantyCreateWithoutCustomerInput[] | WarrantyUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutCustomerInput | WarrantyCreateOrConnectWithoutCustomerInput[]
+    createMany?: WarrantyCreateManyCustomerInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
   export type CustomerUpdatephoneInput = {
@@ -30748,6 +32762,20 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type WarrantyUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput> | WarrantyCreateWithoutCustomerInput[] | WarrantyUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutCustomerInput | WarrantyCreateOrConnectWithoutCustomerInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutCustomerInput | WarrantyUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: WarrantyCreateManyCustomerInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutCustomerInput | WarrantyUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutCustomerInput | WarrantyUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -30787,6 +32815,92 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutCustomerInput | MessageUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutCustomerInput | MessageUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput> | WarrantyCreateWithoutCustomerInput[] | WarrantyUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutCustomerInput | WarrantyCreateOrConnectWithoutCustomerInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutCustomerInput | WarrantyUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: WarrantyCreateManyCustomerInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutCustomerInput | WarrantyUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutCustomerInput | WarrantyUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedOneWithoutWarrantiesAsProductInput = {
+    create?: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsProductInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutWarrantiesAsReplacementInput = {
+    create?: XOR<ProductCreateWithoutWarrantiesAsReplacementInput, ProductUncheckedCreateWithoutWarrantiesAsReplacementInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsReplacementInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type CustomerCreateNestedOneWithoutWarrantiesInput = {
+    create?: XOR<CustomerCreateWithoutWarrantiesInput, CustomerUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutWarrantiesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type WarehouseCreateNestedOneWithoutWarrantiesInput = {
+    create?: XOR<WarehouseCreateWithoutWarrantiesInput, WarehouseUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarrantiesInput
+    connect?: WarehouseWhereUniqueInput
+  }
+
+  export type EnumWarrantyTypeFieldUpdateOperationsInput = {
+    set?: $Enums.WarrantyType
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput = {
+    create?: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsProductInput
+    upsert?: ProductUpsertWithoutWarrantiesAsProductInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutWarrantiesAsProductInput, ProductUpdateWithoutWarrantiesAsProductInput>, ProductUncheckedUpdateWithoutWarrantiesAsProductInput>
+  }
+
+  export type ProductUpdateOneWithoutWarrantiesAsReplacementNestedInput = {
+    create?: XOR<ProductCreateWithoutWarrantiesAsReplacementInput, ProductUncheckedCreateWithoutWarrantiesAsReplacementInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsReplacementInput
+    upsert?: ProductUpsertWithoutWarrantiesAsReplacementInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutWarrantiesAsReplacementInput, ProductUpdateWithoutWarrantiesAsReplacementInput>, ProductUncheckedUpdateWithoutWarrantiesAsReplacementInput>
+  }
+
+  export type CustomerUpdateOneRequiredWithoutWarrantiesNestedInput = {
+    create?: XOR<CustomerCreateWithoutWarrantiesInput, CustomerUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutWarrantiesInput
+    upsert?: CustomerUpsertWithoutWarrantiesInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutWarrantiesInput, CustomerUpdateWithoutWarrantiesInput>, CustomerUncheckedUpdateWithoutWarrantiesInput>
+  }
+
+  export type WarehouseUpdateOneWithoutWarrantiesNestedInput = {
+    create?: XOR<WarehouseCreateWithoutWarrantiesInput, WarehouseUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarrantiesInput
+    upsert?: WarehouseUpsertWithoutWarrantiesInput
+    disconnect?: WarehouseWhereInput | boolean
+    delete?: WarehouseWhereInput | boolean
+    connect?: WarehouseWhereUniqueInput
+    update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutWarrantiesInput, WarehouseUpdateWithoutWarrantiesInput>, WarehouseUncheckedUpdateWithoutWarrantiesInput>
   }
 
   export type CustomerCreateNestedOneWithoutMessageInput = {
@@ -30857,14 +32971,6 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type OrderUpdatereceiverPhoneInput = {
@@ -31287,6 +33393,23 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumWarrantyTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWarrantyTypeFilter<$PrismaModel> | $Enums.WarrantyType
+  }
+
+  export type NestedEnumWarrantyTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWarrantyTypeWithAggregatesFilter<$PrismaModel> | $Enums.WarrantyType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWarrantyTypeFilter<$PrismaModel>
+    _max?: NestedEnumWarrantyTypeFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -31642,6 +33765,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
     message?: MessageCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutUsersInput = {
@@ -31661,6 +33785,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     message?: MessageUncheckedCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutUsersInput = {
@@ -32268,6 +34393,8 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -32281,6 +34408,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -32460,6 +34589,82 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WarrantyCreateWithoutProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replacementProduct?: ProductCreateNestedOneWithoutWarrantiesAsReplacementInput
+    customer: CustomerCreateNestedOneWithoutWarrantiesInput
+    warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateWithoutProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    replacementProductId?: number | null
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateOrConnectWithoutProductInput = {
+    where: WarrantyWhereUniqueInput
+    create: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput>
+  }
+
+  export type WarrantyCreateManyProductInputEnvelope = {
+    data: WarrantyCreateManyProductInput | WarrantyCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WarrantyCreateWithoutReplacementProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
+    customer: CustomerCreateNestedOneWithoutWarrantiesInput
+    warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateWithoutReplacementProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateOrConnectWithoutReplacementProductInput = {
+    where: WarrantyWhereUniqueInput
+    create: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput>
+  }
+
+  export type WarrantyCreateManyReplacementProductInputEnvelope = {
+    data: WarrantyCreateManyReplacementProductInput | WarrantyCreateManyReplacementProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -32605,6 +34810,56 @@ export namespace Prisma {
     data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type WarrantyUpsertWithWhereUniqueWithoutProductInput = {
+    where: WarrantyWhereUniqueInput
+    update: XOR<WarrantyUpdateWithoutProductInput, WarrantyUncheckedUpdateWithoutProductInput>
+    create: XOR<WarrantyCreateWithoutProductInput, WarrantyUncheckedCreateWithoutProductInput>
+  }
+
+  export type WarrantyUpdateWithWhereUniqueWithoutProductInput = {
+    where: WarrantyWhereUniqueInput
+    data: XOR<WarrantyUpdateWithoutProductInput, WarrantyUncheckedUpdateWithoutProductInput>
+  }
+
+  export type WarrantyUpdateManyWithWhereWithoutProductInput = {
+    where: WarrantyScalarWhereInput
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type WarrantyScalarWhereInput = {
+    AND?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+    OR?: WarrantyScalarWhereInput[]
+    NOT?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+    id?: StringFilter<"Warranty"> | string
+    type?: EnumWarrantyTypeFilter<"Warranty"> | $Enums.WarrantyType
+    productId?: IntFilter<"Warranty"> | number
+    replacementProductId?: IntNullableFilter<"Warranty"> | number | null
+    customerId?: StringFilter<"Warranty"> | string
+    warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    quantity?: IntFilter<"Warranty"> | number
+    maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
+    shippingCost?: FloatNullableFilter<"Warranty"> | number | null
+    notes?: StringNullableFilter<"Warranty"> | string | null
+    createdAt?: DateTimeFilter<"Warranty"> | Date | string
+    updatedAt?: DateTimeFilter<"Warranty"> | Date | string
+  }
+
+  export type WarrantyUpsertWithWhereUniqueWithoutReplacementProductInput = {
+    where: WarrantyWhereUniqueInput
+    update: XOR<WarrantyUpdateWithoutReplacementProductInput, WarrantyUncheckedUpdateWithoutReplacementProductInput>
+    create: XOR<WarrantyCreateWithoutReplacementProductInput, WarrantyUncheckedCreateWithoutReplacementProductInput>
+  }
+
+  export type WarrantyUpdateWithWhereUniqueWithoutReplacementProductInput = {
+    where: WarrantyWhereUniqueInput
+    data: XOR<WarrantyUpdateWithoutReplacementProductInput, WarrantyUncheckedUpdateWithoutReplacementProductInput>
+  }
+
+  export type WarrantyUpdateManyWithWhereWithoutReplacementProductInput = {
+    where: WarrantyScalarWhereInput
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutReplacementProductInput>
+  }
+
   export type ProductStockCreateWithoutWarehouseInput = {
     quantity?: number
     price?: number
@@ -32739,6 +34994,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WarrantyCreateWithoutWarehouseInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
+    replacementProduct?: ProductCreateNestedOneWithoutWarrantiesAsReplacementInput
+    customer: CustomerCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateWithoutWarehouseInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    customerId: string
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateOrConnectWithoutWarehouseInput = {
+    where: WarrantyWhereUniqueInput
+    create: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type WarrantyCreateManyWarehouseInputEnvelope = {
+    data: WarrantyCreateManyWarehouseInput | WarrantyCreateManyWarehouseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductStockUpsertWithWhereUniqueWithoutWarehouseInput = {
     where: ProductStockWhereUniqueInput
     update: XOR<ProductStockUpdateWithoutWarehouseInput, ProductStockUncheckedUpdateWithoutWarehouseInput>
@@ -32787,6 +35080,22 @@ export namespace Prisma {
     data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutWarehouseInput>
   }
 
+  export type WarrantyUpsertWithWhereUniqueWithoutWarehouseInput = {
+    where: WarrantyWhereUniqueInput
+    update: XOR<WarrantyUpdateWithoutWarehouseInput, WarrantyUncheckedUpdateWithoutWarehouseInput>
+    create: XOR<WarrantyCreateWithoutWarehouseInput, WarrantyUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type WarrantyUpdateWithWhereUniqueWithoutWarehouseInput = {
+    where: WarrantyWhereUniqueInput
+    data: XOR<WarrantyUpdateWithoutWarehouseInput, WarrantyUncheckedUpdateWithoutWarehouseInput>
+  }
+
+  export type WarrantyUpdateManyWithWhereWithoutWarehouseInput = {
+    where: WarrantyScalarWhereInput
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutWarehouseInput>
+  }
+
   export type ProductCreateWithoutStocksInput = {
     name: string
     description?: string | null
@@ -32797,6 +35106,8 @@ export namespace Prisma {
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -32810,6 +35121,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -32824,6 +35137,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutStocksInput = {
@@ -32834,6 +35148,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutStocksInput = {
@@ -32862,6 +35177,8 @@ export namespace Prisma {
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -32875,6 +35192,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -32895,6 +35214,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutStocksInput = {
@@ -32905,6 +35225,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type ProductCreateWithoutStockMovementsInput = {
@@ -32917,6 +35238,8 @@ export namespace Prisma {
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockMovementsInput = {
@@ -32930,6 +35253,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockMovementsInput = {
@@ -32944,6 +35269,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutMovementsInput = {
@@ -32954,6 +35280,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutMovementsInput = {
@@ -33033,6 +35360,8 @@ export namespace Prisma {
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockMovementsInput = {
@@ -33046,6 +35375,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -33066,6 +35397,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutMovementsInput = {
@@ -33076,6 +35408,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type UserUpsertWithoutStockMovementsInput = {
@@ -33320,6 +35653,8 @@ export namespace Prisma {
     images?: ProductImageCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductsInput = {
@@ -33333,6 +35668,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductsInput = {
@@ -33394,6 +35731,8 @@ export namespace Prisma {
     images?: ProductImageUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductsInput = {
@@ -33407,6 +35746,8 @@ export namespace Prisma {
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -33419,6 +35760,8 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -33432,6 +35775,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -33460,6 +35805,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -33473,6 +35820,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type OrderCreateWithoutCustomerInput = {
@@ -33631,6 +35980,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WarrantyCreateWithoutCustomerInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
+    replacementProduct?: ProductCreateNestedOneWithoutWarrantiesAsReplacementInput
+    warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateOrConnectWithoutCustomerInput = {
+    where: WarrantyWhereUniqueInput
+    create: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type WarrantyCreateManyCustomerInputEnvelope = {
+    data: WarrantyCreateManyCustomerInput | WarrantyCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutCustomerInput, OrderUncheckedUpdateWithoutCustomerInput>
@@ -33679,6 +36066,324 @@ export namespace Prisma {
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutCustomerInput>
   }
 
+  export type WarrantyUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: WarrantyWhereUniqueInput
+    update: XOR<WarrantyUpdateWithoutCustomerInput, WarrantyUncheckedUpdateWithoutCustomerInput>
+    create: XOR<WarrantyCreateWithoutCustomerInput, WarrantyUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type WarrantyUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: WarrantyWhereUniqueInput
+    data: XOR<WarrantyUpdateWithoutCustomerInput, WarrantyUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type WarrantyUpdateManyWithWhereWithoutCustomerInput = {
+    where: WarrantyScalarWhereInput
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type ProductCreateWithoutWarrantiesAsProductInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutWarrantiesAsProductInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutWarrantiesAsProductInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
+  }
+
+  export type ProductCreateWithoutWarrantiesAsReplacementInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutWarrantiesAsReplacementInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutWarrantiesAsReplacementInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutWarrantiesAsReplacementInput, ProductUncheckedCreateWithoutWarrantiesAsReplacementInput>
+  }
+
+  export type CustomerCreateWithoutWarrantiesInput = {
+    id?: string
+    name: string
+    phone?: CustomerCreatephoneInput | string[]
+    countryCode?: string | null
+    phonestatus?: string | null
+    country?: string | null
+    gender?: string | null
+    age?: string | null
+    source?: string | null
+    city?: string | null
+    rating?: number | null
+    status?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    users?: UserCreateNestedManyWithoutCustomersInput
+    message?: MessageCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutWarrantiesInput = {
+    id?: string
+    name: string
+    phone?: CustomerCreatephoneInput | string[]
+    countryCode?: string | null
+    phonestatus?: string | null
+    country?: string | null
+    gender?: string | null
+    age?: string | null
+    source?: string | null
+    city?: string | null
+    rating?: number | null
+    status?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    users?: UserUncheckedCreateNestedManyWithoutCustomersInput
+    message?: MessageUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutWarrantiesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutWarrantiesInput, CustomerUncheckedCreateWithoutWarrantiesInput>
+  }
+
+  export type WarehouseCreateWithoutWarrantiesInput = {
+    name: string
+    location: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
+    orders?: OrderCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseUncheckedCreateWithoutWarrantiesInput = {
+    id?: number
+    name: string
+    location: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
+    orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseCreateOrConnectWithoutWarrantiesInput = {
+    where: WarehouseWhereUniqueInput
+    create: XOR<WarehouseCreateWithoutWarrantiesInput, WarehouseUncheckedCreateWithoutWarrantiesInput>
+  }
+
+  export type ProductUpsertWithoutWarrantiesAsProductInput = {
+    update: XOR<ProductUpdateWithoutWarrantiesAsProductInput, ProductUncheckedUpdateWithoutWarrantiesAsProductInput>
+    create: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutWarrantiesAsProductInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutWarrantiesAsProductInput, ProductUncheckedUpdateWithoutWarrantiesAsProductInput>
+  }
+
+  export type ProductUpdateWithoutWarrantiesAsProductInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutWarrantiesAsProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
+  }
+
+  export type ProductUpsertWithoutWarrantiesAsReplacementInput = {
+    update: XOR<ProductUpdateWithoutWarrantiesAsReplacementInput, ProductUncheckedUpdateWithoutWarrantiesAsReplacementInput>
+    create: XOR<ProductCreateWithoutWarrantiesAsReplacementInput, ProductUncheckedCreateWithoutWarrantiesAsReplacementInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutWarrantiesAsReplacementInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutWarrantiesAsReplacementInput, ProductUncheckedUpdateWithoutWarrantiesAsReplacementInput>
+  }
+
+  export type ProductUpdateWithoutWarrantiesAsReplacementInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutWarrantiesAsReplacementInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type CustomerUpsertWithoutWarrantiesInput = {
+    update: XOR<CustomerUpdateWithoutWarrantiesInput, CustomerUncheckedUpdateWithoutWarrantiesInput>
+    create: XOR<CustomerCreateWithoutWarrantiesInput, CustomerUncheckedCreateWithoutWarrantiesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutWarrantiesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutWarrantiesInput, CustomerUncheckedUpdateWithoutWarrantiesInput>
+  }
+
+  export type CustomerUpdateWithoutWarrantiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: CustomerUpdatephoneInput | string[]
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    users?: UserUpdateManyWithoutCustomersNestedInput
+    message?: MessageUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutWarrantiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: CustomerUpdatephoneInput | string[]
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    users?: UserUncheckedUpdateManyWithoutCustomersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type WarehouseUpsertWithoutWarrantiesInput = {
+    update: XOR<WarehouseUpdateWithoutWarrantiesInput, WarehouseUncheckedUpdateWithoutWarrantiesInput>
+    create: XOR<WarehouseCreateWithoutWarrantiesInput, WarehouseUncheckedCreateWithoutWarrantiesInput>
+    where?: WarehouseWhereInput
+  }
+
+  export type WarehouseUpdateToOneWithWhereWithoutWarrantiesInput = {
+    where?: WarehouseWhereInput
+    data: XOR<WarehouseUpdateWithoutWarrantiesInput, WarehouseUncheckedUpdateWithoutWarrantiesInput>
+  }
+
+  export type WarehouseUpdateWithoutWarrantiesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateWithoutWarrantiesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+  }
+
   export type CustomerCreateWithoutMessageInput = {
     id?: string
     name: string
@@ -33696,6 +36401,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
     users?: UserCreateNestedManyWithoutCustomersInput
+    warranties?: WarrantyCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutMessageInput = {
@@ -33715,6 +36421,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     users?: UserUncheckedCreateNestedManyWithoutCustomersInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutMessageInput = {
@@ -33801,6 +36508,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     users?: UserUpdateManyWithoutCustomersNestedInput
+    warranties?: WarrantyUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutMessageInput = {
@@ -33820,6 +36528,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     users?: UserUncheckedUpdateManyWithoutCustomersNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type UserUpsertWithoutMessageInput = {
@@ -33896,6 +36605,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCustomersInput
     message?: MessageCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -33915,6 +36625,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCustomersInput
     message?: MessageUncheckedCreateNestedManyWithoutCustomerInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -34005,6 +36716,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutOrdersInput = {
@@ -34015,6 +36727,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutOrdersInput = {
@@ -34070,6 +36783,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCustomersNestedInput
     message?: MessageUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -34089,6 +36803,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCustomersNestedInput
     message?: MessageUncheckedUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type UserUpsertWithoutOrdersInput = {
@@ -34182,6 +36897,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutOrdersInput = {
@@ -34192,6 +36908,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type shippingUpsertWithoutOrdersInput = {
@@ -34507,6 +37224,8 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -34520,6 +37239,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsReplacement?: WarrantyUncheckedCreateNestedManyWithoutReplacementProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -34628,6 +37349,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -34641,6 +37364,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type UserCreateManyParentInput = {
@@ -34916,6 +37641,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     message?: MessageUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutUsersInput = {
@@ -34935,6 +37661,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     message?: MessageUncheckedUpdateManyWithoutCustomerNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutUsersInput = {
@@ -35174,6 +37901,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -35187,6 +37916,8 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsReplacement?: WarrantyUncheckedUpdateManyWithoutReplacementProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -35234,6 +37965,34 @@ export namespace Prisma {
     type: $Enums.MovementType
     reason?: string | null
     createdAt?: Date | string
+  }
+
+  export type WarrantyCreateManyProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    replacementProductId?: number | null
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateManyReplacementProductInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -35350,6 +38109,90 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WarrantyUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replacementProduct?: ProductUpdateOneWithoutWarrantiesAsReplacementNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUpdateWithoutReplacementProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateWithoutReplacementProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutReplacementProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProductStockCreateManyWarehouseInput = {
     id?: number
     productId: number
@@ -35400,6 +38243,20 @@ export namespace Prisma {
     type: $Enums.MovementType
     reason?: string | null
     createdAt?: Date | string
+  }
+
+  export type WarrantyCreateManyWarehouseInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    customerId: string
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProductStockUpdateWithoutWarehouseInput = {
@@ -35558,6 +38415,48 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WarrantyUpdateWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
+    replacementProduct?: ProductUpdateOneWithoutWarrantiesAsReplacementNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TargetProductCreateManyTargetInput = {
     id?: string
     productId: number
@@ -35624,6 +38523,20 @@ export namespace Prisma {
     id?: string
     message?: string | null
     userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateManyCustomerInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    replacementProductId?: number | null
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35814,6 +38727,48 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
+    replacementProduct?: ProductUpdateOneWithoutWarrantiesAsReplacementNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    replacementProductId?: NullableIntFieldUpdateOperationsInput | number | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

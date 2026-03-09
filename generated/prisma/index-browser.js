@@ -262,6 +262,21 @@ exports.Prisma.CustomerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WarrantyScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  productId: 'productId',
+  replacementProductId: 'replacementProductId',
+  customerId: 'customerId',
+  warehouseId: 'warehouseId',
+  quantity: 'quantity',
+  maintenanceLaborCost: 'maintenanceLaborCost',
+  shippingCost: 'shippingCost',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   message: 'message',
@@ -386,6 +401,12 @@ exports.MovementType = exports.$Enums.MovementType = {
   RETURN: 'RETURN'
 };
 
+exports.WarrantyType = exports.$Enums.WarrantyType = {
+  REPLACEMENT: 'REPLACEMENT',
+  MAINTENANCE: 'MAINTENANCE',
+  DAMAGED: 'DAMAGED'
+};
+
 exports.ExpenseType = exports.$Enums.ExpenseType = {
   DAILY: 'DAILY',
   STAFF_SALARY: 'STAFF_SALARY',
@@ -415,6 +436,7 @@ exports.Prisma.ModelName = {
   TargetProduct: 'TargetProduct',
   ProductImage: 'ProductImage',
   Customer: 'Customer',
+  Warranty: 'Warranty',
   Message: 'Message',
   Order: 'Order',
   Expense: 'Expense',

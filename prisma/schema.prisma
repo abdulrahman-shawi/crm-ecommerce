@@ -113,6 +113,8 @@ model Product {
   targetProducts TargetProduct[]
   stocks         ProductStock[]
   stockMovements StockMovement[]
+  warrantiesAsProduct     Warranty[] @relation("WarrantyOriginalProduct")
+  warrantiesAsReplacement Warranty[] @relation("WarrantyReplacementProduct")
 }
 
 model Warehouse {
@@ -124,6 +126,7 @@ model Warehouse {
   stocks    ProductStock[]
   orders    Order[] // لتحديد من أي مخزن خرج الطلب
   movements StockMovement[]
+  warranties Warranty[]
 }
 
 model ProductStock {
@@ -213,6 +216,33 @@ model Customer {
   orders      Order[]
   users       User[]    @relation("CustomerToUser")
   message     Message[]
+  warranties  Warranty[]
+}
+
+model Warranty {
+  id                   String       @id @default(uuid())
+  type                 WarrantyType
+  productId            Int
+  replacementProductId Int?
+  customerId           String
+  warehouseId          Int?
+  quantity             Int          @default(1)
+  maintenanceLaborCost Float?
+  shippingCost         Float?
+  notes                String?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  product            Product   @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
+  replacementProduct Product?  @relation("WarrantyReplacementProduct", fields: [replacementProductId], references: [id], onDelete: SetNull)
+  customer           Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  warehouse          Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+}
+
+enum WarrantyType {
+  REPLACEMENT
+  MAINTENANCE
+  DAMAGED
 }
 
 model Message {
