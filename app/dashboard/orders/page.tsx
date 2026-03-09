@@ -225,7 +225,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const shippingTotalExpenses = getOrderTotalShippingExpenses(data);
         const receiverName = data?.receiverName || 'غير محدد';
         const receiverPhone = Array.isArray(data?.receiverPhone)
-            ? data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ')
+            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ') || 'لم يسجل')
             : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل');
         const country = data?.country || '-';
         const city = data?.city || 'لم يسجل';
@@ -305,7 +305,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                     <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:6px;line-height:1.7;">
                         <div>البلد: ${country}</div>
                         <div>المحافظة: ${city}</div>
-                        <div>المنظقة: ${municipality}</div>
+                        <div>المنطقة: ${municipality}</div>
                         <div>العنوان: ${fullAddress}</div>
                         <div>رقم التواصل: <span dir="rtl">${receiverPhone}</span></div>
                         ${mapLink ? `<div>رابط الخريطة: ${mapLink}</div>` : ''}
@@ -1805,7 +1805,7 @@ function ViewOrder({ data, products, onSharePdf }: { data: any, products: any, o
                             <div className="text-sm font-bold text-slate-500 mt-2 space-y-1">
                                 <p>البلد: {data.country} </p>
                                 <p>المحافظة:{data.city ? ` - ${data.city}` : 'لم يسجل'}</p>
-                                <p>المنظقة: {data.municipality ? ` - ${data.municipality}` : 'لم يسجل'}</p>
+                                <p>المنطقة: {data.municipality ? ` - ${data.municipality}` : 'لم يسجل'}</p>
                                 <p>العنوان: {data.fullAddress || 'لم يسجل'}</p>
                                 <p>
                                     رقم التواصل: <span dir="ltr">{

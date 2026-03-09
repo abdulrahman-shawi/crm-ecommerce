@@ -283,7 +283,7 @@ export default function WarrantyPage() {
       </div>
 
       <AppModal title="إضافة حركة كفالة" isOpen={isOpen} onClose={handleClose}>
-        <div className="p-2 max-h-[80vh] overflow-y-auto">
+        <div className="p-2">
           <DynamicForm
             schema={warrantySchema}
             onSubmit={onSubmit}
