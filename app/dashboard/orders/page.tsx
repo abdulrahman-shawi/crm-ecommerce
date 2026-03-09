@@ -225,8 +225,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const shippingTotalExpenses = getOrderTotalShippingExpenses(data);
         const receiverName = data?.receiverName || 'غير محدد';
         const receiverPhone = Array.isArray(data?.receiverPhone)
-            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForInvoice(phone)).join(' - ') || 'لم يسجل')
-            : (formatPhoneForInvoice(data?.receiverPhone) || 'لم يسجل');
+            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)) || 'لم يسجل')
+            : (formatPhoneForDisplay(data?.receiverPhone) || 'لم يسجل');
         const country = data?.country || '-';
         const city = data?.city || 'لم يسجل';
         const municipality = data?.municipality || 'لم يسجل';
