@@ -266,7 +266,6 @@ exports.Prisma.WarrantyScalarFieldEnum = {
   id: 'id',
   type: 'type',
   productId: 'productId',
-  replacementProductId: 'replacementProductId',
   customerId: 'customerId',
   warehouseId: 'warehouseId',
   quantity: 'quantity',

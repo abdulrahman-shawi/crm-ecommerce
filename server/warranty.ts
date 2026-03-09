@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 type WarrantyPayload = {
   type: "REPLACEMENT" | "MAINTENANCE" | "DAMAGED";
   productId: number;
-  replacementProductId?: number | null;
   customerId: string;
   warehouseId?: number | null;
   quantity?: number;
@@ -22,7 +21,6 @@ export async function getWarrantyData() {
         orderBy: { createdAt: "desc" },
         include: {
           product: { select: { id: true, name: true } },
-          replacementProduct: { select: { id: true, name: true } },
           customer: { select: { id: true, name: true } },
           warehouse: { select: { id: true, name: true, location: true } },
         },
@@ -42,10 +40,6 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
   try {
     if (!payload.customerId || !payload.productId || !payload.type) {
       return { success: false, error: "البيانات الأساسية غير مكتملة" };
-    }
-
-    if (payload.type === "REPLACEMENT" && !payload.replacementProductId) {
-      return { success: false, error: "يرجى اختيار المنتج البديل" };
     }
 
     if (payload.type === "DAMAGED") {
@@ -101,7 +95,6 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
         data: {
           type: payload.type,
           productId: Number(payload.productId),
-          replacementProductId: payload.type === "REPLACEMENT" ? Number(payload.replacementProductId) : null,
           customerId: payload.customerId,
           warehouseId: payload.warehouseId ? Number(payload.warehouseId) : null,
           quantity,

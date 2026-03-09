@@ -18,7 +18,6 @@ const warrantySchema = z.object({
   type: z.enum(["REPLACEMENT", "MAINTENANCE", "DAMAGED"]),
   customerId: z.string().min(1, "العميل مطلوب"),
   productId: z.coerce.number().min(1, "المنتج مطلوب"),
-  replacementProductId: z.coerce.number().optional(),
   warehouseId: z.coerce.number().optional(),
   quantity: z.coerce.number().min(1, "الكمية يجب أن تكون 1 على الأقل").default(1),
   maintenanceLaborCost: z.coerce.number().optional(),
@@ -83,10 +82,6 @@ export default function WarrantyPage() {
         type: data.type,
         customerId: data.customerId,
         productId: Number(data.productId),
-        replacementProductId:
-          data.type === "REPLACEMENT" && data.replacementProductId
-            ? Number(data.replacementProductId)
-            : null,
         warehouseId: data.warehouseId ? Number(data.warehouseId) : null,
         quantity: Number(data.quantity || 1),
         maintenanceLaborCost:
@@ -197,7 +192,6 @@ export default function WarrantyPage() {
           columns={[
             { header: "العميل", accessor: (row: any) => row.customer?.name || "-" },
             { header: "المنتج المرتجع", accessor: (row: any) => row.product?.name || "-" },
-            { header: "المنتج البديل", accessor: (row: any) => row.replacementProduct?.name || "-" },
             {
               header: "التاريخ",
               accessor: (row: any) =>
@@ -298,7 +292,6 @@ export default function WarrantyPage() {
               type: warrantyType,
               customerId: "",
               productId: undefined,
-              replacementProductId: undefined,
               warehouseId: undefined,
               quantity: 1,
               maintenanceLaborCost: undefined,
@@ -335,9 +328,6 @@ export default function WarrantyPage() {
                       onChange: (e) => {
                         const nextType = e.target.value as "REPLACEMENT" | "MAINTENANCE" | "DAMAGED";
                         setWarrantyType(nextType);
-                        if (nextType !== "REPLACEMENT") {
-                          setValue("replacementProductId", undefined as any);
-                        }
                         if (nextType !== "DAMAGED") {
                           setValue("warehouseId", undefined as any);
                         }
@@ -364,16 +354,6 @@ export default function WarrantyPage() {
                     {...register("productId")}
                     error={errors.productId?.message as string}
                   />
-
-                  {currentType === "REPLACEMENT" && (
-                    <FormSelect
-                      className="text-gray-800 dark:text-white"
-                      label="المنتج البديل"
-                      options={productOptions}
-                      {...register("replacementProductId")}
-                      error={errors.replacementProductId?.message as string}
-                    />
-                  )}
 
                   {currentType === "DAMAGED" && (
                     <FormSelect

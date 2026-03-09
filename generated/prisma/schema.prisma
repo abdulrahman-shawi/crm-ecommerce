@@ -101,20 +101,19 @@ model Category {
 }
 
 model Product {
-  id                      Int             @id @default(autoincrement())
-  name                    String
-  description             String?
-  googleLink              String?
-  categoryId              Int?
-  createdAt               DateTime        @default(now())
-  orderItems              OrderItem[]
-  category                Category?       @relation(fields: [categoryId], references: [id])
-  images                  ProductImage[]
-  targetProducts          TargetProduct[]
-  stocks                  ProductStock[]
-  stockMovements          StockMovement[]
-  warrantiesAsProduct     Warranty[]      @relation("WarrantyOriginalProduct")
-  warrantiesAsReplacement Warranty[]      @relation("WarrantyReplacementProduct")
+  id                  Int             @id @default(autoincrement())
+  name                String
+  description         String?
+  googleLink          String?
+  categoryId          Int?
+  createdAt           DateTime        @default(now())
+  orderItems          OrderItem[]
+  category            Category?       @relation(fields: [categoryId], references: [id])
+  images              ProductImage[]
+  targetProducts      TargetProduct[]
+  stocks              ProductStock[]
+  stockMovements      StockMovement[]
+  warrantiesAsProduct Warranty[]      @relation("WarrantyOriginalProduct")
 }
 
 model Warehouse {
@@ -223,7 +222,6 @@ model Warranty {
   id                   String       @id @default(uuid())
   type                 WarrantyType
   productId            Int
-  replacementProductId Int?
   customerId           String
   warehouseId          Int?
   quantity             Int          @default(1)
@@ -233,10 +231,9 @@ model Warranty {
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
 
-  product            Product    @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
-  replacementProduct Product?   @relation("WarrantyReplacementProduct", fields: [replacementProductId], references: [id], onDelete: SetNull)
-  customer           Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  warehouse          Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+  product   Product    @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
+  customer  Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
 }
 
 enum WarrantyType {
