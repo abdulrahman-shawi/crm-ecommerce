@@ -225,7 +225,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const shippingTotalExpenses = getOrderTotalShippingExpenses(data);
         const receiverName = data?.receiverName || 'غير محدد';
         const receiverPhone = Array.isArray(data?.receiverPhone)
-            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)) || 'لم يسجل')
+            ? (data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)).join(' - ') || 'لم يسجل')
             : (formatPhoneForDisplay(data?.receiverPhone) || 'لم يسجل');
         const country = data?.country || '-';
         const city = data?.city || 'لم يسجل';
@@ -307,7 +307,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <div>المحافظة: ${city}</div>
                         <div>المنطقة: ${municipality}</div>
                         <div>العنوان: ${fullAddress}</div>
-                        <div>رقم التواصل: <span dir="rtl">${receiverPhone}</span></div>
+                        <div>رقم التواصل: <span dir="ltr">${receiverPhone}</span></div>
                         ${mapLink ? `<div>رابط الخريطة: ${mapLink}</div>` : ''}
                     </div>
                 </div>
