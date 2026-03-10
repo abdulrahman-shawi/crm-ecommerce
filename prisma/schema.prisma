@@ -31,6 +31,7 @@ model User {
   message                Message[]
   targets                UserTarget[]
   activityTarget         UserActivityTarget?
+  salaryAdjustments      EmployeeSalaryAdjustment[]
   expenses               Expense[]
   stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
 }
@@ -391,4 +392,17 @@ model GeneralSetting {
   usdToTryRate    Float?   @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model EmployeeSalaryAdjustment {
+  id          String   @id @default(uuid())
+  userId      String
+  monthKey    String
+  editedSalary Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, monthKey])
 }

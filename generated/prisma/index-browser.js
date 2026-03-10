@@ -386,6 +386,15 @@ exports.Prisma.GeneralSettingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EmployeeSalaryAdjustmentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  monthKey: 'monthKey',
+  editedSalary: 'editedSalary',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -462,7 +471,8 @@ exports.Prisma.ModelName = {
   shipping: 'shipping',
   OrderItem: 'OrderItem',
   TrakingCompany: 'TrakingCompany',
-  GeneralSetting: 'GeneralSetting'
+  GeneralSetting: 'GeneralSetting',
+  EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment'
 };
 
 /**

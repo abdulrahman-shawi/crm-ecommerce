@@ -4,8 +4,8 @@ import { hasAnyPermission, isAdmin } from "@/lib/utils";
 import { 
   Home, BarChart2, Users, Settings, ChevronRight, ChevronLeft, 
   Receipt, Box, FileText, PieChart, ShieldCheck, HelpCircle, LogOut, 
-  Users2,
   Settings2,
+  Users2,
   RollerCoasterIcon,
   Download,
   Warehouse,
@@ -107,8 +107,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Users, label: "السجلات", href: "/dashboard/customers" },
         (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&
   { icon: Users, label: "العملاء", href: "/dashboard/customers-complated" },
-          (user && hasAnyPermission(user, ["viewCustomers", "viewAnalytics"])) &&
-        { icon: Users2, label: "رواتب العملاء", href: "/dashboard/customer-salaries" },
           (user && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
           { icon: PieChart, label: "المصاريف الثابتة", href: "/dashboard/expenses" },
   
@@ -126,6 +124,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       items: [
           (user && hasAnyPermission(user, ["viewEmployees", "addEmployees", "editEmployees", "deleteEmployees"])) &&
        { icon: Users, label: "المستخدمين", href: "/dashboard/users" },
+         (user && hasAnyPermission(user, ["viewEmployees", "viewAnalytics"])) &&
+       { icon: Users2, label: "رواتب الموظفين", href: "/dashboard/employee-salaries" },
          (user && hasAnyPermission(user, ["viewPermissions", "addPermissions", "editPermissions", "deletePermissions"])) &&
        { icon: RollerCoasterIcon, label: "الأدوار", href: "/dashboard/permissions" },
       ].filter(Boolean),

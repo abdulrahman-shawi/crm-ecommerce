@@ -113,6 +113,11 @@ export type TrakingCompany = $Result.DefaultSelection<Prisma.$TrakingCompanyPayl
  * 
  */
 export type GeneralSetting = $Result.DefaultSelection<Prisma.$GeneralSettingPayload>
+/**
+ * Model EmployeeSalaryAdjustment
+ * 
+ */
+export type EmployeeSalaryAdjustment = $Result.DefaultSelection<Prisma.$EmployeeSalaryAdjustmentPayload>
 
 /**
  * Enums
@@ -526,6 +531,16 @@ export class PrismaClient<
     * ```
     */
   get generalSetting(): Prisma.GeneralSettingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.employeeSalaryAdjustment`: Exposes CRUD operations for the **EmployeeSalaryAdjustment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmployeeSalaryAdjustments
+    * const employeeSalaryAdjustments = await prisma.employeeSalaryAdjustment.findMany()
+    * ```
+    */
+  get employeeSalaryAdjustment(): Prisma.EmployeeSalaryAdjustmentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -979,7 +994,8 @@ export namespace Prisma {
     shipping: 'shipping',
     OrderItem: 'OrderItem',
     TrakingCompany: 'TrakingCompany',
-    GeneralSetting: 'GeneralSetting'
+    GeneralSetting: 'GeneralSetting',
+    EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -995,7 +1011,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userActivityTarget" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting"
+      modelProps: "user" | "userActivityTarget" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2479,6 +2495,80 @@ export namespace Prisma {
           }
         }
       }
+      EmployeeSalaryAdjustment: {
+        payload: Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>
+        fields: Prisma.EmployeeSalaryAdjustmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmployeeSalaryAdjustmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmployeeSalaryAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          findFirst: {
+            args: Prisma.EmployeeSalaryAdjustmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmployeeSalaryAdjustmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          findMany: {
+            args: Prisma.EmployeeSalaryAdjustmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>[]
+          }
+          create: {
+            args: Prisma.EmployeeSalaryAdjustmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          createMany: {
+            args: Prisma.EmployeeSalaryAdjustmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EmployeeSalaryAdjustmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>[]
+          }
+          delete: {
+            args: Prisma.EmployeeSalaryAdjustmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          update: {
+            args: Prisma.EmployeeSalaryAdjustmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmployeeSalaryAdjustmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmployeeSalaryAdjustmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EmployeeSalaryAdjustmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.EmployeeSalaryAdjustmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmployeeSalaryAdjustmentPayload>
+          }
+          aggregate: {
+            args: Prisma.EmployeeSalaryAdjustmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEmployeeSalaryAdjustment>
+          }
+          groupBy: {
+            args: Prisma.EmployeeSalaryAdjustmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EmployeeSalaryAdjustmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmployeeSalaryAdjustmentCountArgs<ExtArgs>
+            result: $Utils.Optional<EmployeeSalaryAdjustmentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2607,6 +2697,7 @@ export namespace Prisma {
     orderItem?: OrderItemOmit
     trakingCompany?: TrakingCompanyOmit
     generalSetting?: GeneralSettingOmit
+    employeeSalaryAdjustment?: EmployeeSalaryAdjustmentOmit
   }
 
   /* Types for Logging */
@@ -2692,6 +2783,7 @@ export namespace Prisma {
     customers: number
     message: number
     targets: number
+    salaryAdjustments: number
     expenses: number
     stockMovements: number
   }
@@ -2702,6 +2794,7 @@ export namespace Prisma {
     customers?: boolean | UserCountOutputTypeCountCustomersArgs
     message?: boolean | UserCountOutputTypeCountMessageArgs
     targets?: boolean | UserCountOutputTypeCountTargetsArgs
+    salaryAdjustments?: boolean | UserCountOutputTypeCountSalaryAdjustmentsArgs
     expenses?: boolean | UserCountOutputTypeCountExpensesArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
   }
@@ -2750,6 +2843,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserTargetWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSalaryAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmployeeSalaryAdjustmentWhereInput
   }
 
   /**
@@ -3400,6 +3500,7 @@ export namespace Prisma {
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
     activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
+    salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3470,6 +3571,7 @@ export namespace Prisma {
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
     activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
+    salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3494,6 +3596,7 @@ export namespace Prisma {
       message: Prisma.$MessagePayload<ExtArgs>[]
       targets: Prisma.$UserTargetPayload<ExtArgs>[]
       activityTarget: Prisma.$UserActivityTargetPayload<ExtArgs> | null
+      salaryAdjustments: Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     }
@@ -3914,6 +4017,7 @@ export namespace Prisma {
     message<T extends User$messageArgs<ExtArgs> = {}>(args?: Subset<T, User$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     targets<T extends User$targetsArgs<ExtArgs> = {}>(args?: Subset<T, User$targetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activityTarget<T extends User$activityTargetArgs<ExtArgs> = {}>(args?: Subset<T, User$activityTargetArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    salaryAdjustments<T extends User$salaryAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$salaryAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4529,6 +4633,30 @@ export namespace Prisma {
      */
     include?: UserActivityTargetInclude<ExtArgs> | null
     where?: UserActivityTargetWhereInput
+  }
+
+  /**
+   * User.salaryAdjustments
+   */
+  export type User$salaryAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    where?: EmployeeSalaryAdjustmentWhereInput
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithRelationInput | EmployeeSalaryAdjustmentOrderByWithRelationInput[]
+    cursor?: EmployeeSalaryAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmployeeSalaryAdjustmentScalarFieldEnum | EmployeeSalaryAdjustmentScalarFieldEnum[]
   }
 
   /**
@@ -27217,6 +27345,1111 @@ export namespace Prisma {
 
 
   /**
+   * Model EmployeeSalaryAdjustment
+   */
+
+  export type AggregateEmployeeSalaryAdjustment = {
+    _count: EmployeeSalaryAdjustmentCountAggregateOutputType | null
+    _avg: EmployeeSalaryAdjustmentAvgAggregateOutputType | null
+    _sum: EmployeeSalaryAdjustmentSumAggregateOutputType | null
+    _min: EmployeeSalaryAdjustmentMinAggregateOutputType | null
+    _max: EmployeeSalaryAdjustmentMaxAggregateOutputType | null
+  }
+
+  export type EmployeeSalaryAdjustmentAvgAggregateOutputType = {
+    editedSalary: number | null
+  }
+
+  export type EmployeeSalaryAdjustmentSumAggregateOutputType = {
+    editedSalary: number | null
+  }
+
+  export type EmployeeSalaryAdjustmentMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    monthKey: string | null
+    editedSalary: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EmployeeSalaryAdjustmentMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    monthKey: string | null
+    editedSalary: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EmployeeSalaryAdjustmentCountAggregateOutputType = {
+    id: number
+    userId: number
+    monthKey: number
+    editedSalary: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EmployeeSalaryAdjustmentAvgAggregateInputType = {
+    editedSalary?: true
+  }
+
+  export type EmployeeSalaryAdjustmentSumAggregateInputType = {
+    editedSalary?: true
+  }
+
+  export type EmployeeSalaryAdjustmentMinAggregateInputType = {
+    id?: true
+    userId?: true
+    monthKey?: true
+    editedSalary?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EmployeeSalaryAdjustmentMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    monthKey?: true
+    editedSalary?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EmployeeSalaryAdjustmentCountAggregateInputType = {
+    id?: true
+    userId?: true
+    monthKey?: true
+    editedSalary?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EmployeeSalaryAdjustmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmployeeSalaryAdjustment to aggregate.
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmployeeSalaryAdjustments to fetch.
+     */
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithRelationInput | EmployeeSalaryAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmployeeSalaryAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmployeeSalaryAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmployeeSalaryAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmployeeSalaryAdjustments
+    **/
+    _count?: true | EmployeeSalaryAdjustmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EmployeeSalaryAdjustmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EmployeeSalaryAdjustmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmployeeSalaryAdjustmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmployeeSalaryAdjustmentMaxAggregateInputType
+  }
+
+  export type GetEmployeeSalaryAdjustmentAggregateType<T extends EmployeeSalaryAdjustmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmployeeSalaryAdjustment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmployeeSalaryAdjustment[P]>
+      : GetScalarType<T[P], AggregateEmployeeSalaryAdjustment[P]>
+  }
+
+
+
+
+  export type EmployeeSalaryAdjustmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmployeeSalaryAdjustmentWhereInput
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithAggregationInput | EmployeeSalaryAdjustmentOrderByWithAggregationInput[]
+    by: EmployeeSalaryAdjustmentScalarFieldEnum[] | EmployeeSalaryAdjustmentScalarFieldEnum
+    having?: EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmployeeSalaryAdjustmentCountAggregateInputType | true
+    _avg?: EmployeeSalaryAdjustmentAvgAggregateInputType
+    _sum?: EmployeeSalaryAdjustmentSumAggregateInputType
+    _min?: EmployeeSalaryAdjustmentMinAggregateInputType
+    _max?: EmployeeSalaryAdjustmentMaxAggregateInputType
+  }
+
+  export type EmployeeSalaryAdjustmentGroupByOutputType = {
+    id: string
+    userId: string
+    monthKey: string
+    editedSalary: number
+    createdAt: Date
+    updatedAt: Date
+    _count: EmployeeSalaryAdjustmentCountAggregateOutputType | null
+    _avg: EmployeeSalaryAdjustmentAvgAggregateOutputType | null
+    _sum: EmployeeSalaryAdjustmentSumAggregateOutputType | null
+    _min: EmployeeSalaryAdjustmentMinAggregateOutputType | null
+    _max: EmployeeSalaryAdjustmentMaxAggregateOutputType | null
+  }
+
+  type GetEmployeeSalaryAdjustmentGroupByPayload<T extends EmployeeSalaryAdjustmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmployeeSalaryAdjustmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmployeeSalaryAdjustmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmployeeSalaryAdjustmentGroupByOutputType[P]>
+            : GetScalarType<T[P], EmployeeSalaryAdjustmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmployeeSalaryAdjustmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthKey?: boolean
+    editedSalary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["employeeSalaryAdjustment"]>
+
+  export type EmployeeSalaryAdjustmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthKey?: boolean
+    editedSalary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["employeeSalaryAdjustment"]>
+
+  export type EmployeeSalaryAdjustmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthKey?: boolean
+    editedSalary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["employeeSalaryAdjustment"]>
+
+  export type EmployeeSalaryAdjustmentSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    monthKey?: boolean
+    editedSalary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EmployeeSalaryAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "monthKey" | "editedSalary" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeSalaryAdjustment"]>
+  export type EmployeeSalaryAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmployeeSalaryAdjustmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmployeeSalaryAdjustmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $EmployeeSalaryAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmployeeSalaryAdjustment"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      monthKey: string
+      editedSalary: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["employeeSalaryAdjustment"]>
+    composites: {}
+  }
+
+  type EmployeeSalaryAdjustmentGetPayload<S extends boolean | null | undefined | EmployeeSalaryAdjustmentDefaultArgs> = $Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload, S>
+
+  type EmployeeSalaryAdjustmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EmployeeSalaryAdjustmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EmployeeSalaryAdjustmentCountAggregateInputType | true
+    }
+
+  export interface EmployeeSalaryAdjustmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmployeeSalaryAdjustment'], meta: { name: 'EmployeeSalaryAdjustment' } }
+    /**
+     * Find zero or one EmployeeSalaryAdjustment that matches the filter.
+     * @param {EmployeeSalaryAdjustmentFindUniqueArgs} args - Arguments to find a EmployeeSalaryAdjustment
+     * @example
+     * // Get one EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EmployeeSalaryAdjustmentFindUniqueArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentFindUniqueArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EmployeeSalaryAdjustment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EmployeeSalaryAdjustmentFindUniqueOrThrowArgs} args - Arguments to find a EmployeeSalaryAdjustment
+     * @example
+     * // Get one EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EmployeeSalaryAdjustmentFindUniqueOrThrowArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmployeeSalaryAdjustment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentFindFirstArgs} args - Arguments to find a EmployeeSalaryAdjustment
+     * @example
+     * // Get one EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EmployeeSalaryAdjustmentFindFirstArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentFindFirstArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmployeeSalaryAdjustment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentFindFirstOrThrowArgs} args - Arguments to find a EmployeeSalaryAdjustment
+     * @example
+     * // Get one EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EmployeeSalaryAdjustmentFindFirstOrThrowArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EmployeeSalaryAdjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustments = await prisma.employeeSalaryAdjustment.findMany()
+     * 
+     * // Get first 10 EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustments = await prisma.employeeSalaryAdjustment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const employeeSalaryAdjustmentWithIdOnly = await prisma.employeeSalaryAdjustment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EmployeeSalaryAdjustmentFindManyArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EmployeeSalaryAdjustment.
+     * @param {EmployeeSalaryAdjustmentCreateArgs} args - Arguments to create a EmployeeSalaryAdjustment.
+     * @example
+     * // Create one EmployeeSalaryAdjustment
+     * const EmployeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.create({
+     *   data: {
+     *     // ... data to create a EmployeeSalaryAdjustment
+     *   }
+     * })
+     * 
+     */
+    create<T extends EmployeeSalaryAdjustmentCreateArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentCreateArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EmployeeSalaryAdjustments.
+     * @param {EmployeeSalaryAdjustmentCreateManyArgs} args - Arguments to create many EmployeeSalaryAdjustments.
+     * @example
+     * // Create many EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EmployeeSalaryAdjustmentCreateManyArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EmployeeSalaryAdjustments and returns the data saved in the database.
+     * @param {EmployeeSalaryAdjustmentCreateManyAndReturnArgs} args - Arguments to create many EmployeeSalaryAdjustments.
+     * @example
+     * // Create many EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EmployeeSalaryAdjustments and only return the `id`
+     * const employeeSalaryAdjustmentWithIdOnly = await prisma.employeeSalaryAdjustment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EmployeeSalaryAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EmployeeSalaryAdjustment.
+     * @param {EmployeeSalaryAdjustmentDeleteArgs} args - Arguments to delete one EmployeeSalaryAdjustment.
+     * @example
+     * // Delete one EmployeeSalaryAdjustment
+     * const EmployeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.delete({
+     *   where: {
+     *     // ... filter to delete one EmployeeSalaryAdjustment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EmployeeSalaryAdjustmentDeleteArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentDeleteArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EmployeeSalaryAdjustment.
+     * @param {EmployeeSalaryAdjustmentUpdateArgs} args - Arguments to update one EmployeeSalaryAdjustment.
+     * @example
+     * // Update one EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EmployeeSalaryAdjustmentUpdateArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentUpdateArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EmployeeSalaryAdjustments.
+     * @param {EmployeeSalaryAdjustmentDeleteManyArgs} args - Arguments to filter EmployeeSalaryAdjustments to delete.
+     * @example
+     * // Delete a few EmployeeSalaryAdjustments
+     * const { count } = await prisma.employeeSalaryAdjustment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EmployeeSalaryAdjustmentDeleteManyArgs>(args?: SelectSubset<T, EmployeeSalaryAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmployeeSalaryAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EmployeeSalaryAdjustmentUpdateManyArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmployeeSalaryAdjustments and returns the data updated in the database.
+     * @param {EmployeeSalaryAdjustmentUpdateManyAndReturnArgs} args - Arguments to update many EmployeeSalaryAdjustments.
+     * @example
+     * // Update many EmployeeSalaryAdjustments
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EmployeeSalaryAdjustments and only return the `id`
+     * const employeeSalaryAdjustmentWithIdOnly = await prisma.employeeSalaryAdjustment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EmployeeSalaryAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EmployeeSalaryAdjustment.
+     * @param {EmployeeSalaryAdjustmentUpsertArgs} args - Arguments to update or create a EmployeeSalaryAdjustment.
+     * @example
+     * // Update or create a EmployeeSalaryAdjustment
+     * const employeeSalaryAdjustment = await prisma.employeeSalaryAdjustment.upsert({
+     *   create: {
+     *     // ... data to create a EmployeeSalaryAdjustment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmployeeSalaryAdjustment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EmployeeSalaryAdjustmentUpsertArgs>(args: SelectSubset<T, EmployeeSalaryAdjustmentUpsertArgs<ExtArgs>>): Prisma__EmployeeSalaryAdjustmentClient<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EmployeeSalaryAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentCountArgs} args - Arguments to filter EmployeeSalaryAdjustments to count.
+     * @example
+     * // Count the number of EmployeeSalaryAdjustments
+     * const count = await prisma.employeeSalaryAdjustment.count({
+     *   where: {
+     *     // ... the filter for the EmployeeSalaryAdjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmployeeSalaryAdjustmentCountArgs>(
+      args?: Subset<T, EmployeeSalaryAdjustmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmployeeSalaryAdjustmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmployeeSalaryAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmployeeSalaryAdjustmentAggregateArgs>(args: Subset<T, EmployeeSalaryAdjustmentAggregateArgs>): Prisma.PrismaPromise<GetEmployeeSalaryAdjustmentAggregateType<T>>
+
+    /**
+     * Group by EmployeeSalaryAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmployeeSalaryAdjustmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmployeeSalaryAdjustmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmployeeSalaryAdjustmentGroupByArgs['orderBy'] }
+        : { orderBy?: EmployeeSalaryAdjustmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmployeeSalaryAdjustmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmployeeSalaryAdjustmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmployeeSalaryAdjustment model
+   */
+  readonly fields: EmployeeSalaryAdjustmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmployeeSalaryAdjustment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmployeeSalaryAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EmployeeSalaryAdjustment model
+   */
+  interface EmployeeSalaryAdjustmentFieldRefs {
+    readonly id: FieldRef<"EmployeeSalaryAdjustment", 'String'>
+    readonly userId: FieldRef<"EmployeeSalaryAdjustment", 'String'>
+    readonly monthKey: FieldRef<"EmployeeSalaryAdjustment", 'String'>
+    readonly editedSalary: FieldRef<"EmployeeSalaryAdjustment", 'Float'>
+    readonly createdAt: FieldRef<"EmployeeSalaryAdjustment", 'DateTime'>
+    readonly updatedAt: FieldRef<"EmployeeSalaryAdjustment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EmployeeSalaryAdjustment findUnique
+   */
+  export type EmployeeSalaryAdjustmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which EmployeeSalaryAdjustment to fetch.
+     */
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * EmployeeSalaryAdjustment findUniqueOrThrow
+   */
+  export type EmployeeSalaryAdjustmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which EmployeeSalaryAdjustment to fetch.
+     */
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * EmployeeSalaryAdjustment findFirst
+   */
+  export type EmployeeSalaryAdjustmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which EmployeeSalaryAdjustment to fetch.
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmployeeSalaryAdjustments to fetch.
+     */
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithRelationInput | EmployeeSalaryAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmployeeSalaryAdjustments.
+     */
+    cursor?: EmployeeSalaryAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmployeeSalaryAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmployeeSalaryAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmployeeSalaryAdjustments.
+     */
+    distinct?: EmployeeSalaryAdjustmentScalarFieldEnum | EmployeeSalaryAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * EmployeeSalaryAdjustment findFirstOrThrow
+   */
+  export type EmployeeSalaryAdjustmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which EmployeeSalaryAdjustment to fetch.
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmployeeSalaryAdjustments to fetch.
+     */
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithRelationInput | EmployeeSalaryAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmployeeSalaryAdjustments.
+     */
+    cursor?: EmployeeSalaryAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmployeeSalaryAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmployeeSalaryAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmployeeSalaryAdjustments.
+     */
+    distinct?: EmployeeSalaryAdjustmentScalarFieldEnum | EmployeeSalaryAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * EmployeeSalaryAdjustment findMany
+   */
+  export type EmployeeSalaryAdjustmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which EmployeeSalaryAdjustments to fetch.
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmployeeSalaryAdjustments to fetch.
+     */
+    orderBy?: EmployeeSalaryAdjustmentOrderByWithRelationInput | EmployeeSalaryAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmployeeSalaryAdjustments.
+     */
+    cursor?: EmployeeSalaryAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmployeeSalaryAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmployeeSalaryAdjustments.
+     */
+    skip?: number
+    distinct?: EmployeeSalaryAdjustmentScalarFieldEnum | EmployeeSalaryAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * EmployeeSalaryAdjustment create
+   */
+  export type EmployeeSalaryAdjustmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EmployeeSalaryAdjustment.
+     */
+    data: XOR<EmployeeSalaryAdjustmentCreateInput, EmployeeSalaryAdjustmentUncheckedCreateInput>
+  }
+
+  /**
+   * EmployeeSalaryAdjustment createMany
+   */
+  export type EmployeeSalaryAdjustmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmployeeSalaryAdjustments.
+     */
+    data: EmployeeSalaryAdjustmentCreateManyInput | EmployeeSalaryAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EmployeeSalaryAdjustment createManyAndReturn
+   */
+  export type EmployeeSalaryAdjustmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many EmployeeSalaryAdjustments.
+     */
+    data: EmployeeSalaryAdjustmentCreateManyInput | EmployeeSalaryAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmployeeSalaryAdjustment update
+   */
+  export type EmployeeSalaryAdjustmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EmployeeSalaryAdjustment.
+     */
+    data: XOR<EmployeeSalaryAdjustmentUpdateInput, EmployeeSalaryAdjustmentUncheckedUpdateInput>
+    /**
+     * Choose, which EmployeeSalaryAdjustment to update.
+     */
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * EmployeeSalaryAdjustment updateMany
+   */
+  export type EmployeeSalaryAdjustmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmployeeSalaryAdjustments.
+     */
+    data: XOR<EmployeeSalaryAdjustmentUpdateManyMutationInput, EmployeeSalaryAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which EmployeeSalaryAdjustments to update
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * Limit how many EmployeeSalaryAdjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmployeeSalaryAdjustment updateManyAndReturn
+   */
+  export type EmployeeSalaryAdjustmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to update EmployeeSalaryAdjustments.
+     */
+    data: XOR<EmployeeSalaryAdjustmentUpdateManyMutationInput, EmployeeSalaryAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which EmployeeSalaryAdjustments to update
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * Limit how many EmployeeSalaryAdjustments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmployeeSalaryAdjustment upsert
+   */
+  export type EmployeeSalaryAdjustmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EmployeeSalaryAdjustment to update in case it exists.
+     */
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+    /**
+     * In case the EmployeeSalaryAdjustment found by the `where` argument doesn't exist, create a new EmployeeSalaryAdjustment with this data.
+     */
+    create: XOR<EmployeeSalaryAdjustmentCreateInput, EmployeeSalaryAdjustmentUncheckedCreateInput>
+    /**
+     * In case the EmployeeSalaryAdjustment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmployeeSalaryAdjustmentUpdateInput, EmployeeSalaryAdjustmentUncheckedUpdateInput>
+  }
+
+  /**
+   * EmployeeSalaryAdjustment delete
+   */
+  export type EmployeeSalaryAdjustmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter which EmployeeSalaryAdjustment to delete.
+     */
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * EmployeeSalaryAdjustment deleteMany
+   */
+  export type EmployeeSalaryAdjustmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmployeeSalaryAdjustments to delete
+     */
+    where?: EmployeeSalaryAdjustmentWhereInput
+    /**
+     * Limit how many EmployeeSalaryAdjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmployeeSalaryAdjustment without action
+   */
+  export type EmployeeSalaryAdjustmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmployeeSalaryAdjustment
+     */
+    select?: EmployeeSalaryAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmployeeSalaryAdjustment
+     */
+    omit?: EmployeeSalaryAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeSalaryAdjustmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -27556,6 +28789,18 @@ export namespace Prisma {
   export type GeneralSettingScalarFieldEnum = (typeof GeneralSettingScalarFieldEnum)[keyof typeof GeneralSettingScalarFieldEnum]
 
 
+  export const EmployeeSalaryAdjustmentScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    monthKey: 'monthKey',
+    editedSalary: 'editedSalary',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EmployeeSalaryAdjustmentScalarFieldEnum = (typeof EmployeeSalaryAdjustmentScalarFieldEnum)[keyof typeof EmployeeSalaryAdjustmentScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -27775,6 +29020,7 @@ export namespace Prisma {
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
     activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
+    salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }
@@ -27802,6 +29048,7 @@ export namespace Prisma {
     message?: MessageOrderByRelationAggregateInput
     targets?: UserTargetOrderByRelationAggregateInput
     activityTarget?: UserActivityTargetOrderByWithRelationInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
   }
@@ -27832,6 +29079,7 @@ export namespace Prisma {
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
     activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
+    salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }, "id" | "email">
@@ -29513,6 +30761,69 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"GeneralSetting"> | Date | string
   }
 
+  export type EmployeeSalaryAdjustmentWhereInput = {
+    AND?: EmployeeSalaryAdjustmentWhereInput | EmployeeSalaryAdjustmentWhereInput[]
+    OR?: EmployeeSalaryAdjustmentWhereInput[]
+    NOT?: EmployeeSalaryAdjustmentWhereInput | EmployeeSalaryAdjustmentWhereInput[]
+    id?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    userId?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    monthKey?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    editedSalary?: FloatFilter<"EmployeeSalaryAdjustment"> | number
+    createdAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type EmployeeSalaryAdjustmentOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthKey?: SortOrder
+    editedSalary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type EmployeeSalaryAdjustmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_monthKey?: EmployeeSalaryAdjustmentUserIdMonthKeyCompoundUniqueInput
+    AND?: EmployeeSalaryAdjustmentWhereInput | EmployeeSalaryAdjustmentWhereInput[]
+    OR?: EmployeeSalaryAdjustmentWhereInput[]
+    NOT?: EmployeeSalaryAdjustmentWhereInput | EmployeeSalaryAdjustmentWhereInput[]
+    userId?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    monthKey?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    editedSalary?: FloatFilter<"EmployeeSalaryAdjustment"> | number
+    createdAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_monthKey">
+
+  export type EmployeeSalaryAdjustmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthKey?: SortOrder
+    editedSalary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EmployeeSalaryAdjustmentCountOrderByAggregateInput
+    _avg?: EmployeeSalaryAdjustmentAvgOrderByAggregateInput
+    _max?: EmployeeSalaryAdjustmentMaxOrderByAggregateInput
+    _min?: EmployeeSalaryAdjustmentMinOrderByAggregateInput
+    _sum?: EmployeeSalaryAdjustmentSumOrderByAggregateInput
+  }
+
+  export type EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput = {
+    AND?: EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput | EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput[]
+    OR?: EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput[]
+    NOT?: EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput | EmployeeSalaryAdjustmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EmployeeSalaryAdjustment"> | string
+    userId?: StringWithAggregatesFilter<"EmployeeSalaryAdjustment"> | string
+    monthKey?: StringWithAggregatesFilter<"EmployeeSalaryAdjustment"> | string
+    editedSalary?: FloatWithAggregatesFilter<"EmployeeSalaryAdjustment"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"EmployeeSalaryAdjustment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EmployeeSalaryAdjustment"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -29534,6 +30845,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -29559,6 +30871,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -29584,6 +30897,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -29609,6 +30923,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -31428,6 +32743,68 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EmployeeSalaryAdjustmentCreateInput = {
+    id?: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutSalaryAdjustmentsInput
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedCreateInput = {
+    id?: string
+    userId: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSalaryAdjustmentsNestedInput
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentCreateManyInput = {
+    id?: string
+    userId: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -31543,6 +32920,12 @@ export namespace Prisma {
     isNot?: UserActivityTargetWhereInput | null
   }
 
+  export type EmployeeSalaryAdjustmentListRelationFilter = {
+    every?: EmployeeSalaryAdjustmentWhereInput
+    some?: EmployeeSalaryAdjustmentWhereInput
+    none?: EmployeeSalaryAdjustmentWhereInput
+  }
+
   export type ExpenseListRelationFilter = {
     every?: ExpenseWhereInput
     some?: ExpenseWhereInput
@@ -31577,6 +32960,10 @@ export namespace Prisma {
   }
 
   export type UserTargetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EmployeeSalaryAdjustmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33011,6 +34398,46 @@ export namespace Prisma {
     usdToTryRate?: SortOrder
   }
 
+  export type EmployeeSalaryAdjustmentUserIdMonthKeyCompoundUniqueInput = {
+    userId: string
+    monthKey: string
+  }
+
+  export type EmployeeSalaryAdjustmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthKey?: SortOrder
+    editedSalary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EmployeeSalaryAdjustmentAvgOrderByAggregateInput = {
+    editedSalary?: SortOrder
+  }
+
+  export type EmployeeSalaryAdjustmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthKey?: SortOrder
+    editedSalary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EmployeeSalaryAdjustmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthKey?: SortOrder
+    editedSalary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EmployeeSalaryAdjustmentSumOrderByAggregateInput = {
+    editedSalary?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutSubordinatesInput = {
     create?: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSubordinatesInput
@@ -33061,6 +34488,13 @@ export namespace Prisma {
     create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
     connect?: UserActivityTargetWhereUniqueInput
+  }
+
+  export type EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput> | EmployeeSalaryAdjustmentCreateWithoutUserInput[] | EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput | EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput[]
+    createMany?: EmployeeSalaryAdjustmentCreateManyUserInputEnvelope
+    connect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
   }
 
   export type ExpenseCreateNestedManyWithoutEmployeeInput = {
@@ -33115,6 +34549,13 @@ export namespace Prisma {
     create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
     connect?: UserActivityTargetWhereUniqueInput
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput> | EmployeeSalaryAdjustmentCreateWithoutUserInput[] | EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput | EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput[]
+    createMany?: EmployeeSalaryAdjustmentCreateManyUserInputEnvelope
+    connect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
   }
 
   export type ExpenseUncheckedCreateNestedManyWithoutEmployeeInput = {
@@ -33262,6 +34703,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
   }
 
+  export type EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput> | EmployeeSalaryAdjustmentCreateWithoutUserInput[] | EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput | EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput[]
+    upsert?: EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput | EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmployeeSalaryAdjustmentCreateManyUserInputEnvelope
+    set?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    disconnect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    delete?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    connect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    update?: EmployeeSalaryAdjustmentUpdateWithWhereUniqueWithoutUserInput | EmployeeSalaryAdjustmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmployeeSalaryAdjustmentUpdateManyWithWhereWithoutUserInput | EmployeeSalaryAdjustmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmployeeSalaryAdjustmentScalarWhereInput | EmployeeSalaryAdjustmentScalarWhereInput[]
+  }
+
   export type ExpenseUpdateManyWithoutEmployeeNestedInput = {
     create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
@@ -33367,6 +34822,20 @@ export namespace Prisma {
     delete?: UserActivityTargetWhereInput | boolean
     connect?: UserActivityTargetWhereUniqueInput
     update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput> | EmployeeSalaryAdjustmentCreateWithoutUserInput[] | EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput | EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput[]
+    upsert?: EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput | EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmployeeSalaryAdjustmentCreateManyUserInputEnvelope
+    set?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    disconnect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    delete?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    connect?: EmployeeSalaryAdjustmentWhereUniqueInput | EmployeeSalaryAdjustmentWhereUniqueInput[]
+    update?: EmployeeSalaryAdjustmentUpdateWithWhereUniqueWithoutUserInput | EmployeeSalaryAdjustmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmployeeSalaryAdjustmentUpdateManyWithWhereWithoutUserInput | EmployeeSalaryAdjustmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmployeeSalaryAdjustmentScalarWhereInput | EmployeeSalaryAdjustmentScalarWhereInput[]
   }
 
   export type ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput = {
@@ -34629,6 +36098,20 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutOrderItemsInput, ProductUpdateWithoutOrderItemsInput>, ProductUncheckedUpdateWithoutOrderItemsInput>
   }
 
+  export type UserCreateNestedOneWithoutSalaryAdjustmentsInput = {
+    create?: XOR<UserCreateWithoutSalaryAdjustmentsInput, UserUncheckedCreateWithoutSalaryAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSalaryAdjustmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSalaryAdjustmentsNestedInput = {
+    create?: XOR<UserCreateWithoutSalaryAdjustmentsInput, UserUncheckedCreateWithoutSalaryAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSalaryAdjustmentsInput
+    upsert?: UserUpsertWithoutSalaryAdjustmentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSalaryAdjustmentsInput, UserUpdateWithoutSalaryAdjustmentsInput>, UserUncheckedUpdateWithoutSalaryAdjustmentsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -35001,6 +36484,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -35025,6 +36509,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -35054,6 +36539,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -35078,6 +36564,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -35390,6 +36877,32 @@ export namespace Prisma {
     create: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
   }
 
+  export type EmployeeSalaryAdjustmentCreateWithoutUserInput = {
+    id?: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput = {
+    id?: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentCreateOrConnectWithoutUserInput = {
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+    create: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmployeeSalaryAdjustmentCreateManyUserInputEnvelope = {
+    data: EmployeeSalaryAdjustmentCreateManyUserInput | EmployeeSalaryAdjustmentCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExpenseCreateWithoutEmployeeInput = {
     type?: $Enums.ExpenseType
     amount: number
@@ -35486,6 +36999,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -35510,6 +37024,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -35826,6 +37341,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput = {
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+    update: XOR<EmployeeSalaryAdjustmentUpdateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedUpdateWithoutUserInput>
+    create: XOR<EmployeeSalaryAdjustmentCreateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmployeeSalaryAdjustmentUpdateWithWhereUniqueWithoutUserInput = {
+    where: EmployeeSalaryAdjustmentWhereUniqueInput
+    data: XOR<EmployeeSalaryAdjustmentUpdateWithoutUserInput, EmployeeSalaryAdjustmentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EmployeeSalaryAdjustmentUpdateManyWithWhereWithoutUserInput = {
+    where: EmployeeSalaryAdjustmentScalarWhereInput
+    data: XOR<EmployeeSalaryAdjustmentUpdateManyMutationInput, EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EmployeeSalaryAdjustmentScalarWhereInput = {
+    AND?: EmployeeSalaryAdjustmentScalarWhereInput | EmployeeSalaryAdjustmentScalarWhereInput[]
+    OR?: EmployeeSalaryAdjustmentScalarWhereInput[]
+    NOT?: EmployeeSalaryAdjustmentScalarWhereInput | EmployeeSalaryAdjustmentScalarWhereInput[]
+    id?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    userId?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    monthKey?: StringFilter<"EmployeeSalaryAdjustment"> | string
+    editedSalary?: FloatFilter<"EmployeeSalaryAdjustment"> | number
+    createdAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+    updatedAt?: DateTimeFilter<"EmployeeSalaryAdjustment"> | Date | string
+  }
+
   export type ExpenseUpsertWithWhereUniqueWithoutEmployeeInput = {
     where: ExpenseWhereUniqueInput
     update: XOR<ExpenseUpdateWithoutEmployeeInput, ExpenseUncheckedUpdateWithoutEmployeeInput>
@@ -35909,6 +37452,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -35933,6 +37477,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -35973,6 +37518,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -35997,6 +37543,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -36021,6 +37568,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -36045,6 +37593,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -36934,6 +38483,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
   }
 
@@ -36958,6 +38508,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
@@ -37068,6 +38619,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
   }
 
@@ -37092,6 +38644,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
@@ -37115,6 +38668,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -37139,6 +38693,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -37203,6 +38758,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -37227,6 +38783,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -37546,6 +39103,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -37570,6 +39128,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -37994,6 +39553,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -38018,6 +39578,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -38109,6 +39670,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -38133,6 +39695,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -38202,6 +39765,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -38226,6 +39790,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -38388,6 +39953,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -38412,6 +39978,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -38511,6 +40078,7 @@ export namespace Prisma {
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -38535,6 +40103,7 @@ export namespace Prisma {
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -38575,6 +40144,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -38599,6 +40169,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -38921,6 +40492,122 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
   }
 
+  export type UserCreateWithoutSalaryAdjustmentsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSalaryAdjustmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSalaryAdjustmentsInput, UserUncheckedCreateWithoutSalaryAdjustmentsInput>
+  }
+
+  export type UserUpsertWithoutSalaryAdjustmentsInput = {
+    update: XOR<UserUpdateWithoutSalaryAdjustmentsInput, UserUncheckedUpdateWithoutSalaryAdjustmentsInput>
+    create: XOR<UserCreateWithoutSalaryAdjustmentsInput, UserUncheckedCreateWithoutSalaryAdjustmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSalaryAdjustmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSalaryAdjustmentsInput, UserUncheckedUpdateWithoutSalaryAdjustmentsInput>
+  }
+
+  export type UserUpdateWithoutSalaryAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateManyParentInput = {
     id?: string
     username: string
@@ -38989,6 +40676,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type EmployeeSalaryAdjustmentCreateManyUserInput = {
+    id?: string
+    monthKey: string
+    editedSalary: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ExpenseCreateManyEmployeeInput = {
     id?: number
     type?: $Enums.ExpenseType
@@ -39032,6 +40727,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -39056,6 +40752,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -39292,6 +40989,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EmployeeSalaryAdjustmentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthKey?: StringFieldUpdateOperationsInput | string
+    editedSalary?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ExpenseUpdateWithoutEmployeeInput = {
     type?: EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
     amount?: FloatFieldUpdateOperationsInput | number
@@ -39396,6 +41117,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -39420,6 +41142,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -40154,6 +41877,7 @@ export namespace Prisma {
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -40178,6 +41902,7 @@ export namespace Prisma {
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
