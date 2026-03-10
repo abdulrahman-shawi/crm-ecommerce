@@ -17,21 +17,42 @@ model User {
   accountType AccountType @default(STAFF)
   password    String
 
-  salesCommissionPercent Float           @default(0)
-  wage                   Int             @default(0)
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
+  salesCommissionPercent Float               @default(0)
+  wage                   Int                 @default(0)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
   permissionId           String?
   parentId               String? // معرف المشرف
-  parent                 User?           @relation("UserToSubordinates", fields: [parentId], references: [id])
-  subordinates           User[]          @relation("UserToSubordinates")
+  parent                 User?               @relation("UserToSubordinates", fields: [parentId], references: [id])
+  subordinates           User[]              @relation("UserToSubordinates")
   orders                 Order[]
-  permission             Permission?     @relation(fields: [permissionId], references: [id])
-  customers              Customer[]      @relation("CustomerToUser")
+  permission             Permission?         @relation(fields: [permissionId], references: [id])
+  customers              Customer[]          @relation("CustomerToUser")
   message                Message[]
   targets                UserTarget[]
+  activityTarget         UserActivityTarget?
   expenses               Expense[]
   stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
+}
+
+enum ActivityTargetCycle {
+  DAILY
+  MONTHLY
+}
+
+model UserActivityTarget {
+  id                     String              @id @default(uuid())
+  userId                 String              @unique
+  cycle                  ActivityTargetCycle @default(DAILY)
+  requiredCustomers      Int                 @default(0)
+  customerReward         Float               @default(0)
+  requiredCommunications Int                 @default(0)
+  communicationReward    Float               @default(0)
+  startsAt               DateTime            @default(now())
+  isActive               Boolean             @default(true)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Permission {

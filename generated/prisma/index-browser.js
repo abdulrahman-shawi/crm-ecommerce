@@ -137,6 +137,20 @@ exports.Prisma.UserScalarFieldEnum = {
   parentId: 'parentId'
 };
 
+exports.Prisma.UserActivityTargetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cycle: 'cycle',
+  requiredCustomers: 'requiredCustomers',
+  customerReward: 'customerReward',
+  requiredCommunications: 'requiredCommunications',
+  communicationReward: 'communicationReward',
+  startsAt: 'startsAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PermissionScalarFieldEnum = {
   id: 'id',
   roleName: 'roleName',
@@ -392,6 +406,11 @@ exports.AccountType = exports.$Enums.AccountType = {
   STAFF: 'STAFF'
 };
 
+exports.ActivityTargetCycle = exports.$Enums.ActivityTargetCycle = {
+  DAILY: 'DAILY',
+  MONTHLY: 'MONTHLY'
+};
+
 exports.MovementType = exports.$Enums.MovementType = {
   IN: 'IN',
   OUT: 'OUT',
@@ -425,6 +444,7 @@ exports.PaidFromOffice = exports.$Enums.PaidFromOffice = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserActivityTarget: 'UserActivityTarget',
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',

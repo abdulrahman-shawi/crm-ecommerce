@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
-import { assignManagerToEmployees, createUserTarget, deleteuser, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { assignManagerToEmployees, createUserTarget, deleteuser, getUserActivityTargetProgress, setUserActivityTarget, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Mail, Plus } from 'lucide-react';
@@ -66,6 +66,13 @@ const UserManagement: React.FunctionComponent = () => {
     requiredQty: number;
     rewardValue: number;
   }>>([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
+  const [activityCycle, setActivityCycle] = React.useState<"DAILY" | "MONTHLY">("DAILY");
+  const [requiredCustomersTarget, setRequiredCustomersTarget] = React.useState<string>("0");
+  const [customerRewardTarget, setCustomerRewardTarget] = React.useState<string>("0");
+  const [requiredCommunicationsTarget, setRequiredCommunicationsTarget] = React.useState<string>("0");
+  const [communicationRewardTarget, setCommunicationRewardTarget] = React.useState<string>("0");
+  const [activityTargetStartDate, setActivityTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [activityProgressByUser, setActivityProgressByUser] = React.useState<Record<string, any>>({});
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -116,6 +123,26 @@ const UserManagement: React.FunctionComponent = () => {
   React.useEffect(() => {
     getProduct().then(setProducts).catch(console.error);
   }, []);
+
+  React.useEffect(() => {
+    const loadActivityProgress = async () => {
+      if (!users.length) {
+        setActivityProgressByUser({});
+        return;
+      }
+      const ids = users.map((row: any) => String(row.id)).filter(Boolean);
+      const res = await getUserActivityTargetProgress(ids);
+      if (res?.success) {
+        const map = (res.data || []).reduce((acc: Record<string, any>, row: any) => {
+          acc[row.userId] = row;
+          return acc;
+        }, {});
+        setActivityProgressByUser(map);
+      }
+    };
+
+    loadActivityProgress();
+  }, [users]);
 
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
@@ -268,6 +295,19 @@ const UserManagement: React.FunctionComponent = () => {
       setSalesRewardValue('');
       setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
+
+    const activityTarget = data?.activityTarget;
+    setActivityCycle(activityTarget?.cycle === "MONTHLY" ? "MONTHLY" : "DAILY");
+    setRequiredCustomersTarget(String(Number(activityTarget?.requiredCustomers || 0)));
+    setCustomerRewardTarget(String(Number(activityTarget?.customerReward || 0)));
+    setRequiredCommunicationsTarget(String(Number(activityTarget?.requiredCommunications || 0)));
+    setCommunicationRewardTarget(String(Number(activityTarget?.communicationReward || 0)));
+    setActivityTargetStartDate(
+      activityTarget?.startsAt
+        ? new Date(activityTarget.startsAt).toISOString().slice(0, 10)
+        : new Date().toISOString().slice(0, 10)
+    );
+
     setIsTargetOpen(true);
   };
 
@@ -293,9 +333,16 @@ const UserManagement: React.FunctionComponent = () => {
     const salesRewardValues = parseNumberList(salesRewardValue);
 
     const selectedProducts = targetItems.filter((item) => Boolean(item.productId));
+    const hasSalesOrProducts = salesTargetValues.length > 0 || selectedProducts.length > 0;
 
-    if (salesTargetValues.length === 0 && selectedProducts.length === 0) {
-      toast.error("يمكنك إدخال تاركت المبيعات أو تاركت المنتجات (واحد منهما على الأقل)");
+    const requiredCustomers = Math.max(0, Math.trunc(Number(requiredCustomersTarget) || 0));
+    const requiredCommunications = Math.max(0, Math.trunc(Number(requiredCommunicationsTarget) || 0));
+    const customerReward = Math.max(0, Number(customerRewardTarget) || 0);
+    const communicationReward = Math.max(0, Number(communicationRewardTarget) || 0);
+    const hasActivityTarget = requiredCustomers > 0 || requiredCommunications > 0;
+
+    if (!hasSalesOrProducts && !hasActivityTarget) {
+      toast.error("يرجى إدخال تاركت مبيعات/منتجات أو تاركت نشاط العملاء/التواصل");
       return;
     }
 
@@ -314,32 +361,52 @@ const UserManagement: React.FunctionComponent = () => {
 
     const loadingToast = toast.loading("جاري حفظ التاركت...");
     try {
-      const payload = {
-        userId: targetUser.id,
-        salesTargetValue: salesTargetValues,
-        salesRewardValue: salesRewardValues,
-        products: selectedProducts.map((item) => ({
-          productId: Number(item.productId),
-          requiredQty: item.requiredQty,
-          rewardValue: item.rewardValue,
-        }))
-      };
+      if (hasSalesOrProducts) {
+        const payload = {
+          userId: targetUser.id,
+          salesTargetValue: salesTargetValues,
+          salesRewardValue: salesRewardValues,
+          products: selectedProducts.map((item) => ({
+            productId: Number(item.productId),
+            requiredQty: item.requiredQty,
+            rewardValue: item.rewardValue,
+          }))
+        };
 
-      const res = targetMode === "assign" || !editTargetId
-        ? await createUserTarget(payload)
-        : await updateUserTarget(editTargetId, {
-            salesTargetValue: payload.salesTargetValue,
-            salesRewardValue: payload.salesRewardValue,
-            products: payload.products,
-          });
+        const res = targetMode === "assign" || !editTargetId
+          ? await createUserTarget(payload)
+          : await updateUserTarget(editTargetId, {
+              salesTargetValue: payload.salesTargetValue,
+              salesRewardValue: payload.salesRewardValue,
+              products: payload.products,
+            });
 
-      if (res.success) {
-        toast.success("تم حفظ التاركت بنجاح");
-        setIsTargetOpen(false);
-        getAlluser();
-      } else {
-        toast.error(res.error || "فشل حفظ التاركت");
+        if (!res.success) {
+          toast.error(res.error || "فشل حفظ تاركت المبيعات");
+          return;
+        }
       }
+
+      if (hasActivityTarget) {
+        const activityRes = await setUserActivityTarget(targetUser.id, {
+          cycle: activityCycle,
+          requiredCustomers,
+          customerReward,
+          requiredCommunications,
+          communicationReward,
+          startDate: activityTargetStartDate,
+          isActive: true,
+        });
+
+        if (!activityRes.success) {
+          toast.error(activityRes.error || "فشل حفظ تاركت النشاط");
+          return;
+        }
+      }
+
+      toast.success("تم حفظ التاركت بنجاح");
+      setIsTargetOpen(false);
+      getAlluser();
     } catch (error) {
       toast.error("فشل حفظ التاركت");
     } finally {
@@ -460,7 +527,8 @@ const UserManagement: React.FunctionComponent = () => {
         }
 
         const hasExistingTarget = Array.isArray(data?.targets) && data.targets.length > 0;
-        openTargetModal(hasExistingTarget ? "edit" : "assign", data);
+        const hasActivityTarget = Boolean(data?.activityTarget);
+        openTargetModal(hasExistingTarget || hasActivityTarget ? "edit" : "assign", data);
       }
     },
     (user && hasPermission(user, "editEmployees")) && {
@@ -559,6 +627,24 @@ const UserManagement: React.FunctionComponent = () => {
           },
           { header: "البريد الإلكتروني", accessor: "email" },
           { header: "رقم الهاتف", accessor: "phone" },
+          {
+            header: "تاركت العملاء",
+            accessor: (row: any) => {
+              const progress = activityProgressByUser[row.id];
+              if (!progress) return "-";
+              const cycleLabel = progress.cycle === "MONTHLY" ? "شهري" : "يومي";
+              return `${progress.customersTodayOrPeriod}/${progress.customersTargetTodayOrPeriod} (${cycleLabel})`;
+            }
+          },
+          {
+            header: "تاركت التواصل",
+            accessor: (row: any) => {
+              const progress = activityProgressByUser[row.id];
+              if (!progress) return "-";
+              const reward = Number(progress.communicationReward || 0).toLocaleString();
+              return `${progress.communicationsTodayOrPeriod}/${progress.communicationsTargetTodayOrPeriod} | مكافأة: ${reward}`;
+            }
+          },
           {
             header: "نسبة الأرباح على المبيعات (%)",
             accessor: (row: any) => (
@@ -783,6 +869,80 @@ const UserManagement: React.FunctionComponent = () => {
                     value={salesRewardValue}
                     onChange={(e) => setSalesRewardValue(e.target.value)}
                   />
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+                <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">تاركت النشاط (العملاء والتواصل)</div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">نوع التاركت</label>
+                    <select
+                      className={selectClasses}
+                      value={activityCycle}
+                      onChange={(e) => setActivityCycle(e.target.value as "DAILY" | "MONTHLY")}
+                    >
+                      <option value="DAILY">يومي</option>
+                      <option value="MONTHLY">شهري</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">تاريخ البدء</label>
+                    <input
+                      type="date"
+                      className={selectClasses}
+                      value={activityTargetStartDate}
+                      onChange={(e) => setActivityTargetStartDate(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">عدد العملاء المطلوب</label>
+                    <input
+                      type="number"
+                      min={0}
+                      className={selectClasses}
+                      value={requiredCustomersTarget}
+                      onChange={(e) => setRequiredCustomersTarget(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق العملاء</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      className={selectClasses}
+                      value={customerRewardTarget}
+                      onChange={(e) => setCustomerRewardTarget(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">عدد التواصل المطلوب</label>
+                    <input
+                      type="number"
+                      min={0}
+                      className={selectClasses}
+                      value={requiredCommunicationsTarget}
+                      onChange={(e) => setRequiredCommunicationsTarget(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق التواصل</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      className={selectClasses}
+                      value={communicationRewardTarget}
+                      onChange={(e) => setCommunicationRewardTarget(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
 

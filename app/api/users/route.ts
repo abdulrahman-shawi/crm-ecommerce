@@ -33,6 +33,7 @@ export async function GET(req :NextRequest) {
       ...(whereClause ? { where: whereClause } : {}),
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
+        activityTarget: true,
         targets: {
           include: {
             products: {

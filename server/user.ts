@@ -9,6 +9,7 @@ export async function getalluser() {
   const user = await prisma.user.findMany({
     include:{
       permission:true,
+      activityTarget: true,
       targets: {
         include: {
           products: {
@@ -342,6 +343,42 @@ type UserTargetInput = {
   products: TargetProductInput[];
   startDate?: string;
   endDate?: string;
+  activityTarget?: ActivityTargetInput;
+};
+
+type ActivityTargetCycle = "DAILY" | "MONTHLY";
+
+type ActivityTargetInput = {
+  cycle: ActivityTargetCycle;
+  requiredCustomers: number;
+  customerReward: number;
+  requiredCommunications: number;
+  communicationReward: number;
+  startDate?: string;
+  isActive?: boolean;
+};
+
+type ActivityTargetProgressRow = {
+  userId: string;
+  userName: string;
+  cycle: ActivityTargetCycle;
+  requiredCustomers: number;
+  requiredCommunications: number;
+  customerReward: number;
+  communicationReward: number;
+  periodStart: Date;
+  periodEnd: Date;
+  customersTodayOrPeriod: number;
+  communicationsTodayOrPeriod: number;
+  customersTargetTodayOrPeriod: number;
+  communicationsTargetTodayOrPeriod: number;
+  customersRemaining: number;
+  communicationsRemaining: number;
+  customersReached: boolean;
+  communicationsReached: boolean;
+  totalRewardEarned: number;
+  carryOverCustomers: number;
+  carryOverCommunications: number;
 };
 
 const toNumber = (value: unknown): number | null => {
@@ -382,6 +419,199 @@ const toNumberArray = (value: unknown): number[] => {
   return single === null ? [] : [single];
 };
 
+const startOfDay = (input: Date) => {
+  const date = new Date(input);
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
+
+const endOfDay = (input: Date) => {
+  const date = new Date(input);
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
+
+const startOfMonth = (input: Date) => new Date(input.getFullYear(), input.getMonth(), 1, 0, 0, 0, 0);
+const endOfMonth = (input: Date) => new Date(input.getFullYear(), input.getMonth() + 1, 0, 23, 59, 59, 999);
+
+const diffDays = (start: Date, endExclusive: Date) => {
+  const ms = endExclusive.getTime() - start.getTime();
+  if (ms <= 0) return 0;
+  return Math.floor(ms / (24 * 60 * 60 * 1000));
+};
+
+const toNonNegativeInt = (value: unknown) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.trunc(parsed));
+};
+
+const toNonNegativeFloat = (value: unknown) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, parsed);
+};
+
+const normalizeActivityCycle = (value: unknown): ActivityTargetCycle => {
+  const normalized = String(value || "").trim().toUpperCase();
+  return normalized === "MONTHLY" ? "MONTHLY" : "DAILY";
+};
+
+const countCustomersForUserInRange = async (userId: string, from: Date, to: Date) => {
+  return prisma.customer.count({
+    where: {
+      createdAt: { gte: from, lte: to },
+      users: { some: { id: userId } },
+    },
+  });
+};
+
+const countCommunicationsForUserInRange = async (userId: string, from: Date, to: Date) => {
+  return prisma.message.count({
+    where: {
+      userId,
+      createdAt: { gte: from, lte: to },
+    },
+  });
+};
+
+const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInput) => {
+  const cycle = normalizeActivityCycle(input.cycle);
+  const startsAtCandidate = input.startDate ? new Date(input.startDate) : new Date();
+  const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
+
+  return prisma.userActivityTarget.upsert({
+    where: { userId },
+    create: {
+      userId,
+      cycle,
+      requiredCustomers: toNonNegativeInt(input.requiredCustomers),
+      customerReward: toNonNegativeFloat(input.customerReward),
+      requiredCommunications: toNonNegativeInt(input.requiredCommunications),
+      communicationReward: toNonNegativeFloat(input.communicationReward),
+      startsAt,
+      isActive: input.isActive !== false,
+    },
+    update: {
+      cycle,
+      requiredCustomers: toNonNegativeInt(input.requiredCustomers),
+      customerReward: toNonNegativeFloat(input.customerReward),
+      requiredCommunications: toNonNegativeInt(input.requiredCommunications),
+      communicationReward: toNonNegativeFloat(input.communicationReward),
+      startsAt,
+      isActive: input.isActive !== false,
+    },
+  });
+};
+
+const buildActivityProgressForTarget = async (activityTarget: any, userName: string): Promise<ActivityTargetProgressRow> => {
+  const now = new Date();
+  const cycle = normalizeActivityCycle(activityTarget?.cycle);
+  const startsAt = startOfDay(new Date(activityTarget?.startsAt || now));
+
+  if (cycle === "MONTHLY") {
+    const periodStart = startsAt > startOfMonth(now) ? startsAt : startOfMonth(now);
+    const periodEnd = endOfMonth(now);
+
+    const [customersAchieved, communicationsAchieved] = await Promise.all([
+      countCustomersForUserInRange(activityTarget.userId, periodStart, now),
+      countCommunicationsForUserInRange(activityTarget.userId, periodStart, now),
+    ]);
+
+    const customersTarget = toNonNegativeInt(activityTarget.requiredCustomers);
+    const communicationsTarget = toNonNegativeInt(activityTarget.requiredCommunications);
+    const customersRemaining = Math.max(0, customersTarget - customersAchieved);
+    const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
+    const customersReached = customersTarget > 0 && customersRemaining === 0;
+    const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
+    const totalRewardEarned =
+      (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
+      (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+
+    return {
+      userId: activityTarget.userId,
+      userName,
+      cycle,
+      requiredCustomers: customersTarget,
+      requiredCommunications: communicationsTarget,
+      customerReward: toNonNegativeFloat(activityTarget.customerReward),
+      communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
+      periodStart,
+      periodEnd,
+      customersTodayOrPeriod: customersAchieved,
+      communicationsTodayOrPeriod: communicationsAchieved,
+      customersTargetTodayOrPeriod: customersTarget,
+      communicationsTargetTodayOrPeriod: communicationsTarget,
+      customersRemaining,
+      communicationsRemaining,
+      customersReached,
+      communicationsReached,
+      totalRewardEarned,
+      carryOverCustomers: 0,
+      carryOverCommunications: 0,
+    };
+  }
+
+  const todayStart = startOfDay(now);
+  const todayEnd = endOfDay(now);
+  const effectiveStart = startsAt > todayStart ? startsAt : startsAt;
+
+  const yesterdayEnd = new Date(todayStart.getTime() - 1);
+  const dailyCustomersRequired = toNonNegativeInt(activityTarget.requiredCustomers);
+  const dailyCommunicationsRequired = toNonNegativeInt(activityTarget.requiredCommunications);
+
+  const daysBeforeToday = startsAt <= yesterdayEnd ? diffDays(startsAt, todayStart) : 0;
+
+  const [customersBeforeToday, communicationsBeforeToday, customersToday, communicationsToday] = await Promise.all([
+    startsAt <= yesterdayEnd
+      ? countCustomersForUserInRange(activityTarget.userId, startsAt, yesterdayEnd)
+      : Promise.resolve(0),
+    startsAt <= yesterdayEnd
+      ? countCommunicationsForUserInRange(activityTarget.userId, startsAt, yesterdayEnd)
+      : Promise.resolve(0),
+    countCustomersForUserInRange(activityTarget.userId, todayStart, todayEnd),
+    countCommunicationsForUserInRange(activityTarget.userId, todayStart, todayEnd),
+  ]);
+
+  const carryOverCustomers = Math.max(0, (dailyCustomersRequired * daysBeforeToday) - customersBeforeToday);
+  const carryOverCommunications = Math.max(0, (dailyCommunicationsRequired * daysBeforeToday) - communicationsBeforeToday);
+
+  const customersTargetToday = dailyCustomersRequired + carryOverCustomers;
+  const communicationsTargetToday = dailyCommunicationsRequired + carryOverCommunications;
+
+  const customersRemaining = Math.max(0, customersTargetToday - customersToday);
+  const communicationsRemaining = Math.max(0, communicationsTargetToday - communicationsToday);
+  const customersReached = customersTargetToday > 0 && customersRemaining === 0;
+  const communicationsReached = communicationsTargetToday > 0 && communicationsRemaining === 0;
+
+  const totalRewardEarned =
+    (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
+    (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+
+  return {
+    userId: activityTarget.userId,
+    userName,
+    cycle,
+    requiredCustomers: dailyCustomersRequired,
+    requiredCommunications: dailyCommunicationsRequired,
+    customerReward: toNonNegativeFloat(activityTarget.customerReward),
+    communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
+    periodStart: effectiveStart,
+    periodEnd: todayEnd,
+    customersTodayOrPeriod: customersToday,
+    communicationsTodayOrPeriod: communicationsToday,
+    customersTargetTodayOrPeriod: customersTargetToday,
+    communicationsTargetTodayOrPeriod: communicationsTargetToday,
+    customersRemaining,
+    communicationsRemaining,
+    customersReached,
+    communicationsReached,
+    totalRewardEarned,
+    carryOverCustomers,
+    carryOverCommunications,
+  };
+};
+
 export async function createUserTarget(payload: UserTargetInput) {
   try {
     const currentUser = await getCurrentSessionUserBasic();
@@ -394,32 +624,82 @@ export async function createUserTarget(payload: UserTargetInput) {
       return { success: false, error: "يمكنك إضافة التاركت للموظفين المرتبطين بك فقط" };
     }
 
+    const salesTargets = toNumberArray(payload.salesTargetValue);
+    const salesRewards = toNumberArray(payload.salesRewardValue);
+    const productRows = Array.isArray(payload.products) ? payload.products : [];
+    const hasSalesOrProducts = salesTargets.length > 0 || productRows.length > 0;
+    const hasActivityTarget = Boolean(payload.activityTarget);
+
+    if (!hasSalesOrProducts && !hasActivityTarget) {
+      return { success: false, error: "يرجى إدخال تاركت واحد على الأقل" };
+    }
+
     const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
     const endDate = payload.endDate ? new Date(payload.endDate) : null;
-    const target = await prisma.userTarget.create({
-      data: {
-        userId: payload.userId,
-        salesTargetValue: toNumberArray(payload.salesTargetValue),
-        salesRewardValue: toNumberArray(payload.salesRewardValue),
-        ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
-        ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
-        isActive: true,
-        products: {
-          create: payload.products.map((item) => {
-            const productId = toNumber(item.productId);
-            if (productId === null) {
-              throw new Error("Invalid productId in target products");
+
+    const result = await prisma.$transaction(async (tx) => {
+      let salesTarget: any = null;
+
+      if (hasSalesOrProducts) {
+        salesTarget = await tx.userTarget.create({
+          data: {
+            userId: payload.userId,
+            salesTargetValue: salesTargets,
+            salesRewardValue: salesRewards,
+            ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
+            ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
+            isActive: true,
+            products: {
+              create: productRows.map((item) => {
+                const productId = toNumber(item.productId);
+                if (productId === null) {
+                  throw new Error("Invalid productId in target products");
+                }
+                return {
+                  product: { connect: { id: productId } },
+                  requiredQty: toNumberArray(item.requiredQty),
+                  rewardValue: toNumberArray(item.rewardValue),
+                };
+              })
             }
-            return {
-              product: { connect: { id: productId } },
-              requiredQty: toNumberArray(item.requiredQty),
-              rewardValue: toNumberArray(item.rewardValue),
-            };
-          })
-        }
+          }
+        });
       }
+
+      let activityTarget: any = null;
+      if (hasActivityTarget && payload.activityTarget) {
+        const cycle = normalizeActivityCycle(payload.activityTarget.cycle);
+        const startsAtCandidate = payload.activityTarget.startDate ? new Date(payload.activityTarget.startDate) : new Date();
+        const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
+
+        activityTarget = await tx.userActivityTarget.upsert({
+          where: { userId: payload.userId },
+          create: {
+            userId: payload.userId,
+            cycle,
+            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+            startsAt,
+            isActive: payload.activityTarget.isActive !== false,
+          },
+          update: {
+            cycle,
+            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+            startsAt,
+            isActive: payload.activityTarget.isActive !== false,
+          },
+        });
+      }
+
+      return { salesTarget, activityTarget };
     });
-    return { success: true, data: target };
+
+    return { success: true, data: result };
   } catch (error) {
     console.error("Create User Target Error:", error);
     return { success: false, error: "فشل في تعيين التاركت" };
@@ -449,35 +729,147 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
 
     const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
     const endDate = payload.endDate === "" ? null : payload.endDate ? new Date(payload.endDate) : undefined;
-    const target = await prisma.userTarget.update({
-      where: { id: targetId },
-      data: {
-        salesTargetValue: toNumberArray(payload.salesTargetValue),
-        salesRewardValue: toNumberArray(payload.salesRewardValue),
-        ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
-        ...(endDate !== undefined
-          ? (endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : { endedAt: null })
-          : {}),
-        products: {
-          deleteMany: {},
-          create: payload.products.map((item) => {
-            const productId = toNumber(item.productId);
-            if (productId === null) {
-              throw new Error("Invalid productId in target products");
-            }
-            return {
-              product: { connect: { id: productId } },
-              requiredQty: toNumberArray(item.requiredQty),
-              rewardValue: toNumberArray(item.rewardValue),
-            };
-          })
+
+    const target = await prisma.$transaction(async (tx) => {
+      const updatedTarget = await tx.userTarget.update({
+        where: { id: targetId },
+        data: {
+          salesTargetValue: toNumberArray(payload.salesTargetValue),
+          salesRewardValue: toNumberArray(payload.salesRewardValue),
+          ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
+          ...(endDate !== undefined
+            ? (endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : { endedAt: null })
+            : {}),
+          products: {
+            deleteMany: {},
+            create: payload.products.map((item) => {
+              const productId = toNumber(item.productId);
+              if (productId === null) {
+                throw new Error("Invalid productId in target products");
+              }
+              return {
+                product: { connect: { id: productId } },
+                requiredQty: toNumberArray(item.requiredQty),
+                rewardValue: toNumberArray(item.rewardValue),
+              };
+            })
+          }
         }
+      });
+
+      let updatedActivityTarget: any = null;
+      if (payload.activityTarget) {
+        const cycle = normalizeActivityCycle(payload.activityTarget.cycle);
+        const startsAtCandidate = payload.activityTarget.startDate ? new Date(payload.activityTarget.startDate) : new Date();
+        const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
+
+        updatedActivityTarget = await tx.userActivityTarget.upsert({
+          where: { userId: existingTarget.userId },
+          create: {
+            userId: existingTarget.userId,
+            cycle,
+            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+            startsAt,
+            isActive: payload.activityTarget.isActive !== false,
+          },
+          update: {
+            cycle,
+            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+            startsAt,
+            isActive: payload.activityTarget.isActive !== false,
+          },
+        });
       }
+
+      return { updatedTarget, updatedActivityTarget };
     });
     return { success: true, data: target };
   } catch (error) {
     console.error("Update User Target Error:", error);
     return { success: false, error: "فشل في تحديث التاركت" };
+  }
+}
+
+export async function setUserActivityTarget(userId: string, payload: ActivityTargetInput) {
+  try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح" };
+    }
+
+    const canManage = await canManageTargetForUser(currentUser, userId);
+    if (!canManage) {
+      return { success: false, error: "يمكنك إدارة التاركت للموظفين المرتبطين بك فقط" };
+    }
+
+    const target = await upsertUserActivityTarget(userId, payload);
+    return { success: true, data: target };
+  } catch (error) {
+    console.error("Set User Activity Target Error:", error);
+    return { success: false, error: "فشل حفظ تاركت النشاط" };
+  }
+}
+
+export async function getUserActivityTargetProgress(userIdsInput?: string[]) {
+  try {
+    const currentUser = await getCurrentSessionUserBasic();
+    if (!currentUser) {
+      return { success: false, error: "غير مصرح", data: [] as ActivityTargetProgressRow[] };
+    }
+
+    const requestedIds = Array.from(new Set((userIdsInput || []).map((id) => String(id || "").trim()).filter(Boolean)));
+    const isAdmin = currentUser.accountType === "ADMIN";
+
+    let allowedUserIds: string[] = [];
+    if (isAdmin) {
+      allowedUserIds = requestedIds;
+    } else {
+      const linkedUsers = await prisma.user.findMany({
+        where: {
+          OR: [
+            { id: currentUser.id },
+            { parentId: currentUser.id },
+          ]
+        },
+        select: { id: true },
+      });
+
+      const linkedIds = new Set(linkedUsers.map((row) => row.id));
+      allowedUserIds = requestedIds.length > 0
+        ? requestedIds.filter((id) => linkedIds.has(id))
+        : Array.from(linkedIds);
+    }
+
+    if (allowedUserIds.length === 0) {
+      return { success: true, data: [] as ActivityTargetProgressRow[] };
+    }
+
+    const activityTargets = await prisma.userActivityTarget.findMany({
+      where: {
+        userId: { in: allowedUserIds },
+        isActive: true,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          }
+        }
+      }
+    });
+
+    const rows = await Promise.all(activityTargets.map((target) => buildActivityProgressForTarget(target, target.user?.username || "-")));
+    return { success: true, data: rows };
+  } catch (error) {
+    console.error("Get User Activity Target Progress Error:", error);
+    return { success: false, error: "فشل جلب تقدم تاركت النشاط", data: [] as ActivityTargetProgressRow[] };
   }
 }
 

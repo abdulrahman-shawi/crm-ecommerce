@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserActivityTarget
+ * 
+ */
+export type UserActivityTarget = $Result.DefaultSelection<Prisma.$UserActivityTargetPayload>
+/**
  * Model Permission
  * 
  */
@@ -113,7 +118,15 @@ export type GeneralSetting = $Result.DefaultSelection<Prisma.$GeneralSettingPayl
  * Enums
  */
 export namespace $Enums {
-  export const MovementType: {
+  export const ActivityTargetCycle: {
+  DAILY: 'DAILY',
+  MONTHLY: 'MONTHLY'
+};
+
+export type ActivityTargetCycle = (typeof ActivityTargetCycle)[keyof typeof ActivityTargetCycle]
+
+
+export const MovementType: {
   IN: 'IN',
   OUT: 'OUT',
   TRANSFER: 'TRANSFER',
@@ -168,6 +181,10 @@ export const AccountType: {
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
 }
+
+export type ActivityTargetCycle = $Enums.ActivityTargetCycle
+
+export const ActivityTargetCycle: typeof $Enums.ActivityTargetCycle
 
 export type MovementType = $Enums.MovementType
 
@@ -319,6 +336,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userActivityTarget`: Exposes CRUD operations for the **UserActivityTarget** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserActivityTargets
+    * const userActivityTargets = await prisma.userActivityTarget.findMany()
+    * ```
+    */
+  get userActivityTarget(): Prisma.UserActivityTargetDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.permission`: Exposes CRUD operations for the **Permission** model.
@@ -934,6 +961,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    UserActivityTarget: 'UserActivityTarget',
     Permission: 'Permission',
     Category: 'Category',
     Product: 'Product',
@@ -967,7 +995,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting"
+      modelProps: "user" | "userActivityTarget" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1042,6 +1070,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserActivityTarget: {
+        payload: Prisma.$UserActivityTargetPayload<ExtArgs>
+        fields: Prisma.UserActivityTargetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserActivityTargetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          findFirst: {
+            args: Prisma.UserActivityTargetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserActivityTargetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          findMany: {
+            args: Prisma.UserActivityTargetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          create: {
+            args: Prisma.UserActivityTargetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          createMany: {
+            args: Prisma.UserActivityTargetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserActivityTargetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          delete: {
+            args: Prisma.UserActivityTargetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          update: {
+            args: Prisma.UserActivityTargetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserActivityTargetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserActivityTargetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserActivityTargetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          aggregate: {
+            args: Prisma.UserActivityTargetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserActivityTarget>
+          }
+          groupBy: {
+            args: Prisma.UserActivityTargetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserActivityTargetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserActivityTargetCountArgs<ExtArgs>
+            result: $Utils.Optional<UserActivityTargetCountAggregateOutputType> | number
           }
         }
       }
@@ -2486,6 +2588,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    userActivityTarget?: UserActivityTargetOmit
     permission?: PermissionOmit
     category?: CategoryOmit
     product?: ProductOmit
@@ -3296,6 +3399,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
+    activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3365,6 +3469,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
+    activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3388,6 +3493,7 @@ export namespace Prisma {
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       message: Prisma.$MessagePayload<ExtArgs>[]
       targets: Prisma.$UserTargetPayload<ExtArgs>[]
+      activityTarget: Prisma.$UserActivityTargetPayload<ExtArgs> | null
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     }
@@ -3807,6 +3913,7 @@ export namespace Prisma {
     customers<T extends User$customersArgs<ExtArgs> = {}>(args?: Subset<T, User$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     message<T extends User$messageArgs<ExtArgs> = {}>(args?: Subset<T, User$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     targets<T extends User$targetsArgs<ExtArgs> = {}>(args?: Subset<T, User$targetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activityTarget<T extends User$activityTargetArgs<ExtArgs> = {}>(args?: Subset<T, User$activityTargetArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4406,6 +4513,25 @@ export namespace Prisma {
   }
 
   /**
+   * User.activityTarget
+   */
+  export type User$activityTargetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    where?: UserActivityTargetWhereInput
+  }
+
+  /**
    * User.expenses
    */
   export type User$expensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4469,6 +4595,1188 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserActivityTarget
+   */
+
+  export type AggregateUserActivityTarget = {
+    _count: UserActivityTargetCountAggregateOutputType | null
+    _avg: UserActivityTargetAvgAggregateOutputType | null
+    _sum: UserActivityTargetSumAggregateOutputType | null
+    _min: UserActivityTargetMinAggregateOutputType | null
+    _max: UserActivityTargetMaxAggregateOutputType | null
+  }
+
+  export type UserActivityTargetAvgAggregateOutputType = {
+    requiredCustomers: number | null
+    customerReward: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+  }
+
+  export type UserActivityTargetSumAggregateOutputType = {
+    requiredCustomers: number | null
+    customerReward: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+  }
+
+  export type UserActivityTargetMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cycle: $Enums.ActivityTargetCycle | null
+    requiredCustomers: number | null
+    customerReward: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    startsAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserActivityTargetMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cycle: $Enums.ActivityTargetCycle | null
+    requiredCustomers: number | null
+    customerReward: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    startsAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserActivityTargetCountAggregateOutputType = {
+    id: number
+    userId: number
+    cycle: number
+    requiredCustomers: number
+    customerReward: number
+    requiredCommunications: number
+    communicationReward: number
+    startsAt: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserActivityTargetAvgAggregateInputType = {
+    requiredCustomers?: true
+    customerReward?: true
+    requiredCommunications?: true
+    communicationReward?: true
+  }
+
+  export type UserActivityTargetSumAggregateInputType = {
+    requiredCustomers?: true
+    customerReward?: true
+    requiredCommunications?: true
+    communicationReward?: true
+  }
+
+  export type UserActivityTargetMinAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    requiredCustomers?: true
+    customerReward?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    startsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserActivityTargetMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    requiredCustomers?: true
+    customerReward?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    startsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserActivityTargetCountAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    requiredCustomers?: true
+    customerReward?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    startsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserActivityTargetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivityTarget to aggregate.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserActivityTargets
+    **/
+    _count?: true | UserActivityTargetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserActivityTargetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserActivityTargetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserActivityTargetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserActivityTargetMaxAggregateInputType
+  }
+
+  export type GetUserActivityTargetAggregateType<T extends UserActivityTargetAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserActivityTarget]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserActivityTarget[P]>
+      : GetScalarType<T[P], AggregateUserActivityTarget[P]>
+  }
+
+
+
+
+  export type UserActivityTargetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserActivityTargetWhereInput
+    orderBy?: UserActivityTargetOrderByWithAggregationInput | UserActivityTargetOrderByWithAggregationInput[]
+    by: UserActivityTargetScalarFieldEnum[] | UserActivityTargetScalarFieldEnum
+    having?: UserActivityTargetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserActivityTargetCountAggregateInputType | true
+    _avg?: UserActivityTargetAvgAggregateInputType
+    _sum?: UserActivityTargetSumAggregateInputType
+    _min?: UserActivityTargetMinAggregateInputType
+    _max?: UserActivityTargetMaxAggregateInputType
+  }
+
+  export type UserActivityTargetGroupByOutputType = {
+    id: string
+    userId: string
+    cycle: $Enums.ActivityTargetCycle
+    requiredCustomers: number
+    customerReward: number
+    requiredCommunications: number
+    communicationReward: number
+    startsAt: Date
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: UserActivityTargetCountAggregateOutputType | null
+    _avg: UserActivityTargetAvgAggregateOutputType | null
+    _sum: UserActivityTargetSumAggregateOutputType | null
+    _min: UserActivityTargetMinAggregateOutputType | null
+    _max: UserActivityTargetMaxAggregateOutputType | null
+  }
+
+  type GetUserActivityTargetGroupByPayload<T extends UserActivityTargetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserActivityTargetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserActivityTargetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
+            : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserActivityTargetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    startsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    startsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    startsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    startsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "requiredCustomers" | "customerReward" | "requiredCommunications" | "communicationReward" | "startsAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
+  export type UserActivityTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivityTargetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserActivityTargetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserActivityTarget"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      cycle: $Enums.ActivityTargetCycle
+      requiredCustomers: number
+      customerReward: number
+      requiredCommunications: number
+      communicationReward: number
+      startsAt: Date
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userActivityTarget"]>
+    composites: {}
+  }
+
+  type UserActivityTargetGetPayload<S extends boolean | null | undefined | UserActivityTargetDefaultArgs> = $Result.GetResult<Prisma.$UserActivityTargetPayload, S>
+
+  type UserActivityTargetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserActivityTargetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserActivityTargetCountAggregateInputType | true
+    }
+
+  export interface UserActivityTargetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserActivityTarget'], meta: { name: 'UserActivityTarget' } }
+    /**
+     * Find zero or one UserActivityTarget that matches the filter.
+     * @param {UserActivityTargetFindUniqueArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserActivityTargetFindUniqueArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserActivityTarget that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserActivityTargetFindUniqueOrThrowArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserActivityTargetFindUniqueOrThrowArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivityTarget that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindFirstArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserActivityTargetFindFirstArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivityTarget that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindFirstOrThrowArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserActivityTargetFindFirstOrThrowArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserActivityTargets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserActivityTargets
+     * const userActivityTargets = await prisma.userActivityTarget.findMany()
+     * 
+     * // Get first 10 UserActivityTargets
+     * const userActivityTargets = await prisma.userActivityTarget.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserActivityTargetFindManyArgs>(args?: SelectSubset<T, UserActivityTargetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserActivityTarget.
+     * @param {UserActivityTargetCreateArgs} args - Arguments to create a UserActivityTarget.
+     * @example
+     * // Create one UserActivityTarget
+     * const UserActivityTarget = await prisma.userActivityTarget.create({
+     *   data: {
+     *     // ... data to create a UserActivityTarget
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserActivityTargetCreateArgs>(args: SelectSubset<T, UserActivityTargetCreateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserActivityTargets.
+     * @param {UserActivityTargetCreateManyArgs} args - Arguments to create many UserActivityTargets.
+     * @example
+     * // Create many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserActivityTargetCreateManyArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserActivityTargets and returns the data saved in the database.
+     * @param {UserActivityTargetCreateManyAndReturnArgs} args - Arguments to create many UserActivityTargets.
+     * @example
+     * // Create many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserActivityTargets and only return the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserActivityTargetCreateManyAndReturnArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserActivityTarget.
+     * @param {UserActivityTargetDeleteArgs} args - Arguments to delete one UserActivityTarget.
+     * @example
+     * // Delete one UserActivityTarget
+     * const UserActivityTarget = await prisma.userActivityTarget.delete({
+     *   where: {
+     *     // ... filter to delete one UserActivityTarget
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserActivityTargetDeleteArgs>(args: SelectSubset<T, UserActivityTargetDeleteArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserActivityTarget.
+     * @param {UserActivityTargetUpdateArgs} args - Arguments to update one UserActivityTarget.
+     * @example
+     * // Update one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserActivityTargetUpdateArgs>(args: SelectSubset<T, UserActivityTargetUpdateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserActivityTargets.
+     * @param {UserActivityTargetDeleteManyArgs} args - Arguments to filter UserActivityTargets to delete.
+     * @example
+     * // Delete a few UserActivityTargets
+     * const { count } = await prisma.userActivityTarget.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserActivityTargetDeleteManyArgs>(args?: SelectSubset<T, UserActivityTargetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivityTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserActivityTargetUpdateManyArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivityTargets and returns the data updated in the database.
+     * @param {UserActivityTargetUpdateManyAndReturnArgs} args - Arguments to update many UserActivityTargets.
+     * @example
+     * // Update many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserActivityTargets and only return the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserActivityTargetUpdateManyAndReturnArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserActivityTarget.
+     * @param {UserActivityTargetUpsertArgs} args - Arguments to update or create a UserActivityTarget.
+     * @example
+     * // Update or create a UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.upsert({
+     *   create: {
+     *     // ... data to create a UserActivityTarget
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserActivityTarget we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserActivityTargetUpsertArgs>(args: SelectSubset<T, UserActivityTargetUpsertArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserActivityTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetCountArgs} args - Arguments to filter UserActivityTargets to count.
+     * @example
+     * // Count the number of UserActivityTargets
+     * const count = await prisma.userActivityTarget.count({
+     *   where: {
+     *     // ... the filter for the UserActivityTargets we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserActivityTargetCountArgs>(
+      args?: Subset<T, UserActivityTargetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserActivityTargetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserActivityTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserActivityTargetAggregateArgs>(args: Subset<T, UserActivityTargetAggregateArgs>): Prisma.PrismaPromise<GetUserActivityTargetAggregateType<T>>
+
+    /**
+     * Group by UserActivityTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserActivityTargetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserActivityTargetGroupByArgs['orderBy'] }
+        : { orderBy?: UserActivityTargetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserActivityTargetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserActivityTargetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserActivityTarget model
+   */
+  readonly fields: UserActivityTargetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserActivityTarget.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserActivityTargetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserActivityTarget model
+   */
+  interface UserActivityTargetFieldRefs {
+    readonly id: FieldRef<"UserActivityTarget", 'String'>
+    readonly userId: FieldRef<"UserActivityTarget", 'String'>
+    readonly cycle: FieldRef<"UserActivityTarget", 'ActivityTargetCycle'>
+    readonly requiredCustomers: FieldRef<"UserActivityTarget", 'Int'>
+    readonly customerReward: FieldRef<"UserActivityTarget", 'Float'>
+    readonly requiredCommunications: FieldRef<"UserActivityTarget", 'Int'>
+    readonly communicationReward: FieldRef<"UserActivityTarget", 'Float'>
+    readonly startsAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly isActive: FieldRef<"UserActivityTarget", 'Boolean'>
+    readonly createdAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserActivityTarget", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserActivityTarget findUnique
+   */
+  export type UserActivityTargetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget findUniqueOrThrow
+   */
+  export type UserActivityTargetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget findFirst
+   */
+  export type UserActivityTargetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivityTargets.
+     */
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget findFirstOrThrow
+   */
+  export type UserActivityTargetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivityTargets.
+     */
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget findMany
+   */
+  export type UserActivityTargetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTargets to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget create
+   */
+  export type UserActivityTargetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserActivityTarget.
+     */
+    data: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
+  }
+
+  /**
+   * UserActivityTarget createMany
+   */
+  export type UserActivityTargetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserActivityTargets.
+     */
+    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserActivityTarget createManyAndReturn
+   */
+  export type UserActivityTargetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserActivityTargets.
+     */
+    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivityTarget update
+   */
+  export type UserActivityTargetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserActivityTarget.
+     */
+    data: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
+    /**
+     * Choose, which UserActivityTarget to update.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget updateMany
+   */
+  export type UserActivityTargetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserActivityTargets.
+     */
+    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivityTargets to update
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivityTarget updateManyAndReturn
+   */
+  export type UserActivityTargetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * The data used to update UserActivityTargets.
+     */
+    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivityTargets to update
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivityTarget upsert
+   */
+  export type UserActivityTargetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserActivityTarget to update in case it exists.
+     */
+    where: UserActivityTargetWhereUniqueInput
+    /**
+     * In case the UserActivityTarget found by the `where` argument doesn't exist, create a new UserActivityTarget with this data.
+     */
+    create: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
+    /**
+     * In case the UserActivityTarget was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
+  }
+
+  /**
+   * UserActivityTarget delete
+   */
+  export type UserActivityTargetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter which UserActivityTarget to delete.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget deleteMany
+   */
+  export type UserActivityTargetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivityTargets to delete
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivityTarget without action
+   */
+  export type UserActivityTargetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
   }
 
 
@@ -25942,6 +27250,23 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserActivityTargetScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    cycle: 'cycle',
+    requiredCustomers: 'requiredCustomers',
+    customerReward: 'customerReward',
+    requiredCommunications: 'requiredCommunications',
+    communicationReward: 'communicationReward',
+    startsAt: 'startsAt',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserActivityTargetScalarFieldEnum = (typeof UserActivityTargetScalarFieldEnum)[keyof typeof UserActivityTargetScalarFieldEnum]
+
+
   export const PermissionScalarFieldEnum: {
     id: 'id',
     roleName: 'roleName',
@@ -26331,6 +27656,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ActivityTargetCycle'
+   */
+  export type EnumActivityTargetCycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityTargetCycle'>
+    
+
+
+  /**
+   * Reference to a field of type 'ActivityTargetCycle[]'
+   */
+  export type ListEnumActivityTargetCycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityTargetCycle[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -26435,6 +27774,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
+    activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }
@@ -26461,6 +27801,7 @@ export namespace Prisma {
     customers?: CustomerOrderByRelationAggregateInput
     message?: MessageOrderByRelationAggregateInput
     targets?: UserTargetOrderByRelationAggregateInput
+    activityTarget?: UserActivityTargetOrderByWithRelationInput
     expenses?: ExpenseOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
   }
@@ -26490,6 +27831,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
+    activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
   }, "id" | "email">
@@ -26534,6 +27876,93 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     permissionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     parentId?: StringNullableWithAggregatesFilter<"User"> | string | null
+  }
+
+  export type UserActivityTargetWhereInput = {
+    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    OR?: UserActivityTargetWhereInput[]
+    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    id?: StringFilter<"UserActivityTarget"> | string
+    userId?: StringFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
+    customerReward?: FloatFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    isActive?: BoolFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserActivityTargetOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    startsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserActivityTargetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    OR?: UserActivityTargetWhereInput[]
+    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
+    customerReward?: FloatFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    isActive?: BoolFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type UserActivityTargetOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    startsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserActivityTargetCountOrderByAggregateInput
+    _avg?: UserActivityTargetAvgOrderByAggregateInput
+    _max?: UserActivityTargetMaxOrderByAggregateInput
+    _min?: UserActivityTargetMinOrderByAggregateInput
+    _sum?: UserActivityTargetSumOrderByAggregateInput
+  }
+
+  export type UserActivityTargetScalarWhereWithAggregatesInput = {
+    AND?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
+    OR?: UserActivityTargetScalarWhereWithAggregatesInput[]
+    NOT?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserActivityTarget"> | string
+    userId?: StringWithAggregatesFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleWithAggregatesFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntWithAggregatesFilter<"UserActivityTarget"> | number
+    customerReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntWithAggregatesFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    isActive?: BoolWithAggregatesFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
   }
 
   export type PermissionWhereInput = {
@@ -28104,6 +29533,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -28128,6 +29558,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -28152,6 +29583,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -28176,6 +29608,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -28227,6 +29660,103 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserActivityTargetCreateInput = {
+    id?: string
+    cycle?: $Enums.ActivityTargetCycle
+    requiredCustomers?: number
+    customerReward?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    startsAt?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutActivityTargetInput
+  }
+
+  export type UserActivityTargetUncheckedCreateInput = {
+    id?: string
+    userId: string
+    cycle?: $Enums.ActivityTargetCycle
+    requiredCustomers?: number
+    customerReward?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    startsAt?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutActivityTargetNestedInput
+  }
+
+  export type UserActivityTargetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetCreateManyInput = {
+    id?: string
+    userId: string
+    cycle?: $Enums.ActivityTargetCycle
+    requiredCustomers?: number
+    customerReward?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    startsAt?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PermissionCreateInput = {
@@ -30008,6 +31538,11 @@ export namespace Prisma {
     none?: UserTargetWhereInput
   }
 
+  export type UserActivityTargetNullableScalarRelationFilter = {
+    is?: UserActivityTargetWhereInput | null
+    isNot?: UserActivityTargetWhereInput | null
+  }
+
   export type ExpenseListRelationFilter = {
     every?: ExpenseWhereInput
     some?: ExpenseWhereInput
@@ -30206,9 +31741,95 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumActivityTargetCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type UserActivityTargetCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    startsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetAvgOrderByAggregateInput = {
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+  }
+
+  export type UserActivityTargetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    startsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    startsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetSumOrderByAggregateInput = {
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+  }
+
+  export type EnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type PermissionCountOrderByAggregateInput = {
@@ -30329,14 +31950,6 @@ export namespace Prisma {
     deletePermissions?: SortOrder
     accessSyria?: SortOrder
     accessTurkey?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type ProductListRelationFilter = {
@@ -30662,11 +32275,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type UserTargetCountOrderByAggregateInput = {
@@ -31449,6 +33057,12 @@ export namespace Prisma {
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
   }
 
+  export type UserActivityTargetCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
+    connect?: UserActivityTargetWhereUniqueInput
+  }
+
   export type ExpenseCreateNestedManyWithoutEmployeeInput = {
     create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
@@ -31495,6 +33109,12 @@ export namespace Prisma {
     connectOrCreate?: UserTargetCreateOrConnectWithoutUserInput | UserTargetCreateOrConnectWithoutUserInput[]
     createMany?: UserTargetCreateManyUserInputEnvelope
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
+  }
+
+  export type UserActivityTargetUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
+    connect?: UserActivityTargetWhereUniqueInput
   }
 
   export type ExpenseUncheckedCreateNestedManyWithoutEmployeeInput = {
@@ -31632,6 +33252,16 @@ export namespace Prisma {
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
   }
 
+  export type UserActivityTargetUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
+    upsert?: UserActivityTargetUpsertWithoutUserInput
+    disconnect?: UserActivityTargetWhereInput | boolean
+    delete?: UserActivityTargetWhereInput | boolean
+    connect?: UserActivityTargetWhereUniqueInput
+    update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  }
+
   export type ExpenseUpdateManyWithoutEmployeeNestedInput = {
     create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
@@ -31729,6 +33359,16 @@ export namespace Prisma {
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
   }
 
+  export type UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
+    upsert?: UserActivityTargetUpsertWithoutUserInput
+    disconnect?: UserActivityTargetWhereInput | boolean
+    delete?: UserActivityTargetWhereInput | boolean
+    connect?: UserActivityTargetWhereUniqueInput
+    update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  }
+
   export type ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput = {
     create?: XOR<ExpenseCreateWithoutEmployeeInput, ExpenseUncheckedCreateWithoutEmployeeInput> | ExpenseCreateWithoutEmployeeInput[] | ExpenseUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: ExpenseCreateOrConnectWithoutEmployeeInput | ExpenseCreateOrConnectWithoutEmployeeInput[]
@@ -31757,6 +33397,28 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutActivityTargetInput = {
+    create?: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumActivityTargetCycleFieldUpdateOperationsInput = {
+    set?: $Enums.ActivityTargetCycle
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type UserUpdateOneRequiredWithoutActivityTargetNestedInput = {
+    create?: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetInput
+    upsert?: UserUpsertWithoutActivityTargetInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityTargetInput, UserUpdateWithoutActivityTargetInput>, UserUncheckedUpdateWithoutActivityTargetInput>
+  }
+
   export type UserCreateNestedManyWithoutPermissionInput = {
     create?: XOR<UserCreateWithoutPermissionInput, UserUncheckedCreateWithoutPermissionInput> | UserCreateWithoutPermissionInput[] | UserUncheckedCreateWithoutPermissionInput[]
     connectOrCreate?: UserCreateOrConnectWithoutPermissionInput | UserCreateOrConnectWithoutPermissionInput[]
@@ -31769,10 +33431,6 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutPermissionInput | UserCreateOrConnectWithoutPermissionInput[]
     createMany?: UserCreateManyPermissionInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateManyWithoutPermissionNestedInput = {
@@ -33140,9 +34798,26 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumActivityTargetCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -33325,6 +35000,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -33348,6 +35024,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -33376,6 +35053,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -33399,6 +35077,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -33680,6 +35359,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserActivityTargetCreateWithoutUserInput = {
+    id?: string
+    cycle?: $Enums.ActivityTargetCycle
+    requiredCustomers?: number
+    customerReward?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    startsAt?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetUncheckedCreateWithoutUserInput = {
+    id?: string
+    cycle?: $Enums.ActivityTargetCycle
+    requiredCustomers?: number
+    customerReward?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    startsAt?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetCreateOrConnectWithoutUserInput = {
+    where: UserActivityTargetWhereUniqueInput
+    create: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+  }
+
   export type ExpenseCreateWithoutEmployeeInput = {
     type?: $Enums.ExpenseType
     amount: number
@@ -33775,6 +35485,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -33798,6 +35509,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -34077,6 +35789,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
   }
 
+  export type UserActivityTargetUpsertWithoutUserInput = {
+    update: XOR<UserActivityTargetUpdateWithoutUserInput, UserActivityTargetUncheckedUpdateWithoutUserInput>
+    create: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+    where?: UserActivityTargetWhereInput
+  }
+
+  export type UserActivityTargetUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserActivityTargetWhereInput
+    data: XOR<UserActivityTargetUpdateWithoutUserInput, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserActivityTargetUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ExpenseUpsertWithWhereUniqueWithoutEmployeeInput = {
     where: ExpenseWhereUniqueInput
     update: XOR<ExpenseUpdateWithoutEmployeeInput, ExpenseUncheckedUpdateWithoutEmployeeInput>
@@ -34140,6 +35889,118 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StockMovement"> | Date | string
   }
 
+  export type UserCreateWithoutActivityTargetInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutActivityTargetInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActivityTargetInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+  }
+
+  export type UserUpsertWithoutActivityTargetInput = {
+    update: XOR<UserUpdateWithoutActivityTargetInput, UserUncheckedUpdateWithoutActivityTargetInput>
+    create: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutActivityTargetInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActivityTargetInput, UserUncheckedUpdateWithoutActivityTargetInput>
+  }
+
+  export type UserUpdateWithoutActivityTargetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActivityTargetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutPermissionInput = {
     id?: string
     username: string
@@ -34159,6 +36020,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -34182,6 +36044,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -35070,6 +36933,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
   }
 
@@ -35093,6 +36957,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
@@ -35202,6 +37067,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
   }
 
@@ -35225,6 +37091,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
@@ -35247,6 +37114,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -35270,6 +37138,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -35333,6 +37202,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -35356,6 +37226,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -35674,6 +37545,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -35697,6 +37569,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -36120,6 +37993,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -36143,6 +38017,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -36233,6 +38108,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -36256,6 +38132,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -36324,6 +38201,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -36347,6 +38225,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -36508,6 +38387,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -36531,6 +38411,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -36629,6 +38510,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
@@ -36652,6 +38534,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -36691,6 +38574,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
@@ -36714,6 +38598,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -37146,6 +39031,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -37169,6 +39055,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -37508,6 +39395,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -37531,6 +39419,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -38264,6 +40153,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -38287,6 +40177,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { GetEmployeeActivitySummary, GetUserTargetProgress } from '@/server/analytics';
-import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, updateUserTarget } from '@/server/user';
+import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, getUserActivityTargetProgress, updateUserTarget } from '@/server/user';
 import { getProduct } from '@/server/product';
 import toast from 'react-hot-toast';
 
@@ -76,6 +76,7 @@ const DashboardPage: React.FunctionComponent = () => {
     { productId: "", requiredQty: 1, rewardValue: 0 },
   ]);
   const [creatingTarget, setCreatingTarget] = React.useState(false);
+  const [activityTargetToday, setActivityTargetToday] = React.useState<any | null>(null);
 
   const isInvalidActivityCustomRange =
     activityFilterPreset === "custom" &&
@@ -456,6 +457,20 @@ const DashboardPage: React.FunctionComponent = () => {
   }, [user?.id, activityFilter, isInvalidActivityCustomRange]);
 
   React.useEffect(() => {
+    const fetchActivityTargetToday = async () => {
+      if (!user?.id) return;
+      const res = await getUserActivityTargetProgress([user.id]);
+      if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+        setActivityTargetToday(res.data[0]);
+      } else {
+        setActivityTargetToday(null);
+      }
+    };
+
+    fetchActivityTargetToday();
+  }, [user?.id, activitySummary.data?.addedCustomers, activitySummary.data?.communicatedMessages]);
+
+  React.useEffect(() => {
     getProduct().then(setProducts).catch(() => setProducts([]));
   }, []);
 
@@ -543,6 +558,53 @@ const DashboardPage: React.FunctionComponent = () => {
             <div className="text-xs font-semibold text-slate-500">العملاء المضافون</div>
             <div className="mt-1 text-2xl font-black text-violet-600">{Number(activitySummary.data?.addedCustomers || 0).toLocaleString()}</div>
           </div>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-200">تاركتي اليوم</div>
+            <div className="text-xs text-slate-500">
+              {activityTargetToday
+                ? (activityTargetToday.cycle === "MONTHLY" ? "الدورية: شهري" : "الدورية: يومي")
+                : "لم يتم تعيين تاركت نشاط بعد"}
+            </div>
+          </div>
+
+          {activityTargetToday ? (
+            <div className="mt-3 grid gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                <div className="text-[11px] font-semibold text-slate-500">المتبقي عملاء</div>
+                <div className="mt-1 text-xl font-black text-violet-600">{Number(activityTargetToday.customersRemaining || 0).toLocaleString()}</div>
+                <div className="text-[11px] text-slate-500">{Number(activityTargetToday.customersTodayOrPeriod || 0).toLocaleString()} / {Number(activityTargetToday.customersTargetTodayOrPeriod || 0).toLocaleString()}</div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                <div className="text-[11px] font-semibold text-slate-500">المتبقي تواصل</div>
+                <div className="mt-1 text-xl font-black text-blue-600">{Number(activityTargetToday.communicationsRemaining || 0).toLocaleString()}</div>
+                <div className="text-[11px] text-slate-500">{Number(activityTargetToday.communicationsTodayOrPeriod || 0).toLocaleString()} / {Number(activityTargetToday.communicationsTargetTodayOrPeriod || 0).toLocaleString()}</div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                <div className="text-[11px] font-semibold text-slate-500">المكافأة المتوقعة</div>
+                <div className="mt-1 text-xl font-black text-emerald-600">
+                  {(
+                    (Number(activityTargetToday.customersTargetTodayOrPeriod || 0) > 0 ? Number(activityTargetToday.customerReward || 0) : 0)
+                    + (Number(activityTargetToday.communicationsTargetTodayOrPeriod || 0) > 0 ? Number(activityTargetToday.communicationReward || 0) : 0)
+                  ).toLocaleString()}
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                <div className="text-[11px] font-semibold text-slate-500">المكافأة المحققة</div>
+                <div className="mt-1 text-xl font-black text-emerald-700">{Number(activityTargetToday.totalRewardEarned || 0).toLocaleString()}</div>
+                {activityTargetToday.cycle === "DAILY" && (
+                  <div className="text-[11px] text-slate-500">
+                    ترحيل: عملاء {Number(activityTargetToday.carryOverCustomers || 0).toLocaleString()} - تواصل {Number(activityTargetToday.carryOverCommunications || 0).toLocaleString()}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
