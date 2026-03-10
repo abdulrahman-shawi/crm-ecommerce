@@ -24,7 +24,7 @@ export async function getData() {
     }
 }
 
-const EXPENSE_TYPES = ["DAILY", "STAFF_SALARY", "RENT"] as const;
+const EXPENSE_TYPES = ["DAILY", "RENT"] as const;
 const EXPENSE_CURRENCIES = ["SYP", "TRY", "USD"] as const;
 const PAID_OFFICES = ["TURKEY", "SYRIA"] as const;
 
@@ -64,27 +64,7 @@ const sanitizeDescription = (value: any) => {
 };
 
 export async function getExpenseEmployees() {
-    try {
-        const users = await prisma.user.findMany({
-            where: {
-                accountType: {
-                    not: "ADMIN",
-                },
-            },
-            select: {
-                id: true,
-                username: true,
-                wage: true,
-            },
-            orderBy: {
-                username: "asc",
-            },
-        });
-
-        return { success: true, data: users };
-    } catch (error) {
-        return { success: false, error };
-    }
+    return { success: true, data: [] };
 }
 
 export async function createExpense(data: any) {
@@ -121,50 +101,6 @@ export async function createExpense(data: any) {
                     currency,
                     paidFromOffice,
                     employeeId: null,
-                    scheduledDate: null,
-                },
-                include: {
-                    employee: {
-                        select: { id: true, username: true, wage: true },
-                    },
-                },
-            });
-
-            return { success: true, data: res };
-        }
-
-        if (type === "STAFF_SALARY") {
-            const employeeId = String(data?.employeeId || "").trim();
-            if (!employeeId) {
-                return { success: false, error: "يرجى اختيار الموظف" };
-            }
-
-            const employee = await prisma.user.findUnique({
-                where: { id: employeeId },
-                select: { id: true, wage: true, username: true },
-            });
-
-            if (!employee) {
-                return { success: false, error: "الموظف غير موجود" };
-            }
-
-            const salaryAmount = Number.isFinite(Number(data?.amount))
-                ? Number(data.amount)
-                : Number(employee.wage || 0);
-
-            if (salaryAmount < 0) {
-                return { success: false, error: "قيمة الراتب المصروف غير صالحة" };
-            }
-
-            const res = await prisma.expense.create({
-                data: {
-                    type,
-                    amount: salaryAmount,
-                    salaryBaseWage: Number(employee.wage || 0),
-                    description: description || `راتب الموظف: ${employee.username}`,
-                    employeeId: employee.id,
-                    currency: null,
-                    paidFromOffice: null,
                     scheduledDate: null,
                 },
                 include: {
@@ -263,38 +199,6 @@ export async function updateExpense(id: number, data: any) {
                 currency,
                 paidFromOffice,
                 salaryBaseWage: null,
-            };
-        }
-
-        if (type === "STAFF_SALARY") {
-            const employeeId = String(data?.employeeId || "").trim();
-            if (!employeeId) {
-                return { success: false, error: "يرجى اختيار الموظف" };
-            }
-
-            const employee = await prisma.user.findUnique({
-                where: { id: employeeId },
-                select: { id: true, wage: true, username: true },
-            });
-
-            if (!employee) {
-                return { success: false, error: "الموظف غير موجود" };
-            }
-
-            const salaryAmount = Number.isFinite(Number(data?.amount))
-                ? Number(data.amount)
-                : Number(employee.wage || 0);
-
-            if (salaryAmount < 0) {
-                return { success: false, error: "قيمة الراتب المصروف غير صالحة" };
-            }
-
-            payload = {
-                ...payload,
-                amount: salaryAmount,
-                salaryBaseWage: Number(employee.wage || 0),
-                description: description || `راتب الموظف: ${employee.username}`,
-                employeeId: employee.id,
             };
         }
 

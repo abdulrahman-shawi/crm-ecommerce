@@ -107,6 +107,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Users, label: "السجلات", href: "/dashboard/customers" },
         (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&
   { icon: Users, label: "العملاء", href: "/dashboard/customers-complated" },
+          (user && hasAnyPermission(user, ["viewCustomers", "viewAnalytics"])) &&
+        { icon: Users2, label: "رواتب العملاء", href: "/dashboard/customer-salaries" },
           (user && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
           { icon: PieChart, label: "المصاريف الثابتة", href: "/dashboard/expenses" },
   

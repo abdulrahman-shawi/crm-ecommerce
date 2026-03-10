@@ -458,8 +458,8 @@ const DashboardPage: React.FunctionComponent = () => {
 
   React.useEffect(() => {
     const fetchActivityTargetToday = async () => {
-      if (!user?.id) return;
-      const res = await getUserActivityTargetProgress([user.id]);
+      if (!user?.id || isInvalidActivityCustomRange) return;
+      const res = await getUserActivityTargetProgress([user.id], activityFilter);
       if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
         setActivityTargetToday(res.data[0]);
       } else {
@@ -468,7 +468,7 @@ const DashboardPage: React.FunctionComponent = () => {
     };
 
     fetchActivityTargetToday();
-  }, [user?.id, activitySummary.data?.addedCustomers, activitySummary.data?.communicatedMessages]);
+  }, [user?.id, activityFilter, isInvalidActivityCustomRange]);
 
   React.useEffect(() => {
     getProduct().then(setProducts).catch(() => setProducts([]));
@@ -562,7 +562,9 @@ const DashboardPage: React.FunctionComponent = () => {
 
         <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-            <div className="text-sm font-bold text-slate-700 dark:text-slate-200">تاركتي اليوم</div>
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              {activityFilterPreset === "day" ? "تاركتي اليوم" : "تاركتي ضمن الفترة"}
+            </div>
             <div className="text-xs text-slate-500">
               {activityTargetToday
                 ? (activityTargetToday.cycle === "MONTHLY" ? "الدورية: شهري" : "الدورية: يومي")

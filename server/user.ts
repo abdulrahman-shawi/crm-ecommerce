@@ -358,6 +358,12 @@ type ActivityTargetInput = {
   isActive?: boolean;
 };
 
+type ActivityProgressFilter = {
+  period?: "day" | "week" | "month" | "custom";
+  startDate?: string;
+  endDate?: string;
+};
+
 type ActivityTargetProgressRow = {
   userId: string;
   userName: string;
@@ -434,6 +440,53 @@ const endOfDay = (input: Date) => {
 const startOfMonth = (input: Date) => new Date(input.getFullYear(), input.getMonth(), 1, 0, 0, 0, 0);
 const endOfMonth = (input: Date) => new Date(input.getFullYear(), input.getMonth() + 1, 0, 23, 59, 59, 999);
 
+const addDays = (input: Date, days: number) => {
+  const date = new Date(input);
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
+const countInclusiveDays = (from: Date, to: Date) => {
+  const start = startOfDay(from);
+  const end = startOfDay(to);
+  const ms = end.getTime() - start.getTime();
+  if (ms < 0) return 0;
+  return Math.floor(ms / (24 * 60 * 60 * 1000)) + 1;
+};
+
+const buildActivityDateRange = (filter?: ActivityProgressFilter) => {
+  if (!filter) return null;
+
+  const now = new Date();
+  const period = String(filter.period || "month").toLowerCase();
+
+  if (period === "day") {
+    return { start: startOfDay(now), end: endOfDay(now) };
+  }
+
+  if (period === "week") {
+    const start = startOfDay(addDays(now, -6));
+    return { start, end: endOfDay(now) };
+  }
+
+  if (period === "month") {
+    return { start: startOfMonth(now), end: endOfMonth(now) };
+  }
+
+  if (period === "custom") {
+    const startCandidate = filter.startDate ? new Date(filter.startDate) : null;
+    const endCandidate = filter.endDate ? new Date(filter.endDate) : null;
+    if (!startCandidate || !endCandidate) return null;
+    if (Number.isNaN(startCandidate.getTime()) || Number.isNaN(endCandidate.getTime())) return null;
+
+    const start = startOfDay(startCandidate <= endCandidate ? startCandidate : endCandidate);
+    const end = endOfDay(startCandidate <= endCandidate ? endCandidate : startCandidate);
+    return { start, end };
+  }
+
+  return { start: startOfMonth(now), end: endOfMonth(now) };
+};
+
 const diffDays = (start: Date, endExclusive: Date) => {
   const ms = endExclusive.getTime() - start.getTime();
   if (ms <= 0) return 0;
@@ -504,10 +557,95 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
   });
 };
 
-const buildActivityProgressForTarget = async (activityTarget: any, userName: string): Promise<ActivityTargetProgressRow> => {
+const buildActivityProgressForTarget = async (
+  activityTarget: any,
+  userName: string,
+  filter?: ActivityProgressFilter
+): Promise<ActivityTargetProgressRow> => {
   const now = new Date();
   const cycle = normalizeActivityCycle(activityTarget?.cycle);
   const startsAt = startOfDay(new Date(activityTarget?.startsAt || now));
+
+  const requestedRange = buildActivityDateRange(filter);
+
+  if (requestedRange) {
+    const requestedStart = requestedRange.start;
+    const requestedEnd = requestedRange.end;
+    const periodStart = requestedStart > startsAt ? requestedStart : startsAt;
+    const periodEnd = requestedEnd;
+
+    if (periodEnd < startsAt) {
+      return {
+        userId: activityTarget.userId,
+        userName,
+        cycle,
+        requiredCustomers: toNonNegativeInt(activityTarget.requiredCustomers),
+        requiredCommunications: toNonNegativeInt(activityTarget.requiredCommunications),
+        customerReward: toNonNegativeFloat(activityTarget.customerReward),
+        communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
+        periodStart: requestedStart,
+        periodEnd,
+        customersTodayOrPeriod: 0,
+        communicationsTodayOrPeriod: 0,
+        customersTargetTodayOrPeriod: 0,
+        communicationsTargetTodayOrPeriod: 0,
+        customersRemaining: 0,
+        communicationsRemaining: 0,
+        customersReached: false,
+        communicationsReached: false,
+        totalRewardEarned: 0,
+        carryOverCustomers: 0,
+        carryOverCommunications: 0,
+      };
+    }
+
+    const [customersAchieved, communicationsAchieved] = await Promise.all([
+      countCustomersForUserInRange(activityTarget.userId, periodStart, periodEnd),
+      countCommunicationsForUserInRange(activityTarget.userId, periodStart, periodEnd),
+    ]);
+
+    const requiredCustomers = toNonNegativeInt(activityTarget.requiredCustomers);
+    const requiredCommunications = toNonNegativeInt(activityTarget.requiredCommunications);
+    const activeDays = countInclusiveDays(periodStart, periodEnd);
+
+    const customersTarget = cycle === "MONTHLY"
+      ? requiredCustomers
+      : requiredCustomers * activeDays;
+    const communicationsTarget = cycle === "MONTHLY"
+      ? requiredCommunications
+      : requiredCommunications * activeDays;
+
+    const customersRemaining = Math.max(0, customersTarget - customersAchieved);
+    const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
+    const customersReached = customersTarget > 0 && customersRemaining === 0;
+    const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
+    const totalRewardEarned =
+      (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
+      (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+
+    return {
+      userId: activityTarget.userId,
+      userName,
+      cycle,
+      requiredCustomers,
+      requiredCommunications,
+      customerReward: toNonNegativeFloat(activityTarget.customerReward),
+      communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
+      periodStart,
+      periodEnd,
+      customersTodayOrPeriod: customersAchieved,
+      communicationsTodayOrPeriod: communicationsAchieved,
+      customersTargetTodayOrPeriod: customersTarget,
+      communicationsTargetTodayOrPeriod: communicationsTarget,
+      customersRemaining,
+      communicationsRemaining,
+      customersReached,
+      communicationsReached,
+      totalRewardEarned,
+      carryOverCustomers: 0,
+      carryOverCommunications: 0,
+    };
+  }
 
   if (cycle === "MONTHLY") {
     const periodStart = startsAt > startOfMonth(now) ? startsAt : startOfMonth(now);
@@ -816,7 +954,7 @@ export async function setUserActivityTarget(userId: string, payload: ActivityTar
   }
 }
 
-export async function getUserActivityTargetProgress(userIdsInput?: string[]) {
+export async function getUserActivityTargetProgress(userIdsInput?: string[], filter?: ActivityProgressFilter) {
   try {
     const currentUser = await getCurrentSessionUserBasic();
     if (!currentUser) {
@@ -865,7 +1003,9 @@ export async function getUserActivityTargetProgress(userIdsInput?: string[]) {
       }
     });
 
-    const rows = await Promise.all(activityTargets.map((target) => buildActivityProgressForTarget(target, target.user?.username || "-")));
+    const rows = await Promise.all(
+      activityTargets.map((target) => buildActivityProgressForTarget(target, target.user?.username || "-", filter))
+    );
     return { success: true, data: rows };
   } catch (error) {
     console.error("Get User Activity Target Progress Error:", error);

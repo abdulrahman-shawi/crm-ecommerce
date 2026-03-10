@@ -7,26 +7,23 @@ import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission } from "@/lib/utils";
-import { createExpense, deleteExpense, getData, getExpenseEmployees, updateExpense } from "@/server/expenses";
+import { createExpense, deleteExpense, getData, updateExpense } from "@/server/expenses";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import z from "zod";
 
 const expenseSchema = z.object({
-  type: z.enum(["DAILY", "STAFF_SALARY", "RENT"]),
+  type: z.enum(["DAILY", "RENT"]),
   amount: z.coerce.number().min(0, "المبلغ يجب أن يكون أكبر أو يساوي 0"),
   description: z.string().optional(),
   currency: z.enum(["SYP", "TRY", "USD"]).optional(),
   paidFromOffice: z.enum(["TURKEY", "SYRIA"]).optional(),
-  employeeId: z.string().optional(),
   scheduledDate: z.string().optional(),
-  salaryBaseWage: z.coerce.number().optional(),
 });
 
 const expenseTypeLabels: Record<string, string> = {
   DAILY: "مصاريف يومية",
-  STAFF_SALARY: "رواتب الموظفين",
   RENT: "مصاريف إيجارات",
 };
 
@@ -51,13 +48,11 @@ const formatDateForInput = (dateLike?: string | Date | null) => {
 export default function ExpensesPage() {
   const { user } = useAuth();
   const [expenses, setExpenses] = React.useState<any[]>([]);
-  const [employees, setEmployees] = React.useState<any[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<number | null>(null);
   const [formData, setFormData] = React.useState<any>(null);
-  const [activeType, setActiveType] = React.useState<"DAILY" | "STAFF_SALARY" | "RENT">("DAILY");
+  const [activeType, setActiveType] = React.useState<"DAILY" | "RENT">("DAILY");
   const [dailyPage, setDailyPage] = React.useState(1);
-  const [salaryPage, setSalaryPage] = React.useState(1);
   const [rentPage, setRentPage] = React.useState(1);
   const PAGE_SIZE = 10;
 
@@ -76,17 +71,8 @@ export default function ExpensesPage() {
     }
   };
 
-  const fetchEmployees = async () => {
-    if (!canView) return;
-    const res = await getExpenseEmployees();
-    if (res.success) {
-      setEmployees(Array.isArray(res.data) ? res.data : []);
-    }
-  };
-
   React.useEffect(() => {
     fetchExpenses();
-    fetchEmployees();
   }, [canView]);
 
   const handleClose = () => {
@@ -100,45 +86,23 @@ export default function ExpensesPage() {
     const loadingToast = toast.loading(editId ? "جاري تعديل المصروف..." : "جاري إضافة المصروف...");
     try {
       const normalizedType = data.type || activeType;
-      const selectedEmployee = employees.find((employee) => employee.id === data.employeeId);
       const payload: any = {
         type: normalizedType,
         amount: Number(data.amount || 0),
-          salaryBaseWage: Number(data.salaryBaseWage || 0),
         description: String(data.description || "").trim() || null,
         currency: data.currency || null,
         paidFromOffice: data.paidFromOffice || null,
-        employeeId: data.employeeId || null,
         scheduledDate: data.scheduledDate || null,
       };
 
       if (normalizedType === "DAILY") {
-        if (!payload.description) {
-          throw new Error("يرجى إدخال وصف المصروف اليومي");
-        }
-        if (!payload.currency) {
-          throw new Error("يرجى اختيار العملة");
-        }
-        if (!payload.paidFromOffice) {
-          throw new Error("يرجى تحديد مكتب الدفع");
-        }
-      }
-
-      if (normalizedType === "STAFF_SALARY") {
-        if (!payload.employeeId) {
-          throw new Error("يرجى اختيار الموظف");
-        }
-        payload.salaryBaseWage = Number(selectedEmployee?.wage || 0);
-        if (Number(payload.amount) <= 0) {
-          payload.amount = Number(selectedEmployee?.wage || 0);
-        }
-        payload.description = payload.description || (selectedEmployee ? `راتب الموظف: ${selectedEmployee.username}` : null);
+        if (!payload.description) throw new Error("يرجى إدخال وصف المصروف اليومي");
+        if (!payload.currency) throw new Error("يرجى اختيار العملة");
+        if (!payload.paidFromOffice) throw new Error("يرجى تحديد مكتب الدفع");
       }
 
       if (normalizedType === "RENT") {
-        if (!payload.description) {
-          throw new Error("يرجى إدخال وصف الإيجار");
-        }
+        if (!payload.description) throw new Error("يرجى إدخال وصف الإيجار");
         payload.scheduledDate = payload.scheduledDate || formatDateForInput(new Date());
       }
 
@@ -162,17 +126,15 @@ export default function ExpensesPage() {
   };
 
   const handleEdit = (item: any) => {
-    const expenseType = (item.type || "DAILY") as "DAILY" | "STAFF_SALARY" | "RENT";
+    const expenseType = (item.type || "DAILY") as "DAILY" | "RENT";
     setEditId(Number(item.id));
     setActiveType(expenseType);
     setFormData({
       type: expenseType,
       amount: Number(item.amount || 0),
-      salaryBaseWage: Number(item.salaryBaseWage || item.employee?.wage || 0),
       description: item.description || "",
       currency: item.currency || undefined,
       paidFromOffice: item.paidFromOffice || undefined,
-      employeeId: item.employeeId || "",
       scheduledDate: formatDateForInput(item.scheduledDate || item.createdAt),
     });
     setIsOpen(true);
@@ -221,11 +183,6 @@ export default function ExpensesPage() {
     [expenses]
   );
 
-  const salaryExpenses = React.useMemo(
-    () => expenses.filter((expense) => String(expense?.type || "") === "STAFF_SALARY"),
-    [expenses]
-  );
-
   const rentExpenses = React.useMemo(
     () => expenses.filter((expense) => String(expense?.type || "") === "RENT"),
     [expenses]
@@ -236,11 +193,9 @@ export default function ExpensesPage() {
     return {
       type: activeType,
       amount: 0,
-      salaryBaseWage: 0,
       description: "",
       currency: "SYP",
       paidFromOffice: "SYRIA",
-      employeeId: "",
       scheduledDate: formatDateForInput(new Date()),
     };
   }, [formData, activeType]);
@@ -303,33 +258,6 @@ export default function ExpensesPage() {
         </div>
 
         <div>
-          <h2 className="text-lg font-black text-slate-800 dark:text-white mb-3">رواتب الموظفين</h2>
-          <DataTable
-            data={salaryExpenses}
-            totalCount={salaryExpenses.length}
-            pageSize={PAGE_SIZE}
-            currentPage={salaryPage}
-            onPageChange={(newPage) => setSalaryPage(newPage)}
-            actions={actions.length ? actions : undefined}
-            columns={[
-              { header: "الموظف", accessor: (row: any) => <span className="font-bold">{row.employee?.username || "-"}</span> },
-              { header: "الراتب الثابت", accessor: (row: any) => <span className="font-bold text-slate-600">{Number(row.salaryBaseWage || row.employee?.wage || 0).toLocaleString()}</span> },
-              { header: "الراتب", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
-              { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
-              {
-                header: "تاريخ الإنشاء",
-                accessor: (row: any) =>
-                  new Date(row.createdAt).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }),
-              },
-            ]}
-          />
-        </div>
-
-        <div>
           <h2 className="text-lg font-black text-slate-800 dark:text-white mb-3">مصاريف إيجارات</h2>
           <DataTable
             data={rentExpenses}
@@ -370,24 +298,12 @@ export default function ExpensesPage() {
             key={`${editId || "create"}-${activeType}`}
             submitLabel={editId ? "تحديث" : "إضافة"}
           >
-            {({ register, watch, setValue, formState: { errors } }) => {
-              const type = (watch("type") as "DAILY" | "STAFF_SALARY" | "RENT") || activeType;
-              const employeeId = watch("employeeId") || "";
-              const selectedEmployee = employees.find((employee) => employee.id === employeeId);
+            {({ register, watch, formState: { errors } }) => {
+              const type = (watch("type") as "DAILY" | "RENT") || activeType;
 
               React.useEffect(() => {
                 setActiveType(type);
               }, [type]);
-
-              React.useEffect(() => {
-                if (type === "STAFF_SALARY") {
-                  setValue("salaryBaseWage", Number(selectedEmployee?.wage || 0), { shouldValidate: true });
-                  const currentAmount = Number(watch("amount") || 0);
-                  if (currentAmount <= 0) {
-                    setValue("amount", Number(selectedEmployee?.wage || 0), { shouldValidate: true });
-                  }
-                }
-              }, [type, selectedEmployee, setValue]);
 
               return (
                 <div className="grid gap-4">
@@ -398,7 +314,6 @@ export default function ExpensesPage() {
                       {...register("type")}
                     >
                       <option value="DAILY">مصاريف يومية</option>
-                      <option value="STAFF_SALARY">رواتب الموظفين</option>
                       <option value="RENT">مصاريف إيجارات</option>
                     </select>
                   </div>
@@ -442,50 +357,6 @@ export default function ExpensesPage() {
                         step="0.01"
                         {...register("amount", { valueAsNumber: true })}
                         error={errors.amount?.message as string}
-                      />
-                    </>
-                  )}
-
-                  {type === "STAFF_SALARY" && (
-                    <>
-                      <div className="flex flex-col gap-1.5 w-full text-right">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">الموظف</label>
-                        <select
-                          className="flex h-10 w-full rounded-md border text-slate-700 dark:text-slate-300 text-right border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950"
-                          {...register("employeeId")}
-                        >
-                          <option value="">اختر موظف</option>
-                          {employees.map((employee) => (
-                            <option key={employee.id} value={employee.id}>
-                              {employee.username} - {Number(employee.wage || 0).toLocaleString()}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <FormInput
-                        className="text-gray-800 dark:text-white"
-                        label="الراتب الثابت (من جدول الموظف)"
-                        type="number"
-                        step="0.01"
-                        readOnly
-                        value={Number(selectedEmployee?.wage || 0)}
-                      />
-
-                      <FormInput
-                        className="text-gray-800 dark:text-white"
-                        label="الراتب المصروف (قابل للتعديل)"
-                        type="number"
-                        step="0.01"
-                        {...register("amount", { valueAsNumber: true })}
-                        error={errors.amount?.message as string}
-                      />
-
-                      <FormInput
-                        className="text-gray-800 dark:text-white"
-                        label="الوصف (اختياري)"
-                        {...register("description")}
-                        error={errors.description?.message as string}
                       />
                     </>
                   )}
