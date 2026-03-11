@@ -69,9 +69,10 @@ const UserManagement: React.FunctionComponent = () => {
   const [activityCycle, setActivityCycle] = React.useState<"DAILY" | "MONTHLY">("DAILY");
   const [requiredCustomersTarget, setRequiredCustomersTarget] = React.useState<string>("0");
   const [customerRewardTarget, setCustomerRewardTarget] = React.useState<string>("0");
-  const [customerMissPenaltyPercentTarget, setCustomerMissPenaltyPercentTarget] = React.useState<string>("0");
+  const [customerMissPenaltyAmountTarget, setCustomerMissPenaltyAmountTarget] = React.useState<string>("0");
   const [requiredCommunicationsTarget, setRequiredCommunicationsTarget] = React.useState<string>("0");
   const [communicationRewardTarget, setCommunicationRewardTarget] = React.useState<string>("0");
+  const [communicationMissPenaltyAmountTarget, setCommunicationMissPenaltyAmountTarget] = React.useState<string>("0");
   const [activityTargetStartDate, setActivityTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
   const [activityProgressByUser, setActivityProgressByUser] = React.useState<Record<string, any>>({});
   const {user} = useAuth()
@@ -301,9 +302,10 @@ const UserManagement: React.FunctionComponent = () => {
     setActivityCycle(activityTarget?.cycle === "MONTHLY" ? "MONTHLY" : "DAILY");
     setRequiredCustomersTarget(String(Number(activityTarget?.requiredCustomers || 0)));
     setCustomerRewardTarget(String(Number(activityTarget?.customerReward || 0)));
-    setCustomerMissPenaltyPercentTarget(String(Number(activityTarget?.customerMissPenaltyPercent || 0)));
+    setCustomerMissPenaltyAmountTarget(String(Number(activityTarget?.customerMissPenaltyAmount || 0)));
     setRequiredCommunicationsTarget(String(Number(activityTarget?.requiredCommunications || 0)));
     setCommunicationRewardTarget(String(Number(activityTarget?.communicationReward || 0)));
+    setCommunicationMissPenaltyAmountTarget(String(Number(activityTarget?.communicationMissPenaltyAmount || 0)));
     setActivityTargetStartDate(
       activityTarget?.startsAt
         ? new Date(activityTarget.startsAt).toISOString().slice(0, 10)
@@ -340,8 +342,9 @@ const UserManagement: React.FunctionComponent = () => {
     const requiredCustomers = Math.max(0, Math.trunc(Number(requiredCustomersTarget) || 0));
     const requiredCommunications = Math.max(0, Math.trunc(Number(requiredCommunicationsTarget) || 0));
     const customerReward = Math.max(0, Number(customerRewardTarget) || 0);
-    const customerMissPenaltyPercent = Math.max(0, Number(customerMissPenaltyPercentTarget) || 0);
+    const customerMissPenaltyAmount = Math.max(0, Number(customerMissPenaltyAmountTarget) || 0);
     const communicationReward = Math.max(0, Number(communicationRewardTarget) || 0);
+    const communicationMissPenaltyAmount = Math.max(0, Number(communicationMissPenaltyAmountTarget) || 0);
     const hasActivityTarget = requiredCustomers > 0 || requiredCommunications > 0;
 
     if (!hasSalesOrProducts && !hasActivityTarget) {
@@ -395,9 +398,10 @@ const UserManagement: React.FunctionComponent = () => {
           cycle: activityCycle,
           requiredCustomers,
           customerReward,
-          customerMissPenaltyPercent,
+          customerMissPenaltyAmount,
           requiredCommunications,
           communicationReward,
+          communicationMissPenaltyAmount,
           startDate: activityTargetStartDate,
           isActive: true,
         });
@@ -926,14 +930,14 @@ const UserManagement: React.FunctionComponent = () => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">نسبة خصم عند عدم تحقيق العملاء (%)</label>
+                    <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق العملاء</label>
                     <input
                       type="number"
                       min={0}
                       step="0.01"
                       className={selectClasses}
-                      value={customerMissPenaltyPercentTarget}
-                      onChange={(e) => setCustomerMissPenaltyPercentTarget(e.target.value)}
+                      value={customerMissPenaltyAmountTarget}
+                      onChange={(e) => setCustomerMissPenaltyAmountTarget(e.target.value)}
                     />
                   </div>
 
@@ -957,6 +961,18 @@ const UserManagement: React.FunctionComponent = () => {
                       className={selectClasses}
                       value={communicationRewardTarget}
                       onChange={(e) => setCommunicationRewardTarget(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق التواصل</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      className={selectClasses}
+                      value={communicationMissPenaltyAmountTarget}
+                      onChange={(e) => setCommunicationMissPenaltyAmountTarget(e.target.value)}
                     />
                   </div>
                 </div>

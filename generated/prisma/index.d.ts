@@ -4741,17 +4741,19 @@ export namespace Prisma {
   export type UserActivityTargetAvgAggregateOutputType = {
     requiredCustomers: number | null
     customerReward: number | null
-    customerMissPenaltyPercent: number | null
+    customerMissPenaltyAmount: number | null
     requiredCommunications: number | null
     communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
   }
 
   export type UserActivityTargetSumAggregateOutputType = {
     requiredCustomers: number | null
     customerReward: number | null
-    customerMissPenaltyPercent: number | null
+    customerMissPenaltyAmount: number | null
     requiredCommunications: number | null
     communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
   }
 
   export type UserActivityTargetMinAggregateOutputType = {
@@ -4760,9 +4762,10 @@ export namespace Prisma {
     cycle: $Enums.ActivityTargetCycle | null
     requiredCustomers: number | null
     customerReward: number | null
-    customerMissPenaltyPercent: number | null
+    customerMissPenaltyAmount: number | null
     requiredCommunications: number | null
     communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
     startsAt: Date | null
     isActive: boolean | null
     createdAt: Date | null
@@ -4775,9 +4778,10 @@ export namespace Prisma {
     cycle: $Enums.ActivityTargetCycle | null
     requiredCustomers: number | null
     customerReward: number | null
-    customerMissPenaltyPercent: number | null
+    customerMissPenaltyAmount: number | null
     requiredCommunications: number | null
     communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
     startsAt: Date | null
     isActive: boolean | null
     createdAt: Date | null
@@ -4790,9 +4794,10 @@ export namespace Prisma {
     cycle: number
     requiredCustomers: number
     customerReward: number
-    customerMissPenaltyPercent: number
+    customerMissPenaltyAmount: number
     requiredCommunications: number
     communicationReward: number
+    communicationMissPenaltyAmount: number
     startsAt: number
     isActive: number
     createdAt: number
@@ -4804,17 +4809,19 @@ export namespace Prisma {
   export type UserActivityTargetAvgAggregateInputType = {
     requiredCustomers?: true
     customerReward?: true
-    customerMissPenaltyPercent?: true
+    customerMissPenaltyAmount?: true
     requiredCommunications?: true
     communicationReward?: true
+    communicationMissPenaltyAmount?: true
   }
 
   export type UserActivityTargetSumAggregateInputType = {
     requiredCustomers?: true
     customerReward?: true
-    customerMissPenaltyPercent?: true
+    customerMissPenaltyAmount?: true
     requiredCommunications?: true
     communicationReward?: true
+    communicationMissPenaltyAmount?: true
   }
 
   export type UserActivityTargetMinAggregateInputType = {
@@ -4823,9 +4830,10 @@ export namespace Prisma {
     cycle?: true
     requiredCustomers?: true
     customerReward?: true
-    customerMissPenaltyPercent?: true
+    customerMissPenaltyAmount?: true
     requiredCommunications?: true
     communicationReward?: true
+    communicationMissPenaltyAmount?: true
     startsAt?: true
     isActive?: true
     createdAt?: true
@@ -4838,9 +4846,10 @@ export namespace Prisma {
     cycle?: true
     requiredCustomers?: true
     customerReward?: true
-    customerMissPenaltyPercent?: true
+    customerMissPenaltyAmount?: true
     requiredCommunications?: true
     communicationReward?: true
+    communicationMissPenaltyAmount?: true
     startsAt?: true
     isActive?: true
     createdAt?: true
@@ -4853,9 +4862,10 @@ export namespace Prisma {
     cycle?: true
     requiredCustomers?: true
     customerReward?: true
-    customerMissPenaltyPercent?: true
+    customerMissPenaltyAmount?: true
     requiredCommunications?: true
     communicationReward?: true
+    communicationMissPenaltyAmount?: true
     startsAt?: true
     isActive?: true
     createdAt?: true
@@ -4955,9 +4965,10 @@ export namespace Prisma {
     cycle: $Enums.ActivityTargetCycle
     requiredCustomers: number
     customerReward: number
-    customerMissPenaltyPercent: number
+    customerMissPenaltyAmount: number
     requiredCommunications: number
     communicationReward: number
+    communicationMissPenaltyAmount: number
     startsAt: Date
     isActive: boolean
     createdAt: Date
@@ -4989,9 +5000,10 @@ export namespace Prisma {
     cycle?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
-    customerMissPenaltyPercent?: boolean
+    customerMissPenaltyAmount?: boolean
     requiredCommunications?: boolean
     communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -5005,9 +5017,10 @@ export namespace Prisma {
     cycle?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
-    customerMissPenaltyPercent?: boolean
+    customerMissPenaltyAmount?: boolean
     requiredCommunications?: boolean
     communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -5021,9 +5034,10 @@ export namespace Prisma {
     cycle?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
-    customerMissPenaltyPercent?: boolean
+    customerMissPenaltyAmount?: boolean
     requiredCommunications?: boolean
     communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -5037,16 +5051,17 @@ export namespace Prisma {
     cycle?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
-    customerMissPenaltyPercent?: boolean
+    customerMissPenaltyAmount?: boolean
     requiredCommunications?: boolean
     communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "requiredCustomers" | "customerReward" | "customerMissPenaltyPercent" | "requiredCommunications" | "communicationReward" | "startsAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
+  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "requiredCustomers" | "customerReward" | "customerMissPenaltyAmount" | "requiredCommunications" | "communicationReward" | "communicationMissPenaltyAmount" | "startsAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
   export type UserActivityTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5068,9 +5083,10 @@ export namespace Prisma {
       cycle: $Enums.ActivityTargetCycle
       requiredCustomers: number
       customerReward: number
-      customerMissPenaltyPercent: number
+      customerMissPenaltyAmount: number
       requiredCommunications: number
       communicationReward: number
+      communicationMissPenaltyAmount: number
       startsAt: Date
       isActive: boolean
       createdAt: Date
@@ -5504,9 +5520,10 @@ export namespace Prisma {
     readonly cycle: FieldRef<"UserActivityTarget", 'ActivityTargetCycle'>
     readonly requiredCustomers: FieldRef<"UserActivityTarget", 'Int'>
     readonly customerReward: FieldRef<"UserActivityTarget", 'Float'>
-    readonly customerMissPenaltyPercent: FieldRef<"UserActivityTarget", 'Float'>
+    readonly customerMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
     readonly requiredCommunications: FieldRef<"UserActivityTarget", 'Int'>
     readonly communicationReward: FieldRef<"UserActivityTarget", 'Float'>
+    readonly communicationMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
     readonly startsAt: FieldRef<"UserActivityTarget", 'DateTime'>
     readonly isActive: FieldRef<"UserActivityTarget", 'Boolean'>
     readonly createdAt: FieldRef<"UserActivityTarget", 'DateTime'>
@@ -28506,9 +28523,10 @@ export namespace Prisma {
     cycle: 'cycle',
     requiredCustomers: 'requiredCustomers',
     customerReward: 'customerReward',
-    customerMissPenaltyPercent: 'customerMissPenaltyPercent',
+    customerMissPenaltyAmount: 'customerMissPenaltyAmount',
     requiredCommunications: 'requiredCommunications',
     communicationReward: 'communicationReward',
+    communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
     startsAt: 'startsAt',
     isActive: 'isActive',
     createdAt: 'createdAt',
@@ -29153,9 +29171,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFilter<"UserActivityTarget"> | number
     customerReward?: FloatFilter<"UserActivityTarget"> | number
-    customerMissPenaltyPercent?: FloatFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     requiredCommunications?: IntFilter<"UserActivityTarget"> | number
     communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
     isActive?: BoolFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
@@ -29169,9 +29188,10 @@ export namespace Prisma {
     cycle?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -29188,9 +29208,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFilter<"UserActivityTarget"> | number
     customerReward?: FloatFilter<"UserActivityTarget"> | number
-    customerMissPenaltyPercent?: FloatFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     requiredCommunications?: IntFilter<"UserActivityTarget"> | number
     communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
     isActive?: BoolFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
@@ -29204,9 +29225,10 @@ export namespace Prisma {
     cycle?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -29227,9 +29249,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleWithAggregatesFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
     requiredCustomers?: IntWithAggregatesFilter<"UserActivityTarget"> | number
     customerReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
-    customerMissPenaltyPercent?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
     requiredCommunications?: IntWithAggregatesFilter<"UserActivityTarget"> | number
     communicationReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
     isActive?: BoolWithAggregatesFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
@@ -31005,9 +31028,10 @@ export namespace Prisma {
     cycle?: $Enums.ActivityTargetCycle
     requiredCustomers?: number
     customerReward?: number
-    customerMissPenaltyPercent?: number
+    customerMissPenaltyAmount?: number
     requiredCommunications?: number
     communicationReward?: number
+    communicationMissPenaltyAmount?: number
     startsAt?: Date | string
     isActive?: boolean
     createdAt?: Date | string
@@ -31021,9 +31045,10 @@ export namespace Prisma {
     cycle?: $Enums.ActivityTargetCycle
     requiredCustomers?: number
     customerReward?: number
-    customerMissPenaltyPercent?: number
+    customerMissPenaltyAmount?: number
     requiredCommunications?: number
     communicationReward?: number
+    communicationMissPenaltyAmount?: number
     startsAt?: Date | string
     isActive?: boolean
     createdAt?: Date | string
@@ -31035,9 +31060,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31051,9 +31077,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31066,9 +31093,10 @@ export namespace Prisma {
     cycle?: $Enums.ActivityTargetCycle
     requiredCustomers?: number
     customerReward?: number
-    customerMissPenaltyPercent?: number
+    customerMissPenaltyAmount?: number
     requiredCommunications?: number
     communicationReward?: number
+    communicationMissPenaltyAmount?: number
     startsAt?: Date | string
     isActive?: boolean
     createdAt?: Date | string
@@ -31080,9 +31108,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31095,9 +31124,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33181,9 +33211,10 @@ export namespace Prisma {
     cycle?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -33193,9 +33224,10 @@ export namespace Prisma {
   export type UserActivityTargetAvgOrderByAggregateInput = {
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
   }
 
   export type UserActivityTargetMaxOrderByAggregateInput = {
@@ -33204,9 +33236,10 @@ export namespace Prisma {
     cycle?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -33219,9 +33252,10 @@ export namespace Prisma {
     cycle?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -33231,9 +33265,10 @@ export namespace Prisma {
   export type UserActivityTargetSumOrderByAggregateInput = {
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
-    customerMissPenaltyPercent?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
     requiredCommunications?: SortOrder
     communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
   }
 
   export type EnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
@@ -36886,9 +36921,10 @@ export namespace Prisma {
     cycle?: $Enums.ActivityTargetCycle
     requiredCustomers?: number
     customerReward?: number
-    customerMissPenaltyPercent?: number
+    customerMissPenaltyAmount?: number
     requiredCommunications?: number
     communicationReward?: number
+    communicationMissPenaltyAmount?: number
     startsAt?: Date | string
     isActive?: boolean
     createdAt?: Date | string
@@ -36900,9 +36936,10 @@ export namespace Prisma {
     cycle?: $Enums.ActivityTargetCycle
     requiredCustomers?: number
     customerReward?: number
-    customerMissPenaltyPercent?: number
+    customerMissPenaltyAmount?: number
     requiredCommunications?: number
     communicationReward?: number
+    communicationMissPenaltyAmount?: number
     startsAt?: Date | string
     isActive?: boolean
     createdAt?: Date | string
@@ -37357,9 +37394,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37371,9 +37409,10 @@ export namespace Prisma {
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyPercent?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     requiredCommunications?: IntFieldUpdateOperationsInput | number
     communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
