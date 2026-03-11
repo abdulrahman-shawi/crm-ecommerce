@@ -1050,6 +1050,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         finalAmount: true,
         discount: true,
         usdToTryRateAtOrder: true,
+        shippingPrice: true,
         items: {
           select: {
             quantity: true,
@@ -1225,10 +1226,16 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const converted = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
       return sum + converted;
     }, 0);
+    const totalShippingAmount = revenueOrders.reduce((sum, order) => {
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      const shipping = normalizeOrderAmountToUSD(Number(order.shippingPrice || 0), order.warehouse?.location, effectiveRate);
+      return sum + shipping;
+    }, 0);
+    const netSalesForCommission = Math.max(0, totalSalesAmount - totalShippingAmount);
     const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
-    const totalCommissionAmount = (totalSalesAmount * assignedCommissionPercent) / 100;
-    const commissionPercent = totalSalesAmount > 0
-      ? Number(((totalCommissionAmount / totalSalesAmount) * 100).toFixed(2))
+    const totalCommissionAmount = (netSalesForCommission * assignedCommissionPercent) / 100;
+    const commissionPercent = netSalesForCommission > 0
+      ? Number(((totalCommissionAmount / netSalesForCommission) * 100).toFixed(2))
       : 0;
 
     return {
@@ -1236,6 +1243,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       data,
       summary: {
         totalSalesAmount,
+        totalShippingAmount,
+        netSalesForCommission,
         totalOrdersCount,
         deliveredOrdersCount,
         totalCommissionAmount,

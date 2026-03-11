@@ -572,41 +572,120 @@ const DashboardPage: React.FunctionComponent = () => {
             </div>
           </div>
 
-          {activityTargetToday ? (
-            <div className="mt-3 grid gap-3 md:grid-cols-4">
-              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-                <div className="text-[11px] font-semibold text-slate-500">المتبقي عملاء</div>
-                <div className="mt-1 text-xl font-black text-violet-600">{Number(activityTargetToday.customersRemaining || 0).toLocaleString()}</div>
-                <div className="text-[11px] text-slate-500">{Number(activityTargetToday.customersTodayOrPeriod || 0).toLocaleString()} / {Number(activityTargetToday.customersTargetTodayOrPeriod || 0).toLocaleString()}</div>
-              </div>
+          {activityTargetToday ? (() => {
+            const custTarget = Number(activityTargetToday.customersTargetTodayOrPeriod || 0);
+            const custDone   = Math.min(Number(activityTargetToday.customersTodayOrPeriod || 0), custTarget);
+            const commTarget = Number(activityTargetToday.communicationsTargetTodayOrPeriod || 0);
+            const commDone   = Math.min(Number(activityTargetToday.communicationsTodayOrPeriod || 0), commTarget);
+            const DOT_LIMIT  = 30;
+            const penalty    = Number(activityTargetToday.penaltyAmount || 0);
+            const custPenalty = !activityTargetToday.customersReached && custTarget > 0
+              ? Number(activityTargetToday.customerMissPenaltyAmount || 0) : 0;
+            const commPenalty = !activityTargetToday.communicationsReached && commTarget > 0
+              ? Number(activityTargetToday.communicationMissPenaltyAmount || 0) : 0;
 
-              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-                <div className="text-[11px] font-semibold text-slate-500">المتبقي تواصل</div>
-                <div className="mt-1 text-xl font-black text-blue-600">{Number(activityTargetToday.communicationsRemaining || 0).toLocaleString()}</div>
-                <div className="text-[11px] text-slate-500">{Number(activityTargetToday.communicationsTodayOrPeriod || 0).toLocaleString()} / {Number(activityTargetToday.communicationsTargetTodayOrPeriod || 0).toLocaleString()}</div>
-              </div>
+            const renderDots = (total: number, filled: number, color: string) => {
+              if (total === 0) return <span className="text-xs text-slate-400">لا يوجد هدف</span>;
+              if (total > DOT_LIMIT) {
+                const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+                return (
+                  <div className="flex flex-col gap-1 mt-2">
+                    <div className="flex justify-between text-[10px] text-slate-500 mb-0.5">
+                      <span>{filled} / {total}</span>
+                      <span>{pct}%</span>
+                    </div>
+                    <div className="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${color}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {Array.from({ length: total }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`inline-block w-4 h-4 rounded-full border-2 transition-all duration-300 ${
+                        i < filled
+                          ? `${color} border-transparent scale-110`
+                          : "bg-slate-200 dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+                      }`}
+                    />
+                  ))}
+                </div>
+              );
+            };
 
-              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-                <div className="text-[11px] font-semibold text-slate-500">المكافأة المتوقعة</div>
-                <div className="mt-1 text-xl font-black text-emerald-600">
-                  {(
-                    (Number(activityTargetToday.customersTargetTodayOrPeriod || 0) > 0 ? Number(activityTargetToday.customerReward || 0) : 0)
-                    + (Number(activityTargetToday.communicationsTargetTodayOrPeriod || 0) > 0 ? Number(activityTargetToday.communicationReward || 0) : 0)
-                  ).toLocaleString()}
+            return (
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                {/* customers progress */}
+                <div className={`rounded-lg border p-3 ${activityTargetToday.customersReached ? "border-violet-300 bg-violet-50 dark:border-violet-700 dark:bg-violet-950/30" : "border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-[11px] font-semibold text-slate-500">تقدم إضافة العملاء</div>
+                    {activityTargetToday.customersReached && (
+                      <span className="text-[10px] font-bold text-violet-600 bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 rounded-full">مكتمل ✓</span>
+                    )}
+                  </div>
+                  <div className="mt-1 flex items-end gap-2">
+                    <span className="text-2xl font-black text-violet-600">{custDone}</span>
+                    <span className="text-sm text-slate-400 mb-0.5">/ {custTarget}</span>
+                  </div>
+                  {renderDots(custTarget, custDone, "bg-violet-500")}
+                  <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>المكافأة: <span className="font-bold text-emerald-600">{Number(activityTargetToday.customerReward || 0).toLocaleString()}</span></span>
+                    {custPenalty > 0 && <span className="font-bold text-red-500">خسارة: -{custPenalty.toLocaleString()}</span>}
+                  </div>
+                </div>
+
+                {/* communications progress */}
+                <div className={`rounded-lg border p-3 ${activityTargetToday.communicationsReached ? "border-blue-300 bg-blue-50 dark:border-blue-700 dark:bg-blue-950/30" : "border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-[11px] font-semibold text-slate-500">تقدم التواصل مع العملاء</div>
+                    {activityTargetToday.communicationsReached && (
+                      <span className="text-[10px] font-bold text-blue-600 bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 rounded-full">مكتمل ✓</span>
+                    )}
+                  </div>
+                  <div className="mt-1 flex items-end gap-2">
+                    <span className="text-2xl font-black text-blue-600">{commDone}</span>
+                    <span className="text-sm text-slate-400 mb-0.5">/ {commTarget}</span>
+                  </div>
+                  {renderDots(commTarget, commDone, "bg-blue-500")}
+                  <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>المكافأة: <span className="font-bold text-emerald-600">{Number(activityTargetToday.communicationReward || 0).toLocaleString()}</span></span>
+                    {commPenalty > 0 && <span className="font-bold text-red-500">خسارة: -{commPenalty.toLocaleString()}</span>}
+                  </div>
+                </div>
+
+                {/* penalty card */}
+                <div className={`rounded-lg border p-3 ${penalty > 0 ? "border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-950/20" : "border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"}`}>
+                  <div className="text-[11px] font-semibold text-slate-500">الخسائر (عند عدم تحقيق التاركت)</div>
+                  <div className={`mt-1 text-2xl font-black ${penalty > 0 ? "text-red-500" : "text-slate-400"}`}>
+                    {penalty > 0 ? `-${penalty.toLocaleString()}` : "لا خسائر"}
+                  </div>
+                  {penalty > 0 && (
+                    <div className="mt-1.5 space-y-0.5 text-[10px] text-slate-500">
+                      {custPenalty > 0 && <div className="flex justify-between"><span>عملاء غير مكتملين</span><span className="font-bold text-red-500">-{custPenalty.toLocaleString()}</span></div>}
+                      {commPenalty > 0 && <div className="flex justify-between"><span>تواصل غير مكتمل</span><span className="font-bold text-red-500">-{commPenalty.toLocaleString()}</span></div>}
+                    </div>
+                  )}
+                </div>
+
+                {/* reward card */}
+                <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="text-[11px] font-semibold text-slate-500">المكافأة الصافية المحققة</div>
+                  <div className="mt-1 text-2xl font-black text-emerald-600">{Number(activityTargetToday.totalRewardEarned || 0).toLocaleString()}</div>
+                  {activityTargetToday.cycle === "DAILY" && (Number(activityTargetToday.carryOverCustomers || 0) > 0 || Number(activityTargetToday.carryOverCommunications || 0) > 0) && (
+                    <div className="mt-1 text-[10px] text-slate-500">
+                      ترحيل: عملاء +{Number(activityTargetToday.carryOverCustomers || 0).toLocaleString()} - تواصل +{Number(activityTargetToday.carryOverCommunications || 0).toLocaleString()}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-                <div className="text-[11px] font-semibold text-slate-500">المكافأة المحققة</div>
-                <div className="mt-1 text-xl font-black text-emerald-700">{Number(activityTargetToday.totalRewardEarned || 0).toLocaleString()}</div>
-                {activityTargetToday.cycle === "DAILY" && (
-                  <div className="text-[11px] text-slate-500">
-                    ترحيل: عملاء {Number(activityTargetToday.carryOverCustomers || 0).toLocaleString()} - تواصل {Number(activityTargetToday.carryOverCommunications || 0).toLocaleString()}
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : null}
+            );
+          })() : null}
         </div>
       </div>
 
