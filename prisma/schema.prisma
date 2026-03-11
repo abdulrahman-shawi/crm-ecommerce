@@ -47,6 +47,7 @@ model UserActivityTarget {
   cycle                  ActivityTargetCycle @default(DAILY)
   requiredCustomers      Int                 @default(0)
   customerReward         Float               @default(0)
+  customerMissPenaltyPercent Float           @default(0)
   requiredCommunications Int                 @default(0)
   communicationReward    Float               @default(0)
   startsAt               DateTime            @default(now())

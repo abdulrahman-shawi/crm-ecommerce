@@ -352,6 +352,7 @@ type ActivityTargetInput = {
   cycle: ActivityTargetCycle;
   requiredCustomers: number;
   customerReward: number;
+  customerMissPenaltyPercent?: number;
   requiredCommunications: number;
   communicationReward: number;
   startDate?: string;
@@ -371,6 +372,7 @@ type ActivityTargetProgressRow = {
   requiredCustomers: number;
   requiredCommunications: number;
   customerReward: number;
+  customerMissPenaltyPercent: number;
   communicationReward: number;
   periodStart: Date;
   periodEnd: Date;
@@ -382,6 +384,8 @@ type ActivityTargetProgressRow = {
   communicationsRemaining: number;
   customersReached: boolean;
   communicationsReached: boolean;
+  grossRewardEarned: number;
+  penaltyAmount: number;
   totalRewardEarned: number;
   carryOverCustomers: number;
   carryOverCommunications: number;
@@ -540,6 +544,7 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
       cycle,
       requiredCustomers: toNonNegativeInt(input.requiredCustomers),
       customerReward: toNonNegativeFloat(input.customerReward),
+      customerMissPenaltyPercent: toNonNegativeFloat(input.customerMissPenaltyPercent),
       requiredCommunications: toNonNegativeInt(input.requiredCommunications),
       communicationReward: toNonNegativeFloat(input.communicationReward),
       startsAt,
@@ -549,6 +554,7 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
       cycle,
       requiredCustomers: toNonNegativeInt(input.requiredCustomers),
       customerReward: toNonNegativeFloat(input.customerReward),
+      customerMissPenaltyPercent: toNonNegativeFloat(input.customerMissPenaltyPercent),
       requiredCommunications: toNonNegativeInt(input.requiredCommunications),
       communicationReward: toNonNegativeFloat(input.communicationReward),
       startsAt,
@@ -582,6 +588,7 @@ const buildActivityProgressForTarget = async (
         requiredCustomers: toNonNegativeInt(activityTarget.requiredCustomers),
         requiredCommunications: toNonNegativeInt(activityTarget.requiredCommunications),
         customerReward: toNonNegativeFloat(activityTarget.customerReward),
+        customerMissPenaltyPercent: toNonNegativeFloat(activityTarget.customerMissPenaltyPercent),
         communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
         periodStart: requestedStart,
         periodEnd,
@@ -593,6 +600,8 @@ const buildActivityProgressForTarget = async (
         communicationsRemaining: 0,
         customersReached: false,
         communicationsReached: false,
+        grossRewardEarned: 0,
+        penaltyAmount: 0,
         totalRewardEarned: 0,
         carryOverCustomers: 0,
         carryOverCommunications: 0,
@@ -619,9 +628,12 @@ const buildActivityProgressForTarget = async (
     const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
     const customersReached = customersTarget > 0 && customersRemaining === 0;
     const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
-    const totalRewardEarned =
+    const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+    const penaltyPercent = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyPercent) : 0;
+    const penaltyAmount = grossRewardEarned * (penaltyPercent / 100);
+    const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
     return {
       userId: activityTarget.userId,
@@ -630,6 +642,7 @@ const buildActivityProgressForTarget = async (
       requiredCustomers,
       requiredCommunications,
       customerReward: toNonNegativeFloat(activityTarget.customerReward),
+      customerMissPenaltyPercent: toNonNegativeFloat(activityTarget.customerMissPenaltyPercent),
       communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
       periodStart,
       periodEnd,
@@ -641,6 +654,8 @@ const buildActivityProgressForTarget = async (
       communicationsRemaining,
       customersReached,
       communicationsReached,
+      grossRewardEarned,
+      penaltyAmount,
       totalRewardEarned,
       carryOverCustomers: 0,
       carryOverCommunications: 0,
@@ -662,9 +677,12 @@ const buildActivityProgressForTarget = async (
     const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
     const customersReached = customersTarget > 0 && customersRemaining === 0;
     const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
-    const totalRewardEarned =
+    const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+    const penaltyPercent = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyPercent) : 0;
+    const penaltyAmount = grossRewardEarned * (penaltyPercent / 100);
+    const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
     return {
       userId: activityTarget.userId,
@@ -673,6 +691,7 @@ const buildActivityProgressForTarget = async (
       requiredCustomers: customersTarget,
       requiredCommunications: communicationsTarget,
       customerReward: toNonNegativeFloat(activityTarget.customerReward),
+      customerMissPenaltyPercent: toNonNegativeFloat(activityTarget.customerMissPenaltyPercent),
       communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
       periodStart,
       periodEnd,
@@ -684,6 +703,8 @@ const buildActivityProgressForTarget = async (
       communicationsRemaining,
       customersReached,
       communicationsReached,
+      grossRewardEarned,
+      penaltyAmount,
       totalRewardEarned,
       carryOverCustomers: 0,
       carryOverCommunications: 0,
@@ -722,9 +743,12 @@ const buildActivityProgressForTarget = async (
   const customersReached = customersTargetToday > 0 && customersRemaining === 0;
   const communicationsReached = communicationsTargetToday > 0 && communicationsRemaining === 0;
 
-  const totalRewardEarned =
+  const grossRewardEarned =
     (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
     (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+  const penaltyPercent = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyPercent) : 0;
+  const penaltyAmount = grossRewardEarned * (penaltyPercent / 100);
+  const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
   return {
     userId: activityTarget.userId,
@@ -733,6 +757,7 @@ const buildActivityProgressForTarget = async (
     requiredCustomers: dailyCustomersRequired,
     requiredCommunications: dailyCommunicationsRequired,
     customerReward: toNonNegativeFloat(activityTarget.customerReward),
+    customerMissPenaltyPercent: toNonNegativeFloat(activityTarget.customerMissPenaltyPercent),
     communicationReward: toNonNegativeFloat(activityTarget.communicationReward),
     periodStart: effectiveStart,
     periodEnd: todayEnd,
@@ -744,6 +769,8 @@ const buildActivityProgressForTarget = async (
     communicationsRemaining,
     customersReached,
     communicationsReached,
+    grossRewardEarned,
+    penaltyAmount,
     totalRewardEarned,
     carryOverCustomers,
     carryOverCommunications,
@@ -817,6 +844,7 @@ export async function createUserTarget(payload: UserTargetInput) {
             cycle,
             requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
             customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            customerMissPenaltyPercent: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyPercent),
             requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
             communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
             startsAt,
@@ -826,6 +854,7 @@ export async function createUserTarget(payload: UserTargetInput) {
             cycle,
             requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
             customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            customerMissPenaltyPercent: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyPercent),
             requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
             communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
             startsAt,
@@ -908,6 +937,7 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
             cycle,
             requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
             customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            customerMissPenaltyPercent: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyPercent),
             requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
             communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
             startsAt,
@@ -917,6 +947,7 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
             cycle,
             requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
             customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+            customerMissPenaltyPercent: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyPercent),
             requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
             communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
             startsAt,

@@ -143,6 +143,7 @@ exports.Prisma.UserActivityTargetScalarFieldEnum = {
   cycle: 'cycle',
   requiredCustomers: 'requiredCustomers',
   customerReward: 'customerReward',
+  customerMissPenaltyPercent: 'customerMissPenaltyPercent',
   requiredCommunications: 'requiredCommunications',
   communicationReward: 'communicationReward',
   startsAt: 'startsAt',
