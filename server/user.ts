@@ -685,7 +685,7 @@ const buildActivityProgressForTarget = async (
     const communicationsTarget = toNonNegativeInt(activityTarget.requiredCommunications);
     const customersRemaining = Math.max(0, customersTarget - customersAchieved);
     const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
-    const rewardMultiplier = cycle === "DAILY" ? 2 : 1;
+    const rewardMultiplier = 1;
     const customersRewardTarget = customersTarget * rewardMultiplier;
     const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
     const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
