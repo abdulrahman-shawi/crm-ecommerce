@@ -108,7 +108,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         (user && hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"])) &&
   { icon: Users, label: "العملاء", href: "/dashboard/customers-complated" },
           (user && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
-          { icon: PieChart, label: "المصاريف الثابتة", href: "/dashboard/expenses" },
+          { icon: PieChart, label: "المصاريف اليومية", href: "/dashboard/expenses" },
   
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
   (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&

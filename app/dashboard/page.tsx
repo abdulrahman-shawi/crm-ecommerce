@@ -11,7 +11,7 @@ const DashboardPage: React.FunctionComponent = () => {
   const { user } = useAuth();
   const canManageTargets = user?.accountType === "ADMIN";
   const [loading, setLoading] = React.useState(false);
-  const [activityFilterPreset, setActivityFilterPreset] = React.useState<"day" | "week" | "month" | "custom">("month");
+  const [activityFilterPreset, setActivityFilterPreset] = React.useState<"day" | "week" | "month" | "custom">("day");
   const [activityCustomStartDate, setActivityCustomStartDate] = React.useState<string>("");
   const [activityCustomEndDate, setActivityCustomEndDate] = React.useState<string>("");
   const [activitySummary, setActivitySummary] = React.useState<{

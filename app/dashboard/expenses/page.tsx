@@ -52,6 +52,20 @@ const formatDateForInput = (dateLike?: string | Date | null) => {
   return date.toISOString().slice(0, 10);
 };
 
+const getExpenseEffectiveDate = (expense: any) => {
+  return new Date(expense?.scheduledDate || expense?.createdAt || Date.now());
+};
+
+const getMonthKey = (date: Date) => {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
+
+const getMonthLabel = (monthKey: string) => {
+  const [year, month] = monthKey.split("-").map(Number);
+  const date = new Date(year, (month || 1) - 1, 1);
+  return date.toLocaleDateString("ar-EG", { month: "long", year: "numeric" });
+};
+
 export default function ExpensesPage() {
   const { user } = useAuth();
   const [expenses, setExpenses] = React.useState<any[]>([]);
@@ -60,6 +74,7 @@ export default function ExpensesPage() {
   const [formData, setFormData] = React.useState<any>(null);
   const [activeType, setActiveType] = React.useState<"DAILY" | "RENT">("DAILY");
   const [dailyPage, setDailyPage] = React.useState(1);
+  const [selectedMonth, setSelectedMonth] = React.useState<string>("ALL");
   const PAGE_SIZE = 10;
 
   const canView = user && hasPermission(user, "viewExpenses");
@@ -184,6 +199,50 @@ export default function ExpensesPage() {
     [expenses]
   );
 
+  const currentYear = React.useMemo(() => new Date().getFullYear(), []);
+
+  const availableMonthKeys = React.useMemo(() => {
+    const monthKeys = expenses
+      .map((expense) => getExpenseEffectiveDate(expense))
+      .filter((date) => !Number.isNaN(date.getTime()) && date.getFullYear() === currentYear)
+      .map((date) => getMonthKey(date));
+
+    return Array.from(new Set(monthKeys)).sort((a, b) => b.localeCompare(a));
+  }, [expenses, currentYear]);
+
+  React.useEffect(() => {
+    if (selectedMonth === "ALL") return;
+    if (!availableMonthKeys.includes(selectedMonth)) {
+      setSelectedMonth("ALL");
+    }
+  }, [availableMonthKeys, selectedMonth]);
+
+  const filteredDailyExpenses = React.useMemo(() => {
+    const base = dailyExpenses.filter((expense) => {
+      const date = getExpenseEffectiveDate(expense);
+      return !Number.isNaN(date.getTime()) && date.getFullYear() === currentYear;
+    });
+
+    if (selectedMonth === "ALL") {
+      return base;
+    }
+
+    return base.filter((expense) => getMonthKey(getExpenseEffectiveDate(expense)) === selectedMonth);
+  }, [dailyExpenses, currentYear, selectedMonth]);
+
+  const officeTotals = React.useMemo(() => {
+    return filteredDailyExpenses.reduce(
+      (acc, expense) => {
+        const amount = Number(expense?.amount || 0);
+        const office = String(expense?.paidFromOffice || "").toUpperCase();
+        if (office === "SYRIA") acc.syria += amount;
+        if (office === "TURKEY") acc.turkey += amount;
+        return acc;
+      },
+      { syria: 0, turkey: 0 }
+    );
+  }, [filteredDailyExpenses]);
+
   const defaultFormValues = React.useMemo(() => {
     if (formData) return formData;
     return {
@@ -225,12 +284,65 @@ export default function ExpensesPage() {
         )}
       </div>
 
+      <div className="mb-6 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="text-xs text-slate-500">مجموع مصاريف مكتب سوريا</div>
+          <div className="mt-1 text-2xl font-black text-emerald-600">{officeTotals.syria.toLocaleString()} $</div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="text-xs text-slate-500">مجموع مصاريف مكتب تركيا</div>
+          <div className="mt-1 text-2xl font-black text-blue-600">{officeTotals.turkey.toLocaleString()} ₺</div>
+        </div>
+      </div>
+
+      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">أشهر السنة الحالية المسجلة</div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedMonth("ALL");
+              setDailyPage(1);
+            }}
+            className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+              selectedMonth === "ALL"
+                ? "bg-blue-600 text-white"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+            }`}
+          >
+            كل أشهر {currentYear}
+          </button>
+
+          {availableMonthKeys.map((monthKey) => (
+            <button
+              key={monthKey}
+              type="button"
+              onClick={() => {
+                setSelectedMonth(monthKey);
+                setDailyPage(1);
+              }}
+              className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+                selectedMonth === monthKey
+                  ? "bg-emerald-600 text-white"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+              }`}
+            >
+              {getMonthLabel(monthKey)}
+            </button>
+          ))}
+
+          {availableMonthKeys.length === 0 && (
+            <span className="text-sm text-slate-500">لا توجد أشهر مسجلة لهذه السنة بعد.</span>
+          )}
+        </div>
+      </div>
+
       <div className="space-y-8">
         <div>
           <h2 className="text-lg font-black text-slate-800 dark:text-white mb-3">مصاريف يومية</h2>
           <DataTable
-            data={dailyExpenses}
-            totalCount={dailyExpenses.length}
+            data={filteredDailyExpenses}
+            totalCount={filteredDailyExpenses.length}
             pageSize={PAGE_SIZE}
             currentPage={dailyPage}
             onPageChange={(newPage) => setDailyPage(newPage)}
