@@ -211,7 +211,8 @@ export const buildOrderPdfFile = async (data: any) => {
 };
 
 let isSharingOrderPdf = false;
-let cachedOrderPdf: { key: string; file: File } | null = null;
+const orderPdfCache = new Map<string, File>();
+const orderPdfPending = new Map<string, Promise<File>>();
 
 const getOrderPdfCacheKey = (data: any) => {
   const orderId = data?.id ?? data?._id ?? data?.orderNumber ?? 'unknown';
@@ -221,73 +222,100 @@ const getOrderPdfCacheKey = (data: any) => {
 
 const downloadPdfFile = (pdfFile: File) => {
   const downloadUrl = URL.createObjectURL(pdfFile);
-  const link = document.createElement('a');
-  link.href = downloadUrl;
-  link.download = pdfFile.name;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(downloadUrl);
+  try {
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = pdfFile.name;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+    return true;
+  } catch {
+    const openedWindow = window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+    setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+    return !!openedWindow;
+  }
+};
+
+export const prepareOrderPdfForShare = async (data: any) => {
+  if (!data) {
+    throw new Error('بيانات الطلب غير متوفرة');
+  }
+
+  const key = getOrderPdfCacheKey(data);
+  const cachedFile = orderPdfCache.get(key);
+  if (cachedFile) {
+    return cachedFile;
+  }
+
+  const pendingFile = orderPdfPending.get(key);
+  if (pendingFile) {
+    return pendingFile;
+  }
+
+  const generationPromise = buildOrderPdfFile(data)
+    .then((file) => {
+      orderPdfCache.set(key, file);
+      orderPdfPending.delete(key);
+      return file;
+    })
+    .catch((error) => {
+      orderPdfPending.delete(key);
+      throw error;
+    });
+
+  orderPdfPending.set(key, generationPromise);
+  return generationPromise;
 };
 
 export const shareOrderPdfToCustomerWhatsApp = async (data: any) => {
+  if (!data) {
+    toast.error('بيانات الطلب غير متوفرة');
+    return;
+  }
+
   if (isSharingOrderPdf) {
+    toast('جاري تجهيز المشاركة...');
     return;
   }
 
   isSharingOrderPdf = true;
-  const loadingToast = toast.loading('جاري إنشاء ملف PDF...');
+  const loadingToast = toast.loading('جاري تجهيز المشاركة...');
   const shareTitle = `فاتورة الطلب #${data?.orderNumber || ''}`;
   const shareText = `Invoice #${data?.orderNumber || ''} - ${data?.customer?.name || ''}`;
   const cacheKey = getOrderPdfCacheKey(data);
   const canUseWebShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
-  const canShareFile =
-    canUseWebShare &&
-    typeof navigator.canShare === 'function' &&
-    !!cachedOrderPdf?.file &&
-    cachedOrderPdf.key === cacheKey &&
-    navigator.canShare({ files: [cachedOrderPdf.file] });
-
-  let pdfFile: File | null = cachedOrderPdf?.key === cacheKey ? cachedOrderPdf.file : null;
-  const ensurePdfFile = async () => {
-    if (pdfFile) {
-      return pdfFile;
-    }
-
-    const generated = await buildOrderPdfFile(data);
-    pdfFile = generated;
-    cachedOrderPdf = { key: cacheKey, file: generated };
-    return generated;
-  };
 
   try {
-    if (canShareFile && cachedOrderPdf?.file) {
+    const cachedFile = orderPdfCache.get(cacheKey);
+
+    if (canUseWebShare && cachedFile && typeof navigator.canShare === 'function' && navigator.canShare({ files: [cachedFile] })) {
       toast.dismiss(loadingToast);
       await navigator.share({
         title: shareTitle,
         text: shareText,
-        files: [cachedOrderPdf.file],
+        files: [cachedFile],
       });
       toast.success('تم فتح شاشة المشاركة');
       return;
     }
 
-    if (canUseWebShare) {
+    if (canUseWebShare && !cachedFile) {
+      void prepareOrderPdfForShare(data);
       toast.dismiss(loadingToast);
-      await navigator.share({
-        title: shareTitle,
-        text: `${shareText}\nسيتم تنزيل ملف PDF لإرفاقه يدويًا داخل التطبيق الذي اخترته.`,
-      });
-      toast.success('تم فتح شاشة المشاركة');
+      toast('يتم تجهيز ملف PDF لأول مرة، اضغط مشاركة PDF مرة أخرى بعد ثوانٍ');
+      return;
     }
 
-    const file = await ensurePdfFile();
-    downloadPdfFile(file);
+    const file = await prepareOrderPdfForShare(data);
+    const downloaded = downloadPdfFile(file);
 
     if (!canUseWebShare) {
-      toast.success('تم إنشاء الملف، هذا المتصفح لا يدعم شاشة المشاركة');
+      toast.success(downloaded ? 'تم إنشاء الملف، هذا المتصفح لا يدعم شاشة المشاركة' : 'تم فتح الملف في تبويب جديد');
     } else {
-      toast.success('تم تنزيل ملف PDF لإرفاقه يدويًا');
+      toast.success(downloaded ? 'تم تنزيل ملف PDF لإرفاقه يدويًا' : 'تم فتح الملف في تبويب جديد لإرساله يدويًا');
     }
   } catch (error: any) {
     if (error?.name === 'AbortError') {
@@ -295,9 +323,14 @@ export const shareOrderPdfToCustomerWhatsApp = async (data: any) => {
     }
 
     try {
-      const file = await ensurePdfFile();
-      downloadPdfFile(file);
-      toast.success('تعذر فتح شاشة المشاركة، تم تنزيل ملف PDF لإرساله يدويًا');
+      const file = await prepareOrderPdfForShare(data);
+      const downloaded = downloadPdfFile(file);
+
+      toast.success(
+        downloaded
+          ? 'تعذر فتح شاشة المشاركة، تم تنزيل ملف PDF لإرساله يدويًا'
+          : 'تعذر فتح شاشة المشاركة، تم فتح الملف في تبويب جديد لإرساله يدويًا'
+      );
     } catch (pdfError: any) {
       toast.error(pdfError?.message || error?.message || 'تعذر إنشاء أو مشاركة ملف PDF');
     }

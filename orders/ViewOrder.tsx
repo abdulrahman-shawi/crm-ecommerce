@@ -11,6 +11,7 @@ import {
   getOrderTotalShippingExpenses,
   getOrderDisplayDate,
 } from '@/orders/orderHelpers';
+import { prepareOrderPdfForShare } from '@/orders/orderPdf';
 
 export default function ViewOrder({
   data,
@@ -46,6 +47,24 @@ export default function ViewOrder({
     const product = products?.find((p: any) => p.id === productId);
     return product ? product.name : `منتج رقم #${productId}`;
   };
+
+  React.useEffect(() => {
+    let isCancelled = false;
+
+    const warmPdf = async () => {
+      try {
+        await prepareOrderPdfForShare(data);
+      } catch {
+        if (isCancelled) return;
+      }
+    };
+
+    warmPdf();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [data]);
 
   return (
     <div className="p-4 md:p-10 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 min-h-screen">
