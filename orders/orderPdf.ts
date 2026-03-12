@@ -211,45 +211,95 @@ export const buildOrderPdfFile = async (data: any) => {
 };
 
 let isSharingOrderPdf = false;
+let cachedOrderPdf: { key: string; file: File } | null = null;
+
+const getOrderPdfCacheKey = (data: any) => {
+  const orderId = data?.id ?? data?._id ?? data?.orderNumber ?? 'unknown';
+  const updatedAt = data?.updatedAt ?? data?.createdAt ?? '';
+  return `${orderId}-${updatedAt}`;
+};
+
+const downloadPdfFile = (pdfFile: File) => {
+  const downloadUrl = URL.createObjectURL(pdfFile);
+  const link = document.createElement('a');
+  link.href = downloadUrl;
+  link.download = pdfFile.name;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(downloadUrl);
+};
 
 export const shareOrderPdfToCustomerWhatsApp = async (data: any) => {
   if (isSharingOrderPdf) {
-    toast('يرجى الانتظار حتى تكتمل عملية المشاركة الحالية');
     return;
   }
 
   isSharingOrderPdf = true;
   const loadingToast = toast.loading('جاري إنشاء ملف PDF...');
+  const shareTitle = `فاتورة الطلب #${data?.orderNumber || ''}`;
+  const shareText = `Invoice #${data?.orderNumber || ''} - ${data?.customer?.name || ''}`;
+  const cacheKey = getOrderPdfCacheKey(data);
+  const canUseWebShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+  const canShareFile =
+    canUseWebShare &&
+    typeof navigator.canShare === 'function' &&
+    !!cachedOrderPdf?.file &&
+    cachedOrderPdf.key === cacheKey &&
+    navigator.canShare({ files: [cachedOrderPdf.file] });
+
+  let pdfFile: File | null = cachedOrderPdf?.key === cacheKey ? cachedOrderPdf.file : null;
+  const ensurePdfFile = async () => {
+    if (pdfFile) {
+      return pdfFile;
+    }
+
+    const generated = await buildOrderPdfFile(data);
+    pdfFile = generated;
+    cachedOrderPdf = { key: cacheKey, file: generated };
+    return generated;
+  };
 
   try {
-    const pdfFile = await buildOrderPdfFile(data);
-    const shareTitle = `فاتورة الطلب #${data?.orderNumber || ''}`;
-    const shareText = `Invoice #${data?.orderNumber || ''} - ${data?.customer?.name || ''}`;
-
-    if (navigator.share && navigator.canShare?.({ files: [pdfFile] })) {
+    if (canShareFile && cachedOrderPdf?.file) {
       toast.dismiss(loadingToast);
       await navigator.share({
         title: shareTitle,
         text: shareText,
-        files: [pdfFile],
+        files: [cachedOrderPdf.file],
       });
-      toast.success('تم فتح قائمة مشاركة الملف');
+      toast.success('تم فتح شاشة المشاركة');
       return;
     }
 
-    const downloadUrl = URL.createObjectURL(pdfFile);
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = pdfFile.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(downloadUrl);
+    if (canUseWebShare) {
+      toast.dismiss(loadingToast);
+      await navigator.share({
+        title: shareTitle,
+        text: `${shareText}\nسيتم تنزيل ملف PDF لإرفاقه يدويًا داخل التطبيق الذي اخترته.`,
+      });
+      toast.success('تم فتح شاشة المشاركة');
+    }
 
-    toast.success('تم إنشاء الملف، هذا المتصفح لا يدعم مشاركة الملفات مباشرة');
+    const file = await ensurePdfFile();
+    downloadPdfFile(file);
+
+    if (!canUseWebShare) {
+      toast.success('تم إنشاء الملف، هذا المتصفح لا يدعم شاشة المشاركة');
+    } else {
+      toast.success('تم تنزيل ملف PDF لإرفاقه يدويًا');
+    }
   } catch (error: any) {
-    if (error?.name !== 'AbortError') {
-      toast.error(error?.message || 'تعذر إنشاء أو مشاركة ملف PDF');
+    if (error?.name === 'AbortError') {
+      return;
+    }
+
+    try {
+      const file = await ensurePdfFile();
+      downloadPdfFile(file);
+      toast.success('تعذر فتح شاشة المشاركة، تم تنزيل ملف PDF لإرساله يدويًا');
+    } catch (pdfError: any) {
+      toast.error(pdfError?.message || error?.message || 'تعذر إنشاء أو مشاركة ملف PDF');
     }
   } finally {
     toast.dismiss(loadingToast);
