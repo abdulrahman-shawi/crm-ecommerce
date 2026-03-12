@@ -63,6 +63,11 @@ const sanitizeDescription = (value: any) => {
     return normalized || null;
 };
 
+const sanitizeNotes = (value: any) => {
+    const normalized = String(value || "").trim();
+    return normalized || null;
+};
+
 export async function getExpenseEmployees() {
     return { success: true, data: [] };
 }
@@ -71,6 +76,7 @@ export async function createExpense(data: any) {
     try {
         const type = normalizeExpenseType(data?.type);
         const description = sanitizeDescription(data?.description);
+        const notes = sanitizeNotes(data?.notes);
         const amountInput = Number(data?.amount || 0);
 
         if (Number.isNaN(amountInput) || amountInput < 0) {
@@ -98,6 +104,7 @@ export async function createExpense(data: any) {
                     type,
                     amount: amountInput,
                     description,
+                    notes,
                     currency,
                     paidFromOffice,
                     employeeId: null,
@@ -124,6 +131,7 @@ export async function createExpense(data: any) {
                 type,
                 amount: amountInput,
                 description,
+                notes,
                 scheduledDate: rentDate,
                 employeeId: null,
                 currency: null,
@@ -160,6 +168,7 @@ export async function updateExpense(id: number, data: any) {
     try {
         const type = normalizeExpenseType(data?.type);
         const description = sanitizeDescription(data?.description);
+        const notes = sanitizeNotes(data?.notes);
         const amountInput = Number(data?.amount || 0);
 
         if (Number.isNaN(amountInput) || amountInput < 0) {
@@ -175,6 +184,7 @@ export async function updateExpense(id: number, data: any) {
             paidFromOffice: null,
             employeeId: null,
             scheduledDate: null,
+            notes,
         };
 
         if (type === "DAILY") {

@@ -17,6 +17,7 @@ const expenseSchema = z.object({
   type: z.enum(["DAILY", "RENT"]),
   amount: z.coerce.number().min(0, "المبلغ يجب أن يكون أكبر أو يساوي 0"),
   description: z.string().optional(),
+  notes: z.string().optional(),
   currency: z.enum(["SYP", "TRY", "USD"]).optional(),
   paidFromOffice: z.enum(["TURKEY", "SYRIA"]).optional(),
   scheduledDate: z.string().optional(),
@@ -111,6 +112,7 @@ export default function ExpensesPage() {
         type: normalizedType,
         amount: Number(data.amount || 0),
         description: String(data.description || "").trim() || null,
+        notes: String(data.notes || "").trim() || null,
         currency: data.currency || null,
         paidFromOffice: data.paidFromOffice || null,
         scheduledDate: data.scheduledDate || null,
@@ -149,6 +151,7 @@ export default function ExpensesPage() {
       type: expenseType,
       amount: Number(item.amount || 0),
       description: item.description || "",
+      notes: item.notes || "",
       currency: item.currency || undefined,
       paidFromOffice: item.paidFromOffice || undefined,
       scheduledDate: formatDateForInput(item.scheduledDate || item.createdAt),
@@ -249,6 +252,7 @@ export default function ExpensesPage() {
       type: activeType,
       amount: 0,
       description: "",
+      notes: "",
       currency: "SYP",
       paidFromOffice: "SYRIA",
       scheduledDate: formatDateForInput(new Date()),
@@ -360,6 +364,7 @@ export default function ExpensesPage() {
                 }
               },
               { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
+              { header: "الملاحظات", accessor: (row: any) => <span>{row.notes || "-"}</span> },
               { header: "المكتب", accessor: (row: any) => <span>{paidFromOfficeLabels[String(row.paidFromOffice || "")] || "-"}</span> },
               { header: "العملة", accessor: (row: any) => <span>{currencyLabels[String(row.currency || "")] || "-"}</span> },
               {
@@ -417,6 +422,13 @@ export default function ExpensesPage() {
                         error={errors.description?.message as string}
                       />
 
+                      <FormInput
+                        className="text-gray-800 dark:text-white"
+                        label="ملاحظات"
+                        {...register("notes")}
+                        error={errors.notes?.message as string}
+                      />
+
                       <div className="flex flex-col gap-1.5 w-full text-right">
                         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">الدفع من مكتب</label>
                         <select
@@ -458,6 +470,13 @@ export default function ExpensesPage() {
                         label="وصف الإيجار"
                         {...register("description")}
                         error={errors.description?.message as string}
+                      />
+
+                      <FormInput
+                        className="text-gray-800 dark:text-white"
+                        label="ملاحظات"
+                        {...register("notes")}
+                        error={errors.notes?.message as string}
                       />
 
                       <FormInput

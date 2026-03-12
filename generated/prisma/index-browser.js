@@ -346,6 +346,7 @@ exports.Prisma.ExpenseScalarFieldEnum = {
   paidFromOffice: 'paidFromOffice',
   employeeId: 'employeeId',
   scheduledDate: 'scheduledDate',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

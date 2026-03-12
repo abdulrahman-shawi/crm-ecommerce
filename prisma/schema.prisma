@@ -327,6 +327,7 @@ model Expense {
   paidFromOffice PaidFromOffice?
   employeeId  String?
   scheduledDate DateTime?
+  notes       String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   employee    User?     @relation(fields: [employeeId], references: [id], onDelete: SetNull)
