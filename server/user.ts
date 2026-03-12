@@ -460,6 +460,12 @@ const countInclusiveDays = (from: Date, to: Date) => {
   return Math.floor(ms / (24 * 60 * 60 * 1000)) + 1;
 };
 
+const diffDays = (start: Date, endExclusive: Date) => {
+  const ms = endExclusive.getTime() - start.getTime();
+  if (ms <= 0) return 0;
+  return Math.floor(ms / (24 * 60 * 60 * 1000));
+};
+
 const buildActivityDateRange = (filter?: ActivityProgressFilter) => {
   if (!filter) return null;
 
@@ -491,12 +497,6 @@ const buildActivityDateRange = (filter?: ActivityProgressFilter) => {
   }
 
   return { start: startOfMonth(now), end: endOfMonth(now) };
-};
-
-const diffDays = (start: Date, endExclusive: Date) => {
-  const ms = endExclusive.getTime() - start.getTime();
-  if (ms <= 0) return 0;
-  return Math.floor(ms / (24 * 60 * 60 * 1000));
 };
 
 const toNonNegativeInt = (value: unknown) => {
@@ -631,8 +631,11 @@ const buildActivityProgressForTarget = async (
 
     const customersRemaining = Math.max(0, customersTarget - customersAchieved);
     const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
-    const customersReached = customersTarget > 0 && customersRemaining === 0;
-    const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
+    const rewardMultiplier = cycle === "DAILY" ? 2 : 1;
+    const customersRewardTarget = customersTarget * rewardMultiplier;
+    const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
+    const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
+    const communicationsReached = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
     const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
@@ -682,8 +685,11 @@ const buildActivityProgressForTarget = async (
     const communicationsTarget = toNonNegativeInt(activityTarget.requiredCommunications);
     const customersRemaining = Math.max(0, customersTarget - customersAchieved);
     const communicationsRemaining = Math.max(0, communicationsTarget - communicationsAchieved);
-    const customersReached = customersTarget > 0 && customersRemaining === 0;
-    const communicationsReached = communicationsTarget > 0 && communicationsRemaining === 0;
+    const rewardMultiplier = cycle === "DAILY" ? 2 : 1;
+    const customersRewardTarget = customersTarget * rewardMultiplier;
+    const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
+    const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
+    const communicationsReached = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
     const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
@@ -749,8 +755,10 @@ const buildActivityProgressForTarget = async (
 
   const customersRemaining = Math.max(0, customersTargetToday - customersToday);
   const communicationsRemaining = Math.max(0, communicationsTargetToday - communicationsToday);
-  const customersReached = customersTargetToday > 0 && customersRemaining === 0;
-  const communicationsReached = communicationsTargetToday > 0 && communicationsRemaining === 0;
+  const customersRewardTarget = customersTargetToday * 2;
+  const communicationsRewardTarget = communicationsTargetToday * 2;
+  const customersReached = customersRewardTarget > 0 && customersToday >= customersRewardTarget;
+  const communicationsReached = communicationsRewardTarget > 0 && communicationsToday >= communicationsRewardTarget;
 
   const grossRewardEarned =
     (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +

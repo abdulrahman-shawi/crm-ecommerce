@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import { Mail, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import { formatPhoneForDisplay } from '@/lib/utils';
 import {
@@ -11,16 +11,13 @@ import {
   getOrderTotalShippingExpenses,
   getOrderDisplayDate,
 } from '@/orders/orderHelpers';
-import { prepareOrderPdfForShare } from '@/orders/orderPdf';
 
 export default function ViewOrder({
   data,
   products,
-  onSharePdf,
 }: {
   data: any;
   products: any;
-  onSharePdf?: (order: any) => void | Promise<void>;
 }) {
   const componentRef = React.useRef<HTMLDivElement>(null);
   const currencySymbol = getOrderCurrencySymbol(data);
@@ -48,35 +45,9 @@ export default function ViewOrder({
     return product ? product.name : `منتج رقم #${productId}`;
   };
 
-  React.useEffect(() => {
-    let isCancelled = false;
-
-    const warmPdf = async () => {
-      try {
-        await prepareOrderPdfForShare(data);
-      } catch {
-        if (isCancelled) return;
-      }
-    };
-
-    warmPdf();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [data]);
-
   return (
     <div className="p-4 md:p-10 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 min-h-screen">
       <div className="flex flex-col sm:flex-row sm:justify-end gap-3 p-4 bg-white dark:bg-slate-900 no-print">
-        <button
-          type="button"
-          onClick={() => onSharePdf?.(data)}
-          className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200"
-        >
-          <Mail size={20} />
-          مشاركة PDF
-        </button>
         <button
           type="button"
           onClick={handlePrint}

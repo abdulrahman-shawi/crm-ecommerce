@@ -6,16 +6,20 @@ import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, isAdmin } from "@/lib/utils";
 import { GetUserTargetProgress } from "@/server/analytics";
 import { getEmployeeSalaryAdjustments, upsertEmployeeSalaryAdjustment } from "@/server/employee-salaries";
+import { getData as getExpensesData } from "@/server/expenses";
 import { getalluser } from "@/server/user";
 import toast from "react-hot-toast";
 
 export default function EmployeeSalariesPage() {
   const { user } = useAuth();
   const [rows, setRows] = React.useState<any[]>([]);
+  const [rentExpenses, setRentExpenses] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [rentPage, setRentPage] = React.useState(1);
   const PAGE_SIZE = 12;
+  const RENT_PAGE_SIZE = 10;
 
   const [selectedMonth, setSelectedMonth] = React.useState(() => {
     const now = new Date();
@@ -26,13 +30,26 @@ export default function EmployeeSalariesPage() {
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewEmployees", "viewAnalytics"])) || isAdmin(user);
 
+  const isDateInSelectedMonth = React.useCallback(
+    (dateLike: string | Date | null | undefined) => {
+      if (!dateLike || !selectedMonth) return false;
+      const date = new Date(dateLike);
+      if (Number.isNaN(date.getTime())) return false;
+      const [year, month] = selectedMonth.split("-").map(Number);
+      if (!year || !month) return false;
+      return date.getFullYear() === year && date.getMonth() + 1 === month;
+    },
+    [selectedMonth]
+  );
+
   const fetchData = React.useCallback(async () => {
     if (!canView) return;
     setIsLoading(true);
     try {
-      const [users, adjustmentsRes] = await Promise.all([
+      const [users, adjustmentsRes, expensesRes] = await Promise.all([
         getalluser(),
         getEmployeeSalaryAdjustments(selectedMonth),
+        getExpensesData(),
       ]);
 
       const adjustmentMap: Record<string, string> = {};
@@ -71,10 +88,23 @@ export default function EmployeeSalariesPage() {
 
       setRows(withProfit.sort((a, b) => b.totalDefaultSalary - a.totalDefaultSalary));
       setPage(1);
+
+      if (expensesRes?.success) {
+        const rentRows = (expensesRes.data || []).filter((expense: any) => {
+          if (String(expense?.type || "") !== "RENT") return false;
+          const effectiveDate = expense?.scheduledDate || expense?.createdAt;
+          return isDateInSelectedMonth(effectiveDate);
+        });
+        setRentExpenses(rentRows);
+      } else {
+        setRentExpenses([]);
+      }
+
+      setRentPage(1);
     } finally {
       setIsLoading(false);
     }
-  }, [canView, selectedMonth]);
+  }, [canView, selectedMonth, isDateInSelectedMonth]);
 
   React.useEffect(() => {
     fetchData();
@@ -206,6 +236,33 @@ export default function EmployeeSalariesPage() {
           },
         ]}
       />
+
+      <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="mb-3 text-lg font-black text-slate-800 dark:text-white">مصاريف الإيجارات</h2>
+        <DataTable
+          data={rentExpenses}
+          totalCount={rentExpenses.length}
+          pageSize={RENT_PAGE_SIZE}
+          currentPage={rentPage}
+          onPageChange={(nextPage) => setRentPage(nextPage)}
+          isLoading={isLoading}
+          columns={[
+            { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
+            { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
+            {
+              header: "تاريخ الإيجار",
+              accessor: (row: any) => {
+                const effectiveDate = row.scheduledDate || row.createdAt;
+                return new Date(effectiveDate).toLocaleDateString("ar-EG", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+              },
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }

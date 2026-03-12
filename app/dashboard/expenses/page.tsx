@@ -38,6 +38,13 @@ const paidFromOfficeLabels: Record<string, string> = {
   SYRIA: "مكتب سوريا",
 };
 
+const getDailyOfficeCurrencySymbol = (office: unknown) => {
+  const normalizedOffice = String(office || "").toUpperCase();
+  if (normalizedOffice === "SYRIA") return "$";
+  if (normalizedOffice === "TURKEY") return "₺";
+  return "";
+};
+
 const formatDateForInput = (dateLike?: string | Date | null) => {
   if (!dateLike) return "";
   const date = new Date(dateLike);
@@ -53,7 +60,6 @@ export default function ExpensesPage() {
   const [formData, setFormData] = React.useState<any>(null);
   const [activeType, setActiveType] = React.useState<"DAILY" | "RENT">("DAILY");
   const [dailyPage, setDailyPage] = React.useState(1);
-  const [rentPage, setRentPage] = React.useState(1);
   const PAGE_SIZE = 10;
 
   const canView = user && hasPermission(user, "viewExpenses");
@@ -99,11 +105,6 @@ export default function ExpensesPage() {
         if (!payload.description) throw new Error("يرجى إدخال وصف المصروف اليومي");
         if (!payload.currency) throw new Error("يرجى اختيار العملة");
         if (!payload.paidFromOffice) throw new Error("يرجى تحديد مكتب الدفع");
-      }
-
-      if (normalizedType === "RENT") {
-        if (!payload.description) throw new Error("يرجى إدخال وصف الإيجار");
-        payload.scheduledDate = payload.scheduledDate || formatDateForInput(new Date());
       }
 
       if (editId) {
@@ -183,11 +184,6 @@ export default function ExpensesPage() {
     [expenses]
   );
 
-  const rentExpenses = React.useMemo(
-    () => expenses.filter((expense) => String(expense?.type || "") === "RENT"),
-    [expenses]
-  );
-
   const defaultFormValues = React.useMemo(() => {
     if (formData) return formData;
     return {
@@ -240,7 +236,17 @@ export default function ExpensesPage() {
             onPageChange={(newPage) => setDailyPage(newPage)}
             actions={actions.length ? actions : undefined}
             columns={[
-              { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
+              {
+                header: "المبلغ",
+                accessor: (row: any) => {
+                  const symbol = getDailyOfficeCurrencySymbol(row.paidFromOffice);
+                  return (
+                    <span className="font-black text-blue-600">
+                      {Number(row.amount || 0).toLocaleString()} {symbol}
+                    </span>
+                  );
+                }
+              },
               { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
               { header: "المكتب", accessor: (row: any) => <span>{paidFromOfficeLabels[String(row.paidFromOffice || "")] || "-"}</span> },
               { header: "العملة", accessor: (row: any) => <span>{currencyLabels[String(row.currency || "")] || "-"}</span> },
@@ -252,33 +258,6 @@ export default function ExpensesPage() {
                     month: "long",
                     day: "numeric",
                   }),
-              },
-            ]}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-lg font-black text-slate-800 dark:text-white mb-3">مصاريف إيجارات</h2>
-          <DataTable
-            data={rentExpenses}
-            totalCount={rentExpenses.length}
-            pageSize={PAGE_SIZE}
-            currentPage={rentPage}
-            onPageChange={(newPage) => setRentPage(newPage)}
-            actions={actions.length ? actions : undefined}
-            columns={[
-              { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
-              { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
-              {
-                header: "تاريخ الإيجار",
-                accessor: (row: any) => {
-                  const effectiveDate = row.scheduledDate || row.createdAt;
-                  return new Date(effectiveDate).toLocaleDateString("ar-EG", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  });
-                },
               },
             ]}
           />
@@ -314,7 +293,6 @@ export default function ExpensesPage() {
                       {...register("type")}
                     >
                       <option value="DAILY">مصاريف يومية</option>
-                      <option value="RENT">مصاريف إيجارات</option>
                     </select>
                   </div>
 

@@ -816,6 +816,13 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             icon: <Save size={14} />,
             onClick: (data: any) => openShippingModal(data)
         },
+        (user) && {
+            label: "مشاركة PDF",
+            icon: <Download size={14} />,
+            onClick: async (data: any) => {
+                await shareOrderPdfToCustomerWhatsApp(data);
+            }
+        },
         (user && hasPermission(user, "deleteOrders")) && {
             label: "حذف",
             icon: <Trash size={14} />,
@@ -919,7 +926,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             </AppModal>
 
             <AppModal size='full' isOpen={isOpenorder} onClose={() => setisOpenorder(false)} title='ملخص الطلب' >
-                <ViewOrder data={order} products={products} onSharePdf={shareOrderPdfToCustomerWhatsApp} />
+                <ViewOrder data={order} products={products} />
             </AppModal>
 
             <ShippingModal
