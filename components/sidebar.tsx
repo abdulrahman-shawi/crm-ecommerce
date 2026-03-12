@@ -113,7 +113,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
   (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
   { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
-  (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
+  (user && isAdmin(user)) &&
   { icon: ShieldCheck, label: "الكفالة", href: "/dashboard/warranty" },
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
@@ -124,7 +124,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       items: [
           (user && hasAnyPermission(user, ["viewEmployees", "addEmployees", "editEmployees", "deleteEmployees"])) &&
        { icon: Users, label: "المستخدمين", href: "/dashboard/users" },
-         (user && hasAnyPermission(user, ["viewEmployees", "viewAnalytics"])) &&
+         (user && isAdmin(user)) &&
        { icon: Users2, label: "رواتب الموظفين", href: "/dashboard/employee-salaries" },
          (user && hasAnyPermission(user, ["viewPermissions", "addPermissions", "editPermissions", "deletePermissions"])) &&
        { icon: RollerCoasterIcon, label: "الأدوار", href: "/dashboard/permissions" },
