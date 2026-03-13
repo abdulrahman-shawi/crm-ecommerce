@@ -563,7 +563,7 @@ const DashboardPage: React.FunctionComponent = () => {
         <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
             <div className="text-sm font-bold text-slate-700 dark:text-slate-200">
-              {activityFilterPreset === "day" ? "تاركتي اليوم" : "تاركتي ضمن الفترة"}
+              {activityFilterPreset === "day" ? "مهامي اليوم" : "مهامي ضمن الفترة"}
             </div>
             <div className="text-xs text-slate-500">
               {activityTargetToday
