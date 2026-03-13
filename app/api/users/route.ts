@@ -33,7 +33,9 @@ export async function GET(req :NextRequest) {
       ...(whereClause ? { where: whereClause } : {}),
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
-        activityTarget: true,
+        activityTargets: {
+          orderBy: { createdAt: 'desc' },
+        },
         targets: {
           include: {
             products: {
@@ -48,7 +50,13 @@ export async function GET(req :NextRequest) {
         }, // جلب بيانات الأهداف المرتبطة بالمستخدم
       },
     });
-    return new Response(JSON.stringify({ success: true, data: users }), { status: 200 });
+
+    const normalizedUsers = users.map((userRow: any) => ({
+      ...userRow,
+      activityTarget: Array.isArray(userRow.activityTargets) ? userRow.activityTargets[0] || null : null,
+    }));
+
+    return new Response(JSON.stringify({ success: true, data: normalizedUsers }), { status: 200 });
   } catch (error) {
     console.error("Prisma Error:", error);
     return new Response(JSON.stringify({ success: false, error: "فشل في جلب المستخدمين" }), { status: 500 });

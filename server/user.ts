@@ -6,10 +6,12 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs"; //
 
 export async function getalluser() {
-  const user = await prisma.user.findMany({
+  const users = await prisma.user.findMany({
     include:{
       permission:true,
-      activityTarget: true,
+      activityTargets: {
+        orderBy: { createdAt: 'desc' },
+      },
       targets: {
         include: {
           products: {
@@ -19,7 +21,11 @@ export async function getalluser() {
       }
     }
   });
-  return user;
+
+  return users.map((userRow: any) => ({
+    ...userRow,
+    activityTarget: Array.isArray(userRow.activityTargets) ? userRow.activityTargets[0] || null : null,
+  }));
 }   
 
 
@@ -600,33 +606,37 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
   const startsAtCandidate = input.startDate ? new Date(input.startDate) : new Date();
   const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
 
-  return prisma.userActivityTarget.upsert({
-    where: { userId },
-    create: {
+  const existingActivityTarget = await prisma.userActivityTarget.findFirst({
+    where: { userId, isActive: true },
+    orderBy: { updatedAt: 'desc' },
+    select: { id: true },
+  });
+
+  const basePayload = {
+    cycle,
+    activeWeekDays,
+    requiredCustomers: toNonNegativeInt(input.requiredCustomers),
+    customerReward: toNonNegativeFloat(input.customerReward),
+    customerMissPenaltyAmount: toNonNegativeFloat(input.customerMissPenaltyAmount),
+    requiredCommunications: toNonNegativeInt(input.requiredCommunications),
+    communicationReward: toNonNegativeFloat(input.communicationReward),
+    communicationMissPenaltyAmount: toNonNegativeFloat(input.communicationMissPenaltyAmount),
+    startsAt,
+    isActive: input.isActive !== false,
+  };
+
+  if (existingActivityTarget?.id) {
+    return prisma.userActivityTarget.update({
+      where: { id: existingActivityTarget.id },
+      data: basePayload,
+    });
+  }
+
+  return prisma.userActivityTarget.create({
+    data: {
       userId,
-      cycle,
-      activeWeekDays,
-      requiredCustomers: toNonNegativeInt(input.requiredCustomers),
-      customerReward: toNonNegativeFloat(input.customerReward),
-      customerMissPenaltyAmount: toNonNegativeFloat(input.customerMissPenaltyAmount),
-      requiredCommunications: toNonNegativeInt(input.requiredCommunications),
-      communicationReward: toNonNegativeFloat(input.communicationReward),
-      communicationMissPenaltyAmount: toNonNegativeFloat(input.communicationMissPenaltyAmount),
-      startsAt,
-      isActive: input.isActive !== false,
-    } as any,
-    update: {
-      cycle,
-      activeWeekDays,
-      requiredCustomers: toNonNegativeInt(input.requiredCustomers),
-      customerReward: toNonNegativeFloat(input.customerReward),
-      customerMissPenaltyAmount: toNonNegativeFloat(input.customerMissPenaltyAmount),
-      requiredCommunications: toNonNegativeInt(input.requiredCommunications),
-      communicationReward: toNonNegativeFloat(input.communicationReward),
-      communicationMissPenaltyAmount: toNonNegativeFloat(input.communicationMissPenaltyAmount),
-      startsAt,
-      isActive: input.isActive !== false,
-    } as any,
+      ...basePayload,
+    },
   });
 };
 
@@ -929,35 +939,40 @@ export async function createUserTarget(payload: UserTargetInput) {
       let activityTarget: any = null;
       if (hasActivityTarget && payload.activityTarget) {
         const cycle = normalizeActivityCycle(payload.activityTarget.cycle);
+        const activeWeekDays = normalizeActivityWeekDays(payload.activityTarget.activeWeekDays);
         const startsAtCandidate = payload.activityTarget.startDate ? new Date(payload.activityTarget.startDate) : new Date();
         const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
 
-        activityTarget = await tx.userActivityTarget.upsert({
-          where: { userId: payload.userId },
-          create: {
-            userId: payload.userId,
-            cycle,
-            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
-            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
-            customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
-            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
-            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
-            communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
-            startsAt,
-            isActive: payload.activityTarget.isActive !== false,
-          },
-          update: {
-            cycle,
-            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
-            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
-            customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
-            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
-            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
-            communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
-            startsAt,
-            isActive: payload.activityTarget.isActive !== false,
-          },
+        const existingActivityTarget = await tx.userActivityTarget.findFirst({
+          where: { userId: payload.userId, isActive: true },
+          orderBy: { updatedAt: 'desc' },
+          select: { id: true },
         });
+
+        const activityPayload = {
+          cycle,
+          activeWeekDays,
+          requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+          customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+          customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
+          requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+          communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+          communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
+          startsAt,
+          isActive: payload.activityTarget.isActive !== false,
+        };
+
+        activityTarget = existingActivityTarget?.id
+          ? await tx.userActivityTarget.update({
+              where: { id: existingActivityTarget.id },
+              data: activityPayload,
+            })
+          : await tx.userActivityTarget.create({
+              data: {
+                userId: payload.userId,
+                ...activityPayload,
+              },
+            });
       }
 
       return { salesTarget, activityTarget };
@@ -1024,35 +1039,40 @@ export async function updateUserTarget(targetId: string, payload: Omit<UserTarge
       let updatedActivityTarget: any = null;
       if (payload.activityTarget) {
         const cycle = normalizeActivityCycle(payload.activityTarget.cycle);
+        const activeWeekDays = normalizeActivityWeekDays(payload.activityTarget.activeWeekDays);
         const startsAtCandidate = payload.activityTarget.startDate ? new Date(payload.activityTarget.startDate) : new Date();
         const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
 
-        updatedActivityTarget = await tx.userActivityTarget.upsert({
-          where: { userId: existingTarget.userId },
-          create: {
-            userId: existingTarget.userId,
-            cycle,
-            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
-            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
-            customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
-            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
-            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
-            communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
-            startsAt,
-            isActive: payload.activityTarget.isActive !== false,
-          },
-          update: {
-            cycle,
-            requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
-            customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
-            customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
-            requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
-            communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
-            communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
-            startsAt,
-            isActive: payload.activityTarget.isActive !== false,
-          },
+        const existingActivityTarget = await tx.userActivityTarget.findFirst({
+          where: { userId: existingTarget.userId, isActive: true },
+          orderBy: { updatedAt: 'desc' },
+          select: { id: true },
         });
+
+        const activityPayload = {
+          cycle,
+          activeWeekDays,
+          requiredCustomers: toNonNegativeInt(payload.activityTarget.requiredCustomers),
+          customerReward: toNonNegativeFloat(payload.activityTarget.customerReward),
+          customerMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.customerMissPenaltyAmount),
+          requiredCommunications: toNonNegativeInt(payload.activityTarget.requiredCommunications),
+          communicationReward: toNonNegativeFloat(payload.activityTarget.communicationReward),
+          communicationMissPenaltyAmount: toNonNegativeFloat(payload.activityTarget.communicationMissPenaltyAmount),
+          startsAt,
+          isActive: payload.activityTarget.isActive !== false,
+        };
+
+        updatedActivityTarget = existingActivityTarget?.id
+          ? await tx.userActivityTarget.update({
+              where: { id: existingActivityTarget.id },
+              data: activityPayload,
+            })
+          : await tx.userActivityTarget.create({
+              data: {
+                userId: existingTarget.userId,
+                ...activityPayload,
+              },
+            });
       }
 
       return { updatedTarget, updatedActivityTarget };
