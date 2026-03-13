@@ -30,7 +30,7 @@ model User {
   customers              Customer[]      @relation("CustomerToUser")
   message                Message[]
   targets                UserTarget[]
-  activityTarget         UserActivityTarget?
+  activityTargets        UserActivityTarget[]
   salaryAdjustments      EmployeeSalaryAdjustment[]
   expenses               Expense[]
   stockMovements         StockMovement[] // تتبع من قام بحركة المخزون
@@ -41,10 +41,21 @@ enum ActivityTargetCycle {
   MONTHLY
 }
 
+enum ActivityWeekDay {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
 model UserActivityTarget {
   id                     String              @id @default(uuid())
-  userId                 String              @unique
+  userId                 String
   cycle                  ActivityTargetCycle @default(DAILY)
+  activeWeekDays         ActivityWeekDay[]   @default([SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY])
   requiredCustomers      Int                 @default(0)
   customerReward         Float               @default(0)
   customerMissPenaltyAmount Float            @default(0)
@@ -52,10 +63,13 @@ model UserActivityTarget {
   communicationReward    Float               @default(0)
   communicationMissPenaltyAmount Float       @default(0)
   startsAt               DateTime            @default(now())
+  endedAt                DateTime?
   isActive               Boolean             @default(true)
   createdAt              DateTime            @default(now())
   updatedAt              DateTime            @updatedAt
   user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive, cycle])
 }
 
 model Permission {

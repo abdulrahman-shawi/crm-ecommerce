@@ -347,9 +347,21 @@ type UserTargetInput = {
 };
 
 type ActivityTargetCycle = "DAILY" | "MONTHLY";
+type ActivityWeekDay = "SATURDAY" | "SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY";
+
+const ALL_ACTIVITY_WEEK_DAYS: ActivityWeekDay[] = [
+  "SATURDAY",
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+];
 
 type ActivityTargetInput = {
   cycle: ActivityTargetCycle;
+  activeWeekDays?: ActivityWeekDay[];
   requiredCustomers: number;
   customerReward: number;
   customerMissPenaltyAmount?: number;
@@ -516,6 +528,54 @@ const normalizeActivityCycle = (value: unknown): ActivityTargetCycle => {
   return normalized === "MONTHLY" ? "MONTHLY" : "DAILY";
 };
 
+const normalizeActivityWeekDays = (value: unknown): ActivityWeekDay[] => {
+  const source = Array.isArray(value) ? value : [];
+  const normalized = source
+    .map((item) => String(item || "").trim().toUpperCase())
+    .filter((item): item is ActivityWeekDay => (ALL_ACTIVITY_WEEK_DAYS as string[]).includes(item));
+
+  if (!normalized.length) {
+    return [...ALL_ACTIVITY_WEEK_DAYS];
+  }
+
+  return Array.from(new Set(normalized));
+};
+
+const weekDayByJsDay: Record<number, ActivityWeekDay> = {
+  0: "SUNDAY",
+  1: "MONDAY",
+  2: "TUESDAY",
+  3: "WEDNESDAY",
+  4: "THURSDAY",
+  5: "FRIDAY",
+  6: "SATURDAY",
+};
+
+const getActivityWeekDay = (date: Date): ActivityWeekDay => {
+  return weekDayByJsDay[date.getDay()] || "SUNDAY";
+};
+
+const isActivityDayEnabled = (date: Date, activeWeekDays: ActivityWeekDay[]) => {
+  return activeWeekDays.includes(getActivityWeekDay(date));
+};
+
+const countEnabledDaysInRange = (from: Date, to: Date, activeWeekDays: ActivityWeekDay[]) => {
+  const start = startOfDay(from);
+  const end = startOfDay(to);
+  if (end < start) return 0;
+
+  let count = 0;
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    if (isActivityDayEnabled(cursor, activeWeekDays)) {
+      count += 1;
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return count;
+};
+
 const countCustomersForUserInRange = async (userId: string, from: Date, to: Date) => {
   return prisma.customer.count({
     where: {
@@ -536,6 +596,7 @@ const countCommunicationsForUserInRange = async (userId: string, from: Date, to:
 
 const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInput) => {
   const cycle = normalizeActivityCycle(input.cycle);
+  const activeWeekDays = normalizeActivityWeekDays(input.activeWeekDays);
   const startsAtCandidate = input.startDate ? new Date(input.startDate) : new Date();
   const startsAt = Number.isNaN(startsAtCandidate.getTime()) ? new Date() : startsAtCandidate;
 
@@ -544,6 +605,7 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
     create: {
       userId,
       cycle,
+      activeWeekDays,
       requiredCustomers: toNonNegativeInt(input.requiredCustomers),
       customerReward: toNonNegativeFloat(input.customerReward),
       customerMissPenaltyAmount: toNonNegativeFloat(input.customerMissPenaltyAmount),
@@ -552,9 +614,10 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
       communicationMissPenaltyAmount: toNonNegativeFloat(input.communicationMissPenaltyAmount),
       startsAt,
       isActive: input.isActive !== false,
-    },
+    } as any,
     update: {
       cycle,
+      activeWeekDays,
       requiredCustomers: toNonNegativeInt(input.requiredCustomers),
       customerReward: toNonNegativeFloat(input.customerReward),
       customerMissPenaltyAmount: toNonNegativeFloat(input.customerMissPenaltyAmount),
@@ -563,7 +626,7 @@ const upsertUserActivityTarget = async (userId: string, input: ActivityTargetInp
       communicationMissPenaltyAmount: toNonNegativeFloat(input.communicationMissPenaltyAmount),
       startsAt,
       isActive: input.isActive !== false,
-    },
+    } as any,
   });
 };
 
@@ -574,6 +637,7 @@ const buildActivityProgressForTarget = async (
 ): Promise<ActivityTargetProgressRow> => {
   const now = new Date();
   const cycle = normalizeActivityCycle(activityTarget?.cycle);
+  const activeWeekDays = normalizeActivityWeekDays(activityTarget?.activeWeekDays);
   const startsAt = startOfDay(new Date(activityTarget?.startsAt || now));
 
   const requestedRange = buildActivityDateRange(filter);
@@ -620,7 +684,9 @@ const buildActivityProgressForTarget = async (
 
     const requiredCustomers = toNonNegativeInt(activityTarget.requiredCustomers);
     const requiredCommunications = toNonNegativeInt(activityTarget.requiredCommunications);
-    const activeDays = countInclusiveDays(periodStart, periodEnd);
+    const activeDays = cycle === "DAILY"
+      ? countEnabledDaysInRange(periodStart, periodEnd, activeWeekDays)
+      : countInclusiveDays(periodStart, periodEnd);
 
     const customersTarget = cycle === "MONTHLY"
       ? requiredCustomers
@@ -636,11 +702,13 @@ const buildActivityProgressForTarget = async (
     const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
     const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
     const communicationsReached = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
+    const hasCustomersTarget = customersRewardTarget > 0;
+    const hasCommunicationsTarget = communicationsRewardTarget > 0;
     const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
-    const customerPenaltyAmount = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
-    const communicationPenaltyAmount = !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
+    const customerPenaltyAmount = hasCustomersTarget && !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
+    const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
     const penaltyAmount = customerPenaltyAmount + communicationPenaltyAmount;
     const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
@@ -690,11 +758,13 @@ const buildActivityProgressForTarget = async (
     const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
     const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
     const communicationsReached = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
+    const hasCustomersTarget = customersRewardTarget > 0;
+    const hasCommunicationsTarget = communicationsRewardTarget > 0;
     const grossRewardEarned =
       (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
       (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
-    const customerPenaltyAmount = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
-    const communicationPenaltyAmount = !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
+    const customerPenaltyAmount = hasCustomersTarget && !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
+    const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
     const penaltyAmount = customerPenaltyAmount + communicationPenaltyAmount;
     const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
@@ -735,6 +805,10 @@ const buildActivityProgressForTarget = async (
   const dailyCommunicationsRequired = toNonNegativeInt(activityTarget.requiredCommunications);
 
   const daysBeforeToday = startsAt <= yesterdayEnd ? diffDays(startsAt, todayStart) : 0;
+  const enabledDaysBeforeToday = startsAt <= yesterdayEnd
+    ? countEnabledDaysInRange(startsAt, yesterdayEnd, activeWeekDays)
+    : 0;
+  const isTodayEnabled = isActivityDayEnabled(todayStart, activeWeekDays);
 
   const [customersBeforeToday, communicationsBeforeToday, customersToday, communicationsToday] = await Promise.all([
     startsAt <= yesterdayEnd
@@ -747,11 +821,11 @@ const buildActivityProgressForTarget = async (
     countCommunicationsForUserInRange(activityTarget.userId, todayStart, todayEnd),
   ]);
 
-  const carryOverCustomers = Math.max(0, (dailyCustomersRequired * daysBeforeToday) - customersBeforeToday);
-  const carryOverCommunications = Math.max(0, (dailyCommunicationsRequired * daysBeforeToday) - communicationsBeforeToday);
+  const carryOverCustomers = Math.max(0, (dailyCustomersRequired * enabledDaysBeforeToday) - customersBeforeToday);
+  const carryOverCommunications = Math.max(0, (dailyCommunicationsRequired * enabledDaysBeforeToday) - communicationsBeforeToday);
 
-  const customersTargetToday = dailyCustomersRequired + carryOverCustomers;
-  const communicationsTargetToday = dailyCommunicationsRequired + carryOverCommunications;
+  const customersTargetToday = isTodayEnabled ? dailyCustomersRequired + carryOverCustomers : 0;
+  const communicationsTargetToday = isTodayEnabled ? dailyCommunicationsRequired + carryOverCommunications : 0;
 
   const customersRemaining = Math.max(0, customersTargetToday - customersToday);
   const communicationsRemaining = Math.max(0, communicationsTargetToday - communicationsToday);
@@ -759,12 +833,14 @@ const buildActivityProgressForTarget = async (
   const communicationsRewardTarget = communicationsTargetToday * 2;
   const customersReached = customersRewardTarget > 0 && customersToday >= customersRewardTarget;
   const communicationsReached = communicationsRewardTarget > 0 && communicationsToday >= communicationsRewardTarget;
+  const hasCustomersTarget = customersRewardTarget > 0;
+  const hasCommunicationsTarget = communicationsRewardTarget > 0;
 
   const grossRewardEarned =
     (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
     (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
-  const customerPenaltyAmount = !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
-  const communicationPenaltyAmount = !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
+  const customerPenaltyAmount = hasCustomersTarget && !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
+  const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
   const penaltyAmount = customerPenaltyAmount + communicationPenaltyAmount;
   const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 

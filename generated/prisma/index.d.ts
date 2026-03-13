@@ -131,6 +131,19 @@ export namespace $Enums {
 export type ActivityTargetCycle = (typeof ActivityTargetCycle)[keyof typeof ActivityTargetCycle]
 
 
+export const ActivityWeekDay: {
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY',
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY'
+};
+
+export type ActivityWeekDay = (typeof ActivityWeekDay)[keyof typeof ActivityWeekDay]
+
+
 export const MovementType: {
   IN: 'IN',
   OUT: 'OUT',
@@ -190,6 +203,10 @@ export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 export type ActivityTargetCycle = $Enums.ActivityTargetCycle
 
 export const ActivityTargetCycle: typeof $Enums.ActivityTargetCycle
+
+export type ActivityWeekDay = $Enums.ActivityWeekDay
+
+export const ActivityWeekDay: typeof $Enums.ActivityWeekDay
 
 export type MovementType = $Enums.MovementType
 
@@ -2783,6 +2800,7 @@ export namespace Prisma {
     customers: number
     message: number
     targets: number
+    activityTargets: number
     salaryAdjustments: number
     expenses: number
     stockMovements: number
@@ -2794,6 +2812,7 @@ export namespace Prisma {
     customers?: boolean | UserCountOutputTypeCountCustomersArgs
     message?: boolean | UserCountOutputTypeCountMessageArgs
     targets?: boolean | UserCountOutputTypeCountTargetsArgs
+    activityTargets?: boolean | UserCountOutputTypeCountActivityTargetsArgs
     salaryAdjustments?: boolean | UserCountOutputTypeCountSalaryAdjustmentsArgs
     expenses?: boolean | UserCountOutputTypeCountExpensesArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
@@ -2843,6 +2862,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserTargetWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountActivityTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserActivityTargetWhereInput
   }
 
   /**
@@ -3499,7 +3525,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
-    activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
+    activityTargets?: boolean | User$activityTargetsArgs<ExtArgs>
     salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
@@ -3570,7 +3596,7 @@ export namespace Prisma {
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
     targets?: boolean | User$targetsArgs<ExtArgs>
-    activityTarget?: boolean | User$activityTargetArgs<ExtArgs>
+    activityTargets?: boolean | User$activityTargetsArgs<ExtArgs>
     salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
@@ -3595,7 +3621,7 @@ export namespace Prisma {
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       message: Prisma.$MessagePayload<ExtArgs>[]
       targets: Prisma.$UserTargetPayload<ExtArgs>[]
-      activityTarget: Prisma.$UserActivityTargetPayload<ExtArgs> | null
+      activityTargets: Prisma.$UserActivityTargetPayload<ExtArgs>[]
       salaryAdjustments: Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
@@ -4016,7 +4042,7 @@ export namespace Prisma {
     customers<T extends User$customersArgs<ExtArgs> = {}>(args?: Subset<T, User$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     message<T extends User$messageArgs<ExtArgs> = {}>(args?: Subset<T, User$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     targets<T extends User$targetsArgs<ExtArgs> = {}>(args?: Subset<T, User$targetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    activityTarget<T extends User$activityTargetArgs<ExtArgs> = {}>(args?: Subset<T, User$activityTargetArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    activityTargets<T extends User$activityTargetsArgs<ExtArgs> = {}>(args?: Subset<T, User$activityTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salaryAdjustments<T extends User$salaryAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$salaryAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4617,9 +4643,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.activityTarget
+   * User.activityTargets
    */
-  export type User$activityTargetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$activityTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the UserActivityTarget
      */
@@ -4633,6 +4659,11 @@ export namespace Prisma {
      */
     include?: UserActivityTargetInclude<ExtArgs> | null
     where?: UserActivityTargetWhereInput
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    cursor?: UserActivityTargetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
   }
 
   /**
@@ -4767,6 +4798,7 @@ export namespace Prisma {
     communicationReward: number | null
     communicationMissPenaltyAmount: number | null
     startsAt: Date | null
+    endedAt: Date | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4783,6 +4815,7 @@ export namespace Prisma {
     communicationReward: number | null
     communicationMissPenaltyAmount: number | null
     startsAt: Date | null
+    endedAt: Date | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4792,6 +4825,7 @@ export namespace Prisma {
     id: number
     userId: number
     cycle: number
+    activeWeekDays: number
     requiredCustomers: number
     customerReward: number
     customerMissPenaltyAmount: number
@@ -4799,6 +4833,7 @@ export namespace Prisma {
     communicationReward: number
     communicationMissPenaltyAmount: number
     startsAt: number
+    endedAt: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -4835,6 +4870,7 @@ export namespace Prisma {
     communicationReward?: true
     communicationMissPenaltyAmount?: true
     startsAt?: true
+    endedAt?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4851,6 +4887,7 @@ export namespace Prisma {
     communicationReward?: true
     communicationMissPenaltyAmount?: true
     startsAt?: true
+    endedAt?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4860,6 +4897,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     cycle?: true
+    activeWeekDays?: true
     requiredCustomers?: true
     customerReward?: true
     customerMissPenaltyAmount?: true
@@ -4867,6 +4905,7 @@ export namespace Prisma {
     communicationReward?: true
     communicationMissPenaltyAmount?: true
     startsAt?: true
+    endedAt?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4963,6 +5002,7 @@ export namespace Prisma {
     id: string
     userId: string
     cycle: $Enums.ActivityTargetCycle
+    activeWeekDays: $Enums.ActivityWeekDay[]
     requiredCustomers: number
     customerReward: number
     customerMissPenaltyAmount: number
@@ -4970,6 +5010,7 @@ export namespace Prisma {
     communicationReward: number
     communicationMissPenaltyAmount: number
     startsAt: Date
+    endedAt: Date | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -4998,6 +5039,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     cycle?: boolean
+    activeWeekDays?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
     customerMissPenaltyAmount?: boolean
@@ -5005,6 +5047,7 @@ export namespace Prisma {
     communicationReward?: boolean
     communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
+    endedAt?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5015,6 +5058,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     cycle?: boolean
+    activeWeekDays?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
     customerMissPenaltyAmount?: boolean
@@ -5022,6 +5066,7 @@ export namespace Prisma {
     communicationReward?: boolean
     communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
+    endedAt?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5032,6 +5077,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     cycle?: boolean
+    activeWeekDays?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
     customerMissPenaltyAmount?: boolean
@@ -5039,6 +5085,7 @@ export namespace Prisma {
     communicationReward?: boolean
     communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
+    endedAt?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5049,6 +5096,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     cycle?: boolean
+    activeWeekDays?: boolean
     requiredCustomers?: boolean
     customerReward?: boolean
     customerMissPenaltyAmount?: boolean
@@ -5056,12 +5104,13 @@ export namespace Prisma {
     communicationReward?: boolean
     communicationMissPenaltyAmount?: boolean
     startsAt?: boolean
+    endedAt?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "requiredCustomers" | "customerReward" | "customerMissPenaltyAmount" | "requiredCommunications" | "communicationReward" | "communicationMissPenaltyAmount" | "startsAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
+  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "activeWeekDays" | "requiredCustomers" | "customerReward" | "customerMissPenaltyAmount" | "requiredCommunications" | "communicationReward" | "communicationMissPenaltyAmount" | "startsAt" | "endedAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
   export type UserActivityTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5081,6 +5130,7 @@ export namespace Prisma {
       id: string
       userId: string
       cycle: $Enums.ActivityTargetCycle
+      activeWeekDays: $Enums.ActivityWeekDay[]
       requiredCustomers: number
       customerReward: number
       customerMissPenaltyAmount: number
@@ -5088,6 +5138,7 @@ export namespace Prisma {
       communicationReward: number
       communicationMissPenaltyAmount: number
       startsAt: Date
+      endedAt: Date | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -5518,6 +5569,7 @@ export namespace Prisma {
     readonly id: FieldRef<"UserActivityTarget", 'String'>
     readonly userId: FieldRef<"UserActivityTarget", 'String'>
     readonly cycle: FieldRef<"UserActivityTarget", 'ActivityTargetCycle'>
+    readonly activeWeekDays: FieldRef<"UserActivityTarget", 'ActivityWeekDay[]'>
     readonly requiredCustomers: FieldRef<"UserActivityTarget", 'Int'>
     readonly customerReward: FieldRef<"UserActivityTarget", 'Float'>
     readonly customerMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
@@ -5525,6 +5577,7 @@ export namespace Prisma {
     readonly communicationReward: FieldRef<"UserActivityTarget", 'Float'>
     readonly communicationMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
     readonly startsAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly endedAt: FieldRef<"UserActivityTarget", 'DateTime'>
     readonly isActive: FieldRef<"UserActivityTarget", 'Boolean'>
     readonly createdAt: FieldRef<"UserActivityTarget", 'DateTime'>
     readonly updatedAt: FieldRef<"UserActivityTarget", 'DateTime'>
@@ -28534,6 +28587,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     cycle: 'cycle',
+    activeWeekDays: 'activeWeekDays',
     requiredCustomers: 'requiredCustomers',
     customerReward: 'customerReward',
     customerMissPenaltyAmount: 'customerMissPenaltyAmount',
@@ -28541,6 +28595,7 @@ export namespace Prisma {
     communicationReward: 'communicationReward',
     communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
     startsAt: 'startsAt',
+    endedAt: 'endedAt',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -28965,6 +29020,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ActivityWeekDay[]'
+   */
+  export type ListEnumActivityWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityWeekDay[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ActivityWeekDay'
+   */
+  export type EnumActivityWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityWeekDay'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -29069,7 +29138,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
-    activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
+    activityTargets?: UserActivityTargetListRelationFilter
     salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
@@ -29097,7 +29166,7 @@ export namespace Prisma {
     customers?: CustomerOrderByRelationAggregateInput
     message?: MessageOrderByRelationAggregateInput
     targets?: UserTargetOrderByRelationAggregateInput
-    activityTarget?: UserActivityTargetOrderByWithRelationInput
+    activityTargets?: UserActivityTargetOrderByRelationAggregateInput
     salaryAdjustments?: EmployeeSalaryAdjustmentOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
@@ -29128,7 +29197,7 @@ export namespace Prisma {
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
     targets?: UserTargetListRelationFilter
-    activityTarget?: XOR<UserActivityTargetNullableScalarRelationFilter, UserActivityTargetWhereInput> | null
+    activityTargets?: UserActivityTargetListRelationFilter
     salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
@@ -29183,6 +29252,7 @@ export namespace Prisma {
     id?: StringFilter<"UserActivityTarget"> | string
     userId?: StringFilter<"UserActivityTarget"> | string
     cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
     requiredCustomers?: IntFilter<"UserActivityTarget"> | number
     customerReward?: FloatFilter<"UserActivityTarget"> | number
     customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
@@ -29190,6 +29260,7 @@ export namespace Prisma {
     communicationReward?: FloatFilter<"UserActivityTarget"> | number
     communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
     isActive?: BoolFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
     updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
@@ -29200,6 +29271,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     cycle?: SortOrder
+    activeWeekDays?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
     customerMissPenaltyAmount?: SortOrder
@@ -29207,6 +29279,7 @@ export namespace Prisma {
     communicationReward?: SortOrder
     communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -29215,11 +29288,12 @@ export namespace Prisma {
 
   export type UserActivityTargetWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    userId?: string
     AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
     OR?: UserActivityTargetWhereInput[]
     NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    userId?: StringFilter<"UserActivityTarget"> | string
     cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
     requiredCustomers?: IntFilter<"UserActivityTarget"> | number
     customerReward?: FloatFilter<"UserActivityTarget"> | number
     customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
@@ -29227,16 +29301,18 @@ export namespace Prisma {
     communicationReward?: FloatFilter<"UserActivityTarget"> | number
     communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
     isActive?: BoolFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
     updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "userId">
+  }, "id">
 
   export type UserActivityTargetOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
     cycle?: SortOrder
+    activeWeekDays?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
     customerMissPenaltyAmount?: SortOrder
@@ -29244,6 +29320,7 @@ export namespace Prisma {
     communicationReward?: SortOrder
     communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -29261,6 +29338,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"UserActivityTarget"> | string
     userId?: StringWithAggregatesFilter<"UserActivityTarget"> | string
     cycle?: EnumActivityTargetCycleWithAggregatesFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
     requiredCustomers?: IntWithAggregatesFilter<"UserActivityTarget"> | number
     customerReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
     customerMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
@@ -29268,6 +29346,7 @@ export namespace Prisma {
     communicationReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
     communicationMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
     startsAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableWithAggregatesFilter<"UserActivityTarget"> | Date | string | null
     isActive?: BoolWithAggregatesFilter<"UserActivityTarget"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
@@ -30909,7 +30988,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -30935,7 +31014,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -30961,7 +31040,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -30987,7 +31066,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -31045,6 +31124,7 @@ export namespace Prisma {
   export type UserActivityTargetCreateInput = {
     id?: string
     cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: number
     customerReward?: number
     customerMissPenaltyAmount?: number
@@ -31052,16 +31132,18 @@ export namespace Prisma {
     communicationReward?: number
     communicationMissPenaltyAmount?: number
     startsAt?: Date | string
+    endedAt?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutActivityTargetInput
+    user: UserCreateNestedOneWithoutActivityTargetsInput
   }
 
   export type UserActivityTargetUncheckedCreateInput = {
     id?: string
     userId: string
     cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: number
     customerReward?: number
     customerMissPenaltyAmount?: number
@@ -31069,6 +31151,7 @@ export namespace Prisma {
     communicationReward?: number
     communicationMissPenaltyAmount?: number
     startsAt?: Date | string
+    endedAt?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31077,6 +31160,7 @@ export namespace Prisma {
   export type UserActivityTargetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
     customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
@@ -31084,16 +31168,18 @@ export namespace Prisma {
     communicationReward?: FloatFieldUpdateOperationsInput | number
     communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutActivityTargetNestedInput
+    user?: UserUpdateOneRequiredWithoutActivityTargetsNestedInput
   }
 
   export type UserActivityTargetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
     customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
@@ -31101,6 +31187,7 @@ export namespace Prisma {
     communicationReward?: FloatFieldUpdateOperationsInput | number
     communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31110,6 +31197,7 @@ export namespace Prisma {
     id?: string
     userId: string
     cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: number
     customerReward?: number
     customerMissPenaltyAmount?: number
@@ -31117,6 +31205,7 @@ export namespace Prisma {
     communicationReward?: number
     communicationMissPenaltyAmount?: number
     startsAt?: Date | string
+    endedAt?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31125,6 +31214,7 @@ export namespace Prisma {
   export type UserActivityTargetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
     customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
@@ -31132,6 +31222,7 @@ export namespace Prisma {
     communicationReward?: FloatFieldUpdateOperationsInput | number
     communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31141,6 +31232,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: IntFieldUpdateOperationsInput | number
     customerReward?: FloatFieldUpdateOperationsInput | number
     customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
@@ -31148,6 +31240,7 @@ export namespace Prisma {
     communicationReward?: FloatFieldUpdateOperationsInput | number
     communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33001,9 +33094,10 @@ export namespace Prisma {
     none?: UserTargetWhereInput
   }
 
-  export type UserActivityTargetNullableScalarRelationFilter = {
-    is?: UserActivityTargetWhereInput | null
-    isNot?: UserActivityTargetWhereInput | null
+  export type UserActivityTargetListRelationFilter = {
+    every?: UserActivityTargetWhereInput
+    some?: UserActivityTargetWhereInput
+    none?: UserActivityTargetWhereInput
   }
 
   export type EmployeeSalaryAdjustmentListRelationFilter = {
@@ -33046,6 +33140,10 @@ export namespace Prisma {
   }
 
   export type UserTargetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserActivityTargetOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33221,6 +33319,25 @@ export namespace Prisma {
     not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
   }
 
+  export type EnumActivityWeekDayNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel> | null
+    has?: $Enums.ActivityWeekDay | EnumActivityWeekDayFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -33235,6 +33352,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     cycle?: SortOrder
+    activeWeekDays?: SortOrder
     requiredCustomers?: SortOrder
     customerReward?: SortOrder
     customerMissPenaltyAmount?: SortOrder
@@ -33242,6 +33360,7 @@ export namespace Prisma {
     communicationReward?: SortOrder
     communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
+    endedAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -33267,6 +33386,7 @@ export namespace Prisma {
     communicationReward?: SortOrder
     communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
+    endedAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -33283,6 +33403,7 @@ export namespace Prisma {
     communicationReward?: SortOrder
     communicationMissPenaltyAmount?: SortOrder
     startsAt?: SortOrder
+    endedAt?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -33305,6 +33426,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
     _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -33749,17 +33884,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type UserTargetCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -33797,20 +33921,6 @@ export namespace Prisma {
   export type UserTargetSumOrderByAggregateInput = {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type UserTargetScalarRelationFilter = {
@@ -34583,10 +34693,11 @@ export namespace Prisma {
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
   }
 
-  export type UserActivityTargetCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
-    connect?: UserActivityTargetWhereUniqueInput
+  export type UserActivityTargetCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput> | UserActivityTargetCreateWithoutUserInput[] | UserActivityTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput | UserActivityTargetCreateOrConnectWithoutUserInput[]
+    createMany?: UserActivityTargetCreateManyUserInputEnvelope
+    connect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
   }
 
   export type EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput = {
@@ -34644,10 +34755,11 @@ export namespace Prisma {
     connect?: UserTargetWhereUniqueInput | UserTargetWhereUniqueInput[]
   }
 
-  export type UserActivityTargetUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
-    connect?: UserActivityTargetWhereUniqueInput
+  export type UserActivityTargetUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput> | UserActivityTargetCreateWithoutUserInput[] | UserActivityTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput | UserActivityTargetCreateOrConnectWithoutUserInput[]
+    createMany?: UserActivityTargetCreateManyUserInputEnvelope
+    connect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
   }
 
   export type EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput = {
@@ -34792,14 +34904,18 @@ export namespace Prisma {
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
   }
 
-  export type UserActivityTargetUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
-    upsert?: UserActivityTargetUpsertWithoutUserInput
-    disconnect?: UserActivityTargetWhereInput | boolean
-    delete?: UserActivityTargetWhereInput | boolean
-    connect?: UserActivityTargetWhereUniqueInput
-    update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  export type UserActivityTargetUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput> | UserActivityTargetCreateWithoutUserInput[] | UserActivityTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput | UserActivityTargetCreateOrConnectWithoutUserInput[]
+    upsert?: UserActivityTargetUpsertWithWhereUniqueWithoutUserInput | UserActivityTargetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserActivityTargetCreateManyUserInputEnvelope
+    set?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    disconnect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    delete?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    connect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    update?: UserActivityTargetUpdateWithWhereUniqueWithoutUserInput | UserActivityTargetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserActivityTargetUpdateManyWithWhereWithoutUserInput | UserActivityTargetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserActivityTargetScalarWhereInput | UserActivityTargetScalarWhereInput[]
   }
 
   export type EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput = {
@@ -34913,14 +35029,18 @@ export namespace Prisma {
     deleteMany?: UserTargetScalarWhereInput | UserTargetScalarWhereInput[]
   }
 
-  export type UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput
-    upsert?: UserActivityTargetUpsertWithoutUserInput
-    disconnect?: UserActivityTargetWhereInput | boolean
-    delete?: UserActivityTargetWhereInput | boolean
-    connect?: UserActivityTargetWhereUniqueInput
-    update?: XOR<XOR<UserActivityTargetUpdateToOneWithWhereWithoutUserInput, UserActivityTargetUpdateWithoutUserInput>, UserActivityTargetUncheckedUpdateWithoutUserInput>
+  export type UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput> | UserActivityTargetCreateWithoutUserInput[] | UserActivityTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivityTargetCreateOrConnectWithoutUserInput | UserActivityTargetCreateOrConnectWithoutUserInput[]
+    upsert?: UserActivityTargetUpsertWithWhereUniqueWithoutUserInput | UserActivityTargetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserActivityTargetCreateManyUserInputEnvelope
+    set?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    disconnect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    delete?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    connect?: UserActivityTargetWhereUniqueInput | UserActivityTargetWhereUniqueInput[]
+    update?: UserActivityTargetUpdateWithWhereUniqueWithoutUserInput | UserActivityTargetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserActivityTargetUpdateManyWithWhereWithoutUserInput | UserActivityTargetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserActivityTargetScalarWhereInput | UserActivityTargetScalarWhereInput[]
   }
 
   export type EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput = {
@@ -34965,9 +35085,13 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutActivityTargetInput = {
-    create?: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
-    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetInput
+  export type UserActivityTargetCreateactiveWeekDaysInput = {
+    set: $Enums.ActivityWeekDay[]
+  }
+
+  export type UserCreateNestedOneWithoutActivityTargetsInput = {
+    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
     connect?: UserWhereUniqueInput
   }
 
@@ -34975,16 +35099,25 @@ export namespace Prisma {
     set?: $Enums.ActivityTargetCycle
   }
 
+  export type UserActivityTargetUpdateactiveWeekDaysInput = {
+    set?: $Enums.ActivityWeekDay[]
+    push?: $Enums.ActivityWeekDay | $Enums.ActivityWeekDay[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
 
-  export type UserUpdateOneRequiredWithoutActivityTargetNestedInput = {
-    create?: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
-    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetInput
-    upsert?: UserUpsertWithoutActivityTargetInput
+  export type UserUpdateOneRequiredWithoutActivityTargetsNestedInput = {
+    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
+    upsert?: UserUpsertWithoutActivityTargetsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityTargetInput, UserUpdateWithoutActivityTargetInput>, UserUncheckedUpdateWithoutActivityTargetInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityTargetsInput, UserUpdateWithoutActivityTargetsInput>, UserUncheckedUpdateWithoutActivityTargetsInput>
   }
 
   export type UserCreateNestedManyWithoutPermissionInput = {
@@ -35627,10 +35760,6 @@ export namespace Prisma {
   export type UserTargetUpdatesalesRewardValueInput = {
     set?: number[]
     push?: number | number[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutTargetsNestedInput = {
@@ -36387,6 +36516,17 @@ export namespace Prisma {
     not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -36400,6 +36540,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
     _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -36452,31 +36606,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMovementTypeFilter<$PrismaModel>
     _max?: NestedEnumMovementTypeFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumWarrantyTypeFilter<$PrismaModel = never> = {
@@ -36582,7 +36711,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -36607,7 +36736,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -36637,7 +36766,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -36662,7 +36791,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -36948,6 +37077,7 @@ export namespace Prisma {
   export type UserActivityTargetCreateWithoutUserInput = {
     id?: string
     cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: number
     customerReward?: number
     customerMissPenaltyAmount?: number
@@ -36955,6 +37085,7 @@ export namespace Prisma {
     communicationReward?: number
     communicationMissPenaltyAmount?: number
     startsAt?: Date | string
+    endedAt?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36963,6 +37094,7 @@ export namespace Prisma {
   export type UserActivityTargetUncheckedCreateWithoutUserInput = {
     id?: string
     cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
     requiredCustomers?: number
     customerReward?: number
     customerMissPenaltyAmount?: number
@@ -36970,6 +37102,7 @@ export namespace Prisma {
     communicationReward?: number
     communicationMissPenaltyAmount?: number
     startsAt?: Date | string
+    endedAt?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36978,6 +37111,11 @@ export namespace Prisma {
   export type UserActivityTargetCreateOrConnectWithoutUserInput = {
     where: UserActivityTargetWhereUniqueInput
     create: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserActivityTargetCreateManyUserInputEnvelope = {
+    data: UserActivityTargetCreateManyUserInput | UserActivityTargetCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type EmployeeSalaryAdjustmentCreateWithoutUserInput = {
@@ -37103,7 +37241,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -37128,7 +37266,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -37409,45 +37547,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserTarget"> | Date | string
   }
 
-  export type UserActivityTargetUpsertWithoutUserInput = {
+  export type UserActivityTargetUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserActivityTargetWhereUniqueInput
     update: XOR<UserActivityTargetUpdateWithoutUserInput, UserActivityTargetUncheckedUpdateWithoutUserInput>
     create: XOR<UserActivityTargetCreateWithoutUserInput, UserActivityTargetUncheckedCreateWithoutUserInput>
-    where?: UserActivityTargetWhereInput
   }
 
-  export type UserActivityTargetUpdateToOneWithWhereWithoutUserInput = {
-    where?: UserActivityTargetWhereInput
+  export type UserActivityTargetUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserActivityTargetWhereUniqueInput
     data: XOR<UserActivityTargetUpdateWithoutUserInput, UserActivityTargetUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserActivityTargetUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type UserActivityTargetUpdateManyWithWhereWithoutUserInput = {
+    where: UserActivityTargetScalarWhereInput
+    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type UserActivityTargetUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type UserActivityTargetScalarWhereInput = {
+    AND?: UserActivityTargetScalarWhereInput | UserActivityTargetScalarWhereInput[]
+    OR?: UserActivityTargetScalarWhereInput[]
+    NOT?: UserActivityTargetScalarWhereInput | UserActivityTargetScalarWhereInput[]
+    id?: StringFilter<"UserActivityTarget"> | string
+    userId?: StringFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
+    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
+    customerReward?: FloatFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
+    isActive?: BoolFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
   }
 
   export type EmployeeSalaryAdjustmentUpsertWithWhereUniqueWithoutUserInput = {
@@ -37542,7 +37676,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StockMovement"> | Date | string
   }
 
-  export type UserCreateWithoutActivityTargetInput = {
+  export type UserCreateWithoutActivityTargetsInput = {
     id?: string
     username: string
     email: string
@@ -37567,7 +37701,7 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutActivityTargetInput = {
+  export type UserUncheckedCreateWithoutActivityTargetsInput = {
     id?: string
     username: string
     email: string
@@ -37592,23 +37726,23 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutActivityTargetInput = {
+  export type UserCreateOrConnectWithoutActivityTargetsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
   }
 
-  export type UserUpsertWithoutActivityTargetInput = {
-    update: XOR<UserUpdateWithoutActivityTargetInput, UserUncheckedUpdateWithoutActivityTargetInput>
-    create: XOR<UserCreateWithoutActivityTargetInput, UserUncheckedCreateWithoutActivityTargetInput>
+  export type UserUpsertWithoutActivityTargetsInput = {
+    update: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
+    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutActivityTargetInput = {
+  export type UserUpdateToOneWithWhereWithoutActivityTargetsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutActivityTargetInput, UserUncheckedUpdateWithoutActivityTargetInput>
+    data: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
   }
 
-  export type UserUpdateWithoutActivityTargetInput = {
+  export type UserUpdateWithoutActivityTargetsInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -37633,7 +37767,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutActivityTargetInput = {
+  export type UserUncheckedUpdateWithoutActivityTargetsInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -37677,7 +37811,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -37702,7 +37836,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -38592,7 +38726,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
   }
@@ -38617,7 +38751,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   }
@@ -38728,7 +38862,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
   }
@@ -38753,7 +38887,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   }
@@ -38777,7 +38911,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -38802,7 +38936,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -38867,7 +39001,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -38892,7 +39026,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -39212,7 +39346,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -39237,7 +39371,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -39662,7 +39796,7 @@ export namespace Prisma {
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -39687,7 +39821,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -39779,7 +39913,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -39804,7 +39938,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -39874,7 +40008,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
@@ -39899,7 +40033,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
@@ -40062,7 +40196,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -40087,7 +40221,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -40187,7 +40321,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -40212,7 +40346,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -40253,7 +40387,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -40278,7 +40412,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -40622,7 +40756,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
   }
@@ -40647,7 +40781,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    activityTarget?: UserActivityTargetUncheckedCreateNestedOneWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -40688,7 +40822,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
   }
@@ -40713,7 +40847,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -40786,6 +40920,23 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type UserActivityTargetCreateManyUserInput = {
+    id?: string
+    cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: number
+    customerReward?: number
+    customerMissPenaltyAmount?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    communicationMissPenaltyAmount?: number
+    startsAt?: Date | string
+    endedAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type EmployeeSalaryAdjustmentCreateManyUserInput = {
     id?: string
     monthKey: string
@@ -40837,7 +40988,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -40862,7 +41013,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -41100,6 +41251,57 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserActivityTargetUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type EmployeeSalaryAdjustmentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     monthKey?: StringFieldUpdateOperationsInput | string
@@ -41230,7 +41432,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -41255,7 +41457,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
@@ -41990,7 +42192,7 @@ export namespace Prisma {
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
@@ -42015,7 +42217,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    activityTarget?: UserActivityTargetUncheckedUpdateOneWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput

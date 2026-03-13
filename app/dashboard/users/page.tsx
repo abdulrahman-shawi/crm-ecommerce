@@ -40,6 +40,20 @@ const parseNumberList = (value: string) =>
 const formatNumberList = (values?: number[] | null) =>
   Array.isArray(values) && values.length > 0 ? values.join(', ') : '';
 
+const ACTIVITY_WEEKDAY_OPTIONS = [
+  { value: "SATURDAY", label: "السبت" },
+  { value: "SUNDAY", label: "الأحد" },
+  { value: "MONDAY", label: "الإثنين" },
+  { value: "TUESDAY", label: "الثلاثاء" },
+  { value: "WEDNESDAY", label: "الأربعاء" },
+  { value: "THURSDAY", label: "الخميس" },
+  { value: "FRIDAY", label: "الجمعة" },
+] as const;
+
+const DEFAULT_ACTIVITY_WEEK_DAYS = ACTIVITY_WEEKDAY_OPTIONS.map((item) => item.value);
+
+type ActivityWeekDay = (typeof ACTIVITY_WEEKDAY_OPTIONS)[number]["value"];
+
 const UserManagement: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -51,7 +65,8 @@ const UserManagement: React.FunctionComponent = () => {
   const [wageValues, setWageValues] = React.useState<Record<string, string>>({});
   const [wageSaving, setWageSaving] = React.useState<Record<string, boolean>>({});
   const [products, setProducts] = React.useState<any[]>([]);
-  const [isTargetOpen, setIsTargetOpen] = React.useState(false);
+  const [isSalesTargetOpen, setIsSalesTargetOpen] = React.useState(false);
+  const [isActivityTargetOpen, setIsActivityTargetOpen] = React.useState(false);
   const [targetMode, setTargetMode] = React.useState<"assign" | "edit">("assign");
   const [targetUser, setTargetUser] = React.useState<any>(null);
   const [editTargetId, setEditTargetId] = React.useState<string | null>(null);
@@ -74,6 +89,7 @@ const UserManagement: React.FunctionComponent = () => {
   const [communicationRewardTarget, setCommunicationRewardTarget] = React.useState<string>("0");
   const [communicationMissPenaltyAmountTarget, setCommunicationMissPenaltyAmountTarget] = React.useState<string>("0");
   const [activityTargetStartDate, setActivityTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [activityWeekDays, setActivityWeekDays] = React.useState<ActivityWeekDay[]>(DEFAULT_ACTIVITY_WEEK_DAYS);
   const [activityProgressByUser, setActivityProgressByUser] = React.useState<Record<string, any>>({});
   const {user} = useAuth()
   const getAlluser = async () => {
@@ -276,7 +292,7 @@ const UserManagement: React.FunctionComponent = () => {
     setFormData(null);
   };
 
-  const openTargetModal = (mode: "assign" | "edit", data: any) => {
+  const openSalesTargetModal = (mode: "assign" | "edit", data: any) => {
     setTargetMode(mode);
     setTargetUser(data);
     const currentTarget = mode === "edit" ? data?.targets?.[0] : null;
@@ -298,6 +314,11 @@ const UserManagement: React.FunctionComponent = () => {
       setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
 
+    setIsSalesTargetOpen(true);
+  };
+
+  const openActivityTargetModal = (data: any) => {
+    setTargetUser(data);
     const activityTarget = data?.activityTarget;
     setActivityCycle(activityTarget?.cycle === "MONTHLY" ? "MONTHLY" : "DAILY");
     setRequiredCustomersTarget(String(Number(activityTarget?.requiredCustomers || 0)));
@@ -311,8 +332,21 @@ const UserManagement: React.FunctionComponent = () => {
         ? new Date(activityTarget.startsAt).toISOString().slice(0, 10)
         : new Date().toISOString().slice(0, 10)
     );
+    const nextDays = Array.isArray(activityTarget?.activeWeekDays)
+      ? activityTarget.activeWeekDays.filter((day: string) => DEFAULT_ACTIVITY_WEEK_DAYS.includes(day as ActivityWeekDay))
+      : [];
+    setActivityWeekDays(nextDays.length > 0 ? (nextDays as ActivityWeekDay[]) : DEFAULT_ACTIVITY_WEEK_DAYS);
 
-    setIsTargetOpen(true);
+      setIsActivityTargetOpen(true);
+  };
+
+  const toggleActivityWeekDay = (weekDay: ActivityWeekDay, checked: boolean) => {
+    setActivityWeekDays((prev) => {
+      if (checked) {
+        return prev.includes(weekDay) ? prev : [...prev, weekDay];
+      }
+      return prev.filter((item) => item !== weekDay);
+    });
   };
 
   const updateTargetItem = (index: number, patch: Partial<typeof targetItems[number]>) => {
@@ -330,7 +364,7 @@ const UserManagement: React.FunctionComponent = () => {
     setTargetItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveTarget = async () => {
+  const handleSaveSalesTarget = async () => {
     if (!targetUser?.id) return;
 
     const salesTargetValues = parseNumberList(salesTargetValue);
@@ -339,16 +373,8 @@ const UserManagement: React.FunctionComponent = () => {
     const selectedProducts = targetItems.filter((item) => Boolean(item.productId));
     const hasSalesOrProducts = salesTargetValues.length > 0 || selectedProducts.length > 0;
 
-    const requiredCustomers = Math.max(0, Math.trunc(Number(requiredCustomersTarget) || 0));
-    const requiredCommunications = Math.max(0, Math.trunc(Number(requiredCommunicationsTarget) || 0));
-    const customerReward = Math.max(0, Number(customerRewardTarget) || 0);
-    const customerMissPenaltyAmount = Math.max(0, Number(customerMissPenaltyAmountTarget) || 0);
-    const communicationReward = Math.max(0, Number(communicationRewardTarget) || 0);
-    const communicationMissPenaltyAmount = Math.max(0, Number(communicationMissPenaltyAmountTarget) || 0);
-    const hasActivityTarget = requiredCustomers > 0 || requiredCommunications > 0;
-
-    if (!hasSalesOrProducts && !hasActivityTarget) {
-      toast.error("يرجى إدخال تاركت مبيعات/منتجات أو تاركت نشاط العملاء/التواصل");
+    if (!hasSalesOrProducts) {
+      toast.error("يرجى إدخال تاركت مبيعات أو إضافة منتجات مستهدفة");
       return;
     }
 
@@ -365,58 +391,87 @@ const UserManagement: React.FunctionComponent = () => {
       }
     }
 
-    const loadingToast = toast.loading("جاري حفظ التاركت...");
+    const loadingToast = toast.loading("جاري حفظ تاركت المبيعات...");
     try {
-      if (hasSalesOrProducts) {
-        const payload = {
-          userId: targetUser.id,
-          salesTargetValue: salesTargetValues,
-          salesRewardValue: salesRewardValues,
-          products: selectedProducts.map((item) => ({
-            productId: Number(item.productId),
-            requiredQty: item.requiredQty,
-            rewardValue: item.rewardValue,
-          }))
-        };
+      const payload = {
+        userId: targetUser.id,
+        salesTargetValue: salesTargetValues,
+        salesRewardValue: salesRewardValues,
+        products: selectedProducts.map((item) => ({
+          productId: Number(item.productId),
+          requiredQty: item.requiredQty,
+          rewardValue: item.rewardValue,
+        }))
+      };
 
-        const res = targetMode === "assign" || !editTargetId
-          ? await createUserTarget(payload)
-          : await updateUserTarget(editTargetId, {
-              salesTargetValue: payload.salesTargetValue,
-              salesRewardValue: payload.salesRewardValue,
-              products: payload.products,
-            });
+      const res = targetMode === "assign" || !editTargetId
+        ? await createUserTarget(payload)
+        : await updateUserTarget(editTargetId, {
+            salesTargetValue: payload.salesTargetValue,
+            salesRewardValue: payload.salesRewardValue,
+            products: payload.products,
+          });
 
-        if (!res.success) {
-          toast.error(res.error || "فشل حفظ تاركت المبيعات");
-          return;
-        }
+      if (!res.success) {
+        toast.error(res.error || "فشل حفظ تاركت المبيعات");
+        return;
       }
 
-      if (hasActivityTarget) {
-        const activityRes = await setUserActivityTarget(targetUser.id, {
-          cycle: activityCycle,
-          requiredCustomers,
-          customerReward,
-          customerMissPenaltyAmount,
-          requiredCommunications,
-          communicationReward,
-          communicationMissPenaltyAmount,
-          startDate: activityTargetStartDate,
-          isActive: true,
-        });
-
-        if (!activityRes.success) {
-          toast.error(activityRes.error || "فشل حفظ تاركت النشاط");
-          return;
-        }
-      }
-
-      toast.success("تم حفظ التاركت بنجاح");
-      setIsTargetOpen(false);
+      toast.success("تم حفظ تاركت المبيعات بنجاح");
+      setIsSalesTargetOpen(false);
       getAlluser();
     } catch (error) {
-      toast.error("فشل حفظ التاركت");
+      toast.error("فشل حفظ تاركت المبيعات");
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  };
+
+  const handleSaveActivityTarget = async () => {
+    if (!targetUser?.id) return;
+
+    const requiredCustomers = Math.max(0, Math.trunc(Number(requiredCustomersTarget) || 0));
+    const requiredCommunications = Math.max(0, Math.trunc(Number(requiredCommunicationsTarget) || 0));
+    const customerReward = Math.max(0, Number(customerRewardTarget) || 0);
+    const customerMissPenaltyAmount = Math.max(0, Number(customerMissPenaltyAmountTarget) || 0);
+    const communicationReward = Math.max(0, Number(communicationRewardTarget) || 0);
+    const communicationMissPenaltyAmount = Math.max(0, Number(communicationMissPenaltyAmountTarget) || 0);
+
+    if (requiredCustomers <= 0 && requiredCommunications <= 0) {
+      toast.error("يرجى إدخال تاركت النشاط (العملاء أو التواصل)");
+      return;
+    }
+
+    if (activityCycle === "DAILY" && activityWeekDays.length === 0) {
+      toast.error("يرجى اختيار يوم واحد على الأقل لتاركت النشاط اليومي");
+      return;
+    }
+
+    const loadingToast = toast.loading("جاري حفظ تاركت النشاط...");
+    try {
+      const activityRes = await setUserActivityTarget(targetUser.id, {
+        cycle: activityCycle,
+        activeWeekDays: activityCycle === "DAILY" ? activityWeekDays : DEFAULT_ACTIVITY_WEEK_DAYS,
+        requiredCustomers,
+        customerReward,
+        customerMissPenaltyAmount,
+        requiredCommunications,
+        communicationReward,
+        communicationMissPenaltyAmount,
+        startDate: activityTargetStartDate,
+        isActive: true,
+      });
+
+      if (!activityRes.success) {
+        toast.error(activityRes.error || "فشل حفظ تاركت النشاط");
+        return;
+      }
+
+      toast.success("تم حفظ تاركت النشاط بنجاح");
+      setIsActivityTargetOpen(false);
+      getAlluser();
+    } catch (error) {
+      toast.error("فشل حفظ تاركت النشاط");
     } finally {
       toast.dismiss(loadingToast);
     }
@@ -526,7 +581,7 @@ const UserManagement: React.FunctionComponent = () => {
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
     (user && canManageAnyTargets) && {
-      label: "إدارة التاركت",
+      label: "تاركت المبيعات",
       icon: <Plus size={14} />,
       onClick: (data: any) => {
         if (!canManageTargetForRow(data)) {
@@ -535,8 +590,19 @@ const UserManagement: React.FunctionComponent = () => {
         }
 
         const hasExistingTarget = Array.isArray(data?.targets) && data.targets.length > 0;
-        const hasActivityTarget = Boolean(data?.activityTarget);
-        openTargetModal(hasExistingTarget || hasActivityTarget ? "edit" : "assign", data);
+        openSalesTargetModal(hasExistingTarget ? "edit" : "assign", data);
+      }
+    },
+    (user && canManageAnyTargets) && {
+      label: "تاركت النشاط",
+      icon: <Plus size={14} />,
+      onClick: (data: any) => {
+        if (!canManageTargetForRow(data)) {
+          toast.error("يمكنك إدارة التاركت للموظفين المرتبطين بك فقط");
+          return;
+        }
+
+        openActivityTargetModal(data);
       }
     },
     (user && hasPermission(user, "editEmployees")) && {
@@ -847,10 +913,10 @@ const UserManagement: React.FunctionComponent = () => {
       </AppModal>
 
       <AppModal
-        title={targetMode === "assign" ? "تعيين منتج للتاركت" : "تعديل التاركت"}
-        isOpen={isTargetOpen}
+        title={targetMode === "assign" ? "تعيين تاركت المبيعات والمنتجات" : "تعديل تاركت المبيعات والمنتجات"}
+        isOpen={isSalesTargetOpen}
         size='xl'
-        onClose={() => setIsTargetOpen(false)}
+        onClose={() => setIsSalesTargetOpen(false)}
       >
         <div className="p-4">
           {targetMode === "edit" && (!targetUser?.targets || targetUser.targets.length === 0) ? (
@@ -877,104 +943,6 @@ const UserManagement: React.FunctionComponent = () => {
                     value={salesRewardValue}
                     onChange={(e) => setSalesRewardValue(e.target.value)}
                   />
-                </div>
-              </div>
-
-              <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
-                <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">تاركت النشاط (العملاء والتواصل)</div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">نوع التاركت</label>
-                    <select
-                      className={selectClasses}
-                      value={activityCycle}
-                      onChange={(e) => setActivityCycle(e.target.value as "DAILY" | "MONTHLY")}
-                    >
-                      <option value="DAILY">يومي</option>
-                      <option value="MONTHLY">شهري</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">تاريخ البدء</label>
-                    <input
-                      type="date"
-                      className={selectClasses}
-                      value={activityTargetStartDate}
-                      onChange={(e) => setActivityTargetStartDate(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">عدد العملاء المطلوب</label>
-                    <input
-                      type="number"
-                      min={0}
-                      className={selectClasses}
-                      value={requiredCustomersTarget}
-                      onChange={(e) => setRequiredCustomersTarget(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق العملاء</label>
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      className={selectClasses}
-                      value={customerRewardTarget}
-                      onChange={(e) => setCustomerRewardTarget(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق العملاء</label>
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      className={selectClasses}
-                      value={customerMissPenaltyAmountTarget}
-                      onChange={(e) => setCustomerMissPenaltyAmountTarget(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">عدد التواصل المطلوب</label>
-                    <input
-                      type="number"
-                      min={0}
-                      className={selectClasses}
-                      value={requiredCommunicationsTarget}
-                      onChange={(e) => setRequiredCommunicationsTarget(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق التواصل</label>
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      className={selectClasses}
-                      value={communicationRewardTarget}
-                      onChange={(e) => setCommunicationRewardTarget(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق التواصل</label>
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      className={selectClasses}
-                      value={communicationMissPenaltyAmountTarget}
-                      onChange={(e) => setCommunicationMissPenaltyAmountTarget(e.target.value)}
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -1038,12 +1006,144 @@ const UserManagement: React.FunctionComponent = () => {
               ))}
 
               <div className="flex items-center gap-2 justify-end">
-                <Button onClick={handleSaveTarget} className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button onClick={handleSaveSalesTarget} className="bg-blue-600 hover:bg-blue-700 text-white">
                   حفظ
                 </Button>
               </div>
             </div>
           )}
+        </div>
+      </AppModal>
+
+      <AppModal
+        title="تاركت النشاط (العملاء والتواصل)"
+        isOpen={isActivityTargetOpen}
+        size='xl'
+        onClose={() => setIsActivityTargetOpen(false)}
+      >
+        <div className="p-4">
+          <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+            <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">إعدادات تاركت النشاط</div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">نوع التاركت</label>
+                <select
+                  className={selectClasses}
+                  value={activityCycle}
+                  onChange={(e) => setActivityCycle(e.target.value as "DAILY" | "MONTHLY")}
+                >
+                  <option value="DAILY">يومي</option>
+                  <option value="MONTHLY">شهري</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">تاريخ البدء</label>
+                <input
+                  type="date"
+                  className={selectClasses}
+                  value={activityTargetStartDate}
+                  onChange={(e) => setActivityTargetStartDate(e.target.value)}
+                />
+              </div>
+
+              {activityCycle === "DAILY" && (
+                <div className="flex flex-col gap-2 sm:col-span-2">
+                  <label className="text-sm font-semibold dark:text-slate-300">أيام الأسبوع المحتسبة</label>
+                  <div className="grid grid-cols-2 gap-2 rounded-md border border-slate-200 p-3 dark:border-slate-700 sm:grid-cols-4">
+                    {ACTIVITY_WEEKDAY_OPTIONS.map((day) => (
+                      <label key={day.value} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                        <input
+                          type="checkbox"
+                          checked={activityWeekDays.includes(day.value)}
+                          onChange={(e) => toggleActivityWeekDay(day.value, e.target.checked)}
+                          className="h-4 w-4"
+                        />
+                        <span>{day.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">عدد العملاء المطلوب</label>
+                <input
+                  type="number"
+                  min={0}
+                  className={selectClasses}
+                  value={requiredCustomersTarget}
+                  onChange={(e) => setRequiredCustomersTarget(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق العملاء</label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  className={selectClasses}
+                  value={customerRewardTarget}
+                  onChange={(e) => setCustomerRewardTarget(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق العملاء</label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  className={selectClasses}
+                  value={customerMissPenaltyAmountTarget}
+                  onChange={(e) => setCustomerMissPenaltyAmountTarget(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">عدد التواصل المطلوب</label>
+                <input
+                  type="number"
+                  min={0}
+                  className={selectClasses}
+                  value={requiredCommunicationsTarget}
+                  onChange={(e) => setRequiredCommunicationsTarget(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">مكافأة تحقيق التواصل</label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  className={selectClasses}
+                  value={communicationRewardTarget}
+                  onChange={(e) => setCommunicationRewardTarget(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold dark:text-slate-300">خصم ثابت عند عدم تحقيق التواصل</label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  className={selectClasses}
+                  value={communicationMissPenaltyAmountTarget}
+                  onChange={(e) => setCommunicationMissPenaltyAmountTarget(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-end">
+              <Button onClick={handleSaveActivityTarget} className="bg-blue-600 hover:bg-blue-700 text-white">
+                حفظ تاركت النشاط
+              </Button>
+            </div>
+          </div>
         </div>
       </AppModal>
     </div>

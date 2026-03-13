@@ -141,6 +141,7 @@ exports.Prisma.UserActivityTargetScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   cycle: 'cycle',
+  activeWeekDays: 'activeWeekDays',
   requiredCustomers: 'requiredCustomers',
   customerReward: 'customerReward',
   customerMissPenaltyAmount: 'customerMissPenaltyAmount',
@@ -148,6 +149,7 @@ exports.Prisma.UserActivityTargetScalarFieldEnum = {
   communicationReward: 'communicationReward',
   communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
   startsAt: 'startsAt',
+  endedAt: 'endedAt',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -421,6 +423,16 @@ exports.AccountType = exports.$Enums.AccountType = {
 exports.ActivityTargetCycle = exports.$Enums.ActivityTargetCycle = {
   DAILY: 'DAILY',
   MONTHLY: 'MONTHLY'
+};
+
+exports.ActivityWeekDay = exports.$Enums.ActivityWeekDay = {
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY',
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY'
 };
 
 exports.MovementType = exports.$Enums.MovementType = {
