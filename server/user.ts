@@ -710,15 +710,23 @@ const buildActivityProgressForTarget = async (
     const rewardMultiplier = cycle === "DAILY" ? 2 : 1;
     const customersRewardTarget = customersTarget * rewardMultiplier;
     const communicationsRewardTarget = communicationsTarget * rewardMultiplier;
-    const customersReached = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
-    const communicationsReached = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
-    const hasCustomersTarget = customersRewardTarget > 0;
-    const hasCommunicationsTarget = communicationsRewardTarget > 0;
+
+    const customersCompleted = customersTarget > 0 && customersAchieved >= customersTarget;
+    const communicationsCompleted = communicationsTarget > 0 && communicationsAchieved >= communicationsTarget;
+    const customersReached = customersCompleted;
+    const communicationsReached = communicationsCompleted;
+
+    const customersRewardEarned = customersRewardTarget > 0 && customersAchieved >= customersRewardTarget;
+    const communicationsRewardEarned = communicationsRewardTarget > 0 && communicationsAchieved >= communicationsRewardTarget;
+
+    const hasCustomersTarget = customersTarget > 0;
+    const hasCommunicationsTarget = communicationsTarget > 0;
+
     const grossRewardEarned =
-      (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
-      (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
-    const customerPenaltyAmount = hasCustomersTarget && !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
-    const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
+      (customersRewardEarned ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
+      (communicationsRewardEarned ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+    const customerPenaltyAmount = hasCustomersTarget && !customersCompleted ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
+    const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsCompleted ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
     const penaltyAmount = customerPenaltyAmount + communicationPenaltyAmount;
     const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
@@ -841,16 +849,23 @@ const buildActivityProgressForTarget = async (
   const communicationsRemaining = Math.max(0, communicationsTargetToday - communicationsToday);
   const customersRewardTarget = customersTargetToday * 2;
   const communicationsRewardTarget = communicationsTargetToday * 2;
-  const customersReached = customersRewardTarget > 0 && customersToday >= customersRewardTarget;
-  const communicationsReached = communicationsRewardTarget > 0 && communicationsToday >= communicationsRewardTarget;
-  const hasCustomersTarget = customersRewardTarget > 0;
-  const hasCommunicationsTarget = communicationsRewardTarget > 0;
+
+  const customersCompleted = customersTargetToday > 0 && customersToday >= customersTargetToday;
+  const communicationsCompleted = communicationsTargetToday > 0 && communicationsToday >= communicationsTargetToday;
+  const customersReached = customersCompleted;
+  const communicationsReached = communicationsCompleted;
+
+  const customersRewardEarned = customersRewardTarget > 0 && customersToday >= customersRewardTarget;
+  const communicationsRewardEarned = communicationsRewardTarget > 0 && communicationsToday >= communicationsRewardTarget;
+
+  const hasCustomersTarget = customersTargetToday > 0;
+  const hasCommunicationsTarget = communicationsTargetToday > 0;
 
   const grossRewardEarned =
-    (customersReached ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
-    (communicationsReached ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
-  const customerPenaltyAmount = hasCustomersTarget && !customersReached ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
-  const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsReached ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
+    (customersRewardEarned ? toNonNegativeFloat(activityTarget.customerReward) : 0) +
+    (communicationsRewardEarned ? toNonNegativeFloat(activityTarget.communicationReward) : 0);
+  const customerPenaltyAmount = hasCustomersTarget && !customersCompleted ? toNonNegativeFloat(activityTarget.customerMissPenaltyAmount) : 0;
+  const communicationPenaltyAmount = hasCommunicationsTarget && !communicationsCompleted ? toNonNegativeFloat(activityTarget.communicationMissPenaltyAmount) : 0;
   const penaltyAmount = customerPenaltyAmount + communicationPenaltyAmount;
   const totalRewardEarned = Math.max(0, grossRewardEarned - penaltyAmount);
 
