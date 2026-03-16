@@ -1243,7 +1243,13 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       return sum + shipping;
     }, 0);
     const netSalesForCommission = Math.max(0, totalSalesAmount - totalShippingAmount);
-    const assignedCommissionPercent = Number(currentUser.salesCommissionPercent || 0);
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: effectiveUserId },
+      select: { salesCommissionPercent: true }
+    });
+
+    const assignedCommissionPercent = Number(targetUser?.salesCommissionPercent || 0);
     const totalCommissionAmount = (netSalesForCommission * assignedCommissionPercent) / 100;
     const commissionPercent = netSalesForCommission > 0
       ? Number(((totalCommissionAmount / netSalesForCommission) * 100).toFixed(2))
