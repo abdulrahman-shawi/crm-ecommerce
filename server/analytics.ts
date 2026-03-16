@@ -175,9 +175,7 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
 
     if (!user) return { success: false, error: "User not found" };
 
-    // For the total sales tooltip on dashboard: only the current admin's own sales should be included.
-    // Only users with explicit viewOrders permission still get access to all users' sales.
-    const canViewAll = Boolean(user.permission?.viewOrders);
+    const canViewAll = isAdmin(user) || Boolean(user.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
     const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
     const whereClause = {
@@ -185,7 +183,6 @@ export async function GetSalesByStatusAction(userId: string, dateFilter?: OrderD
       ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       ...(warehouseScope ? warehouseScope : {}),
     };
-
 
     const orders = await prisma.order.findMany({
       where: whereClause,
