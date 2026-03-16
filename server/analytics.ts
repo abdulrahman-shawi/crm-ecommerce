@@ -68,7 +68,13 @@ const getOrderAmountFromItemsInUSD = (order: {
   }, 0);
 
   const globalDiscount = Math.max(0, Number(order.discount || 0));
-  const finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
+  let finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
+
+  // Fallback: if item totals are 0 (or invalid) but finalAmount is set, use finalAmount
+  if (finalOrderAmount === 0 && Number(order.finalAmount || 0) > 0) {
+    finalOrderAmount = Number(order.finalAmount || 0);
+  }
+
   return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location, effectiveRate);
 };
 
@@ -988,23 +994,22 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
 export async function GetUserTargetProgress(userId: string, monthKey?: string) {
   try {
     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
-    const session = cookies().get("skynova")?.value;
-    const decoded = session ? await decrypt(session) : null;
-    const sessionUserId = String(decoded?.userId || "").trim();
     const requestedUserId = String(userId || "").trim();
 
+    if (!requestedUserId) {
+      return { success: false, data: [], error: "User id is required" };
+    }
+
     const currentUser = await prisma.user.findUnique({
-      where: { id: sessionUserId || requestedUserId },
+      where: { id: requestedUserId },
       include: { permission: true }
     });
 
     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
     const isAdminUser = isAdmin(currentUser);
-    const isImpersonating = isAdminUser && requestedUserId && requestedUserId !== sessionUserId;
-    const effectiveUserId = isImpersonating ? requestedUserId : (sessionUserId || requestedUserId);
-
-    const canViewAllTargets = isAdminUser && !isImpersonating;
+    const canViewAllTargets = isAdminUser;
+    const effectiveUserId = requestedUserId;
 
     const targets = canViewAllTargets
       ? await prisma.userTarget.findMany({
