@@ -990,16 +990,22 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const session = cookies().get("skynova")?.value;
     const decoded = session ? await decrypt(session) : null;
-    const scopedUserId = decoded?.userId || userId;
+    const sessionUserId = String(decoded?.userId || "").trim();
+    const requestedUserId = String(userId || "").trim();
 
     const currentUser = await prisma.user.findUnique({
-      where: { id: scopedUserId },
+      where: { id: sessionUserId || requestedUserId },
       include: { permission: true }
     });
 
     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
-    const canViewAllTargets = isAdmin(currentUser);
+    const isAdminUser = isAdmin(currentUser);
+    const isImpersonating = isAdminUser && requestedUserId && requestedUserId !== sessionUserId;
+    const effectiveUserId = isImpersonating ? requestedUserId : (sessionUserId || requestedUserId);
+
+    const canViewAllTargets = isAdminUser && !isImpersonating;
+
     const targets = canViewAllTargets
       ? await prisma.userTarget.findMany({
           include: {
@@ -1010,8 +1016,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
           }
         })
       : await prisma.userTarget.findMany({
-          where: { userId: scopedUserId },
+          where: { userId: effectiveUserId },
           include: {
+            user: { select: { id: true, username: true } },
             products: {
               include: { product: { select: { id: true, name: true } } }
             }
@@ -1032,9 +1039,11 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       return { start, end };
     })();
 
+    const orderScope = canViewAllTargets ? {} : { userId: effectiveUserId };
+
     const revenueOrders = await prisma.order.findMany({
       where: {
-        userId: scopedUserId,
+        ...orderScope,
         status: { notIn: statusBlacklist },
         ...(monthRange
           ? {
@@ -1069,7 +1078,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     const orderItems = await prisma.orderItem.findMany({
       where: {
         order: {
-          ...(canViewAllTargets ? {} : { userId: scopedUserId }),
+          ...(canViewAllTargets ? {} : { userId: effectiveUserId }),
           status: { notIn: statusBlacklist },
           ...(monthRange
             ? {
@@ -1103,9 +1112,11 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       }
     });
 
+    const countScope = canViewAllTargets ? {} : { userId: effectiveUserId };
+
     const deliveredOrdersCount = await prisma.order.count({
       where: {
-        userId: scopedUserId,
+        ...countScope,
         status: { notIn: statusBlacklist },
         ...(monthRange
           ? {
@@ -1120,7 +1131,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const totalOrdersCount = await prisma.order.count({
       where: {
-        userId: scopedUserId,
+        ...countScope,
         ...(monthRange
           ? {
               createdAt: {
@@ -1164,9 +1175,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     }
 
     const data = targets.flatMap((target: any) => {
-      const targetUserId = canViewAllTargets ? target.user?.id : currentUser.id;
+      const targetUserId = target.user?.id || effectiveUserId;
       const monthSalesForUser = totalSoldByUser.get(String(targetUserId)) || 0;
-      const userName = canViewAllTargets ? target.user?.username || "" : currentUser.username || "";
+      const userName = target.user?.username || "";
 
       if (!target.products || target.products.length === 0) {
         return [
