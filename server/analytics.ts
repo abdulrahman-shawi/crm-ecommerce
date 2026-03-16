@@ -477,6 +477,67 @@ export async function GetTopCustomers(userId: string, dateFilter?: OrderDateFilt
   }
 }
 
+// export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilter) {
+//   try {
+//     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
+//     const user = await prisma.user.findUnique({
+//       where: { id: userId },
+//       include: { permission: true }
+//     });
+    
+//     const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
+//     const createdAtFilter = buildOrderDateWhere(dateFilter);
+//     const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+//     const whereClause = {
+//       ...(canViewAll ? {} : { userId: userId }),
+//       ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+//       ...(warehouseScope ? warehouseScope : {}),
+//     };
+
+//     const orders = await prisma.order.findMany({
+//       where: whereClause,
+//       select: {
+//         finalAmount: true,
+//         usdToTryRateAtOrder: true,
+//         warehouse: {
+//           select: {
+//             location: true,
+//           }
+//         }
+//       }
+//     });
+
+//     const groupedByWarehouseCountry = orders.reduce((acc, order) => {
+//       const warehouseCountry = String(order.warehouse?.location || "غير محدد").trim() || "غير محدد";
+
+//       if (!acc[warehouseCountry]) {
+//         acc[warehouseCountry] = {
+//           location: warehouseCountry,
+//           _count: { id: 0 },
+//           _sum: { finalAmount: 0 },
+//         };
+//       }
+
+//       acc[warehouseCountry]._count.id += 1;
+//       const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+//       acc[warehouseCountry]._sum.finalAmount += normalizeOrderAmountToUSD(
+//         Number(order.finalAmount || 0),
+//         order.warehouse?.location,
+//         effectiveRate
+//       );
+//       return acc;
+//     }, {} as Record<string, { location: string; _count: { id: number }; _sum: { finalAmount: number } }>);
+
+//     const citySales = Object.values(groupedByWarehouseCountry).sort(
+//       (a, b) => (b._sum.finalAmount || 0) - (a._sum.finalAmount || 0)
+//     );
+
+//     return { success: true, data: citySales };
+//   } catch (error) {
+//     return { success: false, data: [] };
+//   }
+// }
+
 export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
@@ -488,10 +549,21 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
     const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
     const createdAtFilter = buildOrderDateWhere(dateFilter);
     const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+
+    // تحديث شروط البحث لتعمل مع التاريخ اليدوي
     const whereClause = {
       ...(canViewAll ? {} : { userId: userId }),
-      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
       ...(warehouseScope ? warehouseScope : {}),
+      ...(createdAtFilter ? {
+        OR: [
+          { manualCreatedAt: createdAtFilter },
+          { AND: [
+              { manualCreatedAt: null }, 
+              { createdAt: createdAtFilter }
+            ] 
+          }
+        ]
+      } : {}),
     };
 
     const orders = await prisma.order.findMany({
@@ -499,6 +571,8 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
       select: {
         finalAmount: true,
         usdToTryRateAtOrder: true,
+        manualCreatedAt: true, // جلب التاريخ اليدوي
+        createdAt: true,       // جلب التاريخ الأصلي
         warehouse: {
           select: {
             location: true,
@@ -520,6 +594,7 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
 
       acc[warehouseCountry]._count.id += 1;
       const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      
       acc[warehouseCountry]._sum.finalAmount += normalizeOrderAmountToUSD(
         Number(order.finalAmount || 0),
         order.warehouse?.location,
@@ -534,10 +609,10 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
 
     return { success: true, data: citySales };
   } catch (error) {
+    console.error("Error in GetSalesByCity:", error);
     return { success: false, data: [] };
   }
 }
-
 // src/actions/analytics.ts
 
 export async function GetCustomerInteractions(userId: string, dateFilter?: OrderDateFilter) {
