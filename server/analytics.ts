@@ -1039,8 +1039,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       return { start, end };
     })();
 
-    const orderScope = canViewAllTargets ? { userId: effectiveUserId } : {} ;
+    const orderScope = { userId: effectiveUserId };
 
+    
     const revenueOrders = await prisma.order.findMany({
       where: {
         ...orderScope,
