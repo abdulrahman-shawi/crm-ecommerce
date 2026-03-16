@@ -985,34 +985,26 @@ export async function GetTopSellingUsersByPermission(userId: string, dateFilter?
   }
 }
 
-export async function GetUserTargetProgress(
-  userId: string,
-  monthKey?: string,
-  options?: {
-    period?: "day" | "week" | "month" | "custom";
-    startDate?: string;
-    endDate?: string;
-    includeAll?: boolean;
-  }
-) {
+export async function GetUserTargetProgress(userId: string, monthKey?: string) {
   try {
     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
+    const session = cookies().get("skynova")?.value;
+    const decoded = session ? await decrypt(session) : null;
+    const sessionUserId = String(decoded?.userId || "").trim();
     const requestedUserId = String(userId || "").trim();
 
-    if (!requestedUserId) {
-      return { success: false, data: [], error: "User id is required" };
-    }
-
     const currentUser = await prisma.user.findUnique({
-      where: { id: requestedUserId },
+      where: { id: sessionUserId || requestedUserId },
       include: { permission: true }
     });
 
     if (!currentUser) return { success: false, data: [], error: "User not found" };
 
     const isAdminUser = isAdmin(currentUser);
-    const effectiveUserId = requestedUserId;
-    const canViewAllTargets = isAdminUser && Boolean(options?.includeAll);
+    const isImpersonating = isAdminUser && requestedUserId && requestedUserId !== sessionUserId;
+    const effectiveUserId = isImpersonating ? requestedUserId : (sessionUserId || requestedUserId);
+
+    const canViewAllTargets = isAdminUser && !isImpersonating;
 
     const targets = canViewAllTargets
       ? await prisma.userTarget.findMany({
@@ -1035,42 +1027,9 @@ export async function GetUserTargetProgress(
 
     const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
 
-    const range = (() => {
-      const period = options?.period || "month";
-
-      if (period === "day") {
-        const today = new Date();
-        const start = new Date(today);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(today);
-        end.setHours(23, 59, 59, 999);
-        return { start, end };
-      }
-
-      if (period === "week") {
-        const today = new Date();
-        const start = new Date(today);
-        start.setDate(today.getDate() - 6);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(today);
-        end.setHours(23, 59, 59, 999);
-        return { start, end };
-      }
-
-      if (period === "custom") {
-        if (!options?.startDate || !options?.endDate) return null;
-        const start = new Date(options.startDate);
-        const end = new Date(options.endDate);
-        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
-        start.setHours(0, 0, 0, 0);
-        end.setHours(23, 59, 59, 999);
-        if (start > end) return null;
-        return { start, end };
-      }
-
-      // Default month
-      const key = monthKey || new Date().toISOString().slice(0, 7);
-      const match = key.match(/^(\d{4})-(\d{2})$/);
+    const monthRange = (() => {
+      if (!monthKey) return null;
+      const match = monthKey.match(/^(\d{4})-(\d{2})$/);
       if (!match) return null;
       const year = Number(match[1]);
       const month = Number(match[2]);
@@ -1086,11 +1045,11 @@ export async function GetUserTargetProgress(
       where: {
         ...orderScope,
         status: { notIn: statusBlacklist },
-        ...(range
+        ...(monthRange
           ? {
               createdAt: {
-                gte: range.start,
-                lte: range.end,
+                gte: monthRange.start,
+                lte: monthRange.end,
               },
             }
           : {}),
@@ -1121,11 +1080,11 @@ export async function GetUserTargetProgress(
         order: {
           ...(canViewAllTargets ? {} : { userId: effectiveUserId }),
           status: { notIn: statusBlacklist },
-          ...(range
+          ...(monthRange
             ? {
                 createdAt: {
-                  gte: range.start,
-                  lte: range.end,
+                  gte: monthRange.start,
+                  lte: monthRange.end,
                 },
               }
             : {}),
@@ -1159,11 +1118,11 @@ export async function GetUserTargetProgress(
       where: {
         ...countScope,
         status: { notIn: statusBlacklist },
-        ...(range
+        ...(monthRange
           ? {
               createdAt: {
-                gte: range.start,
-                lte: range.end,
+                gte: monthRange.start,
+                lte: monthRange.end,
               },
             }
           : {}),
@@ -1173,11 +1132,11 @@ export async function GetUserTargetProgress(
     const totalOrdersCount = await prisma.order.count({
       where: {
         ...countScope,
-        ...(range
+        ...(monthRange
           ? {
               createdAt: {
-                gte: range.start,
-                lte: range.end,
+                gte: monthRange.start,
+                lte: monthRange.end,
               },
             }
           : {}),

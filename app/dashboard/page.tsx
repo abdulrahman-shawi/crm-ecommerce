@@ -105,10 +105,6 @@ const DashboardPage: React.FunctionComponent = () => {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   });
 
-  const [targetPeriod, setTargetPeriod] = React.useState<"day" | "week" | "month" | "custom">("month");
-  const [customTargetStartDate, setCustomTargetStartDate] = React.useState<string>(new Date().toISOString().slice(0,10));
-  const [customTargetEndDate, setCustomTargetEndDate] = React.useState<string>(new Date().toISOString().slice(0,10));
-
   const selectedMonth = React.useMemo(() => {
     const now = new Date();
     if (monthFilterPreset === "this_month") {
@@ -437,12 +433,7 @@ const DashboardPage: React.FunctionComponent = () => {
       if (!user?.id) return;
       setLoading(true);
       try {
-        const options: any = { period: targetPeriod };
-        if (targetPeriod === "custom") {
-          options.startDate = customTargetStartDate;
-          options.endDate = customTargetEndDate;
-        }
-        const res = await GetUserTargetProgress(user.id, selectedMonth, options);
+        const res = await GetUserTargetProgress(user.id, selectedMonth);
         setTargetProgress(res as any);
       } catch (error) {
         console.error("Error fetching target progress:", error);
@@ -453,7 +444,7 @@ const DashboardPage: React.FunctionComponent = () => {
     };
 
     fetchTargetProgress();
-  }, [user?.id, selectedMonth, targetPeriod, customTargetStartDate, customTargetEndDate]);
+  }, [user?.id, selectedMonth]);
 
   React.useEffect(() => {
     const fetchActivitySummary = async () => {
@@ -900,43 +891,6 @@ const DashboardPage: React.FunctionComponent = () => {
             </div>
             <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-800 dark:bg-slate-900/40">
               <div className="flex flex-col md:flex-row md:items-end gap-3">
-                <div className="flex flex-col gap-1 min-w-[220px]">
-                  <label className="text-xs font-bold text-slate-500">عرض التاركت حسب الفترة</label>
-                  <select
-                    value={targetPeriod}
-                    onChange={(e) => setTargetPeriod(e.target.value as "day" | "week" | "month" | "custom")}
-                    className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
-                  >
-                    <option value="day">اليوم</option>
-                    <option value="week">الأسبوع</option>
-                    <option value="month">الشهر</option>
-                    <option value="custom">مخصص</option>
-                  </select>
-                </div>
-
-                {targetPeriod === "custom" && (
-                  <div className="flex gap-2">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-bold text-slate-500">من تاريخ</label>
-                      <input
-                        type="date"
-                        className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
-                        value={customTargetStartDate}
-                        onChange={(e) => setCustomTargetStartDate(e.target.value)}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-bold text-slate-500">إلى تاريخ</label>
-                      <input
-                        type="date"
-                        className="rounded-md border border-slate-300 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-900"
-                        value={customTargetEndDate}
-                        onChange={(e) => setCustomTargetEndDate(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex flex-col gap-1 min-w-[220px]">
                   <label className="text-xs font-bold text-slate-500">عرض التاركت حسب الشهر</label>
                   <select
