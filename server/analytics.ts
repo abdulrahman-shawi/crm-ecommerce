@@ -1114,6 +1114,22 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       return { start, end };
     })();
 
+    const dateWhereClause = monthRange ? {
+      OR: [
+        {
+          manualCreatedAt: {
+            gte: monthRange.start,
+            lte: monthRange.end,
+          }
+        },
+        {
+          AND: [
+            { manualCreatedAt: null },
+            { createdAt: { gte: monthRange.start, lte: monthRange.end } }
+          ]
+        }
+      ]
+    } : {};
     const orderScope = { userId: effectiveUserId };
 
     
@@ -1121,14 +1137,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       where: {
         ...orderScope,
         status: { notIn: statusBlacklist },
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
+        ...dateWhereClause,
       },
       select: {
         userId: true,
@@ -1156,14 +1165,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         order: {
           ...(canViewAllTargets ? {} : { userId: effectiveUserId }),
           status: { notIn: statusBlacklist },
-          ...(monthRange
-            ? {
-                createdAt: {
-                  gte: monthRange.start,
-                  lte: monthRange.end,
-                },
-              }
-            : {}),
+          ...dateWhereClause,
         }
       },
       select: {
@@ -1194,28 +1196,14 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       where: {
         ...countScope,
         status: { notIn: statusBlacklist },
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
+        ...dateWhereClause,
       }
     });
 
     const totalOrdersCount = await prisma.order.count({
       where: {
         ...countScope,
-        ...(monthRange
-          ? {
-              createdAt: {
-                gte: monthRange.start,
-                lte: monthRange.end,
-              },
-            }
-          : {}),
+        ...dateWhereClause,
       }
     });
 
