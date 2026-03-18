@@ -132,6 +132,7 @@ export async function createCustomerAction(data: any, id: string) {
         await prisma.customer.update({
           where: { id: existingCustomer.id },
           data: {
+            name:existingCustomer.name, // نحتفظ بالاسم القديم
             users: {
               connect: { id }
             }
