@@ -140,9 +140,9 @@ export async function createCustomerAction(data: any, id: string) {
         });
       }
     }
-
-    // 2. إذا لم يكن موجوداً، نقوم بالإضافة
-    const createdAtFromImport = parseOptionalDate(data?.createdAt || data?.manualCreatedAt);
+    else {
+      // 2. إذا لم يكن موجوداً، نقوم بالإضافة
+      const createdAtFromImport = parseOptionalDate(data?.createdAt || data?.manualCreatedAt);
     const newCustomer = await prisma.customer.create({
       data: {
         name: data.name,
@@ -166,6 +166,11 @@ export async function createCustomerAction(data: any, id: string) {
     revalidatePath("/customers");
     return { success: true, data: newCustomer };
 
+    // 2. إذا لم يكن موجوداً، نقوم بالإضافة
+    
+
+    }
+    return { success: true, data: existingCustomer };
   } catch (error: any) {
     console.error("Prisma Error:", error);
     return { success: false, error: "حدث خطأ أثناء حفظ البيانات" };
