@@ -34,6 +34,8 @@ export const buildOrderPdfFile = async (data: any) => {
   const municipality = data?.municipality || 'لم يسجل';
   const fullAddress = data?.fullAddress || 'لم يسجل';
   const mapLink = data?.googleMapsLink || '';
+  const deliveryNotes = String(data?.deliveryNotes || '').trim();
+  const additionalNotes = String(data?.additionalNotes || '').trim();
   const items = Array.isArray(data?.items) ? data.items : [];
 
   const formatMoney = (value: any) => Number(value || 0).toLocaleString('en-US');
@@ -135,6 +137,17 @@ export const buildOrderPdfFile = async (data: any) => {
                 <div style="flex:1;font-size:11px;font-weight:700;color:#94a3b8;">
                     * هذه الفاتورة صدرت إلكترونياً وهي وثيقة رسمية.<br />
                     * شكراً لتعاملك معنا.
+                ${
+                  deliveryNotes || additionalNotes
+                  ? `
+                <div style="margin-top:10px;padding:10px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#334155;">
+                  <div style="font-size:12px;font-weight:900;color:#0f172a;margin-bottom:4px;">الملاحظات</div>
+                  ${deliveryNotes ? `<div style="font-size:11px;font-weight:700;">ملاحظات التوصيل: ${deliveryNotes}</div>` : ''}
+                  ${additionalNotes ? `<div style="font-size:11px;font-weight:700;">ملاحظات إضافية: ${additionalNotes}</div>` : ''}
+                </div>
+                `
+                  : ''
+                }
                 </div>
                 <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
                     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b;">

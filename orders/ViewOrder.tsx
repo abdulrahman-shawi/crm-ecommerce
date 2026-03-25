@@ -39,6 +39,8 @@ export default function ViewOrder({
   const { moneyTransferCommission, otherCommissions } = getOrderShippingCommissions(data);
   const totalShippingExpenses = getOrderTotalShippingExpenses(data);
   const invoiceGrandTotal = Number(finalAmount);
+  const deliveryNotes = String(data?.deliveryNotes || '').trim();
+  const additionalNotes = String(data?.additionalNotes || '').trim();
 
   const getProductName = (productId: any) => {
     const product = products?.find((p: any) => p.id === productId);
@@ -194,6 +196,22 @@ export default function ViewOrder({
                 <span>طريقة الدفع:</span>
                 <span>{data.paymentMethod}</span>
               </div>
+
+              {(deliveryNotes || additionalNotes) && (
+                <div className="mt-3 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 space-y-2 text-sm">
+                  <p className="font-black text-slate-700 dark:text-slate-200">الملاحظات</p>
+                  {deliveryNotes && (
+                    <p className="font-bold text-slate-600 dark:text-slate-300">
+                      ملاحظات التوصيل: <span className="font-medium">{deliveryNotes}</span>
+                    </p>
+                  )}
+                  {additionalNotes && (
+                    <p className="font-bold text-slate-600 dark:text-slate-300">
+                      ملاحظات إضافية: <span className="font-medium">{additionalNotes}</span>
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
