@@ -315,7 +315,7 @@ export default function ExpensesPage() {
       <div className="mb-6 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">مجموع مصاريف مكتب سوريا</div>
-          <div className="mt-1 text-2xl font-black text-emerald-600">{officeTotals.syria.toLocaleString()} $</div>
+          <div className="mt-1 text-2xl font-black text-emerald-600">{officeTotals.syria.toLocaleString()} ليرة سورية</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">مجموع مصاريف مكتب تركيا</div>
