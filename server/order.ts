@@ -45,6 +45,7 @@ function isWarehouseRole(user: any) {
 function canViewOrders(user: any) {
     if (!user) return false;
     if (user.accountType === "ADMIN") return true;
+    if (isWarehouseRole(user)) return true;
     return Boolean(user?.permission?.viewOrders);
 }
 
@@ -108,23 +109,11 @@ export async function getOrders() {
 
     const isAdminUser = currentUser.accountType === "ADMIN";
     const isWarehouseUser = isWarehouseRole(currentUser);
-    const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
-    const canAccessWarehouseOrders = isWarehouseRole(currentUser) && allowedWarehouseLocations.length > 0;
 
     const where: any = {};
 
     if (!isAdminUser) {
-        if (isWarehouseUser) {
-            if (!canAccessWarehouseOrders) {
-                return { success: true, data: [] };
-            }
-
-            where.warehouse = {
-                location: {
-                    in: allowedWarehouseLocations,
-                },
-            };
-        } else {
+        if (!isWarehouseUser) {
             const scopedUserIds = await getScopedUserIds(currentUser.id);
             where.userId = {
                 in: scopedUserIds.length > 0 ? scopedUserIds : [currentUser.id],
@@ -152,13 +141,7 @@ export async function getOrders() {
         }
     })
 
-    const normalizedOrders = order.filter((currentOrder) => {
-        if (!canAccessWarehouseOrders || isAdminUser) return true;
-        const location = normalizeWarehouseLocation(currentOrder?.warehouse?.location);
-        return allowedWarehouseLocations.includes(location);
-    });
-
-    return {success:true , data:sortOrdersByDisplayDateDesc(normalizedOrders)}
+    return {success:true , data:sortOrdersByDisplayDateDesc(order)}
 }
 
 export async function getOrdersByUser(userId: any) {
