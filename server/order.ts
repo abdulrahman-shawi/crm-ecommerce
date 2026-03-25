@@ -109,11 +109,22 @@ export async function getOrders() {
 
     const isAdminUser = currentUser.accountType === "ADMIN";
     const isWarehouseUser = isWarehouseRole(currentUser);
+    const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
 
     const where: any = {};
 
     if (!isAdminUser) {
-        if (!isWarehouseUser) {
+        if (isWarehouseUser) {
+            if (allowedWarehouseLocations.length === 0) {
+                return { success: true, data: [] };
+            }
+
+            where.warehouse = {
+                location: {
+                    in: allowedWarehouseLocations,
+                },
+            };
+        } else {
             const scopedUserIds = await getScopedUserIds(currentUser.id);
             where.userId = {
                 in: scopedUserIds.length > 0 ? scopedUserIds : [currentUser.id],

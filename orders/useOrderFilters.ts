@@ -30,6 +30,13 @@ export const useOrderFilters = (orders: any[], user?: User) => {
     const isWarehouseUser = String(user?.permission?.roleName || "").trim().includes("مستودع");
     const canViewOrders = isAdminUser || isWarehouseUser || user?.permission?.viewOrders === true;
 
+    const allowedWarehouseLocations = [
+      user?.permission?.accessSyria === true ? "سوريا" : null,
+      user?.permission?.accessTurkey === true ? "تركيا" : null,
+    ].filter(Boolean) as string[];
+
+    const canAccessWarehouseOrders = isWarehouseUser && allowedWarehouseLocations.length > 0;
+
     const normalizeWarehouseLocation = (location?: string | null) => {
       const normalized = String(location || "").trim().toLowerCase();
       if (normalized === "syria" || normalized === "سوريا") return "سوريا";
@@ -41,7 +48,11 @@ export const useOrderFilters = (orders: any[], user?: User) => {
       if (!canViewOrders) return false;
 
       if (!isAdminUser) {
-        if (!isWarehouseUser) {
+        if (isWarehouseUser) {
+          if (!canAccessWarehouseOrders) return false;
+          const orderLocation = normalizeWarehouseLocation(order?.warehouse?.location);
+          if (!allowedWarehouseLocations.includes(orderLocation)) return false;
+        } else {
           const isOwner = order.userId === user?.id;
           if (!isOwner) return false;
         }
