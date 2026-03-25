@@ -564,6 +564,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setSearchQuery,
         warehouseLocation,
         setWarehouseLocation,
+        shippingCompany,
+        setShippingCompany,
         monthFilterType,
         setMonthFilterType,
         customMonth,
@@ -898,6 +900,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 onSearchChange={setSearchQuery}
                 warehouseLocation={warehouseLocation}
                 onWarehouseChange={setWarehouseLocation}
+                shippingCompany={shippingCompany}
+                onShippingCompanyChange={setShippingCompany}
+                shippingCompanyOptions={shippingCompanyOptions}
                 monthFilterType={monthFilterType}
                 onMonthFilterChange={(type) => setMonthFilterType(type as "all" | "previous" | "current" | "custom")}
                 customMonth={customMonth}

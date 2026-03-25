@@ -39,11 +39,9 @@ const paidFromOfficeLabels: Record<string, string> = {
   SYRIA: "مكتب سوريا",
 };
 
-const getDailyOfficeCurrencySymbol = (office: unknown) => {
-  const normalizedOffice = String(office || "").toUpperCase();
-  if (normalizedOffice === "SYRIA") return "$";
-  if (normalizedOffice === "TURKEY") return "₺";
-  return "";
+const getDailyCurrencyLabel = (currency: unknown) => {
+  const normalizedCurrency = String(currency || "").toUpperCase();
+  return currencyLabels[normalizedCurrency] || "";
 };
 
 const formatDateForInput = (dateLike?: string | Date | null) => {
@@ -381,10 +379,10 @@ export default function ExpensesPage() {
               {
                 header: "المبلغ",
                 accessor: (row: any) => {
-                  const symbol = getDailyOfficeCurrencySymbol(row.paidFromOffice);
+                  const currencyLabel = getDailyCurrencyLabel(row.currency);
                   return (
                     <span className="font-black text-blue-600">
-                      {Number(row.amount || 0).toLocaleString()} {symbol}
+                      {Number(row.amount || 0).toLocaleString()} {currencyLabel}
                     </span>
                   );
                 }

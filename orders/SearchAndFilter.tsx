@@ -7,6 +7,9 @@ interface SearchAndFilterProps {
   onSearchChange: (query: string) => void;
   warehouseLocation: string;
   onWarehouseChange: (location: string) => void;
+  shippingCompany: string;
+  onShippingCompanyChange: (shippingCompany: string) => void;
+  shippingCompanyOptions?: string[];
   monthFilterType: string;
   onMonthFilterChange: (type: string) => void;
   customMonth: string;
@@ -22,6 +25,9 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   onSearchChange,
   warehouseLocation,
   onWarehouseChange,
+  shippingCompany,
+  onShippingCompanyChange,
+  shippingCompanyOptions = [],
   monthFilterType,
   onMonthFilterChange,
   customMonth,
@@ -56,6 +62,21 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           {warehouseOptions.map((location) => (
             <option key={location} value={location}>
               {location}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {shippingCompanyOptions.length > 0 && (
+        <select
+          value={shippingCompany}
+          onChange={(e) => onShippingCompanyChange(e.target.value)}
+          className="w-full md:w-52 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
+        >
+          <option value="">كل شركات الشحن</option>
+          {shippingCompanyOptions.map((companyName) => (
+            <option key={companyName} value={companyName}>
+              {companyName}
             </option>
           ))}
         </select>

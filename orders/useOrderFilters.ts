@@ -16,6 +16,7 @@ interface User {
 export const useOrderFilters = (orders: any[], user?: User) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [warehouseLocation, setWarehouseLocation] = React.useState("");
+  const [shippingCompany, setShippingCompany] = React.useState("");
   const [monthFilterType, setMonthFilterType] = React.useState<"all" | "current" | "previous" | "custom">("current");
   const [customMonth, setCustomMonth] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("طلب جديد");
@@ -72,6 +73,11 @@ export const useOrderFilters = (orders: any[], user?: User) => {
       const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
       if (!matchesLocation) return false;
 
+      // فلتر شركة الشحن
+      const normalizedShippingFilter = String(shippingCompany || "").trim().toLowerCase();
+      const orderShippingName = String(order?.shipping?.name || "").trim().toLowerCase();
+      if (normalizedShippingFilter && orderShippingName !== normalizedShippingFilter) return false;
+
       // فلتر الشهر
       if (monthFilterType !== "all") {
         const activeMonth = monthFilterType === "current"
@@ -86,7 +92,7 @@ export const useOrderFilters = (orders: any[], user?: User) => {
 
       return true;
     });
-  }, [orders, user, searchQuery, warehouseLocation, monthFilterType, customMonth]);
+  }, [orders, user, searchQuery, warehouseLocation, shippingCompany, monthFilterType, customMonth]);
 
   const statusOptions = [
     "طلب جديد",
@@ -130,6 +136,8 @@ export const useOrderFilters = (orders: any[], user?: User) => {
     setSearchQuery,
     warehouseLocation,
     setWarehouseLocation,
+    shippingCompany,
+    setShippingCompany,
     monthFilterType,
     setMonthFilterType,
     customMonth,
