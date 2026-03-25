@@ -802,7 +802,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 setisOpenorder(true);
             }
         },
-        (user && isAdmin(user)) && {
+        canManageOrderShippingUi && {
             label: "تعديل",
             icon: <Pencil size={14} />,
             onClick: (data: any) => {

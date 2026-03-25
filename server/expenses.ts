@@ -1,10 +1,71 @@
 "use server";
 
+import { decrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+
+async function getCurrentSessionUser() {
+    try {
+        const session = cookies().get("skynova")?.value;
+        if (!session) return null;
+
+        const decoded = await decrypt(session);
+        if (!decoded?.userId) return null;
+
+        return await prisma.user.findUnique({
+            where: { id: String(decoded.userId) },
+            include: { permission: true },
+        });
+    } catch {
+        return null;
+    }
+}
+
+function canViewExpenses(user: any) {
+    if (!user) return false;
+    if (user.accountType === "ADMIN") return true;
+    return Boolean(user?.permission?.viewExpenses);
+}
+
+function getAllowedPaidOffices(user: any) {
+    const offices: Array<"SYRIA" | "TURKEY"> = [];
+    if (user?.permission?.accessSyria === true) offices.push("SYRIA");
+    if (user?.permission?.accessTurkey === true) offices.push("TURKEY");
+    return offices;
+}
 
 export async function getData() {
     try {
+        const currentUser = await getCurrentSessionUser();
+        if (!currentUser || !canViewExpenses(currentUser)) {
+            return { success: false, error: "غير مصرح لك بعرض المصاريف" };
+        }
+
+        const isAdminUser = currentUser.accountType === "ADMIN";
+        const allowedPaidOffices = getAllowedPaidOffices(currentUser);
+
+        if (!isAdminUser && allowedPaidOffices.length === 0) {
+            return { success: true, data: [] };
+        }
+
+        const where: any = !isAdminUser
+            ? {
+                OR: [
+                    {
+                        type: "DAILY",
+                        paidFromOffice: {
+                            in: allowedPaidOffices,
+                        },
+                    },
+                    {
+                        type: "RENT",
+                    },
+                ],
+            }
+            : undefined;
+
         const res = await prisma.expense.findMany({
+            where,
             orderBy: {
                 createdAt: "desc",
             },

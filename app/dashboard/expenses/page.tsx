@@ -82,6 +82,17 @@ export default function ExpensesPage() {
   const canAdd = user && hasPermission(user, "addExpenses");
   const canEdit = user && hasPermission(user, "editExpenses");
   const canDelete = user && hasPermission(user, "deleteExpenses");
+  const isAdminUser = user?.accountType === "ADMIN";
+  const canAccessSyria = user?.permission?.accessSyria === true;
+  const canAccessTurkey = user?.permission?.accessTurkey === true;
+
+  const allowedPaidOffices = React.useMemo(() => {
+    if (isAdminUser) return ["SYRIA", "TURKEY"] as const;
+    const offices: Array<"SYRIA" | "TURKEY"> = [];
+    if (canAccessSyria) offices.push("SYRIA");
+    if (canAccessTurkey) offices.push("TURKEY");
+    return offices;
+  }, [isAdminUser, canAccessSyria, canAccessTurkey]);
 
   const fetchExpenses = async () => {
     if (!canView) return;
@@ -122,6 +133,9 @@ export default function ExpensesPage() {
         if (!payload.description) throw new Error("يرجى إدخال وصف المصروف اليومي");
         if (!payload.currency) throw new Error("يرجى اختيار العملة");
         if (!payload.paidFromOffice) throw new Error("يرجى تحديد مكتب الدفع");
+        if (!isAdminUser && !allowedPaidOffices.includes(payload.paidFromOffice)) {
+          throw new Error("لا تملك صلاحية تسجيل مصروف لهذا المكتب");
+        }
       }
 
       if (editId) {
@@ -197,10 +211,15 @@ export default function ExpensesPage() {
       : null,
   ].filter(Boolean) as TableAction<any>[];
 
-  const dailyExpenses = React.useMemo(
-    () => expenses.filter((expense) => String(expense?.type || "DAILY") === "DAILY"),
-    [expenses]
-  );
+  const dailyExpenses = React.useMemo(() => {
+    const dailyRows = expenses.filter((expense) => String(expense?.type || "DAILY") === "DAILY");
+    if (isAdminUser) return dailyRows;
+
+    return dailyRows.filter((expense) => {
+      const office = String(expense?.paidFromOffice || "").toUpperCase();
+      return allowedPaidOffices.includes(office as "SYRIA" | "TURKEY");
+    });
+  }, [expenses, isAdminUser, allowedPaidOffices]);
 
   const currentYear = React.useMemo(() => new Date().getFullYear(), []);
 
@@ -254,10 +273,17 @@ export default function ExpensesPage() {
       description: "",
       notes: "",
       currency: "SYP",
-      paidFromOffice: "SYRIA",
+      paidFromOffice: allowedPaidOffices[0] || "SYRIA",
       scheduledDate: formatDateForInput(new Date()),
     };
-  }, [formData, activeType]);
+  }, [formData, activeType, allowedPaidOffices]);
+
+  const paidFromOfficeOptions = React.useMemo(() => {
+    return allowedPaidOffices.map((office) => ({
+      value: office,
+      label: paidFromOfficeLabels[office],
+    }));
+  }, [allowedPaidOffices]);
 
   if (!canView) {
     return (
@@ -433,10 +459,14 @@ export default function ExpensesPage() {
                         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">الدفع من مكتب</label>
                         <select
                           className="flex h-10 w-full rounded-md border text-slate-700 dark:text-slate-300 text-right border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950"
+                          disabled={paidFromOfficeOptions.length === 0}
                           {...register("paidFromOffice")}
                         >
-                          <option value="SYRIA">مكتب سوريا</option>
-                          <option value="TURKEY">مكتب تركيا</option>
+                          {paidFromOfficeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
