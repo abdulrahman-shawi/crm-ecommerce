@@ -613,6 +613,83 @@ export async function GetSalesByCity(userId: string, dateFilter?: OrderDateFilte
     return { success: false, data: [] };
   }
 }
+
+export async function GetOrdersByCity(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found", data: [] };
+
+    const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+
+    const whereClause = {
+      ...(canViewAll ? {} : { userId: userId }),
+      ...(warehouseScope ? warehouseScope : {}),
+      ...(createdAtFilter ? {
+        OR: [
+          { manualCreatedAt: createdAtFilter },
+          {
+            AND: [
+              { manualCreatedAt: null },
+              { createdAt: createdAtFilter }
+            ]
+          }
+        ]
+      } : {}),
+    };
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        city: true,
+        finalAmount: true,
+        usdToTryRateAtOrder: true,
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
+      }
+    });
+
+    const groupedByCity = orders.reduce((acc, order) => {
+      const cityName = String(order.city || "غير محدد").trim() || "غير محدد";
+
+      if (!acc[cityName]) {
+        acc[cityName] = {
+          city: cityName,
+          _count: { id: 0 },
+          _sum: { finalAmount: 0 },
+        };
+      }
+
+      acc[cityName]._count.id += 1;
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      acc[cityName]._sum.finalAmount += normalizeOrderAmountToUSD(
+        Number(order.finalAmount || 0),
+        order.warehouse?.location,
+        effectiveRate
+      );
+
+      return acc;
+    }, {} as Record<string, { city: string; _count: { id: number }; _sum: { finalAmount: number } }>);
+
+    const cityOrderAnalytics = Object.values(groupedByCity).sort(
+      (a, b) => (b._sum.finalAmount || 0) - (a._sum.finalAmount || 0)
+    );
+
+    return { success: true, data: cityOrderAnalytics };
+  } catch (error) {
+    console.error("Error in GetOrdersByCity:", error);
+    return { success: false, data: [] };
+  }
+}
 // src/actions/analytics.ts
 
 export async function GetCustomerInteractions(userId: string, dateFilter?: OrderDateFilter) {

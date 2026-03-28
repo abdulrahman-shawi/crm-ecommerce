@@ -9,6 +9,7 @@ import {
   GetCustomerAcquisitionMonth,
   GetEmployeeCustomerReport,
   GetLowStockProducts,
+  GetOrdersByCity,
   GetSalesByCity,
   GetSalesByStatusAction,
   GetSalesTimelineAction,
@@ -90,6 +91,7 @@ const AnalyticPage: React.FC = () => {
     data: [],
   });
   const [country, setCountry] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [ordersByCity, setOrdersByCity] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [topSale, setTopSale] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [lowStock, setLowStock] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
@@ -175,6 +177,7 @@ const AnalyticPage: React.FC = () => {
         const [
           resStatus,
           resCountry,
+          resOrdersByCity,
           resTopSale,
           resLowStock,
           resTopUsers,
@@ -183,6 +186,7 @@ const AnalyticPage: React.FC = () => {
         ] = await Promise.all([
           GetSalesByStatusAction(user.id, orderDateFilter),
           GetSalesByCity(user.id, orderDateFilter),
+          GetOrdersByCity(user.id, orderDateFilter),
           GetBestSellingProducts(user.id, orderDateFilter),
           GetLowStockProducts(user.id),
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
@@ -192,6 +196,7 @@ const AnalyticPage: React.FC = () => {
 
         setResult(resStatus as any);
         setCountry(resCountry as any);
+        setOrdersByCity(resOrdersByCity as any);
         setTopSale(resTopSale as any);
         setLowStock(resLowStock as any);
         setTopSellingUsers(resTopUsers as any);
@@ -235,6 +240,7 @@ const AnalyticPage: React.FC = () => {
   const showSalesTimeline = loading || timelineData.length > 0;
   const showCustomerGrowth = loading || (msgTimeline.data?.length || 0) > 0;
   const showSalesByCountry = loading || (country.data?.length || 0) > 0;
+  const showOrdersByCity = loading || (ordersByCity.data?.length || 0) > 0;
   const showSalesGeo = loading || cityData.length > 0;
   const showTopProducts = loading || (topSale.data?.length || 0) > 0;
   const showLowStock = loading || (lowStock.data?.length || 0) > 0;
@@ -553,6 +559,23 @@ const AnalyticPage: React.FC = () => {
               <div key={item.location} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
                 <div className="flex flex-col justify-center">
                   <span className="font-semibold text-slate-700 dark:text-slate-200">{item.location || "غير محدد"}</span>
+                  <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
+                </div>
+                <span className="text-green-600 dark:text-green-400 font-bold text-lg">{formatUSD(item._sum?.finalAmount)}$</span>
+              </div>
+            ))}
+          </DynamicCard.Content>
+        </DynamicCard>
+      )}
+
+      {showOrdersByCity && (
+        <DynamicCard isLoading={loading} isError={!ordersByCity.success} isEmpty={!loading && ordersByCity.data?.length === 0} variant="glass" className="mt-6">
+          <DynamicCard.Header title="تحليل الطلبات حسب المدينة" description="تجميع عدد الطلبات وإجمالي المبيعات بحسب المدينة" icon={<MapPin size={20} className="text-emerald-500" />} />
+          <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {ordersByCity.data?.map((item: any) => (
+              <div key={item.city} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
+                <div className="flex flex-col justify-center">
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">{item.city || "غير محدد"}</span>
                   <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
                 </div>
                 <span className="text-green-600 dark:text-green-400 font-bold text-lg">{formatUSD(item._sum?.finalAmount)}$</span>
