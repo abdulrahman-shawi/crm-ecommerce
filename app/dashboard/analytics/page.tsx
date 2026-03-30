@@ -7,9 +7,11 @@ import { getGeneralSettings } from "@/server/general-settings";
 import {
   GetBestSellingProducts,
   GetCustomerAcquisitionMonth,
+  GetDailyExpensesAnalytics,
   GetEmployeeCustomerReport,
   GetLowStockProducts,
   GetOrdersByCity,
+  GetShippingTotalsByCompany,
   GetSalesByCity,
   GetSalesByStatusAction,
   GetSalesTimelineAction,
@@ -27,7 +29,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { MapPin, Package, TrendingDown, TrendingUp, Trophy, Users, X } from "lucide-react";
+import { MapPin, Package, ReceiptText, TrendingDown, TrendingUp, Trophy, Truck, Users, X } from "lucide-react";
 
 type OrderFilterPreset = "this_month" | "last_month" | "custom";
 type EmployeeReportPeriod = "day" | "week" | "month" | "custom";
@@ -92,6 +94,12 @@ const AnalyticPage: React.FC = () => {
   });
   const [country, setCountry] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [ordersByCity, setOrdersByCity] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [shippingByCompany, setShippingByCompany] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [dailyExpenses, setDailyExpenses] = React.useState<{ success: boolean; data: any[]; summary?: { USD: number; TRY: number; SYP: number } }>({
+    success: true,
+    data: [],
+    summary: { USD: 0, TRY: 0, SYP: 0 },
+  });
   const [topSale, setTopSale] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [lowStock, setLowStock] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
@@ -178,6 +186,8 @@ const AnalyticPage: React.FC = () => {
           resStatus,
           resCountry,
           resOrdersByCity,
+          resShippingByCompany,
+          resDailyExpenses,
           resTopSale,
           resLowStock,
           resTopUsers,
@@ -187,6 +197,8 @@ const AnalyticPage: React.FC = () => {
           GetSalesByStatusAction(user.id, orderDateFilter),
           GetSalesByCity(user.id, orderDateFilter),
           GetOrdersByCity(user.id, orderDateFilter),
+          GetShippingTotalsByCompany(user.id, orderDateFilter),
+          GetDailyExpensesAnalytics(user.id, orderDateFilter),
           GetBestSellingProducts(user.id, orderDateFilter),
           GetLowStockProducts(user.id),
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
@@ -197,6 +209,8 @@ const AnalyticPage: React.FC = () => {
         setResult(resStatus as any);
         setCountry(resCountry as any);
         setOrdersByCity(resOrdersByCity as any);
+        setShippingByCompany(resShippingByCompany as any);
+        setDailyExpenses(resDailyExpenses as any);
         setTopSale(resTopSale as any);
         setLowStock(resLowStock as any);
         setTopSellingUsers(resTopUsers as any);
@@ -241,6 +255,8 @@ const AnalyticPage: React.FC = () => {
   const showCustomerGrowth = loading || (msgTimeline.data?.length || 0) > 0;
   const showSalesByCountry = loading || (country.data?.length || 0) > 0;
   const showOrdersByCity = loading || (ordersByCity.data?.length || 0) > 0;
+  const showShippingByCompany = loading || (shippingByCompany.data?.length || 0) > 0;
+  const showDailyExpenses = loading || (dailyExpenses.data?.length || 0) > 0;
   const showSalesGeo = loading || cityData.length > 0;
   const showTopProducts = loading || (topSale.data?.length || 0) > 0;
   const showLowStock = loading || (lowStock.data?.length || 0) > 0;
@@ -581,6 +597,65 @@ const AnalyticPage: React.FC = () => {
                 <span className="text-green-600 dark:text-green-400 font-bold text-lg">{formatUSD(item._sum?.finalAmount)}$</span>
               </div>
             ))}
+          </DynamicCard.Content>
+        </DynamicCard>
+      )}
+
+      {showShippingByCompany && (
+        <DynamicCard isLoading={loading} isError={!shippingByCompany.success} isEmpty={!loading && shippingByCompany.data?.length === 0} variant="glass" className="mt-6">
+          <DynamicCard.Header title="مجموع الشحن لكل شركة" description="إجمالي مبالغ الشحن من الطلبات بحسب شركة الشحن" icon={<Truck size={20} className="text-orange-500" />} />
+          <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {shippingByCompany.data?.map((item: any) => (
+              <div key={item.company} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 h-24">
+                <div className="flex flex-col justify-center">
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">{item.company || "غير محدد"}</span>
+                  <span className="text-xs text-slate-500">{item._count?.id || 0} طلب</span>
+                </div>
+                <span className="text-orange-600 dark:text-orange-400 font-bold text-lg">{formatUSD(item._sum?.shippingTotal)}$</span>
+              </div>
+            ))}
+          </DynamicCard.Content>
+        </DynamicCard>
+      )}
+
+      {showDailyExpenses && (
+        <DynamicCard isLoading={loading} isError={!dailyExpenses.success} isEmpty={!loading && dailyExpenses.data?.length === 0} variant="glass" className="mt-6">
+          <DynamicCard.Header title="تحليل المصاريف اليومية" description="تجميع المصاريف اليومية حسب التاريخ والعملات" icon={<ReceiptText size={20} className="text-rose-500" />} />
+          <DynamicCard.Content className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                <div className="text-xs text-slate-500 mb-1">إجمالي USD</div>
+                <div className="text-lg font-black text-emerald-600">{formatUSD(dailyExpenses.summary?.USD)} $</div>
+              </div>
+              <div className="p-4 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                <div className="text-xs text-slate-500 mb-1">إجمالي TRY</div>
+                <div className="text-lg font-black text-amber-600">{Number(dailyExpenses.summary?.TRY || 0).toLocaleString("en-US", { maximumFractionDigits: 2 })} ₺</div>
+              </div>
+              <div className="p-4 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                <div className="text-xs text-slate-500 mb-1">إجمالي SYP</div>
+                <div className="text-lg font-black text-blue-600">{Number(dailyExpenses.summary?.SYP || 0).toLocaleString("en-US", { maximumFractionDigits: 2 })} ل.س</div>
+              </div>
+            </div>
+
+            <div className="h-[320px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dailyExpenses.data} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    formatter={(value: number | undefined, name: string) => {
+                      if (name === "TRY") return [`${Number(value || 0).toLocaleString("en-US")} ₺`, "TRY"];
+                      if (name === "SYP") return [`${Number(value || 0).toLocaleString("en-US")} ل.س`, "SYP"];
+                      return [`${formatUSD(value)} $`, "USD"];
+                    }}
+                  />
+                  <Bar dataKey="USD" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="TRY" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="SYP" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </DynamicCard.Content>
         </DynamicCard>
       )}

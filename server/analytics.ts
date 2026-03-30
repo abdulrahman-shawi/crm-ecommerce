@@ -690,6 +690,173 @@ export async function GetOrdersByCity(userId: string, dateFilter?: OrderDateFilt
     return { success: false, data: [] };
   }
 }
+
+export async function GetShippingTotalsByCompany(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found", data: [] };
+
+    const canViewAll = isAdmin(user) || Boolean(user?.permission?.viewOrders);
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+
+    const whereClause = {
+      ...(canViewAll ? {} : { userId: userId }),
+      ...(warehouseScope ? warehouseScope : {}),
+      ...(createdAtFilter ? {
+        OR: [
+          { manualCreatedAt: createdAtFilter },
+          {
+            AND: [
+              { manualCreatedAt: null },
+              { createdAt: createdAtFilter }
+            ]
+          }
+        ]
+      } : {}),
+    };
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        shippingPrice: true,
+        usdToTryRateAtOrder: true,
+        shipping: {
+          select: {
+            name: true,
+          }
+        },
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
+      }
+    });
+
+    const groupedByCompany = orders.reduce((acc, order) => {
+      const companyName = String(order.shipping?.name || "غير محدد").trim() || "غير محدد";
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      const shippingValue = normalizeOrderAmountToUSD(
+        Number(order.shippingPrice || 0),
+        order.warehouse?.location,
+        effectiveRate
+      );
+
+      if (!acc[companyName]) {
+        acc[companyName] = {
+          company: companyName,
+          _count: { id: 0 },
+          _sum: { shippingTotal: 0 },
+        };
+      }
+
+      acc[companyName]._count.id += 1;
+      acc[companyName]._sum.shippingTotal += shippingValue;
+      return acc;
+    }, {} as Record<string, { company: string; _count: { id: number }; _sum: { shippingTotal: number } }>);
+
+    const shippingTotals = Object.values(groupedByCompany).sort(
+      (a, b) => (b._sum.shippingTotal || 0) - (a._sum.shippingTotal || 0)
+    );
+
+    return { success: true, data: shippingTotals };
+  } catch (error) {
+    console.error("Error in GetShippingTotalsByCompany:", error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function GetDailyExpensesAnalytics(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found", data: [] };
+
+    const isAdminUser = isAdmin(user);
+    const canViewExpenses = isAdminUser || Boolean(user?.permission?.viewExpenses);
+    if (!canViewExpenses) return { success: true, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
+
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const allowedPaidOffices: Array<"SYRIA" | "TURKEY"> = [];
+    if (user?.permission?.accessSyria === true) allowedPaidOffices.push("SYRIA");
+    if (user?.permission?.accessTurkey === true) allowedPaidOffices.push("TURKEY");
+
+    const whereClause: any = {
+      type: "DAILY",
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+    };
+
+    if (!isAdminUser) {
+      if (allowedPaidOffices.length === 0) {
+        return { success: true, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
+      }
+      whereClause.paidFromOffice = { in: allowedPaidOffices };
+    }
+
+    const expenses = await prisma.expense.findMany({
+      where: whereClause,
+      select: {
+        amount: true,
+        currency: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const groupedByDay = expenses.reduce((acc, expense) => {
+      const dateKey = new Date(expense.createdAt).toISOString().split("T")[0];
+      const currencyKey = String(expense.currency || "USD").toUpperCase();
+      const safeAmount = Number(expense.amount || 0);
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          date: dateKey,
+          count: 0,
+          USD: 0,
+          TRY: 0,
+          SYP: 0,
+        };
+      }
+
+      acc[dateKey].count += 1;
+      if (currencyKey === "TRY") {
+        acc[dateKey].TRY += safeAmount;
+      } else if (currencyKey === "SYP") {
+        acc[dateKey].SYP += safeAmount;
+      } else {
+        acc[dateKey].USD += safeAmount;
+      }
+
+      return acc;
+    }, {} as Record<string, { date: string; count: number; USD: number; TRY: number; SYP: number }>);
+
+    const dailyData = Object.values(groupedByDay).sort((a, b) => a.date.localeCompare(b.date));
+
+    const summary = dailyData.reduce(
+      (acc, day) => {
+        acc.USD += Number(day.USD || 0);
+        acc.TRY += Number(day.TRY || 0);
+        acc.SYP += Number(day.SYP || 0);
+        return acc;
+      },
+      { USD: 0, TRY: 0, SYP: 0 }
+    );
+
+    return { success: true, data: dailyData, summary };
+  } catch (error) {
+    console.error("Error in GetDailyExpensesAnalytics:", error);
+    return { success: false, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
+  }
+}
 // src/actions/analytics.ts
 
 export async function GetCustomerInteractions(userId: string, dateFilter?: OrderDateFilter) {
