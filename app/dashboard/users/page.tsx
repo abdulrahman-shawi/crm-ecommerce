@@ -871,7 +871,7 @@ const UserManagement: React.FunctionComponent = () => {
       >
         <div className="p-4 space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div className="text-sm text-slate-500">اختر الشهر لعرض التقرير المالي للموظف</div>
+            <div className="text-sm text-slate-500 dark:text-slate-300">اختر الشهر لعرض التقرير المالي للموظف</div>
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">الشهر</label>
               <input
@@ -895,16 +895,16 @@ const UserManagement: React.FunctionComponent = () => {
             <>
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="text-xs text-slate-500">الراتب الثابت</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-300">الراتب الثابت</div>
                   <div className="mt-1 text-lg font-black text-slate-700 dark:text-slate-100">{formatMoney(financialReportData.fixedSalary)}</div>
                 </div>
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="text-xs text-slate-500">عمولة المبيعات</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-300">عمولة المبيعات</div>
                   <div className="mt-1 text-lg font-black text-emerald-600">{formatMoney(financialReportData.totalCommissionAmount)}</div>
-                  <div className="text-[11px] text-slate-500">النسبة المعتمدة: {formatMoney(financialReportData.assignedCommissionPercent)}%</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-300">النسبة المعتمدة: {formatMoney(financialReportData.assignedCommissionPercent)}%</div>
                 </div>
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="text-xs text-slate-500">المستحق النهائي</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-300">المستحق النهائي</div>
                   <div className="mt-1 text-lg font-black text-blue-600">{formatMoney(financialReportData.payableSalary)}</div>
                 </div>
               </div>
@@ -938,16 +938,16 @@ const UserManagement: React.FunctionComponent = () => {
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <div>
                     <div className="font-black text-slate-800 dark:text-white">تفصيل المبيعات حسب سعر صرف الدولار</div>
-                    <div className="text-xs text-slate-500">الطلبات التركية تُجمع حسب سعر الصرف المستخدم، والطلبات المباشرة بالدولار تبقى في قسم مستقل</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-300">الطلبات التركية تُجمع حسب سعر الصرف المستخدم، والطلبات المباشرة بالدولار تبقى في قسم مستقل</div>
                   </div>
                 </div>
                 {financialReportData.exchangeRateBreakdown.length === 0 ? (
-                  <div className="text-sm text-slate-500">لا توجد بيانات لسعر الصرف في هذا الشهر.</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-300">لا توجد بيانات لسعر الصرف في هذا الشهر.</div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                       <thead>
-                        <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
+                        <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-300">
                           <th className="px-3 py-2 text-right">نوع التسعير</th>
                           <th className="px-3 py-2 text-right">سعر الصرف</th>
                           <th className="px-3 py-2 text-right">الطلبات</th>
@@ -960,10 +960,10 @@ const UserManagement: React.FunctionComponent = () => {
                         {financialReportData.exchangeRateBreakdown.map((row) => (
                           <tr key={`${row.label}-${row.ordersCount}`} className="border-b border-slate-100 dark:border-slate-800/70">
                             <td className="px-3 py-2 font-bold text-slate-800 dark:text-slate-100">{row.sourceType === "TRY_CONVERTED" ? "طلبات تركيا" : "طلبات USD مباشرة"}</td>
-                            <td className="px-3 py-2">{row.exchangeRate === null ? "-" : row.label}</td>
-                            <td className="px-3 py-2">{Number(row.ordersCount || 0).toLocaleString()}</td>
+                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{row.exchangeRate === null ? "-" : row.label}</td>
+                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{Number(row.ordersCount || 0).toLocaleString()}</td>
                             <td className="px-3 py-2 font-bold text-emerald-600">{formatMoney(row.revenue)}</td>
-                            <td className="px-3 py-2">{formatMoney(row.shipping)}</td>
+                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{formatMoney(row.shipping)}</td>
                             <td className="px-3 py-2 font-bold text-blue-600">{formatMoney(row.netRevenue)}</td>
                           </tr>
                         ))}
@@ -977,10 +977,10 @@ const UserManagement: React.FunctionComponent = () => {
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                   <div className="mb-3">
                     <div className="font-black text-slate-800 dark:text-white">أفضل المنتجات مبيعًا</div>
-                    <div className="text-xs text-slate-500">مرتب حسب أعلى إيراد خلال الشهر المحدد</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-300">مرتب حسب أعلى إيراد خلال الشهر المحدد</div>
                   </div>
                   {financialReportData.productBreakdown.length === 0 ? (
-                    <div className="text-sm text-slate-500">لا توجد منتجات مباعة في هذا الشهر.</div>
+                    <div className="text-sm text-slate-500 dark:text-slate-300">لا توجد منتجات مباعة في هذا الشهر.</div>
                   ) : (
                     <div className="space-y-2">
                       {financialReportData.productBreakdown.slice(0, 8).map((row) => (
@@ -989,7 +989,7 @@ const UserManagement: React.FunctionComponent = () => {
                             <div className="font-bold text-slate-800 dark:text-slate-100">{row.productName}</div>
                             <div className="text-sm font-black text-emerald-600">{formatMoney(row.revenue)} $</div>
                           </div>
-                          <div className="mt-1 text-xs text-slate-500">
+                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">
                             الكمية: {Number(row.quantity || 0).toLocaleString()} | الطلبات: {Number(row.ordersCount || 0).toLocaleString()}
                           </div>
                         </div>
@@ -1001,15 +1001,15 @@ const UserManagement: React.FunctionComponent = () => {
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                   <div className="mb-3">
                     <div className="font-black text-slate-800 dark:text-white">التوزيع اليومي للمبيعات</div>
-                    <div className="text-xs text-slate-500">متابعة الأداء يومًا بيوم داخل الشهر</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-300">متابعة الأداء يومًا بيوم داخل الشهر</div>
                   </div>
                   {financialReportData.dailySalesBreakdown.length === 0 ? (
-                    <div className="text-sm text-slate-500">لا توجد حركة يومية في هذا الشهر.</div>
+                    <div className="text-sm text-slate-500 dark:text-slate-300">لا توجد حركة يومية في هذا الشهر.</div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-sm">
                         <thead>
-                          <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
+                          <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-300">
                             <th className="px-3 py-2 text-right">التاريخ</th>
                             <th className="px-3 py-2 text-right">الكمية</th>
                             <th className="px-3 py-2 text-right">الطلبات</th>
@@ -1020,8 +1020,8 @@ const UserManagement: React.FunctionComponent = () => {
                           {financialReportData.dailySalesBreakdown.map((row) => (
                             <tr key={row.date} className="border-b border-slate-100 dark:border-slate-800/70">
                               <td className="px-3 py-2 font-medium text-slate-800 dark:text-slate-100">{new Date(row.date).toLocaleDateString("ar-EG")}</td>
-                              <td className="px-3 py-2">{Number(row.quantity || 0).toLocaleString()}</td>
-                              <td className="px-3 py-2">{Number(row.ordersCount || 0).toLocaleString()}</td>
+                              <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{Number(row.quantity || 0).toLocaleString()}</td>
+                              <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{Number(row.ordersCount || 0).toLocaleString()}</td>
                               <td className="px-3 py-2 font-bold text-blue-600">{formatMoney(row.revenue)}</td>
                             </tr>
                           ))}
@@ -1035,16 +1035,16 @@ const UserManagement: React.FunctionComponent = () => {
               <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                 <div className="mb-3">
                   <div className="font-black text-slate-800 dark:text-white">تفصيل الحالات</div>
-                  <div className="text-xs text-slate-500">عدد الطلبات وقيمتها حسب حالة الطلب</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-300">عدد الطلبات وقيمتها حسب حالة الطلب</div>
                 </div>
                 {financialReportData.statusBreakdown.length === 0 ? (
-                  <div className="text-sm text-slate-500">لا توجد حالات مسجلة في هذا الشهر.</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-300">لا توجد حالات مسجلة في هذا الشهر.</div>
                 ) : (
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                     {financialReportData.statusBreakdown.map((row) => (
                       <div key={row.status} className="rounded-lg border border-slate-100 p-3 dark:border-slate-800">
                         <div className="font-bold text-slate-800 dark:text-slate-100">{row.status}</div>
-                        <div className="mt-1 text-xs text-slate-500">الطلبات: {Number(row.count || 0).toLocaleString()}</div>
+                        <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">الطلبات: {Number(row.count || 0).toLocaleString()}</div>
                         <div className="text-sm font-black text-violet-600">{formatMoney(row.amount)} $</div>
                       </div>
                     ))}
