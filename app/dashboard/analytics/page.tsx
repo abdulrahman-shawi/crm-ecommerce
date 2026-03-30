@@ -644,7 +644,7 @@ const AnalyticPage: React.FC = () => {
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    formatter={(value: number | undefined, name: string) => {
+                    formatter={(value: number | undefined, name?: string) => {
                       if (name === "TRY") return [`${Number(value || 0).toLocaleString("en-US")} ₺`, "TRY"];
                       if (name === "SYP") return [`${Number(value || 0).toLocaleString("en-US")} ل.س`, "SYP"];
                       return [`${formatUSD(value)} $`, "USD"];
