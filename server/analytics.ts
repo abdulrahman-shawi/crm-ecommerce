@@ -1490,7 +1490,14 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     const totalSoldByUser = new Map<string, number>();
-    const pricePointMap = new Map<string, { unitPrice: number; quantity: number; revenue: number; orderIds: Set<number> }>();
+    const exchangeRateMap = new Map<string, {
+      label: string;
+      exchangeRate: number | null;
+      sourceType: "TRY_CONVERTED" | "USD_DIRECT";
+      revenue: number;
+      shipping: number;
+      orderIds: Set<number>;
+    }>();
     const productBreakdownMap = new Map<string, { productId: number; productName: string; quantity: number; revenue: number; orderIds: Set<number> }>();
     const dailySalesMap = new Map<string, { date: string; revenue: number; quantity: number; orderIds: Set<number> }>();
 
@@ -1513,22 +1520,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const effectiveRate = resolveOrderExchangeRate(item.order, turkeyExchangeRate);
       const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, effectiveRate);
       const quantity = Math.max(0, Number(item.quantity || 0));
-      const unitPriceUSD = quantity > 0 ? Number((lineAmount / quantity).toFixed(2)) : 0;
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
-
-      const priceKey = unitPriceUSD.toFixed(2);
-      const currentPricePoint = pricePointMap.get(priceKey) || {
-        unitPrice: unitPriceUSD,
-        quantity: 0,
-        revenue: 0,
-        orderIds: new Set<number>(),
-      };
-      currentPricePoint.quantity += quantity;
-      currentPricePoint.revenue += lineAmount;
-      currentPricePoint.orderIds.add(item.orderId);
-      pricePointMap.set(priceKey, currentPricePoint);
 
       const productKey = String(item.productId);
       const currentProduct = productBreakdownMap.get(productKey) || {
@@ -1631,6 +1625,29 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     }, 0);
     const netSalesForCommission = Math.max(0, totalSalesAmount - totalShippingAmount);
 
+    for (const order of revenueOrders) {
+      const warehouseLocation = String(order.warehouse?.location || "").trim();
+      const revenue = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      const shipping = normalizeOrderAmountToUSD(Number(order.shippingPrice || 0), order.warehouse?.location, effectiveRate);
+      const isTurkeyOrder = warehouseLocation === "تركيا";
+      const key = isTurkeyOrder ? `TRY:${effectiveRate.toFixed(4)}` : "USD_DIRECT";
+
+      const currentRate = exchangeRateMap.get(key) || {
+        label: isTurkeyOrder ? `${Number(effectiveRate).toLocaleString("en-US", { maximumFractionDigits: 4 })} TRY` : "USD مباشر",
+        exchangeRate: isTurkeyOrder ? Number(effectiveRate) : null,
+        sourceType: isTurkeyOrder ? "TRY_CONVERTED" : "USD_DIRECT",
+        revenue: 0,
+        shipping: 0,
+        orderIds: new Set<number>(),
+      };
+
+      currentRate.revenue += revenue;
+      currentRate.shipping += shipping;
+      currentRate.orderIds.add(order.id);
+      exchangeRateMap.set(key, currentRate);
+    }
+
     const statusMap = new Map<string, { status: string; count: number; amount: number }>();
     for (const order of scopedOrders) {
       const amount = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
@@ -1644,14 +1661,22 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       statusMap.set(order.status, currentStatus);
     }
 
-    const pricePointBreakdown = Array.from(pricePointMap.values())
+    const exchangeRateBreakdown = Array.from(exchangeRateMap.values())
       .map((row) => ({
-        unitPrice: row.unitPrice,
-        quantity: row.quantity,
+        label: row.label,
+        exchangeRate: row.exchangeRate,
+        sourceType: row.sourceType,
         revenue: Number(row.revenue.toFixed(2)),
+        shipping: Number(row.shipping.toFixed(2)),
+        netRevenue: Number(Math.max(0, row.revenue - row.shipping).toFixed(2)),
         ordersCount: row.orderIds.size,
       }))
-      .sort((a, b) => b.revenue - a.revenue);
+      .sort((a, b) => {
+        if (a.sourceType === b.sourceType) {
+          return b.revenue - a.revenue;
+        }
+        return a.sourceType === "TRY_CONVERTED" ? -1 : 1;
+      });
 
     const productBreakdown = Array.from(productBreakdownMap.values())
       .map((row) => ({
@@ -1703,7 +1728,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         totalCommissionAmount,
         commissionPercent,
         assignedCommissionPercent,
-        pricePointBreakdown,
+        exchangeRateBreakdown,
         productBreakdown,
         dailySalesBreakdown,
         statusBreakdown

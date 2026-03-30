@@ -116,7 +116,7 @@ const UserManagement: React.FunctionComponent = () => {
     totalDefaultSalary: number;
     editedSalary: number | null;
     payableSalary: number;
-    pricePointBreakdown: Array<{ unitPrice: number; quantity: number; revenue: number; ordersCount: number }>;
+    exchangeRateBreakdown: Array<{ label: string; exchangeRate: number | null; sourceType: "TRY_CONVERTED" | "USD_DIRECT"; revenue: number; shipping: number; netRevenue: number; ordersCount: number }>;
     productBreakdown: Array<{ productId: number; productName: string; quantity: number; revenue: number; ordersCount: number }>;
     dailySalesBreakdown: Array<{ date: string; quantity: number; revenue: number; ordersCount: number }>;
     statusBreakdown: Array<{ status: string; count: number; amount: number }>;
@@ -652,7 +652,7 @@ const UserManagement: React.FunctionComponent = () => {
         totalDefaultSalary,
         editedSalary: hasEditedSalary ? editedSalaryValue : null,
         payableSalary,
-        pricePointBreakdown: Array.isArray(summary?.pricePointBreakdown) ? summary.pricePointBreakdown : [],
+        exchangeRateBreakdown: Array.isArray(summary?.exchangeRateBreakdown) ? summary.exchangeRateBreakdown : [],
         productBreakdown: Array.isArray(summary?.productBreakdown) ? summary.productBreakdown : [],
         dailySalesBreakdown: Array.isArray(summary?.dailySalesBreakdown) ? summary.dailySalesBreakdown : [],
         statusBreakdown: Array.isArray(summary?.statusBreakdown) ? summary.statusBreakdown : [],
@@ -937,30 +937,34 @@ const UserManagement: React.FunctionComponent = () => {
               <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <div>
-                    <div className="font-black text-slate-800 dark:text-white">تفصيل المبيعات حسب سعر الدولار</div>
-                    <div className="text-xs text-slate-500">يعرض سعر الوحدة بالدولار مع عدد القطع والإيراد الناتج عنها</div>
+                    <div className="font-black text-slate-800 dark:text-white">تفصيل المبيعات حسب سعر صرف الدولار</div>
+                    <div className="text-xs text-slate-500">الطلبات التركية تُجمع حسب سعر الصرف المستخدم، والطلبات المباشرة بالدولار تبقى في قسم مستقل</div>
                   </div>
                 </div>
-                {financialReportData.pricePointBreakdown.length === 0 ? (
-                  <div className="text-sm text-slate-500">لا توجد بيانات سعرية في هذا الشهر.</div>
+                {financialReportData.exchangeRateBreakdown.length === 0 ? (
+                  <div className="text-sm text-slate-500">لا توجد بيانات لسعر الصرف في هذا الشهر.</div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                       <thead>
                         <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
-                          <th className="px-3 py-2 text-right">سعر الوحدة $</th>
-                          <th className="px-3 py-2 text-right">الكمية</th>
+                          <th className="px-3 py-2 text-right">نوع التسعير</th>
+                          <th className="px-3 py-2 text-right">سعر الصرف</th>
                           <th className="px-3 py-2 text-right">الطلبات</th>
-                          <th className="px-3 py-2 text-right">الإيراد</th>
+                          <th className="px-3 py-2 text-right">المبيعات</th>
+                          <th className="px-3 py-2 text-right">الشحن</th>
+                          <th className="px-3 py-2 text-right">الصافي</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {financialReportData.pricePointBreakdown.slice(0, 12).map((row) => (
-                          <tr key={`${row.unitPrice}-${row.ordersCount}`} className="border-b border-slate-100 dark:border-slate-800/70">
-                            <td className="px-3 py-2 font-bold text-slate-800 dark:text-slate-100">{formatMoney(row.unitPrice)}</td>
-                            <td className="px-3 py-2">{Number(row.quantity || 0).toLocaleString()}</td>
+                        {financialReportData.exchangeRateBreakdown.map((row) => (
+                          <tr key={`${row.label}-${row.ordersCount}`} className="border-b border-slate-100 dark:border-slate-800/70">
+                            <td className="px-3 py-2 font-bold text-slate-800 dark:text-slate-100">{row.sourceType === "TRY_CONVERTED" ? "طلبات تركيا" : "طلبات USD مباشرة"}</td>
+                            <td className="px-3 py-2">{row.exchangeRate === null ? "-" : row.label}</td>
                             <td className="px-3 py-2">{Number(row.ordersCount || 0).toLocaleString()}</td>
                             <td className="px-3 py-2 font-bold text-emerald-600">{formatMoney(row.revenue)}</td>
+                            <td className="px-3 py-2">{formatMoney(row.shipping)}</td>
+                            <td className="px-3 py-2 font-bold text-blue-600">{formatMoney(row.netRevenue)}</td>
                           </tr>
                         ))}
                       </tbody>
