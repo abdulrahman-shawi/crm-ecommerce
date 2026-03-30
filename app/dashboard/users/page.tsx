@@ -7,9 +7,11 @@ import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
 import { assignManagerToEmployees, createUserTarget, deleteuser, getUserActivityTargetProgress, setUserActivityTarget, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { GetUserTargetProgress } from '@/server/analytics';
+import { getEmployeeSalaryAdjustments } from '@/server/employee-salaries';
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
-import { Mail, Plus } from 'lucide-react';
+import { Coins, Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
 import { hasPermission } from '@/lib/utils';
 import { getProduct } from '@/server/product';
@@ -54,6 +56,13 @@ const DEFAULT_ACTIVITY_WEEK_DAYS = ACTIVITY_WEEKDAY_OPTIONS.map((item) => item.v
 
 type ActivityWeekDay = (typeof ACTIVITY_WEEKDAY_OPTIONS)[number]["value"];
 
+const getCurrentMonthKey = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+};
+
+const formatMoney = (value: number | undefined | null) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+
 const UserManagement: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -91,6 +100,23 @@ const UserManagement: React.FunctionComponent = () => {
   const [activityTargetStartDate, setActivityTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
   const [activityWeekDays, setActivityWeekDays] = React.useState<ActivityWeekDay[]>(DEFAULT_ACTIVITY_WEEK_DAYS);
   const [activityProgressByUser, setActivityProgressByUser] = React.useState<Record<string, any>>({});
+  const [isFinancialReportOpen, setIsFinancialReportOpen] = React.useState(false);
+  const [financialReportUser, setFinancialReportUser] = React.useState<any>(null);
+  const [financialReportMonth, setFinancialReportMonth] = React.useState<string>(getCurrentMonthKey);
+  const [financialReportLoading, setFinancialReportLoading] = React.useState(false);
+  const [financialReportData, setFinancialReportData] = React.useState<{
+    fixedSalary: number;
+    assignedCommissionPercent: number;
+    totalCommissionAmount: number;
+    totalSalesAmount: number;
+    totalShippingAmount: number;
+    netSalesForCommission: number;
+    totalOrdersCount: number;
+    deliveredOrdersCount: number;
+    totalDefaultSalary: number;
+    editedSalary: number | null;
+    payableSalary: number;
+  } | null>(null);
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -578,6 +604,73 @@ const UserManagement: React.FunctionComponent = () => {
     return users.some((row: any) => String(row?.parentId || "") === String(user?.id || ""));
   }, [user, users]);
 
+  const loadFinancialReport = React.useCallback(async (employee: any, monthKey: string) => {
+    setFinancialReportLoading(true);
+    try {
+      const employeeId = String(employee?.id || "");
+      if (!employeeId) {
+        toast.error("تعذر تحميل التقرير المالي لهذا الموظف");
+        return;
+      }
+
+      const [targetRes, adjustmentsRes] = await Promise.all([
+        GetUserTargetProgress(employeeId, monthKey),
+        getEmployeeSalaryAdjustments(monthKey),
+      ]);
+
+      if (!targetRes?.success) {
+        toast.error(targetRes?.error || "فشل في تحميل التقرير المالي");
+        setFinancialReportData(null);
+        return;
+      }
+
+      const summary: any = targetRes?.summary || {};
+      const fixedSalary = Number(employee?.wage || 0);
+      const totalCommissionAmount = Number(summary?.totalCommissionAmount || 0);
+      const totalDefaultSalary = fixedSalary + totalCommissionAmount;
+
+      const editedSalaryRecord = adjustmentsRes?.success
+        ? (adjustmentsRes.data || []).find((item: any) => String(item?.userId || "") === employeeId)
+        : null;
+      const editedSalaryValue = Number(editedSalaryRecord?.editedSalary);
+      const hasEditedSalary = Number.isFinite(editedSalaryValue);
+      const payableSalary = hasEditedSalary ? editedSalaryValue : totalDefaultSalary;
+
+      setFinancialReportData({
+        fixedSalary,
+        assignedCommissionPercent: Number((summary?.assignedCommissionPercent ?? employee?.salesCommissionPercent) || 0),
+        totalCommissionAmount,
+        totalSalesAmount: Number(summary?.totalSalesAmount || 0),
+        totalShippingAmount: Number(summary?.totalShippingAmount || 0),
+        netSalesForCommission: Number(summary?.netSalesForCommission || 0),
+        totalOrdersCount: Number(summary?.totalOrdersCount || 0),
+        deliveredOrdersCount: Number(summary?.deliveredOrdersCount || 0),
+        totalDefaultSalary,
+        editedSalary: hasEditedSalary ? editedSalaryValue : null,
+        payableSalary,
+      });
+    } catch (error) {
+      toast.error("حدث خطأ أثناء تحميل التقرير المالي");
+      setFinancialReportData(null);
+    } finally {
+      setFinancialReportLoading(false);
+    }
+  }, []);
+
+  const openFinancialReportModal = (employee: any) => {
+    const monthKey = getCurrentMonthKey();
+    setFinancialReportUser(employee);
+    setFinancialReportMonth(monthKey);
+    setIsFinancialReportOpen(true);
+    loadFinancialReport(employee, monthKey);
+  };
+
+  const handleFinancialMonthChange = async (nextMonth: string) => {
+    setFinancialReportMonth(nextMonth);
+    if (!financialReportUser || !nextMonth) return;
+    await loadFinancialReport(financialReportUser, nextMonth);
+  };
+
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
     (user && canManageAnyTargets) && {
@@ -603,6 +696,13 @@ const UserManagement: React.FunctionComponent = () => {
         }
 
         openActivityTargetModal(data);
+      }
+    },
+    (user && (user.accountType === "ADMIN" || hasPermission(user, "viewEmployees"))) && {
+      label: "التقرير المالي",
+      icon: <Coins size={14} />,
+      onClick: (data: any) => {
+        openFinancialReportModal(data);
       }
     },
     (user && hasPermission(user, "editEmployees")) && {
@@ -754,6 +854,81 @@ const UserManagement: React.FunctionComponent = () => {
 
         ]
       } />
+
+      <AppModal
+        title={`التقرير المالي - ${financialReportUser?.username || ""}`}
+        isOpen={isFinancialReportOpen}
+        size='lg'
+        onClose={() => setIsFinancialReportOpen(false)}
+      >
+        <div className="p-4 space-y-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div className="text-sm text-slate-500">اختر الشهر لعرض التقرير المالي للموظف</div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">الشهر</label>
+              <input
+                type="month"
+                value={financialReportMonth}
+                onChange={(e) => handleFinancialMonthChange(e.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+              />
+            </div>
+          </div>
+
+          {financialReportLoading ? (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900">
+              جاري تحميل التقرير المالي...
+            </div>
+          ) : !financialReportData ? (
+            <div className="rounded-lg border border-rose-200 bg-rose-50 p-6 text-center text-sm text-rose-600 dark:border-rose-900/40 dark:bg-rose-950/20">
+              لا توجد بيانات مالية متاحة لهذا الموظف في الشهر المحدد.
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="text-xs text-slate-500">الراتب الثابت</div>
+                  <div className="mt-1 text-lg font-black text-slate-700 dark:text-slate-100">{formatMoney(financialReportData.fixedSalary)}</div>
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="text-xs text-slate-500">عمولة المبيعات</div>
+                  <div className="mt-1 text-lg font-black text-emerald-600">{formatMoney(financialReportData.totalCommissionAmount)}</div>
+                  <div className="text-[11px] text-slate-500">النسبة المعتمدة: {formatMoney(financialReportData.assignedCommissionPercent)}%</div>
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="text-xs text-slate-500">المستحق النهائي</div>
+                  <div className="mt-1 text-lg font-black text-blue-600">{formatMoney(financialReportData.payableSalary)}</div>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-2 font-black text-slate-700 dark:text-slate-100">تفاصيل المبيعات</div>
+                  <div className="space-y-1 text-slate-600 dark:text-slate-300">
+                    <div>إجمالي المبيعات: <span className="font-bold">{formatMoney(financialReportData.totalSalesAmount)}</span></div>
+                    <div>إجمالي الشحن: <span className="font-bold">{formatMoney(financialReportData.totalShippingAmount)}</span></div>
+                    <div>صافي المبيعات للعمولة: <span className="font-bold">{formatMoney(financialReportData.netSalesForCommission)}</span></div>
+                    <div>إجمالي الطلبات: <span className="font-bold">{Number(financialReportData.totalOrdersCount || 0).toLocaleString()}</span></div>
+                    <div>الطلبات المسلمة: <span className="font-bold">{Number(financialReportData.deliveredOrdersCount || 0).toLocaleString()}</span></div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-2 font-black text-slate-700 dark:text-slate-100">تفاصيل الراتب</div>
+                  <div className="space-y-1 text-slate-600 dark:text-slate-300">
+                    <div>المستحق الافتراضي: <span className="font-bold">{formatMoney(financialReportData.totalDefaultSalary)}</span></div>
+                    <div>
+                      الراتب المعدل:
+                      <span className="font-bold"> {financialReportData.editedSalary === null ? "لا يوجد تعديل" : formatMoney(financialReportData.editedSalary)}</span>
+                    </div>
+                    <div>الراتب النهائي المعتمد: <span className="font-bold text-blue-600">{formatMoney(financialReportData.payableSalary)}</span></div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </AppModal>
 
       <AppModal
         title="تعيين موظف مسؤول لعدة موظفين"
