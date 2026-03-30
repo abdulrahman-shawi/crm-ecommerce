@@ -1384,11 +1384,42 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         ...dateWhereClause,
       },
       select: {
+        id: true,
+        orderNumber: true,
+        status: true,
+        createdAt: true,
         userId: true,
         finalAmount: true,
         discount: true,
         usdToTryRateAtOrder: true,
         shippingPrice: true,
+        items: {
+          select: {
+            quantity: true,
+            price: true,
+            discount: true,
+          }
+        },
+        warehouse: {
+          select: {
+            location: true,
+          }
+        }
+      }
+    });
+
+    const scopedOrders = await prisma.order.findMany({
+      where: {
+        ...orderScope,
+        ...dateWhereClause,
+      },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        finalAmount: true,
+        discount: true,
+        usdToTryRateAtOrder: true,
         items: {
           select: {
             quantity: true,
@@ -1418,9 +1449,15 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         quantity: true,
         price: true,
         discount: true,
+        product: {
+          select: {
+            name: true,
+          }
+        },
         order: {
           select: {
             userId: true,
+            orderNumber: true,
             discount: true,
             usdToTryRateAtOrder: true,
             createdAt: true,
@@ -1453,6 +1490,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const soldMap = new Map<string, Array<{ createdAt: Date; quantity: number; amount: number }>>();
     const totalSoldByUser = new Map<string, number>();
+    const pricePointMap = new Map<string, { unitPrice: number; quantity: number; revenue: number; orderIds: Set<number> }>();
+    const productBreakdownMap = new Map<string, { productId: number; productName: string; quantity: number; revenue: number; orderIds: Set<number> }>();
+    const dailySalesMap = new Map<string, { date: string; revenue: number; quantity: number; orderIds: Set<number> }>();
 
     const orderItemsRawTotals = new Map<number, number>();
     for (const item of orderItems) {
@@ -1472,9 +1512,48 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const adjustedLineAmount = Math.max(0, rawLineAmount - discountShare);
       const effectiveRate = resolveOrderExchangeRate(item.order, turkeyExchangeRate);
       const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, effectiveRate);
+      const quantity = Math.max(0, Number(item.quantity || 0));
+      const unitPriceUSD = quantity > 0 ? Number((lineAmount / quantity).toFixed(2)) : 0;
       const list = soldMap.get(key) || [];
       list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
+
+      const priceKey = unitPriceUSD.toFixed(2);
+      const currentPricePoint = pricePointMap.get(priceKey) || {
+        unitPrice: unitPriceUSD,
+        quantity: 0,
+        revenue: 0,
+        orderIds: new Set<number>(),
+      };
+      currentPricePoint.quantity += quantity;
+      currentPricePoint.revenue += lineAmount;
+      currentPricePoint.orderIds.add(item.orderId);
+      pricePointMap.set(priceKey, currentPricePoint);
+
+      const productKey = String(item.productId);
+      const currentProduct = productBreakdownMap.get(productKey) || {
+        productId: Number(item.productId),
+        productName: item.product?.name || `#${item.productId}`,
+        quantity: 0,
+        revenue: 0,
+        orderIds: new Set<number>(),
+      };
+      currentProduct.quantity += quantity;
+      currentProduct.revenue += lineAmount;
+      currentProduct.orderIds.add(item.orderId);
+      productBreakdownMap.set(productKey, currentProduct);
+
+      const dayKey = new Date(item.order.createdAt).toISOString().slice(0, 10);
+      const currentDay = dailySalesMap.get(dayKey) || {
+        date: dayKey,
+        revenue: 0,
+        quantity: 0,
+        orderIds: new Set<number>(),
+      };
+      currentDay.revenue += lineAmount;
+      currentDay.quantity += quantity;
+      currentDay.orderIds.add(item.orderId);
+      dailySalesMap.set(dayKey, currentDay);
 
       if (item.order.userId) {
         const total = totalSoldByUser.get(item.order.userId) || 0;
@@ -1552,6 +1631,55 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     }, 0);
     const netSalesForCommission = Math.max(0, totalSalesAmount - totalShippingAmount);
 
+    const statusMap = new Map<string, { status: string; count: number; amount: number }>();
+    for (const order of scopedOrders) {
+      const amount = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
+      const currentStatus = statusMap.get(order.status) || {
+        status: order.status,
+        count: 0,
+        amount: 0,
+      };
+      currentStatus.count += 1;
+      currentStatus.amount += amount;
+      statusMap.set(order.status, currentStatus);
+    }
+
+    const pricePointBreakdown = Array.from(pricePointMap.values())
+      .map((row) => ({
+        unitPrice: row.unitPrice,
+        quantity: row.quantity,
+        revenue: Number(row.revenue.toFixed(2)),
+        ordersCount: row.orderIds.size,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
+
+    const productBreakdown = Array.from(productBreakdownMap.values())
+      .map((row) => ({
+        productId: row.productId,
+        productName: row.productName,
+        quantity: row.quantity,
+        revenue: Number(row.revenue.toFixed(2)),
+        ordersCount: row.orderIds.size,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
+
+    const dailySalesBreakdown = Array.from(dailySalesMap.values())
+      .map((row) => ({
+        date: row.date,
+        quantity: row.quantity,
+        revenue: Number(row.revenue.toFixed(2)),
+        ordersCount: row.orderIds.size,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    const statusBreakdown = Array.from(statusMap.values())
+      .map((row) => ({
+        status: row.status,
+        count: row.count,
+        amount: Number(row.amount.toFixed(2)),
+      }))
+      .sort((a, b) => b.count - a.count);
+
     const targetUser = await prisma.user.findUnique({
       where: { id: effectiveUserId },
       select: { salesCommissionPercent: true }
@@ -1574,7 +1702,11 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         deliveredOrdersCount,
         totalCommissionAmount,
         commissionPercent,
-        assignedCommissionPercent
+        assignedCommissionPercent,
+        pricePointBreakdown,
+        productBreakdown,
+        dailySalesBreakdown,
+        statusBreakdown
       }
     };
   } catch (error) {

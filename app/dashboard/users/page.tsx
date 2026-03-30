@@ -116,6 +116,10 @@ const UserManagement: React.FunctionComponent = () => {
     totalDefaultSalary: number;
     editedSalary: number | null;
     payableSalary: number;
+    pricePointBreakdown: Array<{ unitPrice: number; quantity: number; revenue: number; ordersCount: number }>;
+    productBreakdown: Array<{ productId: number; productName: string; quantity: number; revenue: number; ordersCount: number }>;
+    dailySalesBreakdown: Array<{ date: string; quantity: number; revenue: number; ordersCount: number }>;
+    statusBreakdown: Array<{ status: string; count: number; amount: number }>;
   } | null>(null);
   const {user} = useAuth()
   const getAlluser = async () => {
@@ -648,6 +652,10 @@ const UserManagement: React.FunctionComponent = () => {
         totalDefaultSalary,
         editedSalary: hasEditedSalary ? editedSalaryValue : null,
         payableSalary,
+        pricePointBreakdown: Array.isArray(summary?.pricePointBreakdown) ? summary.pricePointBreakdown : [],
+        productBreakdown: Array.isArray(summary?.productBreakdown) ? summary.productBreakdown : [],
+        dailySalesBreakdown: Array.isArray(summary?.dailySalesBreakdown) ? summary.dailySalesBreakdown : [],
+        statusBreakdown: Array.isArray(summary?.statusBreakdown) ? summary.statusBreakdown : [],
       });
     } catch (error) {
       toast.error("حدث خطأ أثناء تحميل التقرير المالي");
@@ -924,6 +932,120 @@ const UserManagement: React.FunctionComponent = () => {
                     <div>الراتب النهائي المعتمد: <span className="font-bold text-blue-600">{formatMoney(financialReportData.payableSalary)}</span></div>
                   </div>
                 </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <div>
+                    <div className="font-black text-slate-800 dark:text-white">تفصيل المبيعات حسب سعر الدولار</div>
+                    <div className="text-xs text-slate-500">يعرض سعر الوحدة بالدولار مع عدد القطع والإيراد الناتج عنها</div>
+                  </div>
+                </div>
+                {financialReportData.pricePointBreakdown.length === 0 ? (
+                  <div className="text-sm text-slate-500">لا توجد بيانات سعرية في هذا الشهر.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
+                          <th className="px-3 py-2 text-right">سعر الوحدة $</th>
+                          <th className="px-3 py-2 text-right">الكمية</th>
+                          <th className="px-3 py-2 text-right">الطلبات</th>
+                          <th className="px-3 py-2 text-right">الإيراد</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialReportData.pricePointBreakdown.slice(0, 12).map((row) => (
+                          <tr key={`${row.unitPrice}-${row.ordersCount}`} className="border-b border-slate-100 dark:border-slate-800/70">
+                            <td className="px-3 py-2 font-bold text-slate-800 dark:text-slate-100">{formatMoney(row.unitPrice)}</td>
+                            <td className="px-3 py-2">{Number(row.quantity || 0).toLocaleString()}</td>
+                            <td className="px-3 py-2">{Number(row.ordersCount || 0).toLocaleString()}</td>
+                            <td className="px-3 py-2 font-bold text-emerald-600">{formatMoney(row.revenue)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-3 lg:grid-cols-2">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-3">
+                    <div className="font-black text-slate-800 dark:text-white">أفضل المنتجات مبيعًا</div>
+                    <div className="text-xs text-slate-500">مرتب حسب أعلى إيراد خلال الشهر المحدد</div>
+                  </div>
+                  {financialReportData.productBreakdown.length === 0 ? (
+                    <div className="text-sm text-slate-500">لا توجد منتجات مباعة في هذا الشهر.</div>
+                  ) : (
+                    <div className="space-y-2">
+                      {financialReportData.productBreakdown.slice(0, 8).map((row) => (
+                        <div key={row.productId} className="rounded-lg border border-slate-100 p-3 dark:border-slate-800">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="font-bold text-slate-800 dark:text-slate-100">{row.productName}</div>
+                            <div className="text-sm font-black text-emerald-600">{formatMoney(row.revenue)} $</div>
+                          </div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            الكمية: {Number(row.quantity || 0).toLocaleString()} | الطلبات: {Number(row.ordersCount || 0).toLocaleString()}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-3">
+                    <div className="font-black text-slate-800 dark:text-white">التوزيع اليومي للمبيعات</div>
+                    <div className="text-xs text-slate-500">متابعة الأداء يومًا بيوم داخل الشهر</div>
+                  </div>
+                  {financialReportData.dailySalesBreakdown.length === 0 ? (
+                    <div className="text-sm text-slate-500">لا توجد حركة يومية في هذا الشهر.</div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
+                            <th className="px-3 py-2 text-right">التاريخ</th>
+                            <th className="px-3 py-2 text-right">الكمية</th>
+                            <th className="px-3 py-2 text-right">الطلبات</th>
+                            <th className="px-3 py-2 text-right">الإيراد</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {financialReportData.dailySalesBreakdown.map((row) => (
+                            <tr key={row.date} className="border-b border-slate-100 dark:border-slate-800/70">
+                              <td className="px-3 py-2 font-medium text-slate-800 dark:text-slate-100">{new Date(row.date).toLocaleDateString("ar-EG")}</td>
+                              <td className="px-3 py-2">{Number(row.quantity || 0).toLocaleString()}</td>
+                              <td className="px-3 py-2">{Number(row.ordersCount || 0).toLocaleString()}</td>
+                              <td className="px-3 py-2 font-bold text-blue-600">{formatMoney(row.revenue)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <div className="mb-3">
+                  <div className="font-black text-slate-800 dark:text-white">تفصيل الحالات</div>
+                  <div className="text-xs text-slate-500">عدد الطلبات وقيمتها حسب حالة الطلب</div>
+                </div>
+                {financialReportData.statusBreakdown.length === 0 ? (
+                  <div className="text-sm text-slate-500">لا توجد حالات مسجلة في هذا الشهر.</div>
+                ) : (
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                    {financialReportData.statusBreakdown.map((row) => (
+                      <div key={row.status} className="rounded-lg border border-slate-100 p-3 dark:border-slate-800">
+                        <div className="font-bold text-slate-800 dark:text-slate-100">{row.status}</div>
+                        <div className="mt-1 text-xs text-slate-500">الطلبات: {Number(row.count || 0).toLocaleString()}</div>
+                        <div className="text-sm font-black text-violet-600">{formatMoney(row.amount)} $</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}
