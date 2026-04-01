@@ -415,14 +415,15 @@ const DashboardPage: React.FunctionComponent = () => {
 
   const { totalSalesReward, productRewardTotal, valueRewardTotal } = React.useMemo(() => {
     const currentUserId = user?.id;
+    const shouldScopeToCurrentUser = user?.accountType !== "ADMIN";
     const valueRewards = valueTargets.reduce((sum, row) => {
-      if (currentUserId && row.userId !== currentUserId) return sum;
+      if (shouldScopeToCurrentUser && currentUserId && row.userId !== currentUserId) return sum;
       const reached = row.soldAmount >= row.targetValue && row.targetValue > 0;
       return reached ? sum + (Number(row.rewardValue) || 0) : sum;
     }, 0);
 
     const productRewards = filteredTargets.reduce((sum, row) => {
-      if (currentUserId && row.userId !== currentUserId) return sum;
+      if (shouldScopeToCurrentUser && currentUserId && row.userId !== currentUserId) return sum;
       const reached = row.soldQty >= row.requiredQty && row.requiredQty > 0;
       return reached ? sum + (Number(row.rewardValue) || 0) : sum;
     }, 0);
@@ -432,7 +433,7 @@ const DashboardPage: React.FunctionComponent = () => {
       productRewardTotal: productRewards,
       valueRewardTotal: valueRewards,
     };
-  }, [filteredTargets, valueTargets, user?.id]);
+  }, [filteredTargets, valueTargets, user?.accountType, user?.id]);
 
   const wageAmount = Number(user?.wage || 0);
   const showSalesSummary = user?.accountType === "ADMIN";
@@ -833,7 +834,7 @@ const DashboardPage: React.FunctionComponent = () => {
         )}
 
         {!loading && (!targetProgress.success || filteredTargets.length === 0) && (
-          <div className="text-sm text-slate-500">لا يوجد تاركت مضاف لهذا المستخدم.</div>
+          <div className="text-sm text-slate-500">{user?.accountType === "ADMIN" ? "لا توجد تاركتات مضافة." : "لا يوجد تاركت مضاف لهذا المستخدم."}</div>
         )}
 
         {targetProgress.success && (

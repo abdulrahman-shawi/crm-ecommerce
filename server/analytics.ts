@@ -1325,6 +1325,20 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const canViewAllTargets = isAdminUser && !isImpersonating;
 
+    const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
+
+    const monthRange = (() => {
+      if (!monthKey) return null;
+      const match = monthKey.match(/^(\d{4})-(\d{2})$/);
+      if (!match) return null;
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      if (!year || !month) return null;
+      const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
+      const end = new Date(year, month, 0, 23, 59, 59, 999);
+      return { start, end };
+    })();
+
     const rawTargets = canViewAllTargets
       ? await prisma.userTarget.findMany({
           include: {
@@ -1363,20 +1377,6 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       if (endAt && endAt < now) return false;
       return true;
     });
-
-    const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
-
-    const monthRange = (() => {
-      if (!monthKey) return null;
-      const match = monthKey.match(/^(\d{4})-(\d{2})$/);
-      if (!match) return null;
-      const year = Number(match[1]);
-      const month = Number(match[2]);
-      if (!year || !month) return null;
-      const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
-      const end = new Date(year, month, 0, 23, 59, 59, 999);
-      return { start, end };
-    })();
 
     const dateWhereClause = monthRange ? {
       OR: [
