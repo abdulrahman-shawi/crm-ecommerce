@@ -37,6 +37,7 @@ export async function GET(req :NextRequest) {
           orderBy: { createdAt: 'desc' },
         },
         targets: {
+          orderBy: { updatedAt: 'desc' },
           include: {
             products: {
               select: {

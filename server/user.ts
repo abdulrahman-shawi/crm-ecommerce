@@ -13,6 +13,7 @@ export async function getalluser() {
         orderBy: { createdAt: 'desc' },
       },
       targets: {
+        orderBy: { updatedAt: 'desc' },
         include: {
           products: {
             include: { product: true }

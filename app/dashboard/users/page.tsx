@@ -63,6 +63,18 @@ const getCurrentMonthKey = () => {
 
 const formatMoney = (value: number | undefined | null) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
 
+const getLatestTarget = (targets: any[] | undefined | null) => {
+  if (!Array.isArray(targets) || targets.length === 0) return null;
+
+  const sorted = [...targets].sort((a: any, b: any) => {
+    const aTime = new Date(a?.updatedAt || a?.createdAt || 0).getTime();
+    const bTime = new Date(b?.updatedAt || b?.createdAt || 0).getTime();
+    return bTime - aTime;
+  });
+
+  return sorted.find((item: any) => item?.isActive !== false) || sorted[0];
+};
+
 const UserManagement: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -325,7 +337,7 @@ const UserManagement: React.FunctionComponent = () => {
   const openSalesTargetModal = (mode: "assign" | "edit", data: any) => {
     setTargetMode(mode);
     setTargetUser(data);
-    const currentTarget = mode === "edit" ? data?.targets?.[0] : null;
+    const currentTarget = mode === "edit" ? getLatestTarget(data?.targets) : null;
     setEditTargetId(currentTarget?.id || null);
     if (currentTarget) {
       const items = Array.isArray(currentTarget.products) && currentTarget.products.length > 0
@@ -690,7 +702,7 @@ const UserManagement: React.FunctionComponent = () => {
           return;
         }
 
-        const hasExistingTarget = Array.isArray(data?.targets) && data.targets.length > 0;
+        const hasExistingTarget = Boolean(getLatestTarget(data?.targets));
         openSalesTargetModal(hasExistingTarget ? "edit" : "assign", data);
       }
     },
