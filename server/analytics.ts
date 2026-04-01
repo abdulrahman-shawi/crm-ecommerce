@@ -1368,9 +1368,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       if (endAt && Number.isNaN(endAt.getTime())) return false;
 
       if (monthRange) {
-        if (startAt && startAt > monthRange.end) return false;
-        if (endAt && endAt < monthRange.start) return false;
-        return true;
+        // عند اختيار شهر معين: اعرض فقط التاركتات التي يبدأ تاريخها داخل نفس الشهر.
+        if (!startAt) return false;
+        return startAt >= monthRange.start && startAt <= monthRange.end;
       }
 
       if (startAt && startAt > now) return false;

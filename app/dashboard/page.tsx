@@ -119,9 +119,13 @@ const DashboardPage: React.FunctionComponent = () => {
 
   const monthKey = (value?: string | Date) => {
     if (!value) return "unknown";
+    const raw = String(value);
+    if (raw.length >= 7 && /^\d{4}-\d{2}/.test(raw)) {
+      return raw.slice(0, 7);
+    }
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "unknown";
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
   };
 
   const parseNumberList = (value: string) =>
@@ -158,7 +162,7 @@ const DashboardPage: React.FunctionComponent = () => {
   }, [user?.id, selectedMonth]);
 
   const filteredTargets = React.useMemo(() => {
-    return targetProgress.data ?? [];
+    return (targetProgress.data ?? []).filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
   }, [selectedMonth, targetProgress.data]);
 
   const filteredProductTargets = React.useMemo(() => {

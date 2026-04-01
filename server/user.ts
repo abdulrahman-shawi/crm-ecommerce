@@ -530,6 +530,12 @@ const toNonNegativeFloat = (value: unknown) => {
   return Math.max(0, parsed);
 };
 
+const getMonthDateRange = (date: Date) => {
+  const start = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
+  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
+  return { start, end };
+};
+
 const normalizeActivityCycle = (value: unknown): ActivityTargetCycle => {
   const normalized = String(value || "").trim().toUpperCase();
   return normalized === "MONTHLY" ? "MONTHLY" : "DAILY";
@@ -920,36 +926,123 @@ export async function createUserTarget(payload: UserTargetInput) {
       return { success: false, error: "يرجى إدخال تاركت واحد على الأقل" };
     }
 
-    const startDate = payload.startDate ? new Date(payload.startDate) : undefined;
+    const startDateCandidate = payload.startDate ? new Date(payload.startDate) : new Date();
+    const startDate = Number.isNaN(startDateCandidate.getTime()) ? new Date() : startDateCandidate;
     const endDate = payload.endDate ? new Date(payload.endDate) : null;
 
     const result = await prisma.$transaction(async (tx) => {
       let salesTarget: any = null;
 
       if (hasSalesOrProducts) {
-        salesTarget = await tx.userTarget.create({
-          data: {
+        const monthRange = getMonthDateRange(startDate);
+        const existingMonthlyTarget = await tx.userTarget.findFirst({
+          where: {
             userId: payload.userId,
-            salesTargetValue: salesTargets,
-            salesRewardValue: salesRewards,
-            ...(startDate && !Number.isNaN(startDate.getTime()) ? { createdAt: startDate } : {}),
-            ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
             isActive: true,
+            createdAt: {
+              gte: monthRange.start,
+              lte: monthRange.end,
+            },
+          },
+          include: {
             products: {
-              create: productRows.map((item) => {
-                const productId = toNumber(item.productId);
-                if (productId === null) {
-                  throw new Error("Invalid productId in target products");
-                }
-                return {
-                  product: { connect: { id: productId } },
-                  requiredQty: toNumberArray(item.requiredQty),
-                  rewardValue: toNumberArray(item.rewardValue),
-                };
-              })
-            }
-          }
+              select: {
+                id: true,
+                productId: true,
+                requiredQty: true,
+                rewardValue: true,
+              },
+            },
+          },
+          orderBy: { updatedAt: "desc" },
         });
+
+        if (existingMonthlyTarget) {
+          const existingProductsById = new Map<number, any>();
+          for (const row of existingMonthlyTarget.products || []) {
+            existingProductsById.set(Number(row.productId), row);
+          }
+
+          const createProducts: any[] = [];
+          const updateProducts: any[] = [];
+
+          for (const item of productRows) {
+            const productId = toNumber(item.productId);
+            if (productId === null) {
+              throw new Error("Invalid productId in target products");
+            }
+
+            const nextRequiredQty = toNumberArray(item.requiredQty);
+            const nextRewardValue = toNumberArray(item.rewardValue);
+            const existingProduct = existingProductsById.get(productId);
+
+            if (!existingProduct) {
+              createProducts.push({
+                product: { connect: { id: productId } },
+                requiredQty: nextRequiredQty,
+                rewardValue: nextRewardValue,
+              });
+              continue;
+            }
+
+            updateProducts.push({
+              where: { id: existingProduct.id },
+              data: {
+                requiredQty: [
+                  ...(Array.isArray(existingProduct.requiredQty) ? existingProduct.requiredQty : []),
+                  ...nextRequiredQty,
+                ],
+                rewardValue: [
+                  ...(Array.isArray(existingProduct.rewardValue) ? existingProduct.rewardValue : []),
+                  ...nextRewardValue,
+                ],
+              },
+            });
+          }
+
+          salesTarget = await tx.userTarget.update({
+            where: { id: existingMonthlyTarget.id },
+            data: {
+              salesTargetValue: [
+                ...(Array.isArray(existingMonthlyTarget.salesTargetValue) ? existingMonthlyTarget.salesTargetValue : []),
+                ...salesTargets,
+              ],
+              salesRewardValue: [
+                ...(Array.isArray(existingMonthlyTarget.salesRewardValue) ? existingMonthlyTarget.salesRewardValue : []),
+                ...salesRewards,
+              ],
+              ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
+              products: {
+                ...(createProducts.length > 0 ? { create: createProducts } : {}),
+                ...(updateProducts.length > 0 ? { update: updateProducts } : {}),
+              },
+            },
+          });
+        } else {
+          salesTarget = await tx.userTarget.create({
+            data: {
+              userId: payload.userId,
+              salesTargetValue: salesTargets,
+              salesRewardValue: salesRewards,
+              createdAt: startDate,
+              ...(endDate && !Number.isNaN(endDate.getTime()) ? { endedAt: endDate } : {}),
+              isActive: true,
+              products: {
+                create: productRows.map((item) => {
+                  const productId = toNumber(item.productId);
+                  if (productId === null) {
+                    throw new Error("Invalid productId in target products");
+                  }
+                  return {
+                    product: { connect: { id: productId } },
+                    requiredQty: toNumberArray(item.requiredQty),
+                    rewardValue: toNumberArray(item.rewardValue),
+                  };
+                })
+              }
+            }
+          });
+        }
       }
 
       let activityTarget: any = null;
