@@ -1583,7 +1583,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         .filter((order) => {
           if (String(order?.userId || "") !== String(targetUserId)) return false;
           const orderDate = new Date(order.createdAt);
-          return orderDate >= targetStart && orderDate <= targetEnd;
+          return orderDate >= targetStart && orderDate <= new Date(targetEnd.getFullYear(), targetEnd.getMonth(), targetEnd.getDate(), 23, 59, 59, 999);
         })
         .reduce((sum, order) => sum + getOrderAmountFromItemsInUSD(order, turkeyExchangeRate), 0);
       const userName = target.user?.username || "";
