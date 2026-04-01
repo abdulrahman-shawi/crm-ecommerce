@@ -143,8 +143,22 @@ const DashboardPage: React.FunctionComponent = () => {
     return Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
   };
 
+  const refreshTargetProgress = React.useCallback(async () => {
+    if (!user?.id) return;
+    setLoading(true);
+    try {
+      const res = await GetUserTargetProgress(user.id, selectedMonth);
+      setTargetProgress(res as any);
+    } catch (error) {
+      console.error("Error fetching target progress:", error);
+      setTargetProgress({ success: false, data: [], error: "Internal Error" });
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id, selectedMonth]);
+
   const filteredTargets = React.useMemo(() => {
-    return (targetProgress.data ?? []).filter((item) => monthKey(item.targetCreatedAt) === selectedMonth);
+    return targetProgress.data ?? [];
   }, [selectedMonth, targetProgress.data]);
 
   const filteredProductTargets = React.useMemo(() => {
@@ -258,8 +272,7 @@ const DashboardPage: React.FunctionComponent = () => {
     const res = await updateUserTarget(targetId, payload);
     if (res?.success) {
       toast.success("تم تحديث التاركت");
-      // const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
-      // setTargetProgress(refreshed as any);
+      await refreshTargetProgress();
     } else {
       toast.error(res?.error || "فشل تحديث التاركت");
     }
@@ -278,8 +291,7 @@ const DashboardPage: React.FunctionComponent = () => {
     const res = await deleteSalesTargetRow(targetId, rowIndex);
     if (res?.success) {
       toast.success("تم حذف الصف");
-      // const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
-      // setTargetProgress(refreshed as any);
+      await refreshTargetProgress();
     } else {
       toast.error(res?.error || "فشل حذف الصف");
     }
@@ -293,8 +305,7 @@ const DashboardPage: React.FunctionComponent = () => {
     const res = await deleteProductTargetRow(targetId, productId);
     if (res?.success) {
       toast.success("تم حذف الصف");
-      // const refreshed = await GetUserTargetProgress(user?.id || "", selectedMonth);
-      // setTargetProgress(refreshed as any);
+      await refreshTargetProgress();
     } else {
       toast.error(res?.error || "فشل حذف الصف");
     }
@@ -349,8 +360,7 @@ const DashboardPage: React.FunctionComponent = () => {
       setNewTargetStartDate(new Date().toISOString().slice(0, 10));
       setNewTargetEndDate("");
       setNewProducts([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
-      // const refreshed = await GetUserTargetProgress(user.id, selectedMonth);
-      // setTargetProgress(refreshed as any);
+      await refreshTargetProgress();
     } else {
       toast.error(res?.error || "فشل إنشاء التاركت");
     }
@@ -429,22 +439,8 @@ const DashboardPage: React.FunctionComponent = () => {
   const totalEarnings = (targetProgress.summary?.totalCommissionAmount ?? 0) + totalSalesReward + wageAmount;
 
   React.useEffect(() => {
-    const fetchTargetProgress = async () => {
-      if (!user?.id) return;
-      setLoading(true);
-      try {
-        const res = await GetUserTargetProgress(user.id, selectedMonth);
-        setTargetProgress(res as any);
-      } catch (error) {
-        console.error("Error fetching target progress:", error);
-        setTargetProgress({ success: false, data: [], error: "Internal Error" });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTargetProgress();
-  }, [user?.id, selectedMonth]);
+    refreshTargetProgress();
+  }, [refreshTargetProgress]);
 
   React.useEffect(() => {
     const fetchActivitySummary = async () => {
