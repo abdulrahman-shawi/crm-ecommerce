@@ -1325,7 +1325,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const canViewAllTargets = isAdminUser && !isImpersonating;
 
-    const targets = canViewAllTargets
+    const rawTargets = canViewAllTargets
       ? await prisma.userTarget.findMany({
           include: {
             user: { select: { id: true, username: true } },
@@ -1343,6 +1343,26 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
             }
           }
         });
+
+    const now = new Date();
+    const targets = rawTargets.filter((target: any) => {
+      if (target?.isActive === false) return false;
+
+      const startAt = target?.createdAt ? new Date(target.createdAt) : null;
+      const endAt = target?.endedAt ? new Date(target.endedAt) : null;
+      if (startAt && Number.isNaN(startAt.getTime())) return false;
+      if (endAt && Number.isNaN(endAt.getTime())) return false;
+
+      if (monthRange) {
+        if (startAt && startAt > monthRange.end) return false;
+        if (endAt && endAt < monthRange.start) return false;
+        return true;
+      }
+
+      if (startAt && startAt > now) return false;
+      if (endAt && endAt < now) return false;
+      return true;
+    });
 
     const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
 
@@ -1557,7 +1577,15 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const data = targets.flatMap((target: any) => {
       const targetUserId = target.user?.id || effectiveUserId;
-      const monthSalesForUser = totalSoldByUser.get(String(targetUserId)) || 0;
+      const targetStart = target?.createdAt ? new Date(target.createdAt) : new Date(0);
+      const targetEnd = target?.endedAt ? new Date(target.endedAt) : new Date();
+      const monthSalesForUser = revenueOrders
+        .filter((order) => {
+          if (String(order?.userId || "") !== String(targetUserId)) return false;
+          const orderDate = new Date(order.createdAt);
+          return orderDate >= targetStart && orderDate <= targetEnd;
+        })
+        .reduce((sum, order) => sum + getOrderAmountFromItemsInUSD(order, turkeyExchangeRate), 0);
       const userName = target.user?.username || "";
 
       if (!target.products || target.products.length === 0) {
@@ -1584,12 +1612,13 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
       return target.products.map((item: any) => {
         const key = `${targetUserId}:${item.productId}`;
-        const windowEnd = target.endedAt || new Date();
+        const windowStart = targetStart;
+        const windowEnd = targetEnd;
         const soldItems = soldMap.get(key) || [];
         const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
         const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
         const soldQty = soldItems
-          .filter((sold) => sold.createdAt <= windowEnd)
+          .filter((sold) => sold.createdAt >= windowStart && sold.createdAt <= windowEnd)
           .reduce((sum, sold) => sum + sold.quantity, 0);
         const soldAmount = monthSalesForUser;
         const remaining = Math.max(requiredQty - soldQty, 0);

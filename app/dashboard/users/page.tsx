@@ -97,6 +97,7 @@ const UserManagement: React.FunctionComponent = () => {
   const [assignSaving, setAssignSaving] = React.useState(false);
   const [salesTargetValue, setSalesTargetValue] = React.useState<string>('');
   const [salesRewardValue, setSalesRewardValue] = React.useState<string>('');
+  const [salesTargetStartDate, setSalesTargetStartDate] = React.useState<string>(() => new Date().toISOString().slice(0, 10));
   const [targetItems, setTargetItems] = React.useState<Array<{
     productId: string;
     requiredQty: number;
@@ -349,10 +350,16 @@ const UserManagement: React.FunctionComponent = () => {
         : [{ productId: "", requiredQty: 1, rewardValue: 0 }];
       setSalesTargetValue(formatNumberList(currentTarget.salesTargetValue));
       setSalesRewardValue(formatNumberList(currentTarget.salesRewardValue));
+      setSalesTargetStartDate(
+        currentTarget?.createdAt
+          ? new Date(currentTarget.createdAt).toISOString().slice(0, 10)
+          : new Date().toISOString().slice(0, 10)
+      );
       setTargetItems(items);
     } else {
       setSalesTargetValue('');
       setSalesRewardValue('');
+      setSalesTargetStartDate(new Date().toISOString().slice(0, 10));
       setTargetItems([{ productId: "", requiredQty: 1, rewardValue: 0 }]);
     }
 
@@ -414,9 +421,15 @@ const UserManagement: React.FunctionComponent = () => {
 
     const selectedProducts = targetItems.filter((item) => Boolean(item.productId));
     const hasSalesOrProducts = salesTargetValues.length > 0 || selectedProducts.length > 0;
+    const parsedStartDate = new Date(salesTargetStartDate);
 
     if (!hasSalesOrProducts) {
       toast.error("يرجى إدخال تاركت مبيعات أو إضافة منتجات مستهدفة");
+      return;
+    }
+
+    if (!salesTargetStartDate || Number.isNaN(parsedStartDate.getTime())) {
+      toast.error("يرجى إدخال تاريخ بداية صحيح للتاركت");
       return;
     }
 
@@ -439,6 +452,7 @@ const UserManagement: React.FunctionComponent = () => {
         userId: targetUser.id,
         salesTargetValue: salesTargetValues,
         salesRewardValue: salesRewardValues,
+        startDate: salesTargetStartDate,
         products: selectedProducts.map((item) => ({
           productId: Number(item.productId),
           requiredQty: item.requiredQty,
@@ -446,20 +460,15 @@ const UserManagement: React.FunctionComponent = () => {
         }))
       };
 
-      const res = targetMode === "assign" || !editTargetId
-        ? await createUserTarget(payload)
-        : await updateUserTarget(editTargetId, {
-            salesTargetValue: payload.salesTargetValue,
-            salesRewardValue: payload.salesRewardValue,
-            products: payload.products,
-          });
+      // حفظ من مودال التعيين ينشئ تاركت جديد دائمًا (لا يحدّث القديم).
+      const res = await createUserTarget(payload);
 
       if (!res.success) {
         toast.error(res.error || "فشل حفظ تاركت المبيعات");
         return;
       }
 
-      toast.success("تم حفظ تاركت المبيعات بنجاح");
+      toast.success("تم إنشاء تاركت المبيعات بنجاح");
       setIsSalesTargetOpen(false);
       getAlluser();
     } catch (error) {
@@ -702,8 +711,7 @@ const UserManagement: React.FunctionComponent = () => {
           return;
         }
 
-        const hasExistingTarget = Boolean(getLatestTarget(data?.targets));
-        openSalesTargetModal(hasExistingTarget ? "edit" : "assign", data);
+        openSalesTargetModal("assign", data);
       }
     },
     (user && canManageAnyTargets) && {
@@ -1255,6 +1263,15 @@ const UserManagement: React.FunctionComponent = () => {
                     className={selectClasses}
                     value={salesRewardValue}
                     onChange={(e) => setSalesRewardValue(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2 sm:col-span-2">
+                  <label className="text-sm font-semibold dark:text-slate-300">تاريخ بداية التاركت</label>
+                  <input
+                    type="date"
+                    className={selectClasses}
+                    value={salesTargetStartDate}
+                    onChange={(e) => setSalesTargetStartDate(e.target.value)}
                   />
                 </div>
               </div>
