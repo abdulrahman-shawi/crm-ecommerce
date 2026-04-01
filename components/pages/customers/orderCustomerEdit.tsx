@@ -238,7 +238,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setMunicipality(initialData.municipality || "");
     setFullAddress(initialData.fullAddress || "");
     setPaymentMethod(initialData.paymentMethod || "عند الاستلام");
-    setOverallDiscount(initialData.overallDiscount || 0);
+    setOverallDiscount(Number(initialData?.discount ?? initialData?.overallDiscount ?? 0));
     setStatus(initialData.status || "طلب جديد");
     setManualCreatedAt(formatDateForInput(initialData?.manualCreatedAt || initialData?.createdAt));
   } else if (!initialData && isOpenOrder) {
