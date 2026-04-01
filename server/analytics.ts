@@ -1579,11 +1579,12 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const targetUserId = target.user?.id || effectiveUserId;
       const targetStart = target?.createdAt ? new Date(target.createdAt) : new Date(0);
       const targetEnd = target?.endedAt ? new Date(target.endedAt) : new Date();
+      const targetEndOfDay = new Date(targetEnd.getFullYear(), targetEnd.getMonth(), targetEnd.getDate(), 23, 59, 59, 999);
       const monthSalesForUser = revenueOrders
         .filter((order) => {
           if (String(order?.userId || "") !== String(targetUserId)) return false;
           const orderDate = new Date(order.createdAt);
-          return orderDate >= targetStart && orderDate <= new Date(targetEnd.getFullYear(), targetEnd.getMonth(), targetEnd.getDate(), 23, 59, 59, 999);
+          return orderDate >= targetStart && orderDate <= targetEndOfDay;
         })
         .reduce((sum, order) => sum + getOrderAmountFromItemsInUSD(order, turkeyExchangeRate), 0);
       const userName = target.user?.username || "";
@@ -1613,7 +1614,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       return target.products.map((item: any) => {
         const key = `${targetUserId}:${item.productId}`;
         const windowStart = targetStart;
-        const windowEnd = targetEnd;
+        const windowEnd = targetEndOfDay;
         const soldItems = soldMap.get(key) || [];
         const requiredQty = Array.isArray(item.requiredQty) ? item.requiredQty[0] ?? 0 : item.requiredQty ?? 0;
         const rewardValue = Array.isArray(item.rewardValue) ? item.rewardValue[0] ?? 0 : item.rewardValue ?? 0;
