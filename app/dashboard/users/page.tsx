@@ -6,12 +6,14 @@ import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 import z from 'zod';
 import toast from 'react-hot-toast';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { assignManagerToEmployees, createUserTarget, deleteuser, getUserActivityTargetProgress, setUserActivityTarget, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
 import { GetUserTargetProgress } from '@/server/analytics';
 import { getEmployeeSalaryAdjustments } from '@/server/employee-salaries';
 import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
-import { Coins, Mail, Plus } from 'lucide-react';
+import { Coins, Download, Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
 import { hasPermission } from '@/lib/utils';
 import { getProduct } from '@/server/product';
@@ -117,6 +119,7 @@ const UserManagement: React.FunctionComponent = () => {
   const [financialReportUser, setFinancialReportUser] = React.useState<any>(null);
   const [financialReportMonth, setFinancialReportMonth] = React.useState<string>(getCurrentMonthKey);
   const [financialReportLoading, setFinancialReportLoading] = React.useState(false);
+  const [isFinancialReportPdfExporting, setIsFinancialReportPdfExporting] = React.useState(false);
   const [financialReportData, setFinancialReportData] = React.useState<{
     fixedSalary: number;
     assignedCommissionPercent: number;
@@ -134,6 +137,7 @@ const UserManagement: React.FunctionComponent = () => {
     dailySalesBreakdown: Array<{ date: string; quantity: number; revenue: number; ordersCount: number }>;
     statusBreakdown: Array<{ status: string; count: number; amount: number }>;
   } | null>(null);
+  const financialReportExportRef = React.useRef<HTMLDivElement | null>(null);
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -700,6 +704,64 @@ const UserManagement: React.FunctionComponent = () => {
     await loadFinancialReport(financialReportUser, nextMonth);
   };
 
+  const exportFinancialReportPdf = React.useCallback(async () => {
+    if (financialReportLoading) {
+      toast.error("انتظر حتى يكتمل تحميل التقرير");
+      return;
+    }
+
+    if (!financialReportData) {
+      toast.error("لا توجد بيانات مالية لتصديرها");
+      return;
+    }
+
+    const element = financialReportExportRef.current;
+    if (!element) {
+      toast.error("تعذر العثور على محتوى التقرير");
+      return;
+    }
+
+    setIsFinancialReportPdfExporting(true);
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imageHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      let heightLeft = imageHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      const safeUserName = String(financialReportUser?.username || "employee").replace(/\s+/g, "-");
+      const safeMonth = String(financialReportMonth || getCurrentMonthKey());
+      pdf.save(`financial-report-${safeUserName}-${safeMonth}.pdf`);
+
+      toast.success("تم تحميل التقرير المالي PDF");
+    } catch (error) {
+      console.error("Financial report PDF export error:", error);
+      toast.error("فشل إنشاء ملف PDF للتقرير المالي");
+    } finally {
+      setIsFinancialReportPdfExporting(false);
+    }
+  }, [financialReportLoading, financialReportData, financialReportUser, financialReportMonth]);
+
   // هذا الجزء يستخدم عادة داخل مكون الجدول (DataTable)
   const tableActions: any[] = [
     (user && canManageAnyTargets) && {
@@ -892,14 +954,25 @@ const UserManagement: React.FunctionComponent = () => {
         <div className="p-4 space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div className="text-sm text-slate-500 dark:text-slate-300">اختر الشهر لعرض التقرير المالي للموظف</div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">الشهر</label>
-              <input
-                type="month"
-                value={financialReportMonth}
-                onChange={(e) => handleFinancialMonthChange(e.target.value)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
-              />
+            <div className="flex flex-col gap-2 sm:items-end">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">الشهر</label>
+                <input
+                  type="month"
+                  value={financialReportMonth}
+                  onChange={(e) => handleFinancialMonthChange(e.target.value)}
+                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                />
+              </div>
+              <Button
+                type="button"
+                onClick={exportFinancialReportPdf}
+                disabled={financialReportLoading || !financialReportData || isFinancialReportPdfExporting}
+                className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white"
+              >
+                <Download size={16} />
+                {isFinancialReportPdfExporting ? "جار تجهيز PDF..." : "تحميل PDF"}
+              </Button>
             </div>
           </div>
 
@@ -912,7 +985,7 @@ const UserManagement: React.FunctionComponent = () => {
               لا توجد بيانات مالية متاحة لهذا الموظف في الشهر المحدد.
             </div>
           ) : (
-            <>
+            <div ref={financialReportExportRef} className="space-y-4 bg-white dark:bg-slate-950 p-1 rounded-md">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                   <div className="text-xs text-slate-500 dark:text-slate-300">الراتب الثابت</div>
@@ -1071,7 +1144,7 @@ const UserManagement: React.FunctionComponent = () => {
                   </div>
                 )}
               </div>
-            </>
+            </div>
           )}
         </div>
       </AppModal>

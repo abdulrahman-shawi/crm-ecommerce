@@ -29,7 +29,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { MapPin, Package, ReceiptText, TrendingDown, TrendingUp, Trophy, Truck, Users, X } from "lucide-react";
+import { MapPin, Package, ReceiptText, TrendingDown, TrendingUp, Trophy, Truck, Users, X, Download } from "lucide-react";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import toast from "react-hot-toast";
 
 type OrderFilterPreset = "this_month" | "last_month" | "custom";
 type EmployeeReportPeriod = "day" | "week" | "month" | "custom";
@@ -117,6 +120,7 @@ const AnalyticPage: React.FC = () => {
   const [employeeReportPeriod, setEmployeeReportPeriod] = React.useState<EmployeeReportPeriod>("month");
   const [employeeCustomStartDate, setEmployeeCustomStartDate] = React.useState("");
   const [employeeCustomEndDate, setEmployeeCustomEndDate] = React.useState("");
+  const [isEmployeeReportPdfExporting, setIsEmployeeReportPdfExporting] = React.useState(false);
   const [warehouseLocationFilter, setWarehouseLocationFilter] = React.useState<"all" | "سوريا" | "تركيا">("all");
   const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState<number>(DEFAULT_TURKEY_EXCHANGE_RATE);
 
@@ -160,6 +164,128 @@ const AnalyticPage: React.FC = () => {
     Boolean(employeeCustomStartDate) &&
     Boolean(employeeCustomEndDate) &&
     new Date(employeeCustomStartDate) > new Date(employeeCustomEndDate);
+
+  const exportEmployeeReportToPdf = React.useCallback(async () => {
+    if (employeeReportLoading) {
+      toast.error("انتظر حتى يكتمل تحميل التقرير");
+      return;
+    }
+
+    if (!employeeCustomerReport.data?.length) {
+      toast.error("لا توجد بيانات لتصدير التقرير");
+      return;
+    }
+
+    setIsEmployeeReportPdfExporting(true);
+
+    try {
+      const periodText =
+        employeeReportPeriod === "day"
+          ? "اليوم"
+          : employeeReportPeriod === "week"
+          ? "الأسبوع"
+          : employeeReportPeriod === "month"
+          ? "الشهر"
+          : "مخصص";
+
+      const dateRangeText =
+        employeeReportPeriod === "custom"
+          ? `${employeeCustomStartDate || "-"} إلى ${employeeCustomEndDate || "-"}`
+          : periodText;
+
+      const rowsHtml = employeeCustomerReport.data
+        .map(
+          (row: any) => `
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #e2e8f0;font-weight:700;color:#0f172a;">${row.name || "-"}</td>
+              <td style="padding:10px;border-bottom:1px solid #e2e8f0;color:#2563eb;font-weight:700;">${Number(row.communicatedCustomers || 0).toLocaleString()}</td>
+              <td style="padding:10px;border-bottom:1px solid #e2e8f0;color:#9333ea;font-weight:700;">${Number(row.addedCustomers || 0).toLocaleString()}</td>
+              <td style="padding:10px;border-bottom:1px solid #e2e8f0;color:#059669;font-weight:700;">${Number(row.deliveredCustomers || 0).toLocaleString()}</td>
+            </tr>
+          `
+        )
+        .join("");
+
+      const wrapper = document.createElement("div");
+      wrapper.setAttribute("dir", "rtl");
+      wrapper.style.position = "fixed";
+      wrapper.style.left = "-99999px";
+      wrapper.style.top = "0";
+      wrapper.style.width = "1120px";
+      wrapper.style.background = "#ffffff";
+      wrapper.style.color = "#0f172a";
+      wrapper.style.padding = "24px";
+      wrapper.style.fontFamily = "Tahoma, Arial, sans-serif";
+
+      wrapper.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;">
+          <div style="font-size:26px;font-weight:900;">التقرير المالي للموظفين</div>
+          <div style="text-align:left;font-size:12px;color:#475569;line-height:1.6;">
+            <div><strong>الفترة:</strong> ${dateRangeText}</div>
+            <div><strong>تاريخ التصدير:</strong> ${new Date().toLocaleDateString("ar-EG")}</div>
+          </div>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
+          <thead>
+            <tr style="background:#f1f5f9;color:#334155;font-size:14px;font-weight:900;">
+              <th style="padding:12px;border-bottom:1px solid #cbd5e1;">الموظف</th>
+              <th style="padding:12px;border-bottom:1px solid #cbd5e1;">تم التواصل معهم</th>
+              <th style="padding:12px;border-bottom:1px solid #cbd5e1;">العملاء المضافين</th>
+              <th style="padding:12px;border-bottom:1px solid #cbd5e1;">تم تسليم طلبهم</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      `;
+
+      document.body.appendChild(wrapper);
+
+      const canvas = await html2canvas(wrapper, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      document.body.removeChild(wrapper);
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imageHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      let heightLeft = imageHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      const fileDate = new Date().toISOString().slice(0, 10);
+      pdf.save(`employee-financial-report-${fileDate}.pdf`);
+      toast.success("تم تحميل تقرير الموظفين PDF بنجاح");
+    } catch (error) {
+      console.error("Employee report PDF export error:", error);
+      toast.error("فشل إنشاء ملف PDF للتقرير");
+    } finally {
+      setIsEmployeeReportPdfExporting(false);
+    }
+  }, [
+    employeeReportLoading,
+    employeeCustomerReport.data,
+    employeeReportPeriod,
+    employeeCustomStartDate,
+    employeeCustomEndDate,
+  ]);
 
   React.useEffect(() => {
     const loadExchangeRate = async () => {
@@ -692,7 +818,17 @@ const AnalyticPage: React.FC = () => {
             icon={<Users size={20} className="text-indigo-500" />}
           />
           <DynamicCard.Content>
-            <div className="flex justify-end mb-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-4">
+              <button
+                type="button"
+                onClick={exportEmployeeReportToPdf}
+                disabled={employeeReportLoading || isEmployeeReportPdfExporting || !employeeCustomerReport.data?.length}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-100 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <Download size={16} />
+                {isEmployeeReportPdfExporting ? "جار تجهيز PDF..." : "تحميل التقرير PDF"}
+              </button>
+
               <div className="flex flex-col gap-1 min-w-[220px]">
                 <label className="text-xs font-bold text-slate-500">فلترة التقرير</label>
                 <select
