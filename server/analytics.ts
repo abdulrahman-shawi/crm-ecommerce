@@ -1746,6 +1746,63 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       ? Number(((totalCommissionAmount / netSalesForCommission) * 100).toFixed(2))
       : 0;
 
+    const targetRewardsByTargetId = new Map<string, {
+      salesTargetValue: number[];
+      salesRewardValue: number[];
+      soldAmount: number;
+      productRewardAmount: number;
+    }>();
+
+    for (const row of data) {
+      const targetId = String(row?.targetId || "").trim();
+      if (!targetId) continue;
+
+      const currentTarget = targetRewardsByTargetId.get(targetId) || {
+        salesTargetValue: [],
+        salesRewardValue: [],
+        soldAmount: 0,
+        productRewardAmount: 0,
+      };
+
+      currentTarget.salesTargetValue = Array.isArray(row?.salesTargetValue)
+        ? row.salesTargetValue.map((value: any) => Number(value || 0)).filter((value: number) => Number.isFinite(value) && value > 0)
+        : currentTarget.salesTargetValue;
+      currentTarget.salesRewardValue = Array.isArray(row?.salesRewardValue)
+        ? row.salesRewardValue.map((value: any) => Number(value || 0)).filter((value: number) => Number.isFinite(value) && value >= 0)
+        : currentTarget.salesRewardValue;
+      currentTarget.soldAmount = Math.max(currentTarget.soldAmount, Number(row?.soldAmount || 0));
+
+      if (!row?.isValueOnly && row?.reached) {
+        currentTarget.productRewardAmount += Number(row?.rewardValue || 0);
+      }
+
+      targetRewardsByTargetId.set(targetId, currentTarget);
+    }
+
+    const totalProductRewardAmount = Number(
+      Array.from(targetRewardsByTargetId.values()).reduce((sum, row) => sum + Number(row.productRewardAmount || 0), 0).toFixed(2)
+    );
+
+    const totalSalesRewardAmount = Number(
+      Array.from(targetRewardsByTargetId.values())
+        .reduce((sum, row) => {
+          let matchedReward = 0;
+          const maxPairs = Math.min(row.salesTargetValue.length, row.salesRewardValue.length);
+
+          for (let index = 0; index < maxPairs; index += 1) {
+            const targetValue = Number(row.salesTargetValue[index] || 0);
+            const rewardValue = Number(row.salesRewardValue[index] || 0);
+
+            if (targetValue > 0 && row.soldAmount >= targetValue) {
+              matchedReward = Math.max(matchedReward, rewardValue);
+            }
+          }
+
+          return sum + matchedReward;
+        }, 0)
+        .toFixed(2)
+    );
+
     return {
       success: true,
       data,
@@ -1758,6 +1815,9 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         totalCommissionAmount,
         commissionPercent,
         assignedCommissionPercent,
+        totalSalesRewardAmount,
+        totalProductRewardAmount,
+        totalBonusAmount: Number((totalSalesRewardAmount + totalProductRewardAmount).toFixed(2)),
         exchangeRateBreakdown,
         productBreakdown,
         dailySalesBreakdown,

@@ -124,6 +124,8 @@ const UserManagement: React.FunctionComponent = () => {
     fixedSalary: number;
     assignedCommissionPercent: number;
     totalCommissionAmount: number;
+    totalSalesRewardAmount: number;
+    totalProductRewardAmount: number;
     totalSalesAmount: number;
     totalShippingAmount: number;
     netSalesForCommission: number;
@@ -137,7 +139,6 @@ const UserManagement: React.FunctionComponent = () => {
     dailySalesBreakdown: Array<{ date: string; quantity: number; revenue: number; ordersCount: number }>;
     statusBreakdown: Array<{ status: string; count: number; amount: number }>;
   } | null>(null);
-  const financialReportExportRef = React.useRef<HTMLDivElement | null>(null);
   const {user} = useAuth()
   const getAlluser = async () => {
     try {
@@ -656,7 +657,9 @@ const UserManagement: React.FunctionComponent = () => {
       const summary: any = targetRes?.summary || {};
       const fixedSalary = Number(employee?.wage || 0);
       const totalCommissionAmount = Number(summary?.totalCommissionAmount || 0);
-      const totalDefaultSalary = fixedSalary + totalCommissionAmount;
+      const totalSalesRewardAmount = Number(summary?.totalSalesRewardAmount || 0);
+      const totalProductRewardAmount = Number(summary?.totalProductRewardAmount || 0);
+      const totalDefaultSalary = fixedSalary + totalCommissionAmount + totalSalesRewardAmount + totalProductRewardAmount;
 
       const editedSalaryRecord = adjustmentsRes?.success
         ? (adjustmentsRes.data || []).find((item: any) => String(item?.userId || "") === employeeId)
@@ -669,6 +672,8 @@ const UserManagement: React.FunctionComponent = () => {
         fixedSalary,
         assignedCommissionPercent: Number((summary?.assignedCommissionPercent ?? employee?.salesCommissionPercent) || 0),
         totalCommissionAmount,
+        totalSalesRewardAmount,
+        totalProductRewardAmount,
         totalSalesAmount: Number(summary?.totalSalesAmount || 0),
         totalShippingAmount: Number(summary?.totalShippingAmount || 0),
         netSalesForCommission: Number(summary?.netSalesForCommission || 0),
@@ -715,39 +720,172 @@ const UserManagement: React.FunctionComponent = () => {
       return;
     }
 
-    const element = financialReportExportRef.current;
-    if (!element) {
-      toast.error("تعذر العثور على محتوى التقرير");
-      return;
-    }
-
     setIsFinancialReportPdfExporting(true);
 
     try {
-      const canvas = await html2canvas(element, {
+      const monthLabel = financialReportMonth
+        ? new Date(`${financialReportMonth}-01`).toLocaleDateString("ar-EG", { year: "numeric", month: "long" })
+        : "الشهر الحالي";
+
+      const exchangeRowsHtml = financialReportData.exchangeRateBreakdown.length
+        ? financialReportData.exchangeRateBreakdown
+            .map(
+              (row) => `
+                <div style="display:grid;grid-template-columns:1.1fr .85fr .55fr .8fr;gap:6px;padding:6px 8px;border-bottom:1px solid #e2e8f0;align-items:center;">
+                  <div style="font-weight:700;color:#0f172a;">${row.sourceType === "TRY_CONVERTED" ? "طلبات تركيا" : "طلبات USD مباشرة"}</div>
+                  <div style="color:#475569;">${row.exchangeRate === null ? "-" : row.label}</div>
+                  <div style="color:#475569;">${Number(row.ordersCount || 0).toLocaleString()}</div>
+                  <div style="font-weight:800;color:#2563eb;">${formatMoney(row.netRevenue)} $</div>
+                </div>
+              `
+            )
+            .join("")
+        : `<div style="padding:10px 8px;color:#64748b;">لا توجد بيانات</div>`;
+
+      const productRowsHtml = financialReportData.productBreakdown.length
+        ? financialReportData.productBreakdown
+            .map(
+              (row) => `
+                <div style="display:flex;justify-content:space-between;gap:8px;padding:6px 8px;border-bottom:1px solid #e2e8f0;">
+                  <div style="min-width:0;">
+                    <div style="font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:235px;">${row.productName}</div>
+                    <div style="font-size:10px;color:#64748b;">الكمية ${Number(row.quantity || 0).toLocaleString()} | الطلبات ${Number(row.ordersCount || 0).toLocaleString()}</div>
+                  </div>
+                  <div style="font-weight:800;color:#059669;white-space:nowrap;">${formatMoney(row.revenue)} $</div>
+                </div>
+              `
+            )
+            .join("")
+        : `<div style="padding:10px 8px;color:#64748b;">لا توجد بيانات</div>`;
+
+      const dailyRowsHtml = financialReportData.dailySalesBreakdown.length
+        ? financialReportData.dailySalesBreakdown
+            .map(
+              (row) => `
+                <div style="display:grid;grid-template-columns:.9fr .55fr .55fr .7fr;gap:6px;padding:5px 8px;border-bottom:1px solid #e2e8f0;align-items:center;">
+                  <div style="font-weight:700;color:#0f172a;">${new Date(row.date).toLocaleDateString("ar-EG")}</div>
+                  <div style="color:#475569;">${Number(row.quantity || 0).toLocaleString()}</div>
+                  <div style="color:#475569;">${Number(row.ordersCount || 0).toLocaleString()}</div>
+                  <div style="font-weight:800;color:#2563eb;">${formatMoney(row.revenue)} $</div>
+                </div>
+              `
+            )
+            .join("")
+        : `<div style="padding:10px 8px;color:#64748b;">لا توجد بيانات</div>`;
+
+      const statusRowsHtml = financialReportData.statusBreakdown.length
+        ? financialReportData.statusBreakdown
+            .map(
+              (row) => `
+                <div style="display:flex;justify-content:space-between;gap:8px;padding:6px 8px;border-bottom:1px solid #e2e8f0;">
+                  <div>
+                    <div style="font-weight:700;color:#0f172a;">${row.status}</div>
+                    <div style="font-size:10px;color:#64748b;">الطلبات ${Number(row.count || 0).toLocaleString()}</div>
+                  </div>
+                  <div style="font-weight:800;color:#7c3aed;white-space:nowrap;">${formatMoney(row.amount)} $</div>
+                </div>
+              `
+            )
+            .join("")
+        : `<div style="padding:10px 8px;color:#64748b;">لا توجد بيانات</div>`;
+
+      const wrapper = document.createElement("div");
+      wrapper.setAttribute("dir", "rtl");
+      wrapper.style.position = "fixed";
+      wrapper.style.left = "-99999px";
+      wrapper.style.top = "0";
+      wrapper.style.width = "1123px";
+      wrapper.style.minHeight = "794px";
+      wrapper.style.background = "#ffffff";
+      wrapper.style.color = "#0f172a";
+      wrapper.style.padding = "18px";
+      wrapper.style.fontFamily = "Tahoma, Arial, sans-serif";
+      wrapper.style.boxSizing = "border-box";
+
+      wrapper.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #e2e8f0;">
+          <div>
+            <div style="font-size:24px;font-weight:900;color:#0f172a;">التقرير المالي للموظف</div>
+            <div style="margin-top:4px;font-size:16px;font-weight:700;color:#1e293b;">${financialReportUser?.username || "-"}</div>
+          </div>
+          <div style="text-align:left;font-size:11px;color:#475569;line-height:1.6;">
+            <div><strong>الشهر:</strong> ${monthLabel}</div>
+            <div><strong>تاريخ التصدير:</strong> ${new Date().toLocaleDateString("ar-EG")}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:8px;margin-bottom:12px;">
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#f8fafc;"><div style="font-size:10px;color:#64748b;">البدل الثابت</div><div style="font-size:16px;font-weight:900;color:#0f172a;margin-top:4px;">${formatMoney(financialReportData.fixedSalary)}</div></div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#f8fafc;"><div style="font-size:10px;color:#64748b;">عمولة المبيعات</div><div style="font-size:16px;font-weight:900;color:#059669;margin-top:4px;">${formatMoney(financialReportData.totalCommissionAmount)}</div></div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#f8fafc;"><div style="font-size:10px;color:#64748b;">مكافأة المبيعات</div><div style="font-size:16px;font-weight:900;color:#b45309;margin-top:4px;">${formatMoney(financialReportData.totalSalesRewardAmount)}</div></div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#f8fafc;"><div style="font-size:10px;color:#64748b;">مكافأة المنتجات</div><div style="font-size:16px;font-weight:900;color:#7c3aed;margin-top:4px;">${formatMoney(financialReportData.totalProductRewardAmount)}</div></div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#eff6ff;"><div style="font-size:10px;color:#64748b;">المستحق الافتراضي</div><div style="font-size:16px;font-weight:900;color:#1d4ed8;margin-top:4px;">${formatMoney(financialReportData.totalDefaultSalary)}</div></div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#ecfeff;"><div style="font-size:10px;color:#64748b;">الراتب النهائي</div><div style="font-size:16px;font-weight:900;color:#0f766e;margin-top:4px;">${formatMoney(financialReportData.payableSalary)}</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#ffffff;">
+            <div style="font-size:13px;font-weight:900;margin-bottom:6px;">تفاصيل المبيعات</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:11px;color:#334155;line-height:1.7;">
+              <div>إجمالي المبيعات: <strong>${formatMoney(financialReportData.totalSalesAmount)}</strong></div>
+              <div>إجمالي الشحن: <strong>${formatMoney(financialReportData.totalShippingAmount)}</strong></div>
+              <div>صافي المبيعات للعمولة: <strong>${formatMoney(financialReportData.netSalesForCommission)}</strong></div>
+              <div>الطلبات الكلية: <strong>${Number(financialReportData.totalOrdersCount || 0).toLocaleString()}</strong></div>
+              <div>الطلبات المسلمة: <strong>${Number(financialReportData.deliveredOrdersCount || 0).toLocaleString()}</strong></div>
+              <div>نسبة العمولة: <strong>${formatMoney(financialReportData.assignedCommissionPercent)}%</strong></div>
+            </div>
+          </div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#ffffff;">
+            <div style="font-size:13px;font-weight:900;margin-bottom:6px;">تفاصيل الراتب</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:11px;color:#334155;line-height:1.7;">
+              <div>البدل الثابت: <strong>${formatMoney(financialReportData.fixedSalary)}</strong></div>
+              <div>عمولة المبيعات: <strong>${formatMoney(financialReportData.totalCommissionAmount)}</strong></div>
+              <div>مكافأة المبيعات: <strong>${formatMoney(financialReportData.totalSalesRewardAmount)}</strong></div>
+              <div>مكافأة المنتجات: <strong>${formatMoney(financialReportData.totalProductRewardAmount)}</strong></div>
+              <div>المستحق الافتراضي: <strong>${formatMoney(financialReportData.totalDefaultSalary)}</strong></div>
+              <div>الراتب المعدل: <strong>${financialReportData.editedSalary === null ? "لا يوجد تعديل" : formatMoney(financialReportData.editedSalary)}</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.05fr .95fr 1fr 1fr;gap:10px;align-items:start;">
+          <div style="border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
+            <div style="padding:8px 10px;background:#f8fafc;font-size:12px;font-weight:900;">تفصيل سعر الصرف</div>
+            <div style="font-size:10px;">${exchangeRowsHtml}</div>
+          </div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
+            <div style="padding:8px 10px;background:#f8fafc;font-size:12px;font-weight:900;">أفضل المنتجات</div>
+            <div style="font-size:10px;">${productRowsHtml}</div>
+          </div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
+            <div style="padding:8px 10px;background:#f8fafc;font-size:12px;font-weight:900;">التوزيع اليومي</div>
+            <div style="font-size:10px;">${dailyRowsHtml}</div>
+          </div>
+          <div style="border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
+            <div style="padding:8px 10px;background:#f8fafc;font-size:12px;font-weight:900;">تفصيل الحالات</div>
+            <div style="font-size:10px;">${statusRowsHtml}</div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(wrapper);
+
+      const canvas = await html2canvas(wrapper, {
         scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
       });
 
+      document.body.removeChild(wrapper);
+
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      const pdf = new jsPDF("l", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imageHeight = (canvas.height * pdfWidth) / canvas.width;
+      const renderHeight = Math.min(pdfHeight, imageHeight);
 
-      let heightLeft = imageHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
-      heightLeft -= pdfHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imageHeight);
-        heightLeft -= pdfHeight;
-      }
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, renderHeight);
 
       const safeUserName = String(financialReportUser?.username || "employee").replace(/\s+/g, "-");
       const safeMonth = String(financialReportMonth || getCurrentMonthKey());
@@ -985,7 +1123,7 @@ const UserManagement: React.FunctionComponent = () => {
               لا توجد بيانات مالية متاحة لهذا الموظف في الشهر المحدد.
             </div>
           ) : (
-            <div ref={financialReportExportRef} className="space-y-4 bg-white dark:bg-slate-950 p-1 rounded-md">
+            <div className="space-y-4 bg-white dark:bg-slate-950 p-1 rounded-md">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                   <div className="text-xs text-slate-500 dark:text-slate-300">الراتب الثابت</div>
@@ -1017,6 +1155,10 @@ const UserManagement: React.FunctionComponent = () => {
                 <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm dark:border-slate-800 dark:bg-slate-900">
                   <div className="mb-2 font-black text-slate-700 dark:text-slate-100">تفاصيل الراتب</div>
                   <div className="space-y-1 text-slate-600 dark:text-slate-300">
+                    <div>البدل الثابت: <span className="font-bold">{formatMoney(financialReportData.fixedSalary)}</span></div>
+                    <div>عمولة المبيعات: <span className="font-bold text-emerald-600">{formatMoney(financialReportData.totalCommissionAmount)}</span></div>
+                    <div>مكافأة المبيعات: <span className="font-bold text-amber-600">{formatMoney(financialReportData.totalSalesRewardAmount)}</span></div>
+                    <div>مكافأة المنتجات: <span className="font-bold text-violet-600">{formatMoney(financialReportData.totalProductRewardAmount)}</span></div>
                     <div>المستحق الافتراضي: <span className="font-bold">{formatMoney(financialReportData.totalDefaultSalary)}</span></div>
                     <div>
                       الراتب المعدل:
