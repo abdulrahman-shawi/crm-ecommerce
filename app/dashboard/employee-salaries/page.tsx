@@ -2,16 +2,20 @@
 
 import * as React from "react";
 import { DataTable } from "@/components/shared/DataTable";
+import { AppModal } from "@/components/ui/app-modal";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, isAdmin } from "@/lib/utils";
 import { GetUserTargetProgress } from "@/server/analytics";
 import { getEmployeeSalaryAdjustments, upsertEmployeeSalaryAdjustment } from "@/server/employee-salaries";
-import { getData as getExpensesData } from "@/server/expenses";
+import { createExpense, getData as getExpensesData } from "@/server/expenses";
 import { getalluser } from "@/server/user";
 import toast from "react-hot-toast";
 
 const formatMoney = (value: number | undefined | null) =>
   Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+
+const buildMonthDefaultDate = (monthKey: string) => `${monthKey}-01`;
 
 export default function EmployeeSalariesPage() {
   const { user } = useAuth();
@@ -30,8 +34,27 @@ export default function EmployeeSalariesPage() {
   });
 
   const [editableSalaryByUser, setEditableSalaryByUser] = React.useState<Record<string, string>>({});
+  const [isRentModalOpen, setIsRentModalOpen] = React.useState(false);
+  const [rentDescription, setRentDescription] = React.useState("");
+  const [rentAmount, setRentAmount] = React.useState("");
+  const [rentNotes, setRentNotes] = React.useState("");
+  const [rentDate, setRentDate] = React.useState(() => buildMonthDefaultDate(selectedMonth));
+  const [isRentSaving, setIsRentSaving] = React.useState(false);
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewEmployees", "viewAnalytics"])) || isAdmin(user);
+  const canAddRentExpense = Boolean(user && hasAnyPermission(user, ["addExpenses"])) || isAdmin(user);
+
+  const resetRentForm = React.useCallback(() => {
+    setRentDescription("");
+    setRentAmount("");
+    setRentNotes("");
+    setRentDate(buildMonthDefaultDate(selectedMonth));
+  }, [selectedMonth]);
+
+  const openRentModal = React.useCallback(() => {
+    resetRentForm();
+    setIsRentModalOpen(true);
+  }, [resetRentForm]);
 
   const isDateInSelectedMonth = React.useCallback(
     (dateLike: string | Date | null | undefined) => {
@@ -117,6 +140,11 @@ export default function EmployeeSalariesPage() {
     fetchData();
   }, [fetchData]);
 
+  React.useEffect(() => {
+    if (!isRentModalOpen) return;
+    setRentDate(buildMonthDefaultDate(selectedMonth));
+  }, [selectedMonth, isRentModalOpen]);
+
   const filteredRows = React.useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
@@ -141,6 +169,46 @@ export default function EmployeeSalariesPage() {
       { fixed: 0, commission: 0, salesTargetReward: 0, productTargetReward: 0, payable: 0 }
     );
   }, [filteredRows, editableSalaryByUser]);
+
+  const handleCreateRentExpense = async () => {
+    const amount = Number(rentAmount || 0);
+    if (!rentDescription.trim()) {
+      toast.error("يرجى إدخال وصف الإيجار");
+      return;
+    }
+
+    if (!Number.isFinite(amount) || amount < 0) {
+      toast.error("المبلغ غير صالح");
+      return;
+    }
+
+    setIsRentSaving(true);
+    const loadingToast = toast.loading("جاري إضافة مصروف الإيجار...");
+    try {
+      const res = await createExpense({
+        type: "RENT",
+        description: rentDescription,
+        amount,
+        notes: rentNotes,
+        scheduledDate: rentDate,
+      });
+
+      if (!res?.success) {
+        toast.error(typeof res?.error === "string" ? res.error : "فشل في إضافة مصروف الإيجار");
+        return;
+      }
+
+      toast.success("تمت إضافة مصروف الإيجار بنجاح");
+      setIsRentModalOpen(false);
+      resetRentForm();
+      await fetchData();
+    } catch (error) {
+      toast.error("فشل في إضافة مصروف الإيجار");
+    } finally {
+      setIsRentSaving(false);
+      toast.dismiss(loadingToast);
+    }
+  };
 
   if (!canView) {
     return (
@@ -257,7 +325,14 @@ export default function EmployeeSalariesPage() {
       />
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-        <h2 className="mb-3 text-lg font-black text-slate-800 dark:text-white">مصاريف الإيجارات</h2>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-lg font-black text-slate-800 dark:text-white">مصاريف الإيجارات</h2>
+          {canAddRentExpense && (
+            <Button onClick={openRentModal} className="bg-blue-600 text-white hover:bg-blue-700">
+              إضافة مصروف إيجار
+            </Button>
+          )}
+        </div>
         <DataTable
           data={rentExpenses}
           totalCount={rentExpenses.length}
@@ -267,7 +342,7 @@ export default function EmployeeSalariesPage() {
           isLoading={isLoading}
           columns={[
             { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
-            { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.amount || 0).toLocaleString()}</span> },
+            { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{formatMoney(row.amount)}</span> },
             {
               header: "تاريخ الإيجار",
               accessor: (row: any) => {
@@ -282,6 +357,83 @@ export default function EmployeeSalariesPage() {
           ]}
         />
       </div>
+
+      <AppModal
+        title="إضافة مصروف إيجار"
+        isOpen={isRentModalOpen}
+        onClose={() => {
+          setIsRentModalOpen(false);
+          resetRentForm();
+        }}
+      >
+        <div className="grid gap-4 p-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">الوصف</label>
+            <input
+              type="text"
+              value={rentDescription}
+              onChange={(e) => setRentDescription(e.target.value)}
+              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+              placeholder="مثال: إيجار المكتب"
+              disabled={isRentSaving}
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">المبلغ</label>
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                value={rentAmount}
+                onChange={(e) => setRentAmount(e.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                placeholder="0.00"
+                disabled={isRentSaving}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">تاريخ الإيجار</label>
+              <input
+                type="date"
+                value={rentDate}
+                onChange={(e) => setRentDate(e.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+                disabled={isRentSaving}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">ملاحظات</label>
+            <textarea
+              value={rentNotes}
+              onChange={(e) => setRentNotes(e.target.value)}
+              className="min-h-24 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+              placeholder="ملاحظات إضافية"
+              disabled={isRentSaving}
+            />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsRentModalOpen(false);
+                resetRentForm();
+              }}
+              disabled={isRentSaving}
+            >
+              إلغاء
+            </Button>
+            <Button onClick={handleCreateRentExpense} className="bg-blue-600 text-white hover:bg-blue-700" disabled={isRentSaving}>
+              {isRentSaving ? "جار الحفظ..." : "حفظ المصروف"}
+            </Button>
+          </div>
+        </div>
+      </AppModal>
     </div>
   );
 }
