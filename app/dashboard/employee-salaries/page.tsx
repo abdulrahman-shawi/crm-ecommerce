@@ -69,7 +69,9 @@ export default function EmployeeSalariesPage() {
           const fixedSalary = Number(employee?.wage || 0);
           const commissionPercent = Number(employee?.salesCommissionPercent || 0);
           const salesProfit = Number(summary?.totalCommissionAmount || 0);
-          const totalDefaultSalary = fixedSalary + salesProfit;
+          const salesTargetReward = Number(summary?.totalSalesRewardAmount || 0);
+          const productTargetReward = Number(summary?.totalProductRewardAmount || 0);
+          const totalDefaultSalary = fixedSalary + salesProfit + salesTargetReward + productTargetReward;
 
           return {
             id: String(employee.id),
@@ -78,6 +80,8 @@ export default function EmployeeSalariesPage() {
             fixedSalary,
             commissionPercent,
             salesProfit,
+            salesTargetReward,
+            productTargetReward,
             totalDefaultSalary,
             totalOrdersCount: Number(summary?.totalOrdersCount || 0),
             deliveredOrdersCount: Number(summary?.deliveredOrdersCount || 0),
@@ -125,11 +129,13 @@ export default function EmployeeSalariesPage() {
         const edited = Number(editableSalaryByUser[row.id]);
         const payable = Number.isFinite(edited) ? edited : row.totalDefaultSalary;
         acc.fixed += row.fixedSalary;
-        acc.profit += row.salesProfit;
+        acc.commission += row.salesProfit;
+        acc.salesTargetReward += Number(row.salesTargetReward || 0);
+        acc.productTargetReward += Number(row.productTargetReward || 0);
         acc.payable += Math.max(0, payable || 0);
         return acc;
       },
-      { fixed: 0, profit: 0, payable: 0 }
+      { fixed: 0, commission: 0, salesTargetReward: 0, productTargetReward: 0, payable: 0 }
     );
   }, [filteredRows, editableSalaryByUser]);
 
@@ -173,14 +179,22 @@ export default function EmployeeSalariesPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي الرواتب الثابتة</div>
           <div className="mt-1 text-xl font-black text-blue-600">{totals.fixed.toLocaleString()}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-          <div className="text-xs text-slate-500">إجمالي الأرباح</div>
-          <div className="mt-1 text-xl font-black text-emerald-600">{totals.profit.toLocaleString()}</div>
+          <div className="text-xs text-slate-500">إجمالي عمولة المبيعات</div>
+          <div className="mt-1 text-xl font-black text-emerald-600">{totals.commission.toLocaleString()}</div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="text-xs text-slate-500">إجمالي مكافأة المبيعات</div>
+          <div className="mt-1 text-xl font-black text-amber-600">{totals.salesTargetReward.toLocaleString()}</div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="text-xs text-slate-500">إجمالي مكافأة المنتجات</div>
+          <div className="mt-1 text-xl font-black text-violet-600">{totals.productTargetReward.toLocaleString()}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي المستحق بعد التعديل</div>
@@ -200,7 +214,9 @@ export default function EmployeeSalariesPage() {
           { header: "الإيميل", accessor: (row: any) => <span>{row.email}</span> },
           { header: "الراتب الثابت", accessor: (row: any) => <span className="font-bold text-slate-600">{Number(row.fixedSalary || 0).toLocaleString()}</span> },
           { header: "نسبة الربح %", accessor: (row: any) => <span>{Number(row.commissionPercent || 0).toLocaleString()}</span> },
-          { header: "الربح", accessor: (row: any) => <span className="font-black text-emerald-600">{Number(row.salesProfit || 0).toLocaleString()}</span> },
+          { header: "عمولة المبيعات", accessor: (row: any) => <span className="font-black text-emerald-600">{Number(row.salesProfit || 0).toLocaleString()}</span> },
+          { header: "مكافأة المبيعات", accessor: (row: any) => <span className="font-black text-amber-600">{Number(row.salesTargetReward || 0).toLocaleString()}</span> },
+          { header: "مكافأة المنتجات", accessor: (row: any) => <span className="font-black text-violet-600">{Number(row.productTargetReward || 0).toLocaleString()}</span> },
           { header: "الطلبات", accessor: (row: any) => <span>{Number(row.totalOrdersCount || 0).toLocaleString()}</span> },
           { header: "الطلبات المسلّمة", accessor: (row: any) => <span>{Number(row.deliveredOrdersCount || 0).toLocaleString()}</span> },
           { header: "إجمالي المبيعات", accessor: (row: any) => <span>{Number(row.totalSalesAmount || 0).toLocaleString()}</span> },
