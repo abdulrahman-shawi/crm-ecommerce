@@ -10,6 +10,9 @@ import { getData as getExpensesData } from "@/server/expenses";
 import { getalluser } from "@/server/user";
 import toast from "react-hot-toast";
 
+const formatMoney = (value: number | undefined | null) =>
+  Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+
 export default function EmployeeSalariesPage() {
   const { user } = useAuth();
   const [rows, setRows] = React.useState<any[]>([]);
@@ -182,23 +185,23 @@ export default function EmployeeSalariesPage() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي الرواتب الثابتة</div>
-          <div className="mt-1 text-xl font-black text-blue-600">{totals.fixed.toLocaleString()}</div>
+          <div className="mt-1 text-xl font-black text-blue-600">{formatMoney(totals.fixed)}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي عمولة المبيعات</div>
-          <div className="mt-1 text-xl font-black text-emerald-600">{totals.commission.toLocaleString()}</div>
+          <div className="mt-1 text-xl font-black text-emerald-600">{formatMoney(totals.commission)}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي مكافأة المبيعات</div>
-          <div className="mt-1 text-xl font-black text-amber-600">{totals.salesTargetReward.toLocaleString()}</div>
+          <div className="mt-1 text-xl font-black text-amber-600">{formatMoney(totals.salesTargetReward)}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي مكافأة المنتجات</div>
-          <div className="mt-1 text-xl font-black text-violet-600">{totals.productTargetReward.toLocaleString()}</div>
+          <div className="mt-1 text-xl font-black text-violet-600">{formatMoney(totals.productTargetReward)}</div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="text-xs text-slate-500">إجمالي المستحق بعد التعديل</div>
-          <div className="mt-1 text-xl font-black text-violet-600">{totals.payable.toLocaleString()}</div>
+          <div className="mt-1 text-xl font-black text-violet-600">{formatMoney(totals.payable)}</div>
         </div>
       </div>
 
@@ -212,15 +215,15 @@ export default function EmployeeSalariesPage() {
         columns={[
           { header: "الموظف", accessor: (row: any) => <span className="font-bold">{row.name}</span> },
           { header: "الإيميل", accessor: (row: any) => <span>{row.email}</span> },
-          { header: "الراتب الثابت", accessor: (row: any) => <span className="font-bold text-slate-600">{Number(row.fixedSalary || 0).toLocaleString()}</span> },
+          { header: "الراتب الثابت", accessor: (row: any) => <span className="font-bold text-slate-600">{formatMoney(row.fixedSalary)}</span> },
           { header: "نسبة الربح %", accessor: (row: any) => <span>{Number(row.commissionPercent || 0).toLocaleString()}</span> },
-          { header: "عمولة المبيعات", accessor: (row: any) => <span className="font-black text-emerald-600">{Number(row.salesProfit || 0).toLocaleString()}</span> },
-          { header: "مكافأة المبيعات", accessor: (row: any) => <span className="font-black text-amber-600">{Number(row.salesTargetReward || 0).toLocaleString()}</span> },
-          { header: "مكافأة المنتجات", accessor: (row: any) => <span className="font-black text-violet-600">{Number(row.productTargetReward || 0).toLocaleString()}</span> },
+          { header: "عمولة المبيعات", accessor: (row: any) => <span className="font-black text-emerald-600">{formatMoney(row.salesProfit)}</span> },
+          { header: "مكافأة المبيعات", accessor: (row: any) => <span className="font-black text-amber-600">{formatMoney(row.salesTargetReward)}</span> },
+          { header: "مكافأة المنتجات", accessor: (row: any) => <span className="font-black text-violet-600">{formatMoney(row.productTargetReward)}</span> },
           { header: "الطلبات", accessor: (row: any) => <span>{Number(row.totalOrdersCount || 0).toLocaleString()}</span> },
           { header: "الطلبات المسلّمة", accessor: (row: any) => <span>{Number(row.deliveredOrdersCount || 0).toLocaleString()}</span> },
-          { header: "إجمالي المبيعات", accessor: (row: any) => <span>{Number(row.totalSalesAmount || 0).toLocaleString()}</span> },
-          { header: "المستحق الافتراضي", accessor: (row: any) => <span className="font-black text-blue-600">{Number(row.totalDefaultSalary || 0).toLocaleString()}</span> },
+          { header: "إجمالي المبيعات", accessor: (row: any) => <span>{formatMoney(row.totalSalesAmount)}</span> },
+          { header: "المستحق الافتراضي", accessor: (row: any) => <span className="font-black text-blue-600">{formatMoney(row.totalDefaultSalary)}</span> },
           {
             header: "الراتب المعدّل",
             accessor: (row: any) => (
