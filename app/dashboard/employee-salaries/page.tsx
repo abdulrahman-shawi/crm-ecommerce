@@ -1,15 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { DataTable } from "@/components/shared/DataTable";
+import { DataTable, TableAction } from "@/components/shared/DataTable";
 import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, isAdmin } from "@/lib/utils";
 import { GetUserTargetProgress } from "@/server/analytics";
 import { getEmployeeSalaryAdjustments, upsertEmployeeSalaryAdjustment } from "@/server/employee-salaries";
-import { createExpense, getData as getExpensesData } from "@/server/expenses";
+import { createExpense, deleteExpense, getData as getExpensesData, updateExpense } from "@/server/expenses";
 import { getalluser } from "@/server/user";
+import { Edit, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const formatMoney = (value: number | undefined | null) =>
@@ -35,6 +36,7 @@ export default function EmployeeSalariesPage() {
 
   const [editableSalaryByUser, setEditableSalaryByUser] = React.useState<Record<string, string>>({});
   const [isRentModalOpen, setIsRentModalOpen] = React.useState(false);
+  const [editingRentId, setEditingRentId] = React.useState<number | null>(null);
   const [rentDescription, setRentDescription] = React.useState("");
   const [rentAmount, setRentAmount] = React.useState("");
   const [rentNotes, setRentNotes] = React.useState("");
@@ -43,8 +45,11 @@ export default function EmployeeSalariesPage() {
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewEmployees", "viewAnalytics"])) || isAdmin(user);
   const canAddRentExpense = Boolean(user && hasAnyPermission(user, ["addExpenses"])) || isAdmin(user);
+  const canEditRentExpense = Boolean(user && hasAnyPermission(user, ["editExpenses"])) || isAdmin(user);
+  const canDeleteRentExpense = Boolean(user && hasAnyPermission(user, ["deleteExpenses"])) || isAdmin(user);
 
   const resetRentForm = React.useCallback(() => {
+    setEditingRentId(null);
     setRentDescription("");
     setRentAmount("");
     setRentNotes("");
@@ -55,6 +60,22 @@ export default function EmployeeSalariesPage() {
     resetRentForm();
     setIsRentModalOpen(true);
   }, [resetRentForm]);
+
+  const handleEditRentExpense = React.useCallback((expense: any) => {
+    setEditingRentId(Number(expense?.id));
+    setRentDescription(String(expense?.description || ""));
+    setRentAmount(String(Number(expense?.amount || 0)));
+    setRentNotes(String(expense?.notes || ""));
+
+    const effectiveDate = expense?.scheduledDate || expense?.createdAt;
+    const parsedDate = effectiveDate ? new Date(effectiveDate) : null;
+    setRentDate(
+      parsedDate && !Number.isNaN(parsedDate.getTime())
+        ? parsedDate.toISOString().slice(0, 10)
+        : buildMonthDefaultDate(selectedMonth)
+    );
+    setIsRentModalOpen(true);
+  }, [selectedMonth]);
 
   const isDateInSelectedMonth = React.useCallback(
     (dateLike: string | Date | null | undefined) => {
@@ -170,7 +191,7 @@ export default function EmployeeSalariesPage() {
     );
   }, [filteredRows, editableSalaryByUser]);
 
-  const handleCreateRentExpense = async () => {
+  const handleSaveRentExpense = async () => {
     const amount = Number(rentAmount || 0);
     if (!rentDescription.trim()) {
       toast.error("يرجى إدخال وصف الإيجار");
@@ -183,32 +204,77 @@ export default function EmployeeSalariesPage() {
     }
 
     setIsRentSaving(true);
-    const loadingToast = toast.loading("جاري إضافة مصروف الإيجار...");
+    const isEditing = editingRentId !== null;
+    const loadingToast = toast.loading(isEditing ? "جاري تعديل مصروف الإيجار..." : "جاري إضافة مصروف الإيجار...");
     try {
-      const res = await createExpense({
+      const payload = {
         type: "RENT",
         description: rentDescription,
         amount,
         notes: rentNotes,
         scheduledDate: rentDate,
-      });
+      };
+      const res = isEditing
+        ? await updateExpense(editingRentId, payload)
+        : await createExpense(payload);
 
       if (!res?.success) {
-        toast.error(typeof res?.error === "string" ? res.error : "فشل في إضافة مصروف الإيجار");
+        toast.error(typeof res?.error === "string" ? res.error : isEditing ? "فشل في تعديل مصروف الإيجار" : "فشل في إضافة مصروف الإيجار");
         return;
       }
 
-      toast.success("تمت إضافة مصروف الإيجار بنجاح");
+      toast.success(isEditing ? "تم تعديل مصروف الإيجار بنجاح" : "تمت إضافة مصروف الإيجار بنجاح");
       setIsRentModalOpen(false);
       resetRentForm();
       await fetchData();
     } catch (error) {
-      toast.error("فشل في إضافة مصروف الإيجار");
+      toast.error(isEditing ? "فشل في تعديل مصروف الإيجار" : "فشل في إضافة مصروف الإيجار");
     } finally {
       setIsRentSaving(false);
       toast.dismiss(loadingToast);
     }
   };
+
+  const handleDeleteRentExpense = React.useCallback(async (expense: any) => {
+    const confirmed = window.confirm("هل أنت متأكد من حذف مصروف الإيجار؟");
+    if (!confirmed) return;
+
+    const loadingToast = toast.loading("جاري حذف مصروف الإيجار...");
+    try {
+      const res = await deleteExpense(Number(expense?.id));
+      if (!res?.success) {
+        toast.error(typeof res?.error === "string" ? res.error : "فشل في حذف مصروف الإيجار");
+        return;
+      }
+
+      toast.success("تم حذف مصروف الإيجار بنجاح");
+      await fetchData();
+    } catch (error) {
+      toast.error("فشل في حذف مصروف الإيجار");
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  }, [fetchData]);
+
+  const rentExpenseActions = React.useMemo(() => {
+    return [
+      canEditRentExpense
+        ? {
+            label: "تعديل",
+            icon: <Edit size={14} />,
+            onClick: handleEditRentExpense,
+          }
+        : null,
+      canDeleteRentExpense
+        ? {
+            label: "حذف",
+            icon: <Trash2 size={14} />,
+            variant: "danger" as const,
+            onClick: handleDeleteRentExpense,
+          }
+        : null,
+    ].filter(Boolean) as TableAction<any>[];
+  }, [canDeleteRentExpense, canEditRentExpense, handleDeleteRentExpense, handleEditRentExpense]);
 
   if (!canView) {
     return (
@@ -340,6 +406,7 @@ export default function EmployeeSalariesPage() {
           currentPage={rentPage}
           onPageChange={(nextPage) => setRentPage(nextPage)}
           isLoading={isLoading}
+          actions={rentExpenseActions}
           columns={[
             { header: "الوصف", accessor: (row: any) => <span>{row.description || "-"}</span> },
             { header: "المبلغ", accessor: (row: any) => <span className="font-black text-blue-600">{formatMoney(row.amount)}</span> },
@@ -359,7 +426,7 @@ export default function EmployeeSalariesPage() {
       </div>
 
       <AppModal
-        title="إضافة مصروف إيجار"
+        title={editingRentId === null ? "إضافة مصروف إيجار" : "تعديل مصروف إيجار"}
         isOpen={isRentModalOpen}
         onClose={() => {
           setIsRentModalOpen(false);
@@ -428,8 +495,8 @@ export default function EmployeeSalariesPage() {
             >
               إلغاء
             </Button>
-            <Button onClick={handleCreateRentExpense} className="bg-blue-600 text-white hover:bg-blue-700" disabled={isRentSaving}>
-              {isRentSaving ? "جار الحفظ..." : "حفظ المصروف"}
+            <Button onClick={handleSaveRentExpense} className="bg-blue-600 text-white hover:bg-blue-700" disabled={isRentSaving}>
+              {isRentSaving ? "جار الحفظ..." : editingRentId === null ? "حفظ المصروف" : "حفظ التعديل"}
             </Button>
           </div>
         </div>
