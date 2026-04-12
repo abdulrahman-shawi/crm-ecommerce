@@ -6,7 +6,33 @@ export async function getshipping() {
     try {
         const res = await prisma.shipping.findMany({
             include: {
-                orders: true
+                orders: {
+                    include: {
+                        customer: {
+                            select: {
+                                id: true,
+                                name: true,
+                                phone: true,
+                                countryCode: true,
+                            },
+                        },
+                        user: {
+                            select: {
+                                id: true,
+                                username: true,
+                            },
+                        },
+                        warehouse: {
+                            select: {
+                                id: true,
+                                location: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                }
             }
         });
         return {    success: true, data: res };

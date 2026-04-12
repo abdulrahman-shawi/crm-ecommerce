@@ -4,6 +4,7 @@ import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission } from "@/lib/utils";
+import { getOrderCurrencySymbol, getOrderDisplayDate } from "@/orders/orderHelpers";
 import { createshipping, deletshipping, getshipping, updateshipping } from "@/server/shipping";
 import { AnimatePresence, motion } from "framer-motion";
 import { Edit, Trash2 } from "lucide-react";
@@ -18,10 +19,41 @@ const shippingSchema = z.object({
 });
 export default function ShippingPage() {
     const [isOpen, setIsOpen] = React.useState(false);
+    const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
     const [editId, setEditId] = React.useState<string | null>(null);
     const [formData, setFormData] = React.useState<any>(null);
     const [shipping, setshipping] = React.useState<any[]>([]);
+    const [selectedShipping, setSelectedShipping] = React.useState<any>(null);
     const { user } = useAuth()
+
+    const selectedShippingOrders = React.useMemo(() => {
+        return Array.isArray(selectedShipping?.orders) ? selectedShipping.orders : [];
+    }, [selectedShipping]);
+
+    const selectedShippingStatusSummary = React.useMemo(() => {
+        const summaryMap = new Map<string, { status: string; count: number; totalAmount: number }>();
+
+        selectedShippingOrders.forEach((order: any) => {
+            const status = String(order?.status || "غير محدد");
+            const current = summaryMap.get(status) || { status, count: 0, totalAmount: 0 };
+            current.count += 1;
+            current.totalAmount += Number(order?.finalAmount || 0);
+            summaryMap.set(status, current);
+        });
+
+        return Array.from(summaryMap.values()).sort((a, b) => b.count - a.count);
+    }, [selectedShippingOrders]);
+
+    const selectedShippingTotals = React.useMemo(() => {
+        return selectedShippingOrders.reduce(
+            (acc: { ordersCount: number; totalAmount: number }, order: any) => {
+                acc.ordersCount += 1;
+                acc.totalAmount += Number(order?.finalAmount || 0);
+                return acc;
+            },
+            { ordersCount: 0, totalAmount: 0 }
+        );
+    }, [selectedShippingOrders]);
 
 
     const getData = async () => {
@@ -43,6 +75,11 @@ export default function ShippingPage() {
         setIsOpen(false);
         setEditId(null);
         setFormData(null);
+    };
+
+    const openDetailsModal = (data: any) => {
+        setSelectedShipping(data);
+        setIsDetailsOpen(true);
     };
 
     const handleEdit = (data: any) => {
@@ -129,10 +166,19 @@ export default function ShippingPage() {
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <h3 className="font-bold text-xl text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                                            {e.name}
+                                            <button
+                                                type="button"
+                                                onClick={() => openDetailsModal(e)}
+                                                className="text-right hover:text-blue-600 transition-colors"
+                                            >
+                                                {e.name}
+                                            </button>
                                         </h3>
                                         <p className="text-sm text-slate-500 mt-1">
                                             {e.price} سعر الشحن
+                                        </p>
+                                        <p className="text-xs text-slate-400 mt-2">
+                                            عدد الطلبات المرتبطة: {Array.isArray(e.orders) ? e.orders.length : 0}
                                         </p>
                                     </div>
 
@@ -191,6 +237,92 @@ export default function ShippingPage() {
                                 </div>
                             )}
                         </DynamicForm>
+                    </div>
+                </AppModal>
+
+                <AppModal
+                    title={`تفاصيل شركة الشحن - ${selectedShipping?.name || ""}`}
+                    isOpen={isDetailsOpen}
+                    size="xl"
+                    onClose={() => {
+                        setIsDetailsOpen(false);
+                        setSelectedShipping(null);
+                    }}
+                >
+                    <div className="p-4 space-y-4" dir="rtl">
+                        {!selectedShipping ? (
+                            <div className="text-sm text-slate-500">لا توجد بيانات لعرضها.</div>
+                        ) : (
+                            <>
+                                <div className="grid gap-3 sm:grid-cols-3">
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">اسم شركة الشحن</div>
+                                        <div className="mt-1 text-lg font-black text-slate-800 dark:text-white">{selectedShipping.name}</div>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">سعر الشحن الأساسي</div>
+                                        <div className="mt-1 text-lg font-black text-blue-600">{Number(selectedShipping.price || 0).toLocaleString()}</div>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">مجموع الطلبات</div>
+                                        <div className="mt-1 text-lg font-black text-emerald-600">{selectedShippingTotals.ordersCount.toLocaleString()}</div>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                    <div className="mb-3 font-black text-slate-800 dark:text-white">ملخص الحالات</div>
+                                    {selectedShippingStatusSummary.length === 0 ? (
+                                        <div className="text-sm text-slate-500">لا توجد طلبات مرتبطة بهذه الشركة.</div>
+                                    ) : (
+                                        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                                            {selectedShippingStatusSummary.map((item) => (
+                                                <div key={item.status} className="rounded-lg border border-slate-100 p-3 dark:border-slate-800">
+                                                    <div className="font-bold text-slate-800 dark:text-slate-100">{item.status}</div>
+                                                    <div className="mt-1 text-xs text-slate-500">عدد الطلبات: {item.count.toLocaleString()}</div>
+                                                    <div className="text-sm font-black text-blue-600">إجمالي القيمة: {item.totalAmount.toLocaleString()}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                    <div className="mb-3 font-black text-slate-800 dark:text-white">الطلبات المرتبطة</div>
+                                    {selectedShippingOrders.length === 0 ? (
+                                        <div className="text-sm text-slate-500">لا توجد طلبات مرتبطة بهذه الشركة.</div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-sm">
+                                                <thead>
+                                                    <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-300">
+                                                        <th className="px-3 py-2 text-right">رقم الطلب</th>
+                                                        <th className="px-3 py-2 text-right">العميل</th>
+                                                        <th className="px-3 py-2 text-right">البائع</th>
+                                                        <th className="px-3 py-2 text-right">الحالة</th>
+                                                        <th className="px-3 py-2 text-right">المبلغ</th>
+                                                        <th className="px-3 py-2 text-right">المدينة</th>
+                                                        <th className="px-3 py-2 text-right">التاريخ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {selectedShippingOrders.map((order: any) => (
+                                                        <tr key={order.id} className="border-b border-slate-100 dark:border-slate-800/70">
+                                                            <td className="px-3 py-2 font-bold text-slate-800 dark:text-slate-100">{order.orderNumber}</td>
+                                                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{order.customer?.name || "-"}</td>
+                                                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{order.user?.username || "-"}</td>
+                                                            <td className="px-3 py-2 font-medium text-slate-700 dark:text-slate-200">{order.status || "-"}</td>
+                                                            <td className="px-3 py-2 font-bold text-blue-600">{Number(order.finalAmount || 0).toLocaleString()} {getOrderCurrencySymbol(order)}</td>
+                                                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{order.city || "-"}</td>
+                                                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{new Date(getOrderDisplayDate(order)).toLocaleDateString("ar-EG")}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </AppModal>
             </div>
