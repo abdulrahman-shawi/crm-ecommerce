@@ -28,7 +28,20 @@ export const getOrderTotalShippingExpenses = (orderLike: any) => {
 };
 
 export const getOrderAmountToCollect = (orderLike: any) => {
-  return Number(orderLike?.finalAmount || 0);
+  const paymentMethod = String(orderLike?.paymentMethod || "").trim();
+  const finalAmount = Number(orderLike?.finalAmount || 0);
+  const receivedAmount = Number(orderLike?.amount || 0);
+  const remainingAmount = Number(orderLike?.amountBank || (finalAmount - receivedAmount) || 0);
+
+  if (paymentMethod === "تحويل بنكي") {
+    return 0;
+  }
+
+  if (paymentMethod === "مختلطة") {
+    return Math.max(0, remainingAmount);
+  }
+
+  return Math.max(0, finalAmount);
 };
 
 export const getOrderNetAmountAfterShipping = (orderLike: any) => {
