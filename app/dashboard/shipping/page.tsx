@@ -4,7 +4,7 @@ import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission } from "@/lib/utils";
-import { getOrderCurrencySymbol, getOrderDisplayDate } from "@/orders/orderHelpers";
+import { getOrderCurrencySymbol, getOrderDisplayDate, getOrderNetAmountAfterShipping, getOrderTotalShippingExpenses } from "@/orders/orderHelpers";
 import { createshipping, deletshipping, getshipping, updateshipping } from "@/server/shipping";
 import { AnimatePresence, motion } from "framer-motion";
 import { Edit, Trash2 } from "lucide-react";
@@ -46,12 +46,14 @@ export default function ShippingPage() {
 
     const selectedShippingTotals = React.useMemo(() => {
         return selectedShippingOrders.reduce(
-            (acc: { ordersCount: number; totalAmount: number }, order: any) => {
+            (acc: { ordersCount: number; totalAmount: number; totalShippingAmount: number; totalNetAmount: number }, order: any) => {
                 acc.ordersCount += 1;
                 acc.totalAmount += Number(order?.finalAmount || 0);
+                acc.totalShippingAmount += getOrderTotalShippingExpenses(order);
+                acc.totalNetAmount += getOrderNetAmountAfterShipping(order);
                 return acc;
             },
-            { ordersCount: 0, totalAmount: 0 }
+            { ordersCount: 0, totalAmount: 0, totalShippingAmount: 0, totalNetAmount: 0 }
         );
     }, [selectedShippingOrders]);
 
@@ -254,7 +256,7 @@ export default function ShippingPage() {
                             <div className="text-sm text-slate-500">لا توجد بيانات لعرضها.</div>
                         ) : (
                             <>
-                                <div className="grid gap-3 sm:grid-cols-3">
+                                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                                     <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                                         <div className="text-xs text-slate-500">اسم شركة الشحن</div>
                                         <div className="mt-1 text-lg font-black text-slate-800 dark:text-white">{selectedShipping.name}</div>
@@ -266,6 +268,18 @@ export default function ShippingPage() {
                                     <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                                         <div className="text-xs text-slate-500">مجموع الطلبات</div>
                                         <div className="mt-1 text-lg font-black text-emerald-600">{selectedShippingTotals.ordersCount.toLocaleString()}</div>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">مبلغ الطلبات الكلي</div>
+                                        <div className="mt-1 text-lg font-black text-blue-600">{selectedShippingTotals.totalAmount.toLocaleString()}</div>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">مبلغ الشحن الكلي</div>
+                                        <div className="mt-1 text-lg font-black text-amber-600">{selectedShippingTotals.totalShippingAmount.toLocaleString()}</div>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="text-xs text-slate-500">الفرق بين الطلب والشحن</div>
+                                        <div className="mt-1 text-lg font-black text-violet-600">{selectedShippingTotals.totalNetAmount.toLocaleString()}</div>
                                     </div>
                                 </div>
 
@@ -299,7 +313,9 @@ export default function ShippingPage() {
                                                         <th className="px-3 py-2 text-right">العميل</th>
                                                         <th className="px-3 py-2 text-right">البائع</th>
                                                         <th className="px-3 py-2 text-right">الحالة</th>
-                                                        <th className="px-3 py-2 text-right">المبلغ</th>
+                                                        <th className="px-3 py-2 text-right">مبلغ الطلب الكلي</th>
+                                                        <th className="px-3 py-2 text-right">مبلغ الشحن</th>
+                                                        <th className="px-3 py-2 text-right">الفرق بعد طرح الشحن</th>
                                                         <th className="px-3 py-2 text-right">المدينة</th>
                                                         <th className="px-3 py-2 text-right">التاريخ</th>
                                                     </tr>
@@ -312,6 +328,8 @@ export default function ShippingPage() {
                                                             <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{order.user?.username || "-"}</td>
                                                             <td className="px-3 py-2 font-medium text-slate-700 dark:text-slate-200">{order.status || "-"}</td>
                                                             <td className="px-3 py-2 font-bold text-blue-600">{Number(order.finalAmount || 0).toLocaleString()} {getOrderCurrencySymbol(order)}</td>
+                                                            <td className="px-3 py-2 font-bold text-amber-600">{getOrderTotalShippingExpenses(order).toLocaleString()} {getOrderCurrencySymbol(order)}</td>
+                                                            <td className="px-3 py-2 font-bold text-violet-600">{getOrderNetAmountAfterShipping(order).toLocaleString()} {getOrderCurrencySymbol(order)}</td>
                                                             <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{order.city || "-"}</td>
                                                             <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{new Date(getOrderDisplayDate(order)).toLocaleDateString("ar-EG")}</td>
                                                         </tr>
