@@ -24,6 +24,7 @@ const userSchema = z.object({
   username: z.string().min(3, "اسم المستخدم مطلوب"),
   email: z.string().email("بريد غير صالح"),
   phone: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
   password: z.string().min(6, "كلمة المرور ضعيفة").optional().or(z.literal('')), // اختيارية عند التعديل
   jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
   accountType: z.enum(["ADMIN", "MANAGER", "STAFF"]),
@@ -121,6 +122,7 @@ const UserManagement: React.FunctionComponent = () => {
   const [financialReportLoading, setFinancialReportLoading] = React.useState(false);
   const [isFinancialReportPdfExporting, setIsFinancialReportPdfExporting] = React.useState(false);
   const [financialReportData, setFinancialReportData] = React.useState<{
+    employeeNotes: string | null;
     fixedSalary: number;
     assignedCommissionPercent: number;
     totalCommissionAmount: number;
@@ -669,6 +671,7 @@ const UserManagement: React.FunctionComponent = () => {
       const payableSalary = hasEditedSalary ? editedSalaryValue : totalDefaultSalary;
 
       setFinancialReportData({
+        employeeNotes: String(employee?.notes || "").trim() || null,
         fixedSalary,
         assignedCommissionPercent: Number((summary?.assignedCommissionPercent ?? employee?.salesCommissionPercent) || 0),
         totalCommissionAmount,
@@ -848,6 +851,11 @@ const UserManagement: React.FunctionComponent = () => {
           </div>
         </div>
 
+        <div style="border:1px solid #cbd5e1;border-radius:12px;padding:10px;background:#ffffff;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px;">ملاحظات الموظف</div>
+          <div style="font-size:11px;color:#334155;line-height:1.9;white-space:pre-wrap;word-break:break-word;">${financialReportData.employeeNotes || "لا توجد ملاحظات لهذا الموظف"}</div>
+        </div>
+
         <div style="display:grid;grid-template-columns:1.05fr .95fr 1fr 1fr;gap:10px;align-items:start;">
           <div style="border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;">
             <div style="padding:8px 10px;background:#f8fafc;font-size:12px;font-weight:900;">تفصيل سعر الصرف</div>
@@ -942,6 +950,7 @@ const UserManagement: React.FunctionComponent = () => {
           username: data.username,
           email: data.email,
           phone: data.phone,
+          notes: data.notes || "",
           jobTitle: data.jobTitle,
           accountType: data.accountType,
           salesCommissionPercent: data.salesCommissionPercent ?? 0,
@@ -1169,6 +1178,13 @@ const UserManagement: React.FunctionComponent = () => {
                 </div>
               </div>
 
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm dark:border-slate-800 dark:bg-slate-900">
+                <div className="mb-2 font-black text-slate-700 dark:text-slate-100">ملاحظات الموظف</div>
+                <div className="whitespace-pre-wrap text-slate-600 dark:text-slate-300">
+                  {financialReportData.employeeNotes || "لا توجد ملاحظات لهذا الموظف."}
+                </div>
+              </div>
+
               <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <div>
@@ -1377,6 +1393,7 @@ const UserManagement: React.FunctionComponent = () => {
               <div className="grid gap-4">
                 <FormInput className='text-gray-800 dark:text-white' label="اسم المستخدم" {...register("username")} error={errors.username?.message as string} />
                 <FormInput className='text-gray-800 dark:text-white' label="البريد الإلكتروني" {...register("email")} error={errors.email?.message as string} />
+                <FormInput className='text-gray-800 dark:text-white' label="ملاحظات الموظف" {...register("notes")} error={errors.notes?.message as string} />
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
                   <div className="dir-ltr">

@@ -31,6 +31,7 @@ import { a, button } from "framer-motion/client";
 
 const STATUS_OPTIONS = [
   { label: "فرصة جديدة", value: "فرصة جديدة" },
+  { label: "مهتم", value: "مهتم" },
   { label: "جاري المتابعة", value: "جاري المتابعة" },
   { label: "تم البيع", value: "تم البيع" },
   { label: "غير مهتم / ملغي", value: "غير مهتم / ملغي" },
@@ -845,6 +846,8 @@ const CustomrLayout: React.FC = () => {
             px-3 py-1.5 rounded-full text-[10px] font-black text-center transition-all border
             ${customer.status === "فرصة جديدة"
               ? "bg-blue-100 text-blue-600 border-rose-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
+              : customer.status === "مهتم"
+                ? "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
               : customer.status === "جاري المتابعة"
                 ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
                 : customer.status === "تم البيع"

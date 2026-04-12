@@ -92,6 +92,7 @@ export async function createuser(data: any) {
         email: data.email,
         password: hashedPassword, // حفظ الكلمة المشفرة
         phone: data.phone || null,
+        notes: String(data.notes || "").trim() || null,
         jobTitle: data.jobTitle,
         accountType: data.accountType,
         salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
@@ -122,6 +123,7 @@ export async function updateuser(id: string, data: any) {
       username: data.username,
       email: data.email,
       phone: data.phone || null,
+      notes: String(data.notes || "").trim() || null,
       jobTitle: data.jobTitle,
       ...(typeof data.avatar === "string" ? { avatar: data.avatar } : {}),
       accountType: data.accountType,

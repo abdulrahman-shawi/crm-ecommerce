@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
         email: data.email,
         password: await bcrypt.hash(data.password, 10), //
         phone: data.phone || null,
+        notes: String(data.notes || "").trim() || null,
         jobTitle: data.jobTitle,
         accountType: data.accountType,
         salesCommissionPercent: Number(data.salesCommissionPercent) || 0,

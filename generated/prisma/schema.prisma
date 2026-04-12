@@ -12,6 +12,7 @@ model User {
   username    String
   email       String      @unique
   phone       String?
+  notes       String?
   jobTitle    String?
   avatar      String?
   accountType AccountType @default(STAFF)

@@ -3271,6 +3271,7 @@ export namespace Prisma {
     username: string | null
     email: string | null
     phone: string | null
+    notes: string | null
     jobTitle: string | null
     avatar: string | null
     accountType: $Enums.AccountType | null
@@ -3288,6 +3289,7 @@ export namespace Prisma {
     username: string | null
     email: string | null
     phone: string | null
+    notes: string | null
     jobTitle: string | null
     avatar: string | null
     accountType: $Enums.AccountType | null
@@ -3305,6 +3307,7 @@ export namespace Prisma {
     username: number
     email: number
     phone: number
+    notes: number
     jobTitle: number
     avatar: number
     accountType: number
@@ -3334,6 +3337,7 @@ export namespace Prisma {
     username?: true
     email?: true
     phone?: true
+    notes?: true
     jobTitle?: true
     avatar?: true
     accountType?: true
@@ -3351,6 +3355,7 @@ export namespace Prisma {
     username?: true
     email?: true
     phone?: true
+    notes?: true
     jobTitle?: true
     avatar?: true
     accountType?: true
@@ -3368,6 +3373,7 @@ export namespace Prisma {
     username?: true
     email?: true
     phone?: true
+    notes?: true
     jobTitle?: true
     avatar?: true
     accountType?: true
@@ -3472,6 +3478,7 @@ export namespace Prisma {
     username: string
     email: string
     phone: string | null
+    notes: string | null
     jobTitle: string | null
     avatar: string | null
     accountType: $Enums.AccountType
@@ -3508,6 +3515,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     phone?: boolean
+    notes?: boolean
     jobTitle?: boolean
     avatar?: boolean
     accountType?: boolean
@@ -3537,6 +3545,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     phone?: boolean
+    notes?: boolean
     jobTitle?: boolean
     avatar?: boolean
     accountType?: boolean
@@ -3556,6 +3565,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     phone?: boolean
+    notes?: boolean
     jobTitle?: boolean
     avatar?: boolean
     accountType?: boolean
@@ -3575,6 +3585,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     phone?: boolean
+    notes?: boolean
     jobTitle?: boolean
     avatar?: boolean
     accountType?: boolean
@@ -3587,7 +3598,7 @@ export namespace Prisma {
     parentId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "jobTitle" | "avatar" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId" | "parentId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "notes" | "jobTitle" | "avatar" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId" | "parentId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     parent?: boolean | User$parentArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
@@ -3631,6 +3642,7 @@ export namespace Prisma {
       username: string
       email: string
       phone: string | null
+      notes: string | null
       jobTitle: string | null
       avatar: string | null
       accountType: $Enums.AccountType
@@ -4079,6 +4091,7 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
+    readonly notes: FieldRef<"User", 'String'>
     readonly jobTitle: FieldRef<"User", 'String'>
     readonly avatar: FieldRef<"User", 'String'>
     readonly accountType: FieldRef<"User", 'AccountType'>
@@ -28568,6 +28581,7 @@ export namespace Prisma {
     username: 'username',
     email: 'email',
     phone: 'phone',
+    notes: 'notes',
     jobTitle: 'jobTitle',
     avatar: 'avatar',
     accountType: 'accountType',
@@ -29121,6 +29135,7 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
+    notes?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
@@ -29149,6 +29164,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     phone?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
     accountType?: SortOrder
@@ -29180,6 +29196,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     username?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
+    notes?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
@@ -29208,6 +29225,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     phone?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
     accountType?: SortOrder
@@ -29233,6 +29251,7 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"User"> | string | null
     jobTitle?: StringNullableWithAggregatesFilter<"User"> | string | null
     avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
     accountType?: EnumAccountTypeWithAggregatesFilter<"User"> | $Enums.AccountType
@@ -30973,6 +30992,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -30999,6 +31019,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -31025,6 +31046,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -31051,6 +31073,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -31077,6 +31100,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -31094,6 +31118,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -31109,6 +31134,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -33164,6 +33190,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     phone?: SortOrder
+    notes?: SortOrder
     jobTitle?: SortOrder
     avatar?: SortOrder
     accountType?: SortOrder
@@ -33186,6 +33213,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     phone?: SortOrder
+    notes?: SortOrder
     jobTitle?: SortOrder
     avatar?: SortOrder
     accountType?: SortOrder
@@ -33203,6 +33231,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     phone?: SortOrder
+    notes?: SortOrder
     jobTitle?: SortOrder
     avatar?: SortOrder
     accountType?: SortOrder
@@ -36697,6 +36726,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -36722,6 +36752,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -36752,6 +36783,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -36777,6 +36809,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -37227,6 +37260,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -37252,6 +37286,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -37296,6 +37331,7 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
+    notes?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
     accountType?: EnumAccountTypeFilter<"User"> | $Enums.AccountType
@@ -37681,6 +37717,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -37706,6 +37743,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -37747,6 +37785,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -37772,6 +37811,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -37797,6 +37837,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -37822,6 +37863,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -38711,6 +38753,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -38736,6 +38779,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -38847,6 +38891,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -38872,6 +38917,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -38897,6 +38943,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -38922,6 +38969,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -38987,6 +39035,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -39012,6 +39061,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -39332,6 +39382,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -39357,6 +39408,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -39782,6 +39834,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -39807,6 +39860,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -39899,6 +39953,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -39924,6 +39979,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -39994,6 +40050,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40019,6 +40076,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40182,6 +40240,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40207,6 +40266,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40306,6 +40366,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40331,6 +40392,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40372,6 +40434,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40397,6 +40460,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40741,6 +40805,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40766,6 +40831,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40807,6 +40873,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40832,6 +40899,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40857,6 +40925,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -40974,6 +41043,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -40999,6 +41069,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -41024,6 +41095,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -41402,6 +41474,7 @@ export namespace Prisma {
     username: string
     email: string
     phone?: string | null
+    notes?: string | null
     jobTitle?: string | null
     avatar?: string | null
     accountType?: $Enums.AccountType
@@ -41418,6 +41491,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -41443,6 +41517,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -41468,6 +41543,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -42178,6 +42254,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -42203,6 +42280,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
@@ -42228,6 +42306,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType

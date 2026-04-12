@@ -17,6 +17,7 @@ type CustomersFiltersProps = {
 
 const filterTabs = [
   { id: "فرصة جديدة", label: "فرصة جديدة" },
+  { id: "مهتم", label: "مهتم" },
   { id: "جاري المتابعة", label: "جاري المتابعة" },
   { id: "تم البيع", label: "تم البيع" },
   { id: "غير مهتم / ملغي", label: "غير مهتم / ملغي" },
