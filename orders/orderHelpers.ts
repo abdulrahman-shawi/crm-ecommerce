@@ -27,6 +27,14 @@ export const getOrderTotalShippingExpenses = (orderLike: any) => {
   return shippingPrice + moneyTransferCommission + otherCommissions;
 };
 
+export const getOrderAmountToCollect = (orderLike: any) => {
+  return Number(orderLike?.finalAmount || 0);
+};
+
+export const getOrderNetAmountAfterShipping = (orderLike: any) => {
+  return getOrderAmountToCollect(orderLike) - getOrderTotalShippingExpenses(orderLike);
+};
+
 export const getOrderDeliveryMethod = (orderLike: any) => 
   String(orderLike?.deliveryMethod || "").trim() || "غير محدد";
 

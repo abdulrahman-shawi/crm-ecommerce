@@ -2,7 +2,9 @@ import React from 'react';
 import { DataTable, TableAction } from '@/components/shared/DataTable';
 import {
   statusColors,
+  getOrderAmountToCollect,
   getOrderCurrencySymbol,
+  getOrderNetAmountAfterShipping,
   getOrderShippingName,
   getOrderTotalShippingExpenses,
   getOrderDisplayDate,
@@ -90,10 +92,18 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           },
         },
         {
-          header: "المجموع الكلي",
+          header: "المبلغ اللازم استلامه",
           accessor: (e: any) => (
             <span className="font-black text-blue-600">
-              {(Number(e.finalAmount || 0))} {getOrderCurrencySymbol(e)}
+              {getOrderAmountToCollect(e).toLocaleString()} {getOrderCurrencySymbol(e)}
+            </span>
+          ),
+        },
+        {
+          header: "الصافي بعد طرح الشحن",
+          accessor: (e: any) => (
+            <span className="font-black text-emerald-600">
+              {getOrderNetAmountAfterShipping(e).toLocaleString()} {getOrderCurrencySymbol(e)}
             </span>
           ),
         },
