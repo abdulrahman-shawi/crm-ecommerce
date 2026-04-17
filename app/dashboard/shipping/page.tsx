@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission } from "@/lib/utils";
 import { getOrderCurrencySymbol, getOrderDisplayDate, getOrderNetAmountAfterShipping, getOrderTotalShippingExpenses } from "@/orders/orderHelpers";
-import { createshipping, deletshipping, getshipping, updateshipping } from "@/server/shipping";
+import { createshipping, deletshipping, getshippingWithOrders, updateshipping } from "@/server/shipping";
 import { AnimatePresence, motion } from "framer-motion";
 import { Edit, Trash2 } from "lucide-react";
 import React from "react";
@@ -60,7 +60,7 @@ export default function ShippingPage() {
 
     const getData = async () => {
         try {
-            const res = await getshipping();
+            const res = await getshippingWithOrders();
             if (res.success) {
                 setshipping(res.data);
             } else {

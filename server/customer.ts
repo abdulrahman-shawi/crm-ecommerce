@@ -11,32 +11,107 @@ const parseOptionalDate = (value: any) => {
   return date;
 };
 
+const customerOrderSelect = {
+  id: true,
+  orderNumber: true,
+  finalAmount: true,
+  status: true,
+  createdAt: true,
+  manualCreatedAt: true,
+  shippingPrice: true,
+  moneyTransferCommission: true,
+  otherCommissions: true,
+  warehouse: {
+    select: {
+      id: true,
+      location: true,
+    },
+  },
+  user: {
+    select: {
+      id: true,
+      name: true,
+      username: true,
+    },
+  },
+  customer: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  items: {
+    select: {
+      id: true,
+      quantity: true,
+      price: true,
+      discount: true,
+      product: {
+        select: {
+          id: true,
+          name: true,
+          modelNumber: true,
+        },
+      },
+    },
+  },
+} as const;
+
+const customerMessageSelect = {
+  id: true,
+  message: true,
+  createdAt: true,
+  user: {
+    select: {
+      id: true,
+      username: true,
+    },
+  },
+} as const;
+
 export async function getCustomer() {
   const res = await prisma.customer.findMany({
     orderBy:{
       createdAt:"desc"
     },
-    include:{
-      users:true,
-      orders:{
-        include:{
-          warehouse: true,
-          items:{
-            include:{
-              product:true
-            }
-          }
-        }
+    select:{
+      id: true,
+      name: true,
+      phone: true,
+      countryCode: true,
+      phonestatus: true,
+      country: true,
+      gender: true,
+      age: true,
+      source: true,
+      city: true,
+      rating: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      users: {
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          avatar: true,
+        },
       },
-      message:{
-        include:{
-          user:true
-        }
-      }
+      orders: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: customerOrderSelect,
+      },
+      message: {
+        orderBy: {
+          createdAt: "asc",
+        },
+        select: customerMessageSelect,
+      },
     }
     
   })
-revalidatePath("/customers");
   return {success:true , data:res }
   
 }

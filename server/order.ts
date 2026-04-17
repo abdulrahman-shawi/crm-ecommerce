@@ -97,6 +97,81 @@ async function getScopedUserIds(userId: string) {
     return rows.map((row) => row.id);
 }
 
+const orderItemSelect = {
+    id: true,
+    quantity: true,
+    price: true,
+    discount: true,
+    productId: true,
+    product: {
+        select: {
+            id: true,
+            name: true,
+            modelNumber: true,
+        },
+    },
+} as const;
+
+const orderListSelect = {
+    id: true,
+    orderNumber: true,
+    totalAmount: true,
+    discount: true,
+    finalAmount: true,
+    paymentMethod: true,
+    receiverName: true,
+    receiverPhone: true,
+    country: true,
+    city: true,
+    municipality: true,
+    fullAddress: true,
+    deliveryNotes: true,
+    googleMapsLink: true,
+    amount: true,
+    amountBank: true,
+    deliveryMethod: true,
+    additionalNotes: true,
+    status: true,
+    userId: true,
+    customerId: true,
+    shippingPrice: true,
+    moneyTransferCommission: true,
+    otherCommissions: true,
+    createdAt: true,
+    manualCreatedAt: true,
+    warehouse: {
+        select: {
+            id: true,
+            location: true,
+        },
+    },
+    shipping: {
+        select: {
+            id: true,
+            name: true,
+            price: true,
+        },
+    },
+    user: {
+        select: {
+            id: true,
+            username: true,
+            phone: true,
+        },
+    },
+    items: {
+        select: orderItemSelect,
+    },
+    customer: {
+        select: {
+            id: true,
+            name: true,
+            phone: true,
+            countryCode: true,
+        },
+    },
+} as const;
+
 export async function getOrders() {
     const currentUser = await getCurrentSessionUser();
     if (!currentUser) {
@@ -135,21 +210,7 @@ export async function getOrders() {
     const order = await prisma.order.findMany({
         where,
         orderBy:{createdAt:"desc"},
-        include:{
-            warehouse:true,
-            shipping:true,
-            user:{
-                include:{
-                    orders:true
-                }
-            },
-            items:{
-                include:{
-                    product:true
-                }
-            },
-            customer:true
-        }
+        select: orderListSelect,
     })
 
     return {success:true , data:sortOrdersByDisplayDateDesc(order)}
@@ -162,12 +223,7 @@ export async function getOrdersByUser(userId: any) {
             customerId: userId 
         },
         orderBy: { createdAt: "desc" },
-        include: {
-            warehouse: true,
-            shipping: true,
-            items: { include: { product: true } },
-            customer: true
-        }
+        select: orderListSelect,
     })
     return { success: true, data: sortOrdersByDisplayDateDesc(orders) }
 }

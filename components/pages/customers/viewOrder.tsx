@@ -44,7 +44,7 @@ export default function ViewOrderCustomer({ orders }: { orders: any[] }) {
                 </p>
                 <div className="flex items-center gap-3 text-[11px] font-bold text-slate-400">
                   <span className="flex items-center gap-1">📅 {new Date(order.createdAt).toLocaleDateString('ar-EG')}</span>
-                  <span className="flex items-center gap-1">👤 بواسطة: {order.user?.name || 'Admin'}</span>
+                  <span className="flex items-center gap-1">👤 بواسطة: {order.user?.username || 'Admin'}</span>
                 </div>
               </div>
 

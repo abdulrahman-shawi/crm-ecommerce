@@ -5,9 +5,51 @@ import { prisma } from "@/lib/prisma";
 export async function getshipping() {
     try {
         const res = await prisma.shipping.findMany({
-            include: {
+            orderBy: {
+                name: "asc",
+            },
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+        return {    success: true, data: res };
+    } catch (error) {
+        console.error("Error fetching shipping data:", error);
+        return { success: false, data: [] };
+    }   
+}
+
+export async function getshippingWithOrders() {
+    try {
+        const res = await prisma.shipping.findMany({
+            orderBy: {
+                name: "asc",
+            },
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                createdAt: true,
+                updatedAt: true,
                 orders: {
-                    include: {
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                    select: {
+                        id: true,
+                        orderNumber: true,
+                        finalAmount: true,
+                        status: true,
+                        city: true,
+                        createdAt: true,
+                        manualCreatedAt: true,
+                        shippingPrice: true,
+                        moneyTransferCommission: true,
+                        otherCommissions: true,
                         customer: {
                             select: {
                                 id: true,
@@ -29,17 +71,14 @@ export async function getshipping() {
                             },
                         },
                     },
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                }
-            }
+                },
+            },
         });
-        return {    success: true, data: res };
+        return { success: true, data: res };
     } catch (error) {
-        console.error("Error fetching shipping data:", error);
+        console.error("Error fetching shipping details:", error);
         return { success: false, data: [] };
-    }   
+    }
 }
 
 export async function createshipping(data: any) {

@@ -243,7 +243,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "المنتجات (JSON)": itemsStructured,
                 "كود التتبع": order.trackingCode,
                 "ملاحظات التوصيل": order.deliveryNotes,
-                "بواسطة الموظف": order.user?.name || "Admin",
+                "بواسطة الموظف": order.user?.username || "Admin",
             };
         });
 

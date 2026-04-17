@@ -119,7 +119,7 @@ const CustomrLayout: React.FC = () => {
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
   const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const [viewMode, setViewMode] = React.useState<"cards" | "table">("table");
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
@@ -400,13 +400,13 @@ const CustomrLayout: React.FC = () => {
   const getData = async () => {
     const res = await getCustomer();
     if (res.success) {
-      const allCustomers = res.data;
+      const allCustomers: any[] = Array.isArray(res.data) ? res.data : [];
       console.log(allCustomers)
       // 1. تحديث القائمة العامة (كما كنت تفعل)
       if (isAdmin(user)) {
         setCustomers(allCustomers);
       } else {
-        const filtered = allCustomers.filter((c) => c.users?.some((u) => u.id === user?.id));
+        const filtered = allCustomers.filter((c: any) => c.users?.some((u: any) => u.id === user?.id));
         setCustomers(filtered);
       }
 
@@ -423,7 +423,7 @@ const CustomrLayout: React.FC = () => {
 
   const getAlluser = async () => {
     try {
-      const res = await fetch("/api/users")
+      const res = await fetch("/api/users", { cache: "no-store" })
       const data = await res.json()
       setUsers(data.data);
       console.log("Users:", res);
@@ -433,12 +433,16 @@ const CustomrLayout: React.FC = () => {
   }
   const [products, setProduct] = React.useState<any[]>([])
   React.useEffect(() => {
+    if (loading) {
+      return;
+    }
+
     getData();
     getAlluser();
     getProduct().then((products) => {
       setProduct(products);
     }).catch(console.error);
-  }, [user])
+  }, [loading, user])
   const [isPending, setIsPending] = React.useState(false);
 
   // const resetForm = () => {
