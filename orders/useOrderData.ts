@@ -65,15 +65,6 @@ export const useOrderData = (user?: User) => {
 
   const refreshCustomers = async () => {
     try {
-      const customersRes = await getCustomer();
-      setCustomers(customersRes?.success ? (customersRes.data || []) : []);
-    } catch (error) {
-      console.error("Error refreshing customers:", error);
-    }
-  };
-
-  const refreshCustomers = async () => {
-    try {
       const customersRes = await getCustomerList();
       setCustomers(customersRes?.success ? (customersRes.data || []) : []);
     } catch (error) {
