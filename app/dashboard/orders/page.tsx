@@ -3,7 +3,7 @@ import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { formatPhoneForDisplay, hasPermission, isAdmin } from '@/lib/utils';
-import { createOrder, deleteOrder, getOrdersByUser, updateOrder, updateOrderShippingFromTable, updateStaus } from '@/server/order';
+import { createOrder, deleteOrder, getOrderById, getOrdersByIds, getOrdersByUser, updateOrder, updateOrderShippingFromTable, updateStaus } from '@/server/order';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BarChart2, Download, Eye, Pencil, Plus, Save, Search, Trash, Trash2, Upload, X } from 'lucide-react';
 import * as React from 'react';
@@ -189,6 +189,25 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
     const addNewItem = () => {
         setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
+    };
+
+    const loadOrderDetails = async (orderId: string | number, loadingMessage = "جاري تحميل تفاصيل الطلب...") => {
+        const loadingToast = toast.loading(loadingMessage);
+
+        try {
+            const response = await getOrderById(orderId);
+            if (!response?.success || !response.data) {
+                toast.error(response?.error || "تعذر تحميل تفاصيل الطلب");
+                return null;
+            }
+
+            return response.data;
+        } catch (error) {
+            toast.error("حدث خطأ أثناء تحميل تفاصيل الطلب");
+            return null;
+        } finally {
+            toast.dismiss(loadingToast);
+        }
     };
 
 
@@ -795,21 +814,21 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         (user) && {
             label: "عرض تقارير الطلب",
             icon: <BarChart2 size={14} />,
-            onClick: (data: any) => {
-                console.log("فتح تقارير الطلب رقم:", data.orderNumber);
-                // منطق فتح التقارير هنا
-                setorder(data);
-                console.log(data)
-                // فتح مودال الفاتورة
+            onClick: async (data: any) => {
+                const orderDetails = await loadOrderDetails(data.id, "جاري تحميل ملخص الطلب...");
+                if (!orderDetails) return;
+                setorder(orderDetails);
                 setisOpenorder(true);
             }
         },
         canManageOrderShippingUi && {
             label: "تعديل",
             icon: <Pencil size={14} />,
-            onClick: (data: any) => {
-                setEditId(data?.id ?? null);
-                setorder(data);
+            onClick: async (data: any) => {
+                const orderDetails = await loadOrderDetails(data.id, "جاري تحميل بيانات الطلب...");
+                if (!orderDetails) return;
+                setEditId(orderDetails?.id ?? null);
+                setorder(orderDetails);
                 setIsOpen(true);
             }
         },
@@ -822,7 +841,9 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             label: "مشاركة PDF",
             icon: <Download size={14} />,
             onClick: async (data: any) => {
-                await shareOrderPdfToCustomerWhatsApp(data);
+                const orderDetails = await loadOrderDetails(data.id, "جاري تجهيز ملف الطلب...");
+                if (!orderDetails) return;
+                await shareOrderPdfToCustomerWhatsApp(orderDetails);
             }
         },
         (user && hasPermission(user, "deleteOrders")) && {
@@ -887,7 +908,24 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                         <Upload size={20} />
                     </button>
                     <button
-                        onClick={() => exportAllOrdersToExcel(visibleOrders)}
+                        onClick={async () => {
+                            const orderIds = visibleOrders.map((visibleOrder: any) => visibleOrder.id);
+                            const loading = toast.loading("جاري تجهيز ملف التصدير...");
+
+                            try {
+                                const response = await getOrdersByIds(orderIds);
+                                if (!response?.success) {
+                                    toast.error(response?.error || "تعذر تجهيز ملف التصدير");
+                                    return;
+                                }
+
+                                exportAllOrdersToExcel(Array.isArray(response.data) ? response.data : []);
+                            } catch (error) {
+                                toast.error("حدث خطأ أثناء تجهيز ملف التصدير");
+                            } finally {
+                                toast.dismiss(loading);
+                            }
+                        }}
                         className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-none"
                         title="تصدير الطلبات"
                     >

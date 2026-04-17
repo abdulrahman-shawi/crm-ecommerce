@@ -111,9 +111,10 @@ const orderItemSelect = {
     },
 } as const;
 
-const orderListSelect = {
+const orderBaseSelect = {
     id: true,
     orderNumber: true,
+    usdToTryRateAtOrder: true,
     totalAmount: true,
     discount: true,
     finalAmount: true,
@@ -133,11 +134,13 @@ const orderListSelect = {
     status: true,
     userId: true,
     customerId: true,
+    shippingId: true,
     shippingPrice: true,
     moneyTransferCommission: true,
     otherCommissions: true,
     createdAt: true,
     manualCreatedAt: true,
+    updatedAt: true,
     warehouse: {
         select: {
             id: true,
@@ -158,9 +161,6 @@ const orderListSelect = {
             phone: true,
         },
     },
-    items: {
-        select: orderItemSelect,
-    },
     customer: {
         select: {
             id: true,
@@ -168,6 +168,17 @@ const orderListSelect = {
             phone: true,
             countryCode: true,
         },
+    },
+} as const;
+
+const orderListSelect = {
+    ...orderBaseSelect,
+} as const;
+
+const orderDetailsSelect = {
+    ...orderBaseSelect,
+    items: {
+        select: orderItemSelect,
     },
 } as const;
 
@@ -222,9 +233,119 @@ export async function getOrdersByUser(userId: any) {
             customerId: userId 
         },
         orderBy: { createdAt: "desc" },
-        select: orderListSelect,
+        select: orderDetailsSelect,
     })
     return { success: true, data: sortOrdersByDisplayDateDesc(orders) }
+}
+
+export async function getOrderById(orderId: string | number) {
+    const currentUser = await getCurrentSessionUser();
+    if (!currentUser) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
+    if (!canViewOrders(currentUser)) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
+    const normalizedOrderId = Number(orderId);
+    if (Number.isNaN(normalizedOrderId)) {
+        return { success: false, error: "معرف الطلب غير صالح" };
+    }
+
+    const order = await prisma.order.findUnique({
+        where: { id: normalizedOrderId },
+        select: orderDetailsSelect,
+    });
+
+    if (!order) {
+        return { success: false, error: "الطلب غير موجود" };
+    }
+
+    const isAdminUser = currentUser.accountType === "ADMIN";
+    const isWarehouseUser = isWarehouseRole(currentUser);
+
+    if (!isAdminUser) {
+        if (isWarehouseUser) {
+            const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
+            const orderWarehouseLocation = normalizeWarehouseLocation(order?.warehouse?.location);
+            const canAccessWarehouse = allowedWarehouseLocations
+                .map((location) => normalizeWarehouseLocation(location))
+                .includes(orderWarehouseLocation);
+
+            if (!canAccessWarehouse) {
+                return { success: false, error: "غير مصرح لك بعرض هذا الطلب" };
+            }
+        } else {
+            const scopedUserIds = await getScopedUserIds(currentUser.id);
+            const allowedUserIds = scopedUserIds.length > 0 ? scopedUserIds : [currentUser.id];
+            if (!allowedUserIds.includes(String(order.userId))) {
+                return { success: false, error: "غير مصرح لك بعرض هذا الطلب" };
+            }
+        }
+    }
+
+    return { success: true, data: order };
+}
+
+export async function getOrdersByIds(orderIds: Array<string | number>) {
+    const currentUser = await getCurrentSessionUser();
+    if (!currentUser) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
+    if (!canViewOrders(currentUser)) {
+        return { success: false, error: "غير مصرح لك بعرض الطلبات" };
+    }
+
+    const normalizedIds = Array.from(
+        new Set(
+            orderIds
+                .map((orderId) => Number(orderId))
+                .filter((orderId) => !Number.isNaN(orderId))
+        )
+    );
+
+    if (normalizedIds.length === 0) {
+        return { success: true, data: [] };
+    }
+
+    const isAdminUser = currentUser.accountType === "ADMIN";
+    const isWarehouseUser = isWarehouseRole(currentUser);
+    const allowedWarehouseLocations = getAllowedWarehouseLocations(currentUser);
+
+    const where: any = {
+        id: {
+            in: normalizedIds,
+        },
+    };
+
+    if (!isAdminUser) {
+        if (isWarehouseUser) {
+            if (allowedWarehouseLocations.length === 0) {
+                return { success: true, data: [] };
+            }
+
+            where.warehouse = {
+                location: {
+                    in: allowedWarehouseLocations,
+                },
+            };
+        } else {
+            const scopedUserIds = await getScopedUserIds(currentUser.id);
+            where.userId = {
+                in: scopedUserIds.length > 0 ? scopedUserIds : [currentUser.id],
+            };
+        }
+    }
+
+    const orders = await prisma.order.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        select: orderDetailsSelect,
+    });
+
+    return { success: true, data: sortOrdersByDisplayDateDesc(orders) };
 }
 
 export async function createOrder(data: any, items: any[], user: any) {
