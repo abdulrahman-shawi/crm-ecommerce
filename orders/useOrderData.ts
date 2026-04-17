@@ -16,27 +16,23 @@ export const useOrderData = (user?: User) => {
   const [orders, setOrders] = React.useState<any[]>([]);
   const [shippingCompanies, setShippingCompanies] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isSupportingDataLoading, setIsSupportingDataLoading] = React.useState(false);
+  const supportingDataPromiseRef = React.useRef<Promise<void> | null>(null);
 
-  // جلب البيانات الأساسية
-  const loadData = async () => {
+  const refreshOrders = async () => {
     setIsLoading(true);
     try {
-      const [productsData, customersRes, ordersRes, shippingRes] = await Promise.all([
-        getProductCatalog(),
-        getCustomerList(),
-        getOrders(),
-        getshipping(),
-      ]);
-
-      setProduct(Array.isArray(productsData) ? productsData : []);
-      setCustomers(customersRes?.success ? (customersRes.data || []) : []);
+      const ordersRes = await getOrders();
       setOrders(ordersRes?.success ? (ordersRes.data || []) : []);
-      setShippingCompanies(shippingRes?.success ? (Array.isArray(shippingRes.data) ? shippingRes.data : []) : []);
     } catch (error) {
-      console.error("Error loading data:", error);
+      console.error("Error refreshing orders:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const loadData = async () => {
+    await refreshOrders();
   };
 
   // جلب طلبات عميل محدد
@@ -50,16 +46,6 @@ export const useOrderData = (user?: User) => {
     } catch (error) {
       console.error("Error loading customer orders:", error);
       return [];
-    }
-  };
-
-  // تحديث قائمة الطلبات
-  const refreshOrders = async () => {
-    try {
-      const ordersRes = await getOrders();
-      setOrders(ordersRes?.success ? (ordersRes.data || []) : []);
-    } catch (error) {
-      console.error("Error refreshing orders:", error);
     }
   };
 
@@ -90,9 +76,55 @@ export const useOrderData = (user?: User) => {
     }
   };
 
-  // تحميل البيانات عند التركيب
+  const ensureSupportingDataLoaded = async () => {
+    const hasProducts = products.length > 0;
+    const hasCustomers = customers.length > 0;
+    const hasShippingCompanies = shippingCompanies.length > 0;
+
+    if (hasProducts && hasCustomers && hasShippingCompanies) {
+      return;
+    }
+
+    if (supportingDataPromiseRef.current) {
+      return supportingDataPromiseRef.current;
+    }
+
+    setIsSupportingDataLoading(true);
+
+    supportingDataPromiseRef.current = (async () => {
+      try {
+        const [productsData, customersRes, shippingRes] = await Promise.all([
+          hasProducts ? Promise.resolve(products) : getProductCatalog(),
+          hasCustomers ? Promise.resolve({ success: true, data: customers }) : getCustomerList(),
+          hasShippingCompanies ? Promise.resolve({ success: true, data: shippingCompanies }) : getshipping(),
+        ]);
+
+        if (!hasProducts) {
+          setProduct(Array.isArray(productsData) ? productsData : []);
+        }
+
+        if (!hasCustomers) {
+          setCustomers(customersRes?.success ? (customersRes.data || []) : []);
+        }
+
+        if (!hasShippingCompanies) {
+          setShippingCompanies(shippingRes?.success ? (Array.isArray(shippingRes.data) ? shippingRes.data : []) : []);
+        }
+      } finally {
+        supportingDataPromiseRef.current = null;
+        setIsSupportingDataLoading(false);
+      }
+    })();
+
+    return supportingDataPromiseRef.current;
+  };
+
   React.useEffect(() => {
     loadData();
+  }, []);
+
+  React.useEffect(() => {
+    refreshShippingCompanies();
   }, []);
 
   return {
@@ -105,11 +137,13 @@ export const useOrderData = (user?: User) => {
     shippingCompanies,
     setShippingCompanies,
     isLoading,
+    isSupportingDataLoading,
     loadData,
     loadOrdersByCustomer,
     refreshOrders,
     refreshCustomers,
     refreshShippingCompanies,
     refreshProducts,
+    ensureSupportingDataLoaded,
   };
 };

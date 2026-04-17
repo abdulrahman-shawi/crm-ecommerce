@@ -95,8 +95,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         orders,
         shippingCompanies,
         refreshOrders: Order,
-        refreshCustomers: getAlluser,
-        refreshShippingCompanies: loadShippingCompanies,
+        ensureSupportingDataLoaded,
+        isLoading,
     } = useOrderData(user);
     const [order, setorder] = React.useState<any>({})
     const [isOpen, setIsOpen] = React.useState(false);
@@ -191,6 +191,20 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         setItems([...items, { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }]);
     };
 
+    const ensureOrderSupportData = async (loadingMessage = "جاري تحميل بيانات الطلب...") => {
+        const loadingToast = toast.loading(loadingMessage);
+
+        try {
+            await ensureSupportingDataLoaded();
+            return true;
+        } catch (error) {
+            toast.error("تعذر تحميل بيانات العملاء والمنتجات");
+            return false;
+        } finally {
+            toast.dismiss(loadingToast);
+        }
+    };
+
     const loadOrderDetails = async (orderId: string | number, loadingMessage = "جاري تحميل تفاصيل الطلب...") => {
         const loadingToast = toast.loading(loadingMessage);
 
@@ -235,8 +249,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 "تاريخ الإنشاء ISO": new Date(getOrderDisplayDate(order)).toISOString(),
                 "حالة الطلب": order.status,
                 "اسم العميل": order.customer?.name,
-                // هاتف العميل على شكل أرييه بعد تقسيمه، أو نص بديل إذا لم يكن موجودًا
-                "هاتف العميل": order.customer?.phone ? (Array.isArray(order.customer.phone) ? order.customer.phone.join(' - ') : order.customer.phone) : "لم يسجل",
                 "الجنس": order.customer?.gender || "غير محدد",
                 "الفئة العمرية": order.customer?.age || "غير محدد",
                 "المبلغ الإجمالي": order.totalAmount,
@@ -270,7 +282,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
         const worksheet = XLSX.utils.json_to_sheet(worksheetData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "كافة الطلبات");
-
         // ضبط اتجاه الصفحة للعربية وضبط عرض الأعمدة تلقائياً
         worksheet['!dir'] = "rtl";
 
@@ -296,6 +307,12 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
 
         if (!user?.id) {
             toast.error("يجب تسجيل الدخول أولاً");
+            event.target.value = "";
+            return;
+        }
+
+        const supportDataReady = await ensureOrderSupportData("جاري تحميل بيانات الاستيراد...");
+        if (!supportDataReady) {
             event.target.value = "";
             return;
         }
@@ -825,6 +842,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             label: "تعديل",
             icon: <Pencil size={14} />,
             onClick: async (data: any) => {
+                const supportDataReady = await ensureOrderSupportData();
+                if (!supportDataReady) return;
                 const orderDetails = await loadOrderDetails(data.id, "جاري تحميل بيانات الطلب...");
                 if (!orderDetails) return;
                 setEditId(orderDetails?.id ?? null);
@@ -833,7 +852,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             }
         },
         canManageOrderShippingUi && {
-            label: "بيانات الشحن",
             icon: <Save size={14} />,
             onClick: (data: any) => openShippingModal(data)
         },
@@ -961,6 +979,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 pageSize={PAGE_SIZE}
                 totalCount={visibleOrders.length}
                 onPageChange={setPage}
+                isLoading={isLoading}
             />
             
 
@@ -969,7 +988,7 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             </AppModal>
 
             <AppModal size='full' isOpen={isOpenorder} onClose={() => setisOpenorder(false)} title='ملخص الطلب' >
-                <ViewOrder data={order} products={products} />
+                <ViewOrder data={order} products={[]} />
             </AppModal>
 
             <ShippingModal
