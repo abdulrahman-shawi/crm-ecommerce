@@ -99,8 +99,11 @@ const CustomrLayout: React.FC = () => {
   const [createdFrom, setCreatedFrom] = React.useState("");
   const [createdTo, setCreatedTo] = React.useState("");
   const [alluser, setUsers] = React.useState<any[]>([])
+  const [products, setProduct] = React.useState<any[]>([])
   const importInputRef = React.useRef<HTMLInputElement | null>(null);
   const { user, loading } = useAuth()
+  const usersLoadPromiseRef = React.useRef<Promise<any[]> | null>(null);
+  const productsLoadPromiseRef = React.useRef<Promise<any[]> | null>(null);
 
   const filterCustomer = useCustomerFilters(customers, search, dateFilter, genderFilter, createdPreset, createdFrom, createdTo);
   const {
@@ -143,34 +146,111 @@ const CustomrLayout: React.FC = () => {
   }
 
 
-  const getData = async () => {
+  const getData = React.useCallback(async () => {
     const res = await getCustomerList();
     if (res.success) {
       const allCustomers: any[] = Array.isArray(res.data) ? res.data : [];
-      console.log(allCustomers)
       setCustomers(allCustomers);
 
-      // 2. السطر السحري: تحديث العميل المختار حالياً ببياناته الجديدة
-      // نبحث عن العميل الحالي داخل البيانات الجديدة التي وصلت من السيرفر
       if (customer?.id) {
-        const detailsRes = await getCustomerDetails(customer.id);
-        if (detailsRes.success && detailsRes.data) {
-          setCustomer(detailsRes.data);
-        }
+        void getCustomerDetails(customer.id).then((detailsRes) => {
+          if (detailsRes.success && detailsRes.data) {
+            setCustomer(detailsRes.data);
+          }
+        });
       }
     }
-  };
+  }, [customer?.id]);
 
-  const getAlluser = async () => {
-    try {
-      const res = await fetch("/api/users", { cache: "no-store" })
-      const data = await res.json()
-      setUsers(data.data);
-      console.log("Users:", res);
-    } catch (error) {
-
+  const getAlluser = React.useCallback(async () => {
+    if (alluser.length > 0) {
+      return alluser;
     }
-  }
+
+    if (usersLoadPromiseRef.current) {
+      return usersLoadPromiseRef.current;
+    }
+
+    try {
+      usersLoadPromiseRef.current = fetch("/api/users", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          const users = Array.isArray(data?.data) ? data.data : [];
+          setUsers(users);
+          return users;
+        })
+        .finally(() => {
+          usersLoadPromiseRef.current = null;
+        });
+
+      return await usersLoadPromiseRef.current;
+    } catch (error) {
+      usersLoadPromiseRef.current = null;
+      return [];
+    }
+  }, [alluser]);
+
+  const loadProducts = React.useCallback(async () => {
+    if (products.length > 0) {
+      return products;
+    }
+
+    if (productsLoadPromiseRef.current) {
+      return productsLoadPromiseRef.current;
+    }
+
+    try {
+      productsLoadPromiseRef.current = getProductCatalog()
+        .then((catalog) => {
+          const nextProducts = Array.isArray(catalog) ? catalog : [];
+          setProduct(nextProducts);
+          return nextProducts;
+        })
+        .finally(() => {
+          productsLoadPromiseRef.current = null;
+        });
+
+      return await productsLoadPromiseRef.current;
+    } catch (error) {
+      productsLoadPromiseRef.current = null;
+      return [];
+    }
+  }, [products]);
+
+  const openAssignModal = React.useCallback(async (selectedCustomer: any) => {
+    setCustomer(selectedCustomer);
+    const loadingToast = toast.loading("جاري تحميل المستخدمين...");
+
+    try {
+      await getAlluser();
+      setOpenAssignModal(true);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  }, [getAlluser]);
+
+  const openBulkAssignModal = React.useCallback(async () => {
+    const loadingToast = toast.loading("جاري تحميل المستخدمين...");
+
+    try {
+      await getAlluser();
+      setIsBulkAssignOpen(true);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  }, [getAlluser]);
+
+  const openCustomerOrderModal = React.useCallback(async (selectedCustomerId: string) => {
+    const loadingToast = toast.loading("جاري تحميل المنتجات...");
+
+    try {
+      await loadProducts();
+      setCustomerId(selectedCustomerId);
+      setisOpenOrder(true);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  }, [loadProducts]);
 
   const { handleBulkAssignUsers, handleBulkDelete } = useCustomerBulkActions({
     selectedCustomers,
@@ -180,18 +260,13 @@ const CustomrLayout: React.FC = () => {
     setIsBulkAssignOpen,
   });
 
-  const [products, setProduct] = React.useState<any[]>([])
   React.useEffect(() => {
     if (loading) {
       return;
     }
 
-    getData();
-    getAlluser();
-    getProductCatalog().then((products) => {
-      setProduct(products);
-    }).catch(console.error);
-  }, [loading, user])
+    void getData();
+  }, [loading, getData])
   
 
   // const resetForm = () => {
@@ -832,8 +907,7 @@ const CustomrLayout: React.FC = () => {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setCustomer(customer);
-              setOpenAssignModal(true);
+              void openAssignModal(customer);
             }}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
           >
@@ -971,8 +1045,7 @@ const CustomrLayout: React.FC = () => {
         label: "الطلبات",
         icon: <ShoppingBag size={16} />,
         onClick: (customer: any) => {
-          setCustomerId(customer.id);
-          setisOpenOrder(true);
+          void openCustomerOrderModal(customer.id);
         }
       });
     }
@@ -992,7 +1065,7 @@ const CustomrLayout: React.FC = () => {
           setIsOpen(true);
         }}
         onToggleSelectAll={toggleSelectAll}
-        onOpenBulkAssign={() => setIsBulkAssignOpen(true)}
+        onOpenBulkAssign={() => void openBulkAssignModal()}
         onBulkDelete={handleBulkDelete}
         onImportClick={handleImportClick}
         onImportFile={handleImportFile}
@@ -1068,15 +1141,13 @@ const CustomrLayout: React.FC = () => {
                   onDelete={deleteCus}
                   onStatusChange={handleStatus}
                   onOpenOrder={(selectedCustomerId) => {
-                    setCustomerId(selectedCustomerId);
-                    setisOpenOrder(true);
+                    void openCustomerOrderModal(selectedCustomerId);
                   }}
                   onViewOrders={(selectedCustomerId) => {
                     openCustomerOrders(selectedCustomerId)
                   }}
                   onOpenAssign={(selectedCustomer) => {
-                    setCustomer(selectedCustomer);
-                    setOpenAssignModal(true);
+                    void openAssignModal(selectedCustomer);
                   }}
                 />
               ))}
