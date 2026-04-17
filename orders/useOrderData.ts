@@ -1,7 +1,7 @@
 import React from 'react';
 import { getOrders, getOrdersByUser } from '@/server/order';
-import { getCustomer } from '@/server/customer';
-import { getProduct } from '@/server/product';
+import { getCustomerList } from '@/server/customer';
+import { getProductCatalog } from '@/server/product';
 import { getshipping } from '@/server/shipping';
 
 interface User {
@@ -22,8 +22,8 @@ export const useOrderData = (user?: User) => {
     setIsLoading(true);
     try {
       const [productsData, customersRes, ordersRes, shippingRes] = await Promise.all([
-        getProduct(),
-        getCustomer(),
+        getProductCatalog(),
+        getCustomerList(),
         getOrders(),
         getshipping(),
       ]);
@@ -72,6 +72,15 @@ export const useOrderData = (user?: User) => {
     }
   };
 
+  const refreshCustomers = async () => {
+    try {
+      const customersRes = await getCustomerList();
+      setCustomers(customersRes?.success ? (customersRes.data || []) : []);
+    } catch (error) {
+      console.error("Error refreshing customers:", error);
+    }
+  };
+
   const refreshShippingCompanies = async () => {
     try {
       const shippingRes = await getshipping();
@@ -83,7 +92,7 @@ export const useOrderData = (user?: User) => {
 
   const refreshProducts = async () => {
     try {
-      const productsRes = await getProduct();
+      const productsRes = await getProductCatalog();
       setProduct(Array.isArray(productsRes) ? productsRes : []);
     } catch (error) {
       console.error("Error refreshing products:", error);

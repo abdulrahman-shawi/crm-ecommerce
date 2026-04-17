@@ -67,6 +67,92 @@ const customerMessageSelect = {
   },
 } as const;
 
+const customerListSelect = {
+  id: true,
+  name: true,
+  phone: true,
+  countryCode: true,
+  phonestatus: true,
+  country: true,
+  gender: true,
+  age: true,
+  source: true,
+  city: true,
+  rating: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+  users: {
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      avatar: true,
+    },
+  },
+  _count: {
+    select: {
+      orders: true,
+    },
+  },
+  message: {
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 1,
+    select: customerMessageSelect,
+  },
+} as const;
+
+const customerDetailsSelect = {
+  id: true,
+  name: true,
+  phone: true,
+  countryCode: true,
+  phonestatus: true,
+  country: true,
+  gender: true,
+  age: true,
+  source: true,
+  city: true,
+  rating: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+  message: {
+    orderBy: {
+      createdAt: "asc",
+    },
+    select: customerMessageSelect,
+  },
+} as const;
+
+export async function getCustomerList() {
+  const res = await prisma.customer.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
+    select: customerListSelect,
+  });
+
+  return {
+    success: true,
+    data: res.map((customer) => ({
+      ...customer,
+      ordersCount: Number(customer._count?.orders || 0),
+    })),
+  };
+}
+
+export async function getCustomerDetails(customerId: string) {
+  const customer = await prisma.customer.findUnique({
+    where: { id: customerId },
+    select: customerDetailsSelect,
+  });
+
+  return { success: Boolean(customer), data: customer };
+}
+
 export async function getCustomer() {
   const res = await prisma.customer.findMany({
     orderBy:{

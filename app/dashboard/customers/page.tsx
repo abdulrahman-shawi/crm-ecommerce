@@ -7,11 +7,12 @@ import { DynamicForm } from "@/components/shared/dynamic-form";
 import { FormInput } from "@/components/ui/form-input";
 import PhoneInput from 'react-phone-number-input'
 import { AppModal } from "@/components/ui/app-modal";
-import { AssignUsers, createCustomerAction, deleteCustomer, getCustomer, updateCustomer, UpdateStusa } from "@/server/customer";
+import { AssignUsers, createCustomerAction, deleteCustomer, getCustomerDetails, getCustomerList, updateCustomer, UpdateStusa } from "@/server/customer";
 import { useAuth } from "@/context/AuthContext";
 import { formatPhoneForDisplay, hasPermission, isAdmin } from "@/lib/utils";
 import toast from "react-hot-toast";
-import { getProduct } from "@/server/product";
+import { getProductCatalog } from "@/server/product";
+import { getOrdersByUser } from "@/server/order";
 import { Controller, useFieldArray } from "react-hook-form";
 import ViewOrderCustomer from "@/components/pages/customers/viewOrder";
 import AssignUserModal from "@/components/pages/customers/assignuser";
@@ -110,6 +111,18 @@ const CustomrLayout: React.FC = () => {
     toggleSelect,
   } = useCustomerSelection(filterCustomer);
 
+  const getCustomerOrdersCount = React.useCallback((customer: any) => {
+    return Number(customer?.ordersCount || customer?._count?.orders || (Array.isArray(customer?.orders) ? customer.orders.length : 0));
+  }, []);
+
+  const getCustomerLastMessage = React.useCallback((customer: any) => {
+    if (!Array.isArray(customer?.message) || customer.message.length === 0) {
+      return "لا توجد رسائل";
+    }
+
+    return customer.message[customer.message.length - 1]?.message || "لا توجد رسائل";
+  }, []);
+
   // دالة للتعامل مع الاختيار
   const deleteCus = async (data: any) => {
     const confirm = window.confirm("هل انت متأكد من الحذف")
@@ -131,7 +144,7 @@ const CustomrLayout: React.FC = () => {
 
 
   const getData = async () => {
-    const res = await getCustomer();
+    const res = await getCustomerList();
     if (res.success) {
       const allCustomers: any[] = Array.isArray(res.data) ? res.data : [];
       console.log(allCustomers)
@@ -140,9 +153,9 @@ const CustomrLayout: React.FC = () => {
       // 2. السطر السحري: تحديث العميل المختار حالياً ببياناته الجديدة
       // نبحث عن العميل الحالي داخل البيانات الجديدة التي وصلت من السيرفر
       if (customer?.id) {
-        const updatedCustomer = allCustomers.find(c => c.id === customer.id);
-        if (updatedCustomer) {
-          setCustomer(updatedCustomer); // هذا سيجعل الرسائل تظهر فوراً
+        const detailsRes = await getCustomerDetails(customer.id);
+        if (detailsRes.success && detailsRes.data) {
+          setCustomer(detailsRes.data);
         }
       }
     }
@@ -175,7 +188,7 @@ const CustomrLayout: React.FC = () => {
 
     getData();
     getAlluser();
-    getProduct().then((products) => {
+    getProductCatalog().then((products) => {
       setProduct(products);
     }).catch(console.error);
   }, [loading, user])
@@ -438,10 +451,26 @@ const CustomrLayout: React.FC = () => {
   };
 
   const getSingleCustomer = async (data: any) => {
-    setCustomer(data)
+    const detailsRes = await getCustomerDetails(data.id);
+    if (detailsRes.success && detailsRes.data) {
+      setCustomer(detailsRes.data)
+    } else {
+      setCustomer(data)
+    }
     console.log(data)
     setIsOpencustomer(true)
   }
+
+  const openCustomerOrders = async (customerId: string) => {
+    const res = await getOrdersByUser(customerId);
+    if (res.success) {
+      setCustomerorder(Array.isArray(res.data) ? res.data : []);
+      setisOpenordercustomer(true);
+      return;
+    }
+
+    toast.error("تعذر جلب طلبات العميل");
+  };
 
   const handleExportAction = () => {
     // 1. تحديد أي بيانات سنصدرها
@@ -471,9 +500,7 @@ const CustomrLayout: React.FC = () => {
 
     const worksheetData = customers.map((customer) => {
       // تجميع الرسائل الأخيرة أو الطلبات إذا أردت
-      const lastMessage = customer.message && customer.message.length > 0
-        ? customer.message[customer.message.length - 1].message
-        : "لا توجد رسائل";
+      const lastMessage = getCustomerLastMessage(customer);
 
       const phones = Array.isArray(customer.phone)
         ? customer.phone
@@ -492,7 +519,7 @@ const CustomrLayout: React.FC = () => {
         "الحالة": customer.status,
         "تاريخ التسجيل": new Date(customer.createdAt).toLocaleDateString('ar-EG'),
         "تاريخ التسجيل ISO": new Date(customer.createdAt).toISOString(),
-        "عدد الطلبات": customer.orders?.length || 0,
+        "عدد الطلبات": getCustomerOrdersCount(customer),
         "آخر رسالة": lastMessage,
         "الجنس" : customer.gender ||  "غير محدد",
         "الفئة العمرية" : customer.age || "غير محدد",
@@ -660,8 +687,8 @@ const CustomrLayout: React.FC = () => {
         const rightValue = new Date(right?.createdAt || 0).getTime();
         comparison = leftValue - rightValue;
       } else if (sortState.field === "ordersCount") {
-        const leftValue = Array.isArray(left?.orders) ? left.orders.length : 0;
-        const rightValue = Array.isArray(right?.orders) ? right.orders.length : 0;
+        const leftValue = getCustomerOrdersCount(left);
+        const rightValue = getCustomerOrdersCount(right);
         comparison = leftValue - rightValue;
       }
 
@@ -887,11 +914,11 @@ const CustomrLayout: React.FC = () => {
           type="button"
           onClick={() => {
             setisOpenordercustomer(true);
-          setCustomerorder(customer.orders);
+          openCustomerOrders(customer.id);
           }}
           className="font-black text-slate-800 dark:text-slate-100 hover:text-blue-600"
         >
-          {customer.orders?.length || 0}
+          {getCustomerOrdersCount(customer)}
         </button>
       ),
         
@@ -900,9 +927,7 @@ const CustomrLayout: React.FC = () => {
     {
       header: "آخر رسالة",
       accessor: (customer: any) => {
-        const lastMessage = customer.message && customer.message.length > 0
-          ? customer.message[customer.message.length - 1].message
-          : "لا توجد رسائل...";
+        const lastMessage = getCustomerLastMessage(customer);
         return <span className="max-w-[220px] truncate block text-slate-500 dark:text-slate-400">{lastMessage}</span>;
       },
     },
@@ -1046,9 +1071,8 @@ const CustomrLayout: React.FC = () => {
                     setCustomerId(selectedCustomerId);
                     setisOpenOrder(true);
                   }}
-                  onViewOrders={(orders) => {
-                    setisOpenordercustomer(true)
-                    setCustomerorder(orders)
+                  onViewOrders={(selectedCustomerId) => {
+                    openCustomerOrders(selectedCustomerId)
                   }}
                   onOpenAssign={(selectedCustomer) => {
                     setCustomer(selectedCustomer);

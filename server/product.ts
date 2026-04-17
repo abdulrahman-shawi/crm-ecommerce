@@ -17,3 +17,28 @@ export async function getProduct() {
     });
     return JSON.parse(JSON.stringify(products));
 }
+
+export async function getProductCatalog() {
+    const products = await prisma.product.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: {
+            id: true,
+            name: true,
+            stocks: {
+                select: {
+                    id: true,
+                    price: true,
+                    discount: true,
+                    warehouse: {
+                        select: {
+                            id: true,
+                            location: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    return JSON.parse(JSON.stringify(products));
+}

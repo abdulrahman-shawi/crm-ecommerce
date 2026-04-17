@@ -17,7 +17,7 @@ type CustomerCardProps = {
   onDelete: (customer: any) => void;
   onStatusChange: (customerId: any, status: any) => void;
   onOpenOrder: (customerId: any) => void;
-  onViewOrders: (orders: any[]) => void;
+  onViewOrders: (customerId: string) => void;
   onOpenAssign: (customer: any) => void;
 };
 
@@ -35,10 +35,15 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
   onViewOrders,
   onOpenAssign,
 }) => {
+  const ordersCount = Number(customer?.ordersCount || 0);
+  const latestMessage = Array.isArray(customer?.message) && customer.message.length > 0
+    ? customer.message[customer.message.length - 1]?.message || "لا توجد رسائل..."
+    : "لا توجد رسائل...";
+
   return (
     <div
       onClick={() => onOpenCustomer(customer)}
-      className={`group border ${customer.orders.length === 1 ? `border-pink-700` : customer.orders.length >= 2 ? "border-purple-500" : "border-transparent"
+      className={`group border ${ordersCount === 1 ? `border-pink-700` : ordersCount >= 2 ? "border-purple-500" : "border-transparent"
         } relative bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer`}
     >
       <div className="absolute top-4 right-6 z-10">
@@ -82,9 +87,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
           <div>
             <h3 className="text-base font-black text-slate-900 dark:text-white mb-1">{customer.name}</h3>
             <p className="text-xs text-slate-500 line-clamp-1 italic font-medium">
-              {customer.message && customer.message.length > 0
-                ? customer.message[customer.message.length - 1].message
-                : "لا توجد رسائل..."}
+              {latestMessage}
             </p>
           </div>
 
@@ -194,7 +197,7 @@ ${customer.status === "فرصة جديدة"
               title="اظهار الفواتير"
               onClick={(e) => {
                 e.stopPropagation();
-                onViewOrders(customer.orders);
+                onViewOrders(customer.id);
               }}
             >
               <Eye size={20} />
