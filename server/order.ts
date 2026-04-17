@@ -107,7 +107,6 @@ const orderItemSelect = {
         select: {
             id: true,
             name: true,
-            modelNumber: true,
         },
     },
 } as const;

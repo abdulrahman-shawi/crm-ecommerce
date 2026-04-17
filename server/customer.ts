@@ -49,7 +49,6 @@ const customerOrderSelect = {
         select: {
           id: true,
           name: true,
-          modelNumber: true,
         },
       },
     },
