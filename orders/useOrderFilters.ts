@@ -25,11 +25,9 @@ export const useOrderFilters = (orders: any[], user?: User) => {
   const PAGE_SIZE = 10;
 
   const filterOrder = React.useMemo(() => {
-    if (!user) return [];
-
-    const isAdminUser = user.accountType === "ADMIN";
+    const isAdminUser = user?.accountType === "ADMIN";
     const isWarehouseUser = String(user?.permission?.roleName || "").trim().includes("مستودع");
-    const canViewOrders = isAdminUser || isWarehouseUser || user?.permission?.viewOrders === true;
+    const canViewOrders = !user || isAdminUser || isWarehouseUser || user?.permission?.viewOrders === true;
 
     const allowedWarehouseLocations = [
       user?.permission?.accessSyria === true ? "سوريا" : null,
@@ -48,7 +46,7 @@ export const useOrderFilters = (orders: any[], user?: User) => {
     return orders.filter((order: any) => {
       if (!canViewOrders) return false;
 
-      if (!isAdminUser) {
+      if (user && !isAdminUser) {
         if (isWarehouseUser) {
           if (!canAccessWarehouseOrders) return false;
           const orderLocation = normalizeWarehouseLocation(order?.warehouse?.location);

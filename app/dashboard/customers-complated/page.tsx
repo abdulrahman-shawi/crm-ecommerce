@@ -191,6 +191,7 @@ const CustomrLayout: React.FC = () => {
 
   const visibleCustomers = React.useMemo(() => {
     return filterCustomer.filter((customer) => {
+      if (!user) return true;
       if (isAdmin(user)) return true;
       return customer.users.some((u: any) => u.id === user?.id);
     });
@@ -402,13 +403,7 @@ const CustomrLayout: React.FC = () => {
     if (res.success) {
       const allCustomers: any[] = Array.isArray(res.data) ? res.data : [];
       console.log(allCustomers)
-      // 1. تحديث القائمة العامة (كما كنت تفعل)
-      if (isAdmin(user)) {
-        setCustomers(allCustomers);
-      } else {
-        const filtered = allCustomers.filter((c: any) => c.users?.some((u: any) => u.id === user?.id));
-        setCustomers(filtered);
-      }
+      setCustomers(allCustomers);
 
       // 2. السطر السحري: تحديث العميل المختار حالياً ببياناته الجديدة
       // نبحث عن العميل الحالي داخل البيانات الجديدة التي وصلت من السيرفر
