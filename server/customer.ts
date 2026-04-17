@@ -30,7 +30,6 @@ const customerOrderSelect = {
   user: {
     select: {
       id: true,
-      name: true,
       username: true,
     },
   },
