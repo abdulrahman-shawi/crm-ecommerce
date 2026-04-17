@@ -27,6 +27,7 @@ export async function getProductCatalog() {
             stocks: {
                 select: {
                     id: true,
+                    quantity: true,
                     price: true,
                     discount: true,
                     warehouse: {
