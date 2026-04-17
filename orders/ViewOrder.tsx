@@ -42,9 +42,17 @@ export default function ViewOrder({
   const deliveryNotes = String(data?.deliveryNotes || '').trim();
   const additionalNotes = String(data?.additionalNotes || '').trim();
 
-  const getProductName = (productId: any) => {
-    const product = products?.find((p: any) => p.id === productId);
-    return product ? product.name : `منتج رقم #${productId}`;
+  const getProductName = (item: any) => {
+    if (item?.product?.name) {
+      return item.product.name;
+    }
+
+    if (item?.name) {
+      return item.name;
+    }
+
+    const product = products?.find((p: any) => p.id === item?.productId);
+    return product ? product.name : `منتج رقم #${item?.productId}`;
   };
 
   return (
@@ -138,7 +146,7 @@ export default function ViewOrder({
                 {data.items?.map((item: any, idx: number) => (
                   <tr key={idx} className="hover:bg-slate-50/50">
                     <td className="px-4 md:px-8 py-2">
-                      <p className="font-black text-slate-800 dark:text-slate-100">{getProductName(item.productId)}</p>
+                      <p className="font-black text-slate-800 dark:text-slate-100">{getProductName(item)}</p>
                     </td>
                     <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
                     <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600">

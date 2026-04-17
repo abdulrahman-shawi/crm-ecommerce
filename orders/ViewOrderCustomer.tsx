@@ -75,9 +75,6 @@ export default function ViewOrderCustomer({ orders }: { orders: any[] }) {
                     >
                       <div className="flex flex-col">
                         <span className="font-bold text-slate-700 dark:text-slate-200">{item.product?.name || item.name || 'منتج غير مسمى'}</span>
-                        <span className="text-[10px] text-slate-400 font-mono italic">
-                          {item.product?.modelNumber || item.modelNumber || 'بدون موديل'}
-                        </span>
                       </div>
                       <div className="text-left font-bold">
                         <span className="text-blue-600">{item.quantity}</span>
