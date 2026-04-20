@@ -85,6 +85,7 @@ const CustomrLayout: React.FC = () => {
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
   const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
+  const [isCustomerDetailsLoading, setIsCustomerDetailsLoading] = React.useState(false)
   const [viewMode, setViewMode] = React.useState<"cards" | "table">("table");
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 10;
@@ -104,6 +105,7 @@ const CustomrLayout: React.FC = () => {
   const { user, loading } = useAuth()
   const usersLoadPromiseRef = React.useRef<Promise<any[]> | null>(null);
   const productsLoadPromiseRef = React.useRef<Promise<any[]> | null>(null);
+  const customerDetailsRequestRef = React.useRef(0);
 
   const filterCustomer = useCustomerFilters(customers, search, dateFilter, genderFilter, createdPreset, createdFrom, createdTo);
   const {
@@ -526,14 +528,31 @@ const CustomrLayout: React.FC = () => {
   };
 
   const getSingleCustomer = async (data: any) => {
-    const detailsRes = await getCustomerDetails(data.id);
-    if (detailsRes.success && detailsRes.data) {
-      setCustomer(detailsRes.data)
-    } else {
-      setCustomer(data)
-    }
-    console.log(data)
+    setCustomer(data)
     setIsOpencustomer(true)
+    setIsCustomerDetailsLoading(true)
+
+    const requestId = customerDetailsRequestRef.current + 1;
+    customerDetailsRequestRef.current = requestId;
+
+    try {
+      const detailsRes = await getCustomerDetails(data.id);
+      if (
+        requestId === customerDetailsRequestRef.current &&
+        detailsRes.success &&
+        detailsRes.data
+      ) {
+        setCustomer(detailsRes.data)
+      }
+    } catch (error) {
+      if (requestId === customerDetailsRequestRef.current) {
+        toast.error("تعذر تحميل تفاصيل العميل")
+      }
+    } finally {
+      if (requestId === customerDetailsRequestRef.current) {
+        setIsCustomerDetailsLoading(false)
+      }
+    }
   }
 
   const openCustomerOrders = async (customerId: string) => {
@@ -1277,7 +1296,17 @@ const CustomrLayout: React.FC = () => {
           }}
         </DynamicForm>
       </AppModal>
-      <AppModal size="lg" isOpen={isOpencustomer} onClose={() => setIsOpencustomer(false)} title="بيانات العميل">
+      <AppModal
+        size="lg"
+        isOpen={isOpencustomer}
+        onClose={() => {
+          customerDetailsRequestRef.current += 1;
+          setIsCustomerDetailsLoading(false);
+          setIsOpencustomer(false);
+        }}
+        title="بيانات العميل"
+        description={isCustomerDetailsLoading ? "جاري تحميل التفاصيل الكاملة..." : undefined}
+      >
         <GetCustomerSingle data={customer} getdatas={getData} />
       </AppModal>
 
