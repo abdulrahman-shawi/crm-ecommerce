@@ -23,6 +23,8 @@ type CollectionsPayload = {
   };
 };
 
+const paymentMethodOptions = ["الكل", "تحويل بنكي", "مختلطة", "عند الاستلام"] as const;
+
 const formatMoney = (amount: number, location?: string | null) => {
   const currency = String(location || "").trim() === "تركيا" ? "₺" : "$";
   return `${Number(amount || 0).toLocaleString()} ${currency}`;
@@ -168,6 +170,7 @@ export default function CollectionsPage() {
   const [payload, setPayload] = React.useState<CollectionsPayload | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [paymentMethodFilter, setPaymentMethodFilter] = React.useState<(typeof paymentMethodOptions)[number]>("الكل");
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]));
   const canManage = Boolean(user && (user.accountType === "ADMIN" || user?.permission?.editOrders));
@@ -202,6 +205,34 @@ export default function CollectionsPage() {
   React.useEffect(() => {
     void loadData();
   }, [loadData]);
+
+  const filteredPayload = React.useMemo(() => {
+    if (!payload) return null;
+
+    const matchesPaymentMethod = (row: any) => {
+      if (paymentMethodFilter === "الكل") return true;
+      return String(row?.paymentMethod || "").trim() === paymentMethodFilter;
+    };
+
+    const bankTransfers = payload.bankTransfers.filter(matchesPaymentMethod);
+    const carrierCollectionsPending = payload.carrierCollectionsPending.filter(matchesPaymentMethod);
+    const carrierCollectionsReceived = payload.carrierCollectionsReceived.filter(matchesPaymentMethod);
+
+    return {
+      ...payload,
+      bankTransfers,
+      carrierCollectionsPending,
+      carrierCollectionsReceived,
+      summaries: {
+        bankTransfersTotal: bankTransfers.reduce((sum: number, order: any) => sum + Number(order.collectionAmount || 0), 0),
+        carrierPendingTotal: carrierCollectionsPending.reduce((sum: number, order: any) => sum + Number(order.collectionWithShipping || 0), 0),
+        carrierReceivedTotal: carrierCollectionsReceived.reduce(
+          (sum: number, order: any) => sum + Number(order.carrierCollectionReceivedAmount ?? order.collectionNetReceived ?? 0),
+          0
+        ),
+      },
+    };
+  }, [payload, paymentMethodFilter]);
 
   const handleMarkReceived = async (row: any) => {
     const loadingToast = toast.loading("جاري تسجيل التحصيل كمستلم...");
@@ -265,7 +296,27 @@ export default function CollectionsPage() {
         </button>
       </div>
 
-      {payload && !payload.supportsCarrierCollectionTracking && (
+      <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب طريقة الدفع</div>
+        <div className="flex flex-wrap gap-2">
+          {paymentMethodOptions.map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setPaymentMethodFilter(option)}
+              className={`rounded-xl px-4 py-2 text-sm font-black transition-colors ${
+                paymentMethodFilter === option
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filteredPayload && !filteredPayload.supportsCarrierCollectionTracking && (
         <div className="rounded-[1.5rem] border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
           تمت إضافة حقول nullable في Prisma لتتبع التحصيلات المستلمة من الناقل، لكن يجب تنفيذ الترحيل أولًا حتى يتفعّل الصندوق الثالث وأزرار تسجيل الاستلام.
         </div>
@@ -274,21 +325,21 @@ export default function CollectionsPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <SummaryCard
           title="الحوالات البنكية المستلمة"
-          value={formatMoney(payload?.summaries.bankTransfersTotal || 0)}
+          value={formatMoney(filteredPayload?.summaries.bankTransfersTotal || 0)}
           subtitle="طلبات الدفع البنكي أو الجزء البنكي من الدفع المختلط"
           icon={Landmark}
           tone="blue"
         />
         <SummaryCard
           title="التحصيلات الموجودة مع الناقل"
-          value={formatMoney(payload?.summaries.carrierPendingTotal || 0)}
+          value={formatMoney(filteredPayload?.summaries.carrierPendingTotal || 0)}
           subtitle="قيمة الطلب القابلة للتحصيل + قيمة الشحن"
           icon={HandCoins}
           tone="amber"
         />
         <SummaryCard
           title="تحصيلاتي المستلمة"
-          value={formatMoney(payload?.summaries.carrierReceivedTotal || 0)}
+          value={formatMoney(filteredPayload?.summaries.carrierReceivedTotal || 0)}
           subtitle="التحصيلات التي تم استلامها بعد خصم الشحن"
           icon={Wallet}
           tone="emerald"
@@ -304,7 +355,7 @@ export default function CollectionsPage() {
           <SectionTable
             title="الحوالات البنكية المستلمة"
             description="تشمل الطلبات المدفوعة بتحويل بنكي كامل، أو الجزء البنكي من الطلبات المختلطة."
-            rows={payload?.bankTransfers || []}
+            rows={filteredPayload?.bankTransfers || []}
             emptyMessage="لا توجد حوالات بنكية مطابقة حاليًا."
             amountLabel="قيمة الحوالة"
             getAmount={(row) => formatMoney(Number(row.collectionAmount || 0), row?.warehouse?.location)}
@@ -313,23 +364,23 @@ export default function CollectionsPage() {
           <SectionTable
             title="التحصيلات المستلمة مع الناقل"
             description="القيمة القابلة للتحصيل لدى شركة الشحن وتُحسب كقيمة الطلب القابلة للتحصيل + قيمة الشحن."
-            rows={payload?.carrierCollectionsPending || []}
+            rows={filteredPayload?.carrierCollectionsPending || []}
             emptyMessage="لا توجد تحصيلات معلقة مع الناقل حاليًا."
             amountLabel="مع الناقل"
             getAmount={(row) => formatMoney(Number(row.collectionWithShipping || 0), row?.warehouse?.location)}
-            actionLabel={canManage && payload?.supportsCarrierCollectionTracking ? "تسجيل كمستلم" : undefined}
-            onAction={canManage && payload?.supportsCarrierCollectionTracking ? handleMarkReceived : undefined}
+            actionLabel={canManage && filteredPayload?.supportsCarrierCollectionTracking ? "تسجيل كمستلم" : undefined}
+            onAction={canManage && filteredPayload?.supportsCarrierCollectionTracking ? handleMarkReceived : undefined}
           />
 
           <SectionTable
             title="تحصيلاتي المستلمة"
             description="التحصيلات التي تم استلامها وتُعرض بصافي قيمة الطلب القابلة للتحصيل بعد خصم الشحن."
-            rows={payload?.carrierCollectionsReceived || []}
+            rows={filteredPayload?.carrierCollectionsReceived || []}
             emptyMessage="لا توجد تحصيلات مستلمة مسجلة بعد."
             amountLabel="الصافي المستلم"
             getAmount={(row) => formatMoney(Number(row.carrierCollectionReceivedAmount ?? row.collectionNetReceived ?? 0), row?.warehouse?.location)}
-            actionLabel={canManage && payload?.supportsCarrierCollectionTracking ? "إلغاء الاستلام" : undefined}
-            onAction={canManage && payload?.supportsCarrierCollectionTracking ? handleClearReceived : undefined}
+            actionLabel={canManage && filteredPayload?.supportsCarrierCollectionTracking ? "إلغاء الاستلام" : undefined}
+            onAction={canManage && filteredPayload?.supportsCarrierCollectionTracking ? handleClearReceived : undefined}
             actionVariant="danger"
           />
         </div>
