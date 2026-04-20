@@ -299,6 +299,9 @@ model Order {
   shippingPrice   Float?
   moneyTransferCommission Float? @default(0)
   otherCommissions Float? @default(0)
+  carrierCollectionReceivedAt DateTime?
+  carrierCollectionReceivedAmount Float?
+  carrierCollectionNotes String?
   totalAmount     Float
   discount        Float       @default(0)
   finalAmount     Float
@@ -330,6 +333,12 @@ model Order {
   items           OrderItem[]
   warehouse       Warehouse?  @relation(fields: [warehouseId], references: [id])
   shipping        shipping?   @relation(fields: [shippingId], references: [id])
+
+  @@index([createdAt])
+  @@index([customerId, createdAt])
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@index([warehouseId, createdAt])
 }
 
 model Expense {

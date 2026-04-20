@@ -20311,6 +20311,7 @@ export namespace Prisma {
     shippingPrice: number | null
     moneyTransferCommission: number | null
     otherCommissions: number | null
+    carrierCollectionReceivedAmount: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -20324,6 +20325,7 @@ export namespace Prisma {
     shippingPrice: number | null
     moneyTransferCommission: number | null
     otherCommissions: number | null
+    carrierCollectionReceivedAmount: number | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -20338,6 +20340,9 @@ export namespace Prisma {
     shippingPrice: number | null
     moneyTransferCommission: number | null
     otherCommissions: number | null
+    carrierCollectionReceivedAt: Date | null
+    carrierCollectionReceivedAmount: number | null
+    carrierCollectionNotes: string | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -20372,6 +20377,9 @@ export namespace Prisma {
     shippingPrice: number | null
     moneyTransferCommission: number | null
     otherCommissions: number | null
+    carrierCollectionReceivedAt: Date | null
+    carrierCollectionReceivedAmount: number | null
+    carrierCollectionNotes: string | null
     totalAmount: number | null
     discount: number | null
     finalAmount: number | null
@@ -20406,6 +20414,9 @@ export namespace Prisma {
     shippingPrice: number
     moneyTransferCommission: number
     otherCommissions: number
+    carrierCollectionReceivedAt: number
+    carrierCollectionReceivedAmount: number
+    carrierCollectionNotes: number
     totalAmount: number
     discount: number
     finalAmount: number
@@ -20442,6 +20453,7 @@ export namespace Prisma {
     shippingPrice?: true
     moneyTransferCommission?: true
     otherCommissions?: true
+    carrierCollectionReceivedAmount?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -20455,6 +20467,7 @@ export namespace Prisma {
     shippingPrice?: true
     moneyTransferCommission?: true
     otherCommissions?: true
+    carrierCollectionReceivedAmount?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -20469,6 +20482,9 @@ export namespace Prisma {
     shippingPrice?: true
     moneyTransferCommission?: true
     otherCommissions?: true
+    carrierCollectionReceivedAt?: true
+    carrierCollectionReceivedAmount?: true
+    carrierCollectionNotes?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -20503,6 +20519,9 @@ export namespace Prisma {
     shippingPrice?: true
     moneyTransferCommission?: true
     otherCommissions?: true
+    carrierCollectionReceivedAt?: true
+    carrierCollectionReceivedAmount?: true
+    carrierCollectionNotes?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -20537,6 +20556,9 @@ export namespace Prisma {
     shippingPrice?: true
     moneyTransferCommission?: true
     otherCommissions?: true
+    carrierCollectionReceivedAt?: true
+    carrierCollectionReceivedAmount?: true
+    carrierCollectionNotes?: true
     totalAmount?: true
     discount?: true
     finalAmount?: true
@@ -20659,6 +20681,9 @@ export namespace Prisma {
     shippingPrice: number | null
     moneyTransferCommission: number | null
     otherCommissions: number | null
+    carrierCollectionReceivedAt: Date | null
+    carrierCollectionReceivedAmount: number | null
+    carrierCollectionNotes: string | null
     totalAmount: number
     discount: number
     finalAmount: number
@@ -20713,6 +20738,9 @@ export namespace Prisma {
     shippingPrice?: boolean
     moneyTransferCommission?: boolean
     otherCommissions?: boolean
+    carrierCollectionReceivedAt?: boolean
+    carrierCollectionReceivedAmount?: boolean
+    carrierCollectionNotes?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -20754,6 +20782,9 @@ export namespace Prisma {
     shippingPrice?: boolean
     moneyTransferCommission?: boolean
     otherCommissions?: boolean
+    carrierCollectionReceivedAt?: boolean
+    carrierCollectionReceivedAmount?: boolean
+    carrierCollectionNotes?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -20793,6 +20824,9 @@ export namespace Prisma {
     shippingPrice?: boolean
     moneyTransferCommission?: boolean
     otherCommissions?: boolean
+    carrierCollectionReceivedAt?: boolean
+    carrierCollectionReceivedAmount?: boolean
+    carrierCollectionNotes?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -20832,6 +20866,9 @@ export namespace Prisma {
     shippingPrice?: boolean
     moneyTransferCommission?: boolean
     otherCommissions?: boolean
+    carrierCollectionReceivedAt?: boolean
+    carrierCollectionReceivedAmount?: boolean
+    carrierCollectionNotes?: boolean
     totalAmount?: boolean
     discount?: boolean
     finalAmount?: boolean
@@ -20860,7 +20897,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "pay" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "manualCreatedAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "carrierCollectionReceivedAt" | "carrierCollectionReceivedAmount" | "carrierCollectionNotes" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "pay" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "manualCreatedAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -20898,6 +20935,9 @@ export namespace Prisma {
       shippingPrice: number | null
       moneyTransferCommission: number | null
       otherCommissions: number | null
+      carrierCollectionReceivedAt: Date | null
+      carrierCollectionReceivedAmount: number | null
+      carrierCollectionNotes: string | null
       totalAmount: number
       discount: number
       finalAmount: number
@@ -21358,6 +21398,9 @@ export namespace Prisma {
     readonly shippingPrice: FieldRef<"Order", 'Float'>
     readonly moneyTransferCommission: FieldRef<"Order", 'Float'>
     readonly otherCommissions: FieldRef<"Order", 'Float'>
+    readonly carrierCollectionReceivedAt: FieldRef<"Order", 'DateTime'>
+    readonly carrierCollectionReceivedAmount: FieldRef<"Order", 'Float'>
+    readonly carrierCollectionNotes: FieldRef<"Order", 'String'>
     readonly totalAmount: FieldRef<"Order", 'Float'>
     readonly discount: FieldRef<"Order", 'Float'>
     readonly finalAmount: FieldRef<"Order", 'Float'>
@@ -28809,6 +28852,9 @@ export namespace Prisma {
     shippingPrice: 'shippingPrice',
     moneyTransferCommission: 'moneyTransferCommission',
     otherCommissions: 'otherCommissions',
+    carrierCollectionReceivedAt: 'carrierCollectionReceivedAt',
+    carrierCollectionReceivedAmount: 'carrierCollectionReceivedAmount',
+    carrierCollectionNotes: 'carrierCollectionNotes',
     totalAmount: 'totalAmount',
     discount: 'discount',
     finalAmount: 'finalAmount',
@@ -30383,6 +30429,9 @@ export namespace Prisma {
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
     moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
     otherCommissions?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionReceivedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    carrierCollectionReceivedAmount?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionNotes?: StringNullableFilter<"Order"> | string | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -30423,6 +30472,9 @@ export namespace Prisma {
     shippingPrice?: SortOrderInput | SortOrder
     moneyTransferCommission?: SortOrderInput | SortOrder
     otherCommissions?: SortOrderInput | SortOrder
+    carrierCollectionReceivedAt?: SortOrderInput | SortOrder
+    carrierCollectionReceivedAmount?: SortOrderInput | SortOrder
+    carrierCollectionNotes?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -30466,6 +30518,9 @@ export namespace Prisma {
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
     moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
     otherCommissions?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionReceivedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    carrierCollectionReceivedAmount?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionNotes?: StringNullableFilter<"Order"> | string | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -30506,6 +30561,9 @@ export namespace Prisma {
     shippingPrice?: SortOrderInput | SortOrder
     moneyTransferCommission?: SortOrderInput | SortOrder
     otherCommissions?: SortOrderInput | SortOrder
+    carrierCollectionReceivedAt?: SortOrderInput | SortOrder
+    carrierCollectionReceivedAmount?: SortOrderInput | SortOrder
+    carrierCollectionNotes?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -30549,6 +30607,9 @@ export namespace Prisma {
     shippingPrice?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     moneyTransferCommission?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     otherCommissions?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    carrierCollectionReceivedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    carrierCollectionReceivedAmount?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    carrierCollectionNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     totalAmount?: FloatWithAggregatesFilter<"Order"> | number
     discount?: FloatWithAggregatesFilter<"Order"> | number
     finalAmount?: FloatWithAggregatesFilter<"Order"> | number
@@ -32352,6 +32413,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -32388,6 +32452,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -32423,6 +32490,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -32459,6 +32529,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -32495,6 +32568,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -32529,6 +32605,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -32560,6 +32639,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -34241,6 +34323,9 @@ export namespace Prisma {
     shippingPrice?: SortOrder
     moneyTransferCommission?: SortOrder
     otherCommissions?: SortOrder
+    carrierCollectionReceivedAt?: SortOrder
+    carrierCollectionReceivedAmount?: SortOrder
+    carrierCollectionNotes?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -34275,6 +34360,7 @@ export namespace Prisma {
     shippingPrice?: SortOrder
     moneyTransferCommission?: SortOrder
     otherCommissions?: SortOrder
+    carrierCollectionReceivedAmount?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -34289,6 +34375,9 @@ export namespace Prisma {
     shippingPrice?: SortOrder
     moneyTransferCommission?: SortOrder
     otherCommissions?: SortOrder
+    carrierCollectionReceivedAt?: SortOrder
+    carrierCollectionReceivedAmount?: SortOrder
+    carrierCollectionNotes?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -34323,6 +34412,9 @@ export namespace Prisma {
     shippingPrice?: SortOrder
     moneyTransferCommission?: SortOrder
     otherCommissions?: SortOrder
+    carrierCollectionReceivedAt?: SortOrder
+    carrierCollectionReceivedAmount?: SortOrder
+    carrierCollectionNotes?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -34356,6 +34448,7 @@ export namespace Prisma {
     shippingPrice?: SortOrder
     moneyTransferCommission?: SortOrder
     otherCommissions?: SortOrder
+    carrierCollectionReceivedAmount?: SortOrder
     totalAmount?: SortOrder
     discount?: SortOrder
     finalAmount?: SortOrder
@@ -36846,6 +36939,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -36881,6 +36977,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -37370,6 +37469,9 @@ export namespace Prisma {
     shippingPrice?: FloatNullableFilter<"Order"> | number | null
     moneyTransferCommission?: FloatNullableFilter<"Order"> | number | null
     otherCommissions?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionReceivedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    carrierCollectionReceivedAmount?: FloatNullableFilter<"Order"> | number | null
+    carrierCollectionNotes?: StringNullableFilter<"Order"> | string | null
     totalAmount?: FloatFilter<"Order"> | number
     discount?: FloatFilter<"Order"> | number
     finalAmount?: FloatFilter<"Order"> | number
@@ -38359,6 +38461,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -38394,6 +38499,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -39304,6 +39412,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -39339,6 +39450,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -40487,6 +40601,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -40522,6 +40639,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -40582,6 +40702,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -40617,6 +40740,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -40699,6 +40825,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -40734,6 +40863,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -40944,6 +41076,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -41113,6 +41248,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -41148,6 +41286,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -41183,6 +41324,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -41818,6 +41962,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -41897,6 +42044,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -41932,6 +42082,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -41967,6 +42120,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42098,6 +42254,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -42152,6 +42311,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42187,6 +42349,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42222,6 +42387,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42420,6 +42588,9 @@ export namespace Prisma {
     shippingPrice?: number | null
     moneyTransferCommission?: number | null
     otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
     totalAmount: number
     discount?: number
     finalAmount: number
@@ -42453,6 +42624,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42488,6 +42662,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
@@ -42523,6 +42700,9 @@ export namespace Prisma {
     shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
     otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
