@@ -187,7 +187,8 @@ export default function CollectionsPage() {
     try {
       const result = await getCollectionsDashboardData();
       if (!result.success) {
-        toast.error(String(result.error || "تعذر جلب صفحة التحصيلات"));
+        const errorMessage = "error" in result ? result.error : "تعذر جلب صفحة التحصيلات";
+        toast.error(String(errorMessage || "تعذر جلب صفحة التحصيلات"));
         return;
       }
 
