@@ -39,6 +39,12 @@ const paidFromOfficeLabels: Record<string, string> = {
   SYRIA: "مكتب سوريا",
 };
 
+const officeFilterOptions = [
+  { value: "ALL", label: "كل البلدان" },
+  { value: "SYRIA", label: "سوريا" },
+  { value: "TURKEY", label: "تركيا" },
+] as const;
+
 const getDailyCurrencyLabel = (currency: unknown) => {
   const normalizedCurrency = String(currency || "").toUpperCase();
   return currencyLabels[normalizedCurrency] || "";
@@ -74,6 +80,7 @@ export default function ExpensesPage() {
   const [activeType, setActiveType] = React.useState<"DAILY" | "RENT">("DAILY");
   const [dailyPage, setDailyPage] = React.useState(1);
   const [selectedMonth, setSelectedMonth] = React.useState<string>("ALL");
+  const [selectedOfficeFilter, setSelectedOfficeFilter] = React.useState<"ALL" | "SYRIA" | "TURKEY">("ALL");
   const PAGE_SIZE = 10;
 
   const canView = user && hasPermission(user, "viewExpenses");
@@ -237,18 +244,29 @@ export default function ExpensesPage() {
     }
   }, [availableMonthKeys, selectedMonth]);
 
+  React.useEffect(() => {
+    if (selectedOfficeFilter === "ALL") return;
+    if (!allowedPaidOffices.includes(selectedOfficeFilter)) {
+      setSelectedOfficeFilter("ALL");
+    }
+  }, [allowedPaidOffices, selectedOfficeFilter]);
+
   const filteredDailyExpenses = React.useMemo(() => {
     const base = dailyExpenses.filter((expense) => {
       const date = getExpenseEffectiveDate(expense);
       return !Number.isNaN(date.getTime()) && date.getFullYear() === currentYear;
     });
 
+    const officeFiltered = selectedOfficeFilter === "ALL"
+      ? base
+      : base.filter((expense) => String(expense?.paidFromOffice || "").toUpperCase() === selectedOfficeFilter);
+
     if (selectedMonth === "ALL") {
-      return base;
+      return officeFiltered;
     }
 
-    return base.filter((expense) => getMonthKey(getExpenseEffectiveDate(expense)) === selectedMonth);
-  }, [dailyExpenses, currentYear, selectedMonth]);
+    return officeFiltered.filter((expense) => getMonthKey(getExpenseEffectiveDate(expense)) === selectedMonth);
+  }, [dailyExpenses, currentYear, selectedMonth, selectedOfficeFilter]);
 
   const officeTotals = React.useMemo(() => {
     return filteredDailyExpenses.reduce(
@@ -362,6 +380,31 @@ export default function ExpensesPage() {
           {availableMonthKeys.length === 0 && (
             <span className="text-sm text-slate-500">لا توجد أشهر مسجلة لهذه السنة بعد.</span>
           )}
+        </div>
+      </div>
+
+      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة البلد</div>
+        <div className="flex flex-wrap gap-2">
+          {officeFilterOptions
+            .filter((option) => option.value === "ALL" || allowedPaidOffices.includes(option.value))
+            .map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  setSelectedOfficeFilter(option.value);
+                  setDailyPage(1);
+                }}
+                className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+                  selectedOfficeFilter === option.value
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
         </div>
       </div>
 
