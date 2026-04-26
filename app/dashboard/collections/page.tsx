@@ -24,6 +24,7 @@ type CollectionsPayload = {
 };
 
 const paymentMethodOptions = ["الكل", "تحويل بنكي", "مختلطة", "عند الاستلام"] as const;
+const countryFilterOptions = ["الكل", "سوريا", "تركيا"] as const;
 
 const formatMoney = (amount: number, location?: string | null) => {
   const currency = String(location || "").trim() === "تركيا" ? "₺" : "$";
@@ -171,6 +172,7 @@ export default function CollectionsPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [paymentMethodFilter, setPaymentMethodFilter] = React.useState<(typeof paymentMethodOptions)[number]>("الكل");
+  const [countryFilter, setCountryFilter] = React.useState<(typeof countryFilterOptions)[number]>("الكل");
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]));
   const canManage = Boolean(user && (user.accountType === "ADMIN" || user?.permission?.editOrders));
@@ -209,14 +211,30 @@ export default function CollectionsPage() {
   const filteredPayload = React.useMemo(() => {
     if (!payload) return null;
 
+    const normalizeCountry = (value: unknown) => {
+      const normalized = String(value || "").trim().toLowerCase();
+      if (normalized === "سوريا" || normalized === "syria") return "سوريا";
+      if (normalized === "تركيا" || normalized === "turkey") return "تركيا";
+      return "";
+    };
+
     const matchesPaymentMethod = (row: any) => {
       if (paymentMethodFilter === "الكل") return true;
       return String(row?.paymentMethod || "").trim() === paymentMethodFilter;
     };
 
-    const bankTransfers = payload.bankTransfers.filter(matchesPaymentMethod);
-    const carrierCollectionsPending = payload.carrierCollectionsPending.filter(matchesPaymentMethod);
-    const carrierCollectionsReceived = payload.carrierCollectionsReceived.filter(matchesPaymentMethod);
+    const matchesCountry = (row: any) => {
+      if (countryFilter === "الكل") return true;
+      const orderCountry = normalizeCountry(row?.country);
+      const warehouseCountry = normalizeCountry(row?.warehouse?.location);
+      return orderCountry === countryFilter || warehouseCountry === countryFilter;
+    };
+
+    const matchesFilters = (row: any) => matchesPaymentMethod(row) && matchesCountry(row);
+
+    const bankTransfers = payload.bankTransfers.filter(matchesFilters);
+    const carrierCollectionsPending = payload.carrierCollectionsPending.filter(matchesFilters);
+    const carrierCollectionsReceived = payload.carrierCollectionsReceived.filter(matchesFilters);
 
     return {
       ...payload,
@@ -232,7 +250,7 @@ export default function CollectionsPage() {
         ),
       },
     };
-  }, [payload, paymentMethodFilter]);
+  }, [payload, paymentMethodFilter, countryFilter]);
 
   const handleMarkReceived = async (row: any) => {
     const loadingToast = toast.loading("جاري تسجيل التحصيل كمستلم...");
@@ -297,22 +315,46 @@ export default function CollectionsPage() {
       </div>
 
       <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب طريقة الدفع</div>
-        <div className="flex flex-wrap gap-2">
-          {paymentMethodOptions.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setPaymentMethodFilter(option)}
-              className={`rounded-xl px-4 py-2 text-sm font-black transition-colors ${
-                paymentMethodFilter === option
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
-              }`}
-            >
-              {option}
-            </button>
-          ))}
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div>
+            <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب طريقة الدفع</div>
+            <div className="flex flex-wrap gap-2">
+              {paymentMethodOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setPaymentMethodFilter(option)}
+                  className={`rounded-xl px-4 py-2 text-sm font-black transition-colors ${
+                    paymentMethodFilter === option
+                      ? "bg-blue-600 text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب بلد الطلب</div>
+            <div className="flex flex-wrap gap-2">
+              {countryFilterOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setCountryFilter(option)}
+                  className={`rounded-xl px-4 py-2 text-sm font-black transition-colors ${
+                    countryFilter === option
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

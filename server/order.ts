@@ -5,9 +5,11 @@ import { prisma } from "@/lib/prisma"
 import { cookies } from "next/headers";
 
 const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم التسليم", "مدفوعة"]);
+const STOCK_RETURN_STATUSES = new Set(["فشل التسليم مرتجع", "تم الغاء الطلب"]);
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const isSoldOrderStatus = (status: string) => SOLD_ORDER_STATUSES.has(status);
+const isStockReturnStatus = (status: string) => STOCK_RETURN_STATUSES.has(status);
 const WAREHOUSE_ROLE_NAME = "مستودع";
 
 const normalizeWarehouseLocation = (location?: string | null) => {
@@ -36,6 +38,72 @@ const getOrderSortTimestamp = (orderLike: any) => {
 const sortOrdersByDisplayDateDesc = <T extends { manualCreatedAt?: Date | null; createdAt?: Date | null }>(orders: T[]) => {
     return [...orders].sort((a, b) => getOrderSortTimestamp(b) - getOrderSortTimestamp(a));
 };
+
+async function applyOrderStockChange(
+    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+    order: { warehouseId?: number | null; warehouse?: { location?: string | null } | null; items: Array<{ productId: number; quantity: number }> },
+    direction: "restore" | "reserve"
+) {
+    const stockCountry = String(order.warehouse?.location || "").trim();
+
+    for (const item of order.items) {
+        const quantity = Number(item.quantity || 0);
+        if (quantity <= 0) continue;
+
+        const stock = order.warehouseId
+            ? await tx.productStock.findFirst({
+                where: {
+                    productId: item.productId,
+                    warehouseId: order.warehouseId,
+                },
+            })
+            : stockCountry
+                ? await tx.productStock.findFirst({
+                    where: {
+                        productId: item.productId,
+                        warehouse: { location: stockCountry },
+                    },
+                    orderBy: { quantity: "desc" },
+                })
+                : null;
+
+        if (direction === "restore") {
+            if (stock) {
+                await tx.productStock.update({
+                    where: { id: stock.id },
+                    data: { quantity: (Number(stock.quantity) || 0) + quantity },
+                });
+                continue;
+            }
+
+            if (order.warehouseId) {
+                await tx.productStock.create({
+                    data: {
+                        productId: item.productId,
+                        warehouseId: order.warehouseId,
+                        quantity,
+                    },
+                });
+            }
+
+            continue;
+        }
+
+        if (!stock) {
+            throw new Error(`لا يمكن إعادة حجز المنتج ${item.productId} لأنه غير موجود في المخزن`);
+        }
+
+        const currentQuantity = Number(stock.quantity) || 0;
+        if (currentQuantity < quantity) {
+            throw new Error(`كمية المنتج ${item.productId} في المخزن غير كافية لإعادة الطلب إلى حالة نشطة`);
+        }
+
+        await tx.productStock.update({
+            where: { id: stock.id },
+            data: { quantity: currentQuantity - quantity },
+        });
+    }
+}
 
 function isWarehouseRole(user: any) {
     const roleName = String(user?.permission?.roleName || "").trim();
@@ -752,23 +820,76 @@ export async function updateOrderShippingFromTable(
 }
 
 export async function updateStaus(status:any , id:any){
-    const updatestutas = await prisma.order.update({
-        where:{id:id},
-        data:{
-            status:status
-        },
-        select: {
-            id: true,
-            customerId: true,
-            status: true
-        }
-    })
+    try {
+        const nextStatus = String(status || "").trim();
+        const orderId = Number(id);
 
-    if (isSoldOrderStatus(updatestutas.status)) {
-        await prisma.customer.update({
-            where: { id: updatestutas.customerId },
-            data: { status: "تم البيع" }
+        if (!nextStatus) {
+            return { success: false, error: "حالة الطلب غير صالحة" };
+        }
+
+        if (!Number.isFinite(orderId)) {
+            return { success: false, error: "معرف الطلب غير صالح" };
+        }
+
+        const updatedStatus = await prisma.$transaction(async (tx) => {
+            const existingOrder = await tx.order.findUnique({
+                where: { id: orderId },
+                include: {
+                    items: {
+                        select: {
+                            productId: true,
+                            quantity: true,
+                        },
+                    },
+                    warehouse: {
+                        select: {
+                            location: true,
+                        },
+                    },
+                },
+            });
+
+            if (!existingOrder) {
+                throw new Error("الطلب غير موجود");
+            }
+
+            const previousStatus = String(existingOrder.status || "").trim();
+            const wasReturned = isStockReturnStatus(previousStatus);
+            const willBeReturned = isStockReturnStatus(nextStatus);
+
+            if (!wasReturned && willBeReturned) {
+                await applyOrderStockChange(tx, existingOrder, "restore");
+            }
+
+            if (wasReturned && !willBeReturned) {
+                await applyOrderStockChange(tx, existingOrder, "reserve");
+            }
+
+            const nextOrder = await tx.order.update({
+                where: { id: orderId },
+                data: {
+                    status: nextStatus,
+                },
+                select: {
+                    id: true,
+                    customerId: true,
+                    status: true,
+                },
+            });
+
+            if (isSoldOrderStatus(nextOrder.status)) {
+                await tx.customer.update({
+                    where: { id: nextOrder.customerId },
+                    data: { status: "تم البيع" },
+                });
+            }
+
+            return nextOrder;
         });
+
+        return {success :true , data:updatedStatus}
+    } catch (error: any) {
+        return { success: false, error: error?.message || "فشل تحديث حالة الطلب" };
     }
-    return {success :true , data:updatestutas}
 }
