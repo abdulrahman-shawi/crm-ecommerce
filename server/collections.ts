@@ -14,18 +14,33 @@ const normalizeNumber = (value: unknown) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
+
+const resolveOrderExchangeRate = (orderLike: any) => {
+  const snapshotRate = Number(orderLike?.usdToTryRateAtOrder || 0);
+  return snapshotRate > 0 ? snapshotRate : DEFAULT_TURKEY_EXCHANGE_RATE;
+};
+
+const convertToUSD = (value: unknown, orderLike: any) => {
+  const amount = normalizeNumber(value);
+  const isTurkey = String(orderLike?.warehouse?.location || "").trim() === "تركيا";
+  if (!isTurkey) return amount;
+  const rate = resolveOrderExchangeRate(orderLike);
+  return rate > 0 ? amount / rate : amount;
+};
+
 const getShippingCharge = (orderLike: any) => {
-  return Math.max(0, normalizeNumber(orderLike?.shippingPrice ?? orderLike?.shipping?.price));
+  return Math.max(0, convertToUSD(orderLike?.shippingPrice ?? orderLike?.shipping?.price, orderLike));
 };
 
 const getBankTransferReceivedAmount = (orderLike: any) => {
   const paymentMethod = String(orderLike?.paymentMethod || "").trim();
   if (paymentMethod === "تحويل بنكي") {
-    return Math.max(0, normalizeNumber(orderLike?.finalAmount));
+    return Math.max(0, convertToUSD(orderLike?.finalAmount, orderLike));
   }
 
   if (paymentMethod === "مختلطة") {
-    return Math.max(0, normalizeNumber(orderLike?.amount));
+    return Math.max(0, convertToUSD(orderLike?.amount, orderLike));
   }
 
   return 0;
@@ -38,10 +53,10 @@ const getCarrierCollectionBaseAmount = (orderLike: any) => {
   }
 
   if (paymentMethod === "مختلطة") {
-    return Math.max(0, normalizeNumber(orderLike?.amountBank));
+    return Math.max(0, convertToUSD(orderLike?.amountBank, orderLike));
   }
 
-  return Math.max(0, normalizeNumber(orderLike?.finalAmount));
+  return Math.max(0, convertToUSD(orderLike?.finalAmount, orderLike));
 };
 
 const getCarrierCollectionWithShipping = (orderLike: any) => {
