@@ -1,63 +1,40 @@
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
+import { put, del } from '@vercel/blob';
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 /**
- * دالة مساعدة لتنظيف اسم الملف من الحروف الخاصة والعربية لضمان عدم حدوث خطأ في المسار
+ * دالة مساعدة لتنظيف اسم الملف من الحروف الخاصة والعربية
  */
 function sanitizeFileName(fileName: string) {
     return fileName
-        .replace(/[^a-z0-9.]/gi, '_') // استبدال أي حرف غير إنجليزي أو رقم بـ "_"
+        .replace(/[^a-z0-9.]/gi, '_')
         .toLowerCase();
 }
 
 async function uploadSingleFile(file: File) {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // استخدام المسار المطلق لضمان الوصول للمجلد في بيئات التشغيل المختلفة
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    
-    try { 
-        await fs.access(uploadDir); 
-    } catch { 
-        await fs.mkdir(uploadDir, { recursive: true }); 
-    }
-
-    // إضافة طابع زمني + اسم منظف لتجنب تكرار الأسماء أو أخطاء الحروف العربية
     const fileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-    const uploadPath = path.join(uploadDir, fileName);
     
-    await fs.writeFile(uploadPath, buffer);
+    const blob = await put(fileName, file, {
+        access: 'public',
+    });
     
     return {
-        url: `/uploads/${fileName}`,
+        url: blob.url,
         type: file.type
     };
 }
 
 export async function uploadUserAvatar(file: File) {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'users');
-
-    try {
-        await fs.access(uploadDir);
-    } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-    }
-
-    const fileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-    const uploadPath = path.join(uploadDir, fileName);
-
-    await fs.writeFile(uploadPath, buffer);
-
+    const fileName = `users/${Date.now()}-${sanitizeFileName(file.name)}`;
+    
+    const blob = await put(fileName, file, {
+        access: 'public',
+    });
+    
     return {
-        url: `/uploads/users/${fileName}`,
+        url: blob.url,
         type: file.type
     };
 }
@@ -266,7 +243,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             // أ. رفع الملفات الجديدة أولاً
             fileDataArray = await Promise.all(files.map(uploadSingleFile));
 
-            // ب. جلب بيانات الصور القديمة لحذف الملفات الفيزيائية
+            // ب. جلب بيانات الصور القديمة لحذفها من Vercel Blob
             const currentProduct = await prisma.product.findUnique({
                 where: { id: productId },
                 include: { images: true }
@@ -275,13 +252,9 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             if (currentProduct?.images) {
                 for (const img of currentProduct.images) {
                     try {
-                        // بناء المسار المطلق للملف في مجلد public
-                        const filePath = path.join(process.cwd(), 'public', img.url);
-                        // حذف الملف من الهارد ديسك
-                        await fs.unlink(filePath);
+                        await del(img.url);
                     } catch (err) {
-                        console.error(`Could not delete file: ${img.url}`, err);
-                        // نكمل العملية حتى لو فشل حذف ملف واحد (ربما الملف غير موجود أصلاً)
+                        console.error(`Could not delete blob: ${img.url}`, err);
                     }
                 }
             }
@@ -341,17 +314,13 @@ export async function deleteProduct(productId: number) {
             return { success: false, error: "المنتج غير موجود" };
         }
 
-        // 2. حذف الملفات الفيزيائية من الهارد ديسك
+        // 2. حذف الصور من Vercel Blob
         if (product.images && product.images.length > 0) {
             for (const img of product.images) {
                 try {
-                    // بناء المسار: لاحظ أن img.url يبدأ عادة بـ /uploads/
-                    // لذا نستخدم path.join بحذر لضمان المسار الصحيح
-                    const filePath = path.join(process.cwd(), 'public', img.url);
-                    await fs.unlink(filePath);
+                    await del(img.url);
                 } catch (err) {
-                    console.error(`فشل حذف الملف: ${img.url}`, err);
-                    // نستمر في الحلقة حتى لو فشل حذف ملف واحد
+                    console.error(`فشل حذف الصورة: ${img.url}`, err);
                 }
             }
         }
@@ -412,10 +381,9 @@ export async function deleteProductFromWarehouse(productId: number, warehouseId:
         if (result.deletedProduct && result.images.length > 0) {
             for (const img of result.images) {
                 try {
-                    const filePath = path.join(process.cwd(), 'public', img.url);
-                    await fs.unlink(filePath);
+                    await del(img.url);
                 } catch (err) {
-                    console.error(`فشل حذف الملف: ${img.url}`, err);
+                    console.error(`فشل حذف الصورة: ${img.url}`, err);
                 }
             }
         }

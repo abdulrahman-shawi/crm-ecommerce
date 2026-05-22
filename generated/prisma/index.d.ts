@@ -19,11 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model UserActivityTarget
- * 
- */
-export type UserActivityTarget = $Result.DefaultSelection<Prisma.$UserActivityTargetPayload>
-/**
  * Model Permission
  * 
  */
@@ -58,6 +53,11 @@ export type StockMovement = $Result.DefaultSelection<Prisma.$StockMovementPayloa
  * 
  */
 export type UserTarget = $Result.DefaultSelection<Prisma.$UserTargetPayload>
+/**
+ * Model UserActivityTarget
+ * 
+ */
+export type UserActivityTarget = $Result.DefaultSelection<Prisma.$UserActivityTargetPayload>
 /**
  * Model TargetProduct
  * 
@@ -118,6 +118,16 @@ export type GeneralSetting = $Result.DefaultSelection<Prisma.$GeneralSettingPayl
  * 
  */
 export type EmployeeSalaryAdjustment = $Result.DefaultSelection<Prisma.$EmployeeSalaryAdjustmentPayload>
+/**
+ * Model AffiliateLink
+ * 
+ */
+export type AffiliateLink = $Result.DefaultSelection<Prisma.$AffiliateLinkPayload>
+/**
+ * Model Commission
+ * 
+ */
+export type Commission = $Result.DefaultSelection<Prisma.$CommissionPayload>
 
 /**
  * Enums
@@ -198,6 +208,24 @@ export const AccountType: {
 
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
+
+export const EcommerceRole: {
+  ADMIN: 'ADMIN',
+  AFFILIATE: 'AFFILIATE',
+  CUSTOMER: 'CUSTOMER'
+};
+
+export type EcommerceRole = (typeof EcommerceRole)[keyof typeof EcommerceRole]
+
+
+export const CommissionStatus: {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+};
+
+export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
+
 }
 
 export type ActivityTargetCycle = $Enums.ActivityTargetCycle
@@ -231,6 +259,14 @@ export const PaidFromOffice: typeof $Enums.PaidFromOffice
 export type AccountType = $Enums.AccountType
 
 export const AccountType: typeof $Enums.AccountType
+
+export type EcommerceRole = $Enums.EcommerceRole
+
+export const EcommerceRole: typeof $Enums.EcommerceRole
+
+export type CommissionStatus = $Enums.CommissionStatus
+
+export const CommissionStatus: typeof $Enums.CommissionStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -360,16 +396,6 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.userActivityTarget`: Exposes CRUD operations for the **UserActivityTarget** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserActivityTargets
-    * const userActivityTargets = await prisma.userActivityTarget.findMany()
-    * ```
-    */
-  get userActivityTarget(): Prisma.UserActivityTargetDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.permission`: Exposes CRUD operations for the **Permission** model.
     * Example usage:
     * ```ts
@@ -438,6 +464,16 @@ export class PrismaClient<
     * ```
     */
   get userTarget(): Prisma.UserTargetDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userActivityTarget`: Exposes CRUD operations for the **UserActivityTarget** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserActivityTargets
+    * const userActivityTargets = await prisma.userActivityTarget.findMany()
+    * ```
+    */
+  get userActivityTarget(): Prisma.UserActivityTargetDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.targetProduct`: Exposes CRUD operations for the **TargetProduct** model.
@@ -558,6 +594,26 @@ export class PrismaClient<
     * ```
     */
   get employeeSalaryAdjustment(): Prisma.EmployeeSalaryAdjustmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.affiliateLink`: Exposes CRUD operations for the **AffiliateLink** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AffiliateLinks
+    * const affiliateLinks = await prisma.affiliateLink.findMany()
+    * ```
+    */
+  get affiliateLink(): Prisma.AffiliateLinkDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.commission`: Exposes CRUD operations for the **Commission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Commissions
+    * const commissions = await prisma.commission.findMany()
+    * ```
+    */
+  get commission(): Prisma.CommissionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -993,7 +1049,6 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    UserActivityTarget: 'UserActivityTarget',
     Permission: 'Permission',
     Category: 'Category',
     Product: 'Product',
@@ -1001,6 +1056,7 @@ export namespace Prisma {
     ProductStock: 'ProductStock',
     StockMovement: 'StockMovement',
     UserTarget: 'UserTarget',
+    UserActivityTarget: 'UserActivityTarget',
     TargetProduct: 'TargetProduct',
     ProductImage: 'ProductImage',
     Customer: 'Customer',
@@ -1012,7 +1068,9 @@ export namespace Prisma {
     OrderItem: 'OrderItem',
     TrakingCompany: 'TrakingCompany',
     GeneralSetting: 'GeneralSetting',
-    EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment'
+    EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment',
+    AffiliateLink: 'AffiliateLink',
+    Commission: 'Commission'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1028,7 +1086,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userActivityTarget" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment"
+      modelProps: "user" | "permission" | "category" | "product" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "affiliateLink" | "commission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1103,80 +1161,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
-          }
-        }
-      }
-      UserActivityTarget: {
-        payload: Prisma.$UserActivityTargetPayload<ExtArgs>
-        fields: Prisma.UserActivityTargetFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UserActivityTargetFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          findFirst: {
-            args: Prisma.UserActivityTargetFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UserActivityTargetFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          findMany: {
-            args: Prisma.UserActivityTargetFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
-          }
-          create: {
-            args: Prisma.UserActivityTargetCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          createMany: {
-            args: Prisma.UserActivityTargetCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserActivityTargetCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
-          }
-          delete: {
-            args: Prisma.UserActivityTargetDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          update: {
-            args: Prisma.UserActivityTargetUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          deleteMany: {
-            args: Prisma.UserActivityTargetDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UserActivityTargetUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
-          }
-          upsert: {
-            args: Prisma.UserActivityTargetUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
-          }
-          aggregate: {
-            args: Prisma.UserActivityTargetAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUserActivityTarget>
-          }
-          groupBy: {
-            args: Prisma.UserActivityTargetGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UserActivityTargetGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UserActivityTargetCountArgs<ExtArgs>
-            result: $Utils.Optional<UserActivityTargetCountAggregateOutputType> | number
           }
         }
       }
@@ -1695,6 +1679,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserTargetCountArgs<ExtArgs>
             result: $Utils.Optional<UserTargetCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserActivityTarget: {
+        payload: Prisma.$UserActivityTargetPayload<ExtArgs>
+        fields: Prisma.UserActivityTargetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserActivityTargetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          findFirst: {
+            args: Prisma.UserActivityTargetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserActivityTargetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          findMany: {
+            args: Prisma.UserActivityTargetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          create: {
+            args: Prisma.UserActivityTargetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          createMany: {
+            args: Prisma.UserActivityTargetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserActivityTargetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          delete: {
+            args: Prisma.UserActivityTargetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          update: {
+            args: Prisma.UserActivityTargetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserActivityTargetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserActivityTargetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserActivityTargetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivityTargetPayload>
+          }
+          aggregate: {
+            args: Prisma.UserActivityTargetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserActivityTarget>
+          }
+          groupBy: {
+            args: Prisma.UserActivityTargetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserActivityTargetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserActivityTargetCountArgs<ExtArgs>
+            result: $Utils.Optional<UserActivityTargetCountAggregateOutputType> | number
           }
         }
       }
@@ -2586,6 +2644,154 @@ export namespace Prisma {
           }
         }
       }
+      AffiliateLink: {
+        payload: Prisma.$AffiliateLinkPayload<ExtArgs>
+        fields: Prisma.AffiliateLinkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AffiliateLinkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AffiliateLinkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          findFirst: {
+            args: Prisma.AffiliateLinkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AffiliateLinkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          findMany: {
+            args: Prisma.AffiliateLinkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>[]
+          }
+          create: {
+            args: Prisma.AffiliateLinkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          createMany: {
+            args: Prisma.AffiliateLinkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AffiliateLinkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>[]
+          }
+          delete: {
+            args: Prisma.AffiliateLinkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          update: {
+            args: Prisma.AffiliateLinkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          deleteMany: {
+            args: Prisma.AffiliateLinkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AffiliateLinkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AffiliateLinkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>[]
+          }
+          upsert: {
+            args: Prisma.AffiliateLinkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateLinkPayload>
+          }
+          aggregate: {
+            args: Prisma.AffiliateLinkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAffiliateLink>
+          }
+          groupBy: {
+            args: Prisma.AffiliateLinkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateLinkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AffiliateLinkCountArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateLinkCountAggregateOutputType> | number
+          }
+        }
+      }
+      Commission: {
+        payload: Prisma.$CommissionPayload<ExtArgs>
+        fields: Prisma.CommissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CommissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CommissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          findFirst: {
+            args: Prisma.CommissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CommissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          findMany: {
+            args: Prisma.CommissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>[]
+          }
+          create: {
+            args: Prisma.CommissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          createMany: {
+            args: Prisma.CommissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CommissionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>[]
+          }
+          delete: {
+            args: Prisma.CommissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          update: {
+            args: Prisma.CommissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.CommissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CommissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CommissionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>[]
+          }
+          upsert: {
+            args: Prisma.CommissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayload>
+          }
+          aggregate: {
+            args: Prisma.CommissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCommission>
+          }
+          groupBy: {
+            args: Prisma.CommissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CommissionCountArgs<ExtArgs>
+            result: $Utils.Optional<CommissionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2695,7 +2901,6 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
-    userActivityTarget?: UserActivityTargetOmit
     permission?: PermissionOmit
     category?: CategoryOmit
     product?: ProductOmit
@@ -2703,6 +2908,7 @@ export namespace Prisma {
     productStock?: ProductStockOmit
     stockMovement?: StockMovementOmit
     userTarget?: UserTargetOmit
+    userActivityTarget?: UserActivityTargetOmit
     targetProduct?: TargetProductOmit
     productImage?: ProductImageOmit
     customer?: CustomerOmit
@@ -2715,6 +2921,8 @@ export namespace Prisma {
     trakingCompany?: TrakingCompanyOmit
     generalSetting?: GeneralSettingOmit
     employeeSalaryAdjustment?: EmployeeSalaryAdjustmentOmit
+    affiliateLink?: AffiliateLinkOmit
+    commission?: CommissionOmit
   }
 
   /* Types for Logging */
@@ -2804,6 +3012,7 @@ export namespace Prisma {
     salaryAdjustments: number
     expenses: number
     stockMovements: number
+    affiliateLinks: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2816,6 +3025,7 @@ export namespace Prisma {
     salaryAdjustments?: boolean | UserCountOutputTypeCountSalaryAdjustmentsArgs
     expenses?: boolean | UserCountOutputTypeCountExpensesArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
+    affiliateLinks?: boolean | UserCountOutputTypeCountAffiliateLinksArgs
   }
 
   // Custom InputTypes
@@ -2892,6 +3102,13 @@ export namespace Prisma {
     where?: StockMovementWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAffiliateLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateLinkWhereInput
+  }
+
 
   /**
    * Count Type PermissionCountOutputType
@@ -2966,6 +3183,7 @@ export namespace Prisma {
     stocks: number
     stockMovements: number
     warrantiesAsProduct: number
+    affiliateLinks: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2975,6 +3193,7 @@ export namespace Prisma {
     stocks?: boolean | ProductCountOutputTypeCountStocksArgs
     stockMovements?: boolean | ProductCountOutputTypeCountStockMovementsArgs
     warrantiesAsProduct?: boolean | ProductCountOutputTypeCountWarrantiesAsProductArgs
+    affiliateLinks?: boolean | ProductCountOutputTypeCountAffiliateLinksArgs
   }
 
   // Custom InputTypes
@@ -3028,6 +3247,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountWarrantiesAsProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WarrantyWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountAffiliateLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateLinkWhereInput
   }
 
 
@@ -3184,10 +3410,12 @@ export namespace Prisma {
 
   export type OrderCountOutputType = {
     items: number
+    commissions: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | OrderCountOutputTypeCountItemsArgs
+    commissions?: boolean | OrderCountOutputTypeCountCommissionsArgs
   }
 
   // Custom InputTypes
@@ -3206,6 +3434,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionWhereInput
   }
 
 
@@ -3237,6 +3472,46 @@ export namespace Prisma {
    */
   export type ShippingCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type AffiliateLinkCountOutputType
+   */
+
+  export type AffiliateLinkCountOutputType = {
+    orderItems: number
+    commissions: number
+  }
+
+  export type AffiliateLinkCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderItems?: boolean | AffiliateLinkCountOutputTypeCountOrderItemsArgs
+    commissions?: boolean | AffiliateLinkCountOutputTypeCountCommissionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AffiliateLinkCountOutputType without action
+   */
+  export type AffiliateLinkCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLinkCountOutputType
+     */
+    select?: AffiliateLinkCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateLinkCountOutputType without action
+   */
+  export type AffiliateLinkCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderItemWhereInput
+  }
+
+  /**
+   * AffiliateLinkCountOutputType without action
+   */
+  export type AffiliateLinkCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionWhereInput
   }
 
 
@@ -3282,6 +3557,8 @@ export namespace Prisma {
     updatedAt: Date | null
     permissionId: string | null
     parentId: string | null
+    isAffiliate: boolean | null
+    affiliateCode: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3300,6 +3577,8 @@ export namespace Prisma {
     updatedAt: Date | null
     permissionId: string | null
     parentId: string | null
+    isAffiliate: boolean | null
+    affiliateCode: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3318,6 +3597,8 @@ export namespace Prisma {
     updatedAt: number
     permissionId: number
     parentId: number
+    isAffiliate: number
+    affiliateCode: number
     _all: number
   }
 
@@ -3348,6 +3629,8 @@ export namespace Prisma {
     updatedAt?: true
     permissionId?: true
     parentId?: true
+    isAffiliate?: true
+    affiliateCode?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3366,6 +3649,8 @@ export namespace Prisma {
     updatedAt?: true
     permissionId?: true
     parentId?: true
+    isAffiliate?: true
+    affiliateCode?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3384,6 +3669,8 @@ export namespace Prisma {
     updatedAt?: true
     permissionId?: true
     parentId?: true
+    isAffiliate?: true
+    affiliateCode?: true
     _all?: true
   }
 
@@ -3489,6 +3776,8 @@ export namespace Prisma {
     updatedAt: Date
     permissionId: string | null
     parentId: string | null
+    isAffiliate: boolean
+    affiliateCode: string | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -3526,6 +3815,8 @@ export namespace Prisma {
     updatedAt?: boolean
     permissionId?: boolean
     parentId?: boolean
+    isAffiliate?: boolean
+    affiliateCode?: boolean
     parent?: boolean | User$parentArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -3537,6 +3828,7 @@ export namespace Prisma {
     salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    affiliateLinks?: boolean | User$affiliateLinksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3556,6 +3848,8 @@ export namespace Prisma {
     updatedAt?: boolean
     permissionId?: boolean
     parentId?: boolean
+    isAffiliate?: boolean
+    affiliateCode?: boolean
     parent?: boolean | User$parentArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3576,6 +3870,8 @@ export namespace Prisma {
     updatedAt?: boolean
     permissionId?: boolean
     parentId?: boolean
+    isAffiliate?: boolean
+    affiliateCode?: boolean
     parent?: boolean | User$parentArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3596,9 +3892,11 @@ export namespace Prisma {
     updatedAt?: boolean
     permissionId?: boolean
     parentId?: boolean
+    isAffiliate?: boolean
+    affiliateCode?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "notes" | "jobTitle" | "avatar" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId" | "parentId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "phone" | "notes" | "jobTitle" | "avatar" | "accountType" | "password" | "salesCommissionPercent" | "wage" | "createdAt" | "updatedAt" | "permissionId" | "parentId" | "isAffiliate" | "affiliateCode", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     parent?: boolean | User$parentArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
@@ -3611,6 +3909,7 @@ export namespace Prisma {
     salaryAdjustments?: boolean | User$salaryAdjustmentsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    affiliateLinks?: boolean | User$affiliateLinksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3636,6 +3935,7 @@ export namespace Prisma {
       salaryAdjustments: Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3653,6 +3953,8 @@ export namespace Prisma {
       updatedAt: Date
       permissionId: string | null
       parentId: string | null
+      isAffiliate: boolean
+      affiliateCode: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4058,6 +4360,7 @@ export namespace Prisma {
     salaryAdjustments<T extends User$salaryAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$salaryAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeSalaryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    affiliateLinks<T extends User$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4102,6 +4405,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly permissionId: FieldRef<"User", 'String'>
     readonly parentId: FieldRef<"User", 'String'>
+    readonly isAffiliate: FieldRef<"User", 'Boolean'>
+    readonly affiliateCode: FieldRef<"User", 'String'>
   }
     
 
@@ -4752,6 +5057,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.affiliateLinks
+   */
+  export type User$affiliateLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    where?: AffiliateLinkWhereInput
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    cursor?: AffiliateLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AffiliateLinkScalarFieldEnum | AffiliateLinkScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4767,1244 +5096,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model UserActivityTarget
-   */
-
-  export type AggregateUserActivityTarget = {
-    _count: UserActivityTargetCountAggregateOutputType | null
-    _avg: UserActivityTargetAvgAggregateOutputType | null
-    _sum: UserActivityTargetSumAggregateOutputType | null
-    _min: UserActivityTargetMinAggregateOutputType | null
-    _max: UserActivityTargetMaxAggregateOutputType | null
-  }
-
-  export type UserActivityTargetAvgAggregateOutputType = {
-    requiredCustomers: number | null
-    customerReward: number | null
-    customerMissPenaltyAmount: number | null
-    requiredCommunications: number | null
-    communicationReward: number | null
-    communicationMissPenaltyAmount: number | null
-  }
-
-  export type UserActivityTargetSumAggregateOutputType = {
-    requiredCustomers: number | null
-    customerReward: number | null
-    customerMissPenaltyAmount: number | null
-    requiredCommunications: number | null
-    communicationReward: number | null
-    communicationMissPenaltyAmount: number | null
-  }
-
-  export type UserActivityTargetMinAggregateOutputType = {
-    id: string | null
-    userId: string | null
-    cycle: $Enums.ActivityTargetCycle | null
-    requiredCustomers: number | null
-    customerReward: number | null
-    customerMissPenaltyAmount: number | null
-    requiredCommunications: number | null
-    communicationReward: number | null
-    communicationMissPenaltyAmount: number | null
-    startsAt: Date | null
-    endedAt: Date | null
-    isActive: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserActivityTargetMaxAggregateOutputType = {
-    id: string | null
-    userId: string | null
-    cycle: $Enums.ActivityTargetCycle | null
-    requiredCustomers: number | null
-    customerReward: number | null
-    customerMissPenaltyAmount: number | null
-    requiredCommunications: number | null
-    communicationReward: number | null
-    communicationMissPenaltyAmount: number | null
-    startsAt: Date | null
-    endedAt: Date | null
-    isActive: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserActivityTargetCountAggregateOutputType = {
-    id: number
-    userId: number
-    cycle: number
-    activeWeekDays: number
-    requiredCustomers: number
-    customerReward: number
-    customerMissPenaltyAmount: number
-    requiredCommunications: number
-    communicationReward: number
-    communicationMissPenaltyAmount: number
-    startsAt: number
-    endedAt: number
-    isActive: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type UserActivityTargetAvgAggregateInputType = {
-    requiredCustomers?: true
-    customerReward?: true
-    customerMissPenaltyAmount?: true
-    requiredCommunications?: true
-    communicationReward?: true
-    communicationMissPenaltyAmount?: true
-  }
-
-  export type UserActivityTargetSumAggregateInputType = {
-    requiredCustomers?: true
-    customerReward?: true
-    customerMissPenaltyAmount?: true
-    requiredCommunications?: true
-    communicationReward?: true
-    communicationMissPenaltyAmount?: true
-  }
-
-  export type UserActivityTargetMinAggregateInputType = {
-    id?: true
-    userId?: true
-    cycle?: true
-    requiredCustomers?: true
-    customerReward?: true
-    customerMissPenaltyAmount?: true
-    requiredCommunications?: true
-    communicationReward?: true
-    communicationMissPenaltyAmount?: true
-    startsAt?: true
-    endedAt?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserActivityTargetMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    cycle?: true
-    requiredCustomers?: true
-    customerReward?: true
-    customerMissPenaltyAmount?: true
-    requiredCommunications?: true
-    communicationReward?: true
-    communicationMissPenaltyAmount?: true
-    startsAt?: true
-    endedAt?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserActivityTargetCountAggregateInputType = {
-    id?: true
-    userId?: true
-    cycle?: true
-    activeWeekDays?: true
-    requiredCustomers?: true
-    customerReward?: true
-    customerMissPenaltyAmount?: true
-    requiredCommunications?: true
-    communicationReward?: true
-    communicationMissPenaltyAmount?: true
-    startsAt?: true
-    endedAt?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type UserActivityTargetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserActivityTarget to aggregate.
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserActivityTargets to fetch.
-     */
-    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserActivityTargetWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserActivityTargets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserActivityTargets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserActivityTargets
-    **/
-    _count?: true | UserActivityTargetCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UserActivityTargetAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UserActivityTargetSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserActivityTargetMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserActivityTargetMaxAggregateInputType
-  }
-
-  export type GetUserActivityTargetAggregateType<T extends UserActivityTargetAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserActivityTarget]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserActivityTarget[P]>
-      : GetScalarType<T[P], AggregateUserActivityTarget[P]>
-  }
-
-
-
-
-  export type UserActivityTargetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserActivityTargetWhereInput
-    orderBy?: UserActivityTargetOrderByWithAggregationInput | UserActivityTargetOrderByWithAggregationInput[]
-    by: UserActivityTargetScalarFieldEnum[] | UserActivityTargetScalarFieldEnum
-    having?: UserActivityTargetScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserActivityTargetCountAggregateInputType | true
-    _avg?: UserActivityTargetAvgAggregateInputType
-    _sum?: UserActivityTargetSumAggregateInputType
-    _min?: UserActivityTargetMinAggregateInputType
-    _max?: UserActivityTargetMaxAggregateInputType
-  }
-
-  export type UserActivityTargetGroupByOutputType = {
-    id: string
-    userId: string
-    cycle: $Enums.ActivityTargetCycle
-    activeWeekDays: $Enums.ActivityWeekDay[]
-    requiredCustomers: number
-    customerReward: number
-    customerMissPenaltyAmount: number
-    requiredCommunications: number
-    communicationReward: number
-    communicationMissPenaltyAmount: number
-    startsAt: Date
-    endedAt: Date | null
-    isActive: boolean
-    createdAt: Date
-    updatedAt: Date
-    _count: UserActivityTargetCountAggregateOutputType | null
-    _avg: UserActivityTargetAvgAggregateOutputType | null
-    _sum: UserActivityTargetSumAggregateOutputType | null
-    _min: UserActivityTargetMinAggregateOutputType | null
-    _max: UserActivityTargetMaxAggregateOutputType | null
-  }
-
-  type GetUserActivityTargetGroupByPayload<T extends UserActivityTargetGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UserActivityTargetGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserActivityTargetGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
-            : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserActivityTargetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    cycle?: boolean
-    activeWeekDays?: boolean
-    requiredCustomers?: boolean
-    customerReward?: boolean
-    customerMissPenaltyAmount?: boolean
-    requiredCommunications?: boolean
-    communicationReward?: boolean
-    communicationMissPenaltyAmount?: boolean
-    startsAt?: boolean
-    endedAt?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userActivityTarget"]>
-
-  export type UserActivityTargetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    cycle?: boolean
-    activeWeekDays?: boolean
-    requiredCustomers?: boolean
-    customerReward?: boolean
-    customerMissPenaltyAmount?: boolean
-    requiredCommunications?: boolean
-    communicationReward?: boolean
-    communicationMissPenaltyAmount?: boolean
-    startsAt?: boolean
-    endedAt?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userActivityTarget"]>
-
-  export type UserActivityTargetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    cycle?: boolean
-    activeWeekDays?: boolean
-    requiredCustomers?: boolean
-    customerReward?: boolean
-    customerMissPenaltyAmount?: boolean
-    requiredCommunications?: boolean
-    communicationReward?: boolean
-    communicationMissPenaltyAmount?: boolean
-    startsAt?: boolean
-    endedAt?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userActivityTarget"]>
-
-  export type UserActivityTargetSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    cycle?: boolean
-    activeWeekDays?: boolean
-    requiredCustomers?: boolean
-    customerReward?: boolean
-    customerMissPenaltyAmount?: boolean
-    requiredCommunications?: boolean
-    communicationReward?: boolean
-    communicationMissPenaltyAmount?: boolean
-    startsAt?: boolean
-    endedAt?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "activeWeekDays" | "requiredCustomers" | "customerReward" | "customerMissPenaltyAmount" | "requiredCommunications" | "communicationReward" | "communicationMissPenaltyAmount" | "startsAt" | "endedAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
-  export type UserActivityTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserActivityTargetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $UserActivityTargetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserActivityTarget"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      userId: string
-      cycle: $Enums.ActivityTargetCycle
-      activeWeekDays: $Enums.ActivityWeekDay[]
-      requiredCustomers: number
-      customerReward: number
-      customerMissPenaltyAmount: number
-      requiredCommunications: number
-      communicationReward: number
-      communicationMissPenaltyAmount: number
-      startsAt: Date
-      endedAt: Date | null
-      isActive: boolean
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["userActivityTarget"]>
-    composites: {}
-  }
-
-  type UserActivityTargetGetPayload<S extends boolean | null | undefined | UserActivityTargetDefaultArgs> = $Result.GetResult<Prisma.$UserActivityTargetPayload, S>
-
-  type UserActivityTargetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserActivityTargetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UserActivityTargetCountAggregateInputType | true
-    }
-
-  export interface UserActivityTargetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserActivityTarget'], meta: { name: 'UserActivityTarget' } }
-    /**
-     * Find zero or one UserActivityTarget that matches the filter.
-     * @param {UserActivityTargetFindUniqueArgs} args - Arguments to find a UserActivityTarget
-     * @example
-     * // Get one UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends UserActivityTargetFindUniqueArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one UserActivityTarget that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {UserActivityTargetFindUniqueOrThrowArgs} args - Arguments to find a UserActivityTarget
-     * @example
-     * // Get one UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends UserActivityTargetFindUniqueOrThrowArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserActivityTarget that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetFindFirstArgs} args - Arguments to find a UserActivityTarget
-     * @example
-     * // Get one UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends UserActivityTargetFindFirstArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserActivityTarget that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetFindFirstOrThrowArgs} args - Arguments to find a UserActivityTarget
-     * @example
-     * // Get one UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends UserActivityTargetFindFirstOrThrowArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more UserActivityTargets that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserActivityTargets
-     * const userActivityTargets = await prisma.userActivityTarget.findMany()
-     * 
-     * // Get first 10 UserActivityTargets
-     * const userActivityTargets = await prisma.userActivityTarget.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends UserActivityTargetFindManyArgs>(args?: SelectSubset<T, UserActivityTargetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a UserActivityTarget.
-     * @param {UserActivityTargetCreateArgs} args - Arguments to create a UserActivityTarget.
-     * @example
-     * // Create one UserActivityTarget
-     * const UserActivityTarget = await prisma.userActivityTarget.create({
-     *   data: {
-     *     // ... data to create a UserActivityTarget
-     *   }
-     * })
-     * 
-     */
-    create<T extends UserActivityTargetCreateArgs>(args: SelectSubset<T, UserActivityTargetCreateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many UserActivityTargets.
-     * @param {UserActivityTargetCreateManyArgs} args - Arguments to create many UserActivityTargets.
-     * @example
-     * // Create many UserActivityTargets
-     * const userActivityTarget = await prisma.userActivityTarget.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends UserActivityTargetCreateManyArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UserActivityTargets and returns the data saved in the database.
-     * @param {UserActivityTargetCreateManyAndReturnArgs} args - Arguments to create many UserActivityTargets.
-     * @example
-     * // Create many UserActivityTargets
-     * const userActivityTarget = await prisma.userActivityTarget.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserActivityTargets and only return the `id`
-     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserActivityTargetCreateManyAndReturnArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a UserActivityTarget.
-     * @param {UserActivityTargetDeleteArgs} args - Arguments to delete one UserActivityTarget.
-     * @example
-     * // Delete one UserActivityTarget
-     * const UserActivityTarget = await prisma.userActivityTarget.delete({
-     *   where: {
-     *     // ... filter to delete one UserActivityTarget
-     *   }
-     * })
-     * 
-     */
-    delete<T extends UserActivityTargetDeleteArgs>(args: SelectSubset<T, UserActivityTargetDeleteArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one UserActivityTarget.
-     * @param {UserActivityTargetUpdateArgs} args - Arguments to update one UserActivityTarget.
-     * @example
-     * // Update one UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends UserActivityTargetUpdateArgs>(args: SelectSubset<T, UserActivityTargetUpdateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more UserActivityTargets.
-     * @param {UserActivityTargetDeleteManyArgs} args - Arguments to filter UserActivityTargets to delete.
-     * @example
-     * // Delete a few UserActivityTargets
-     * const { count } = await prisma.userActivityTarget.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends UserActivityTargetDeleteManyArgs>(args?: SelectSubset<T, UserActivityTargetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserActivityTargets.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserActivityTargets
-     * const userActivityTarget = await prisma.userActivityTarget.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends UserActivityTargetUpdateManyArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserActivityTargets and returns the data updated in the database.
-     * @param {UserActivityTargetUpdateManyAndReturnArgs} args - Arguments to update many UserActivityTargets.
-     * @example
-     * // Update many UserActivityTargets
-     * const userActivityTarget = await prisma.userActivityTarget.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UserActivityTargets and only return the `id`
-     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserActivityTargetUpdateManyAndReturnArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one UserActivityTarget.
-     * @param {UserActivityTargetUpsertArgs} args - Arguments to update or create a UserActivityTarget.
-     * @example
-     * // Update or create a UserActivityTarget
-     * const userActivityTarget = await prisma.userActivityTarget.upsert({
-     *   create: {
-     *     // ... data to create a UserActivityTarget
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserActivityTarget we want to update
-     *   }
-     * })
-     */
-    upsert<T extends UserActivityTargetUpsertArgs>(args: SelectSubset<T, UserActivityTargetUpsertArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of UserActivityTargets.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetCountArgs} args - Arguments to filter UserActivityTargets to count.
-     * @example
-     * // Count the number of UserActivityTargets
-     * const count = await prisma.userActivityTarget.count({
-     *   where: {
-     *     // ... the filter for the UserActivityTargets we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserActivityTargetCountArgs>(
-      args?: Subset<T, UserActivityTargetCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserActivityTargetCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserActivityTarget.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserActivityTargetAggregateArgs>(args: Subset<T, UserActivityTargetAggregateArgs>): Prisma.PrismaPromise<GetUserActivityTargetAggregateType<T>>
-
-    /**
-     * Group by UserActivityTarget.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserActivityTargetGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserActivityTargetGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserActivityTargetGroupByArgs['orderBy'] }
-        : { orderBy?: UserActivityTargetGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserActivityTargetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserActivityTargetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UserActivityTarget model
-   */
-  readonly fields: UserActivityTargetFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserActivityTarget.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UserActivityTargetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the UserActivityTarget model
-   */
-  interface UserActivityTargetFieldRefs {
-    readonly id: FieldRef<"UserActivityTarget", 'String'>
-    readonly userId: FieldRef<"UserActivityTarget", 'String'>
-    readonly cycle: FieldRef<"UserActivityTarget", 'ActivityTargetCycle'>
-    readonly activeWeekDays: FieldRef<"UserActivityTarget", 'ActivityWeekDay[]'>
-    readonly requiredCustomers: FieldRef<"UserActivityTarget", 'Int'>
-    readonly customerReward: FieldRef<"UserActivityTarget", 'Float'>
-    readonly customerMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
-    readonly requiredCommunications: FieldRef<"UserActivityTarget", 'Int'>
-    readonly communicationReward: FieldRef<"UserActivityTarget", 'Float'>
-    readonly communicationMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
-    readonly startsAt: FieldRef<"UserActivityTarget", 'DateTime'>
-    readonly endedAt: FieldRef<"UserActivityTarget", 'DateTime'>
-    readonly isActive: FieldRef<"UserActivityTarget", 'Boolean'>
-    readonly createdAt: FieldRef<"UserActivityTarget", 'DateTime'>
-    readonly updatedAt: FieldRef<"UserActivityTarget", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UserActivityTarget findUnique
-   */
-  export type UserActivityTargetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter, which UserActivityTarget to fetch.
-     */
-    where: UserActivityTargetWhereUniqueInput
-  }
-
-  /**
-   * UserActivityTarget findUniqueOrThrow
-   */
-  export type UserActivityTargetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter, which UserActivityTarget to fetch.
-     */
-    where: UserActivityTargetWhereUniqueInput
-  }
-
-  /**
-   * UserActivityTarget findFirst
-   */
-  export type UserActivityTargetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter, which UserActivityTarget to fetch.
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserActivityTargets to fetch.
-     */
-    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserActivityTargets.
-     */
-    cursor?: UserActivityTargetWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserActivityTargets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserActivityTargets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserActivityTargets.
-     */
-    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
-  }
-
-  /**
-   * UserActivityTarget findFirstOrThrow
-   */
-  export type UserActivityTargetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter, which UserActivityTarget to fetch.
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserActivityTargets to fetch.
-     */
-    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserActivityTargets.
-     */
-    cursor?: UserActivityTargetWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserActivityTargets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserActivityTargets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserActivityTargets.
-     */
-    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
-  }
-
-  /**
-   * UserActivityTarget findMany
-   */
-  export type UserActivityTargetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter, which UserActivityTargets to fetch.
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserActivityTargets to fetch.
-     */
-    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserActivityTargets.
-     */
-    cursor?: UserActivityTargetWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserActivityTargets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserActivityTargets.
-     */
-    skip?: number
-    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
-  }
-
-  /**
-   * UserActivityTarget create
-   */
-  export type UserActivityTargetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * The data needed to create a UserActivityTarget.
-     */
-    data: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
-  }
-
-  /**
-   * UserActivityTarget createMany
-   */
-  export type UserActivityTargetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UserActivityTargets.
-     */
-    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UserActivityTarget createManyAndReturn
-   */
-  export type UserActivityTargetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * The data used to create many UserActivityTargets.
-     */
-    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserActivityTarget update
-   */
-  export type UserActivityTargetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * The data needed to update a UserActivityTarget.
-     */
-    data: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
-    /**
-     * Choose, which UserActivityTarget to update.
-     */
-    where: UserActivityTargetWhereUniqueInput
-  }
-
-  /**
-   * UserActivityTarget updateMany
-   */
-  export type UserActivityTargetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UserActivityTargets.
-     */
-    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
-    /**
-     * Filter which UserActivityTargets to update
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * Limit how many UserActivityTargets to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserActivityTarget updateManyAndReturn
-   */
-  export type UserActivityTargetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * The data used to update UserActivityTargets.
-     */
-    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
-    /**
-     * Filter which UserActivityTargets to update
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * Limit how many UserActivityTargets to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserActivityTarget upsert
-   */
-  export type UserActivityTargetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserActivityTarget to update in case it exists.
-     */
-    where: UserActivityTargetWhereUniqueInput
-    /**
-     * In case the UserActivityTarget found by the `where` argument doesn't exist, create a new UserActivityTarget with this data.
-     */
-    create: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
-    /**
-     * In case the UserActivityTarget was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
-  }
-
-  /**
-   * UserActivityTarget delete
-   */
-  export type UserActivityTargetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
-    /**
-     * Filter which UserActivityTarget to delete.
-     */
-    where: UserActivityTargetWhereUniqueInput
-  }
-
-  /**
-   * UserActivityTarget deleteMany
-   */
-  export type UserActivityTargetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserActivityTargets to delete
-     */
-    where?: UserActivityTargetWhereInput
-    /**
-     * Limit how many UserActivityTargets to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserActivityTarget without action
-   */
-  export type UserActivityTargetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserActivityTarget
-     */
-    select?: UserActivityTargetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserActivityTarget
-     */
-    omit?: UserActivityTargetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserActivityTargetInclude<ExtArgs> | null
   }
 
 
@@ -7517,16 +6608,22 @@ export namespace Prisma {
   export type CategoryMinAggregateOutputType = {
     id: number | null
     name: string | null
+    slug: string | null
+    createdAt: Date | null
   }
 
   export type CategoryMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    slug: string | null
+    createdAt: Date | null
   }
 
   export type CategoryCountAggregateOutputType = {
     id: number
     name: number
+    slug: number
+    createdAt: number
     _all: number
   }
 
@@ -7542,16 +6639,22 @@ export namespace Prisma {
   export type CategoryMinAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
+    createdAt?: true
   }
 
   export type CategoryMaxAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
+    createdAt?: true
   }
 
   export type CategoryCountAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -7644,6 +6747,8 @@ export namespace Prisma {
   export type CategoryGroupByOutputType = {
     id: number
     name: string
+    slug: string | null
+    createdAt: Date
     _count: CategoryCountAggregateOutputType | null
     _avg: CategoryAvgAggregateOutputType | null
     _sum: CategorySumAggregateOutputType | null
@@ -7668,6 +6773,8 @@ export namespace Prisma {
   export type CategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
+    createdAt?: boolean
     products?: boolean | Category$productsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
@@ -7675,19 +6782,25 @@ export namespace Prisma {
   export type CategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
+    createdAt?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
+    createdAt?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectScalar = {
     id?: boolean
     name?: boolean
+    slug?: boolean
+    createdAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "createdAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -7703,6 +6816,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      slug: string | null
+      createdAt: Date
     }, ExtArgs["result"]["category"]>
     composites: {}
   }
@@ -8129,6 +7244,8 @@ export namespace Prisma {
   interface CategoryFieldRefs {
     readonly id: FieldRef<"Category", 'Int'>
     readonly name: FieldRef<"Category", 'String'>
+    readonly slug: FieldRef<"Category", 'String'>
+    readonly createdAt: FieldRef<"Category", 'DateTime'>
   }
     
 
@@ -8574,11 +7691,13 @@ export namespace Prisma {
   export type ProductAvgAggregateOutputType = {
     id: number | null
     categoryId: number | null
+    affiliatePrice: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     id: number | null
     categoryId: number | null
+    affiliatePrice: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -8588,6 +7707,9 @@ export namespace Prisma {
     googleLink: string | null
     categoryId: number | null
     createdAt: Date | null
+    seoSlug: string | null
+    isActive: boolean | null
+    affiliatePrice: number | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -8597,6 +7719,9 @@ export namespace Prisma {
     googleLink: string | null
     categoryId: number | null
     createdAt: Date | null
+    seoSlug: string | null
+    isActive: boolean | null
+    affiliatePrice: number | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -8606,6 +7731,9 @@ export namespace Prisma {
     googleLink: number
     categoryId: number
     createdAt: number
+    seoSlug: number
+    isActive: number
+    affiliatePrice: number
     _all: number
   }
 
@@ -8613,11 +7741,13 @@ export namespace Prisma {
   export type ProductAvgAggregateInputType = {
     id?: true
     categoryId?: true
+    affiliatePrice?: true
   }
 
   export type ProductSumAggregateInputType = {
     id?: true
     categoryId?: true
+    affiliatePrice?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -8627,6 +7757,9 @@ export namespace Prisma {
     googleLink?: true
     categoryId?: true
     createdAt?: true
+    seoSlug?: true
+    isActive?: true
+    affiliatePrice?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -8636,6 +7769,9 @@ export namespace Prisma {
     googleLink?: true
     categoryId?: true
     createdAt?: true
+    seoSlug?: true
+    isActive?: true
+    affiliatePrice?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -8645,6 +7781,9 @@ export namespace Prisma {
     googleLink?: true
     categoryId?: true
     createdAt?: true
+    seoSlug?: true
+    isActive?: true
+    affiliatePrice?: true
     _all?: true
   }
 
@@ -8741,6 +7880,9 @@ export namespace Prisma {
     googleLink: string | null
     categoryId: number | null
     createdAt: Date
+    seoSlug: string | null
+    isActive: boolean
+    affiliatePrice: number
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -8769,6 +7911,9 @@ export namespace Prisma {
     googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
+    seoSlug?: boolean
+    isActive?: boolean
+    affiliatePrice?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -8776,6 +7921,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -8786,6 +7932,9 @@ export namespace Prisma {
     googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
+    seoSlug?: boolean
+    isActive?: boolean
+    affiliatePrice?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -8796,6 +7945,9 @@ export namespace Prisma {
     googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
+    seoSlug?: boolean
+    isActive?: boolean
+    affiliatePrice?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -8806,9 +7958,12 @@ export namespace Prisma {
     googleLink?: boolean
     categoryId?: boolean
     createdAt?: boolean
+    seoSlug?: boolean
+    isActive?: boolean
+    affiliatePrice?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "affiliatePrice", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8817,6 +7972,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8836,6 +7992,7 @@ export namespace Prisma {
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
       warrantiesAsProduct: Prisma.$WarrantyPayload<ExtArgs>[]
+      affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8844,6 +8001,9 @@ export namespace Prisma {
       googleLink: string | null
       categoryId: number | null
       createdAt: Date
+      seoSlug: string | null
+      isActive: boolean
+      affiliatePrice: number
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -9245,6 +8405,7 @@ export namespace Prisma {
     stocks<T extends Product$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Product$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends Product$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warrantiesAsProduct<T extends Product$warrantiesAsProductArgs<ExtArgs> = {}>(args?: Subset<T, Product$warrantiesAsProductArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    affiliateLinks<T extends Product$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, Product$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9280,6 +8441,9 @@ export namespace Prisma {
     readonly googleLink: FieldRef<"Product", 'String'>
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
+    readonly seoSlug: FieldRef<"Product", 'String'>
+    readonly isActive: FieldRef<"Product", 'Boolean'>
+    readonly affiliatePrice: FieldRef<"Product", 'Float'>
   }
     
 
@@ -9836,6 +9000,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
+  }
+
+  /**
+   * Product.affiliateLinks
+   */
+  export type Product$affiliateLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    where?: AffiliateLinkWhereInput
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    cursor?: AffiliateLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AffiliateLinkScalarFieldEnum | AffiliateLinkScalarFieldEnum[]
   }
 
   /**
@@ -14506,6 +13694,1244 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserTargetInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserActivityTarget
+   */
+
+  export type AggregateUserActivityTarget = {
+    _count: UserActivityTargetCountAggregateOutputType | null
+    _avg: UserActivityTargetAvgAggregateOutputType | null
+    _sum: UserActivityTargetSumAggregateOutputType | null
+    _min: UserActivityTargetMinAggregateOutputType | null
+    _max: UserActivityTargetMaxAggregateOutputType | null
+  }
+
+  export type UserActivityTargetAvgAggregateOutputType = {
+    requiredCustomers: number | null
+    customerReward: number | null
+    customerMissPenaltyAmount: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
+  }
+
+  export type UserActivityTargetSumAggregateOutputType = {
+    requiredCustomers: number | null
+    customerReward: number | null
+    customerMissPenaltyAmount: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
+  }
+
+  export type UserActivityTargetMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cycle: $Enums.ActivityTargetCycle | null
+    requiredCustomers: number | null
+    customerReward: number | null
+    customerMissPenaltyAmount: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
+    startsAt: Date | null
+    endedAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserActivityTargetMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cycle: $Enums.ActivityTargetCycle | null
+    requiredCustomers: number | null
+    customerReward: number | null
+    customerMissPenaltyAmount: number | null
+    requiredCommunications: number | null
+    communicationReward: number | null
+    communicationMissPenaltyAmount: number | null
+    startsAt: Date | null
+    endedAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserActivityTargetCountAggregateOutputType = {
+    id: number
+    userId: number
+    cycle: number
+    activeWeekDays: number
+    requiredCustomers: number
+    customerReward: number
+    customerMissPenaltyAmount: number
+    requiredCommunications: number
+    communicationReward: number
+    communicationMissPenaltyAmount: number
+    startsAt: number
+    endedAt: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserActivityTargetAvgAggregateInputType = {
+    requiredCustomers?: true
+    customerReward?: true
+    customerMissPenaltyAmount?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    communicationMissPenaltyAmount?: true
+  }
+
+  export type UserActivityTargetSumAggregateInputType = {
+    requiredCustomers?: true
+    customerReward?: true
+    customerMissPenaltyAmount?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    communicationMissPenaltyAmount?: true
+  }
+
+  export type UserActivityTargetMinAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    requiredCustomers?: true
+    customerReward?: true
+    customerMissPenaltyAmount?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    communicationMissPenaltyAmount?: true
+    startsAt?: true
+    endedAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserActivityTargetMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    requiredCustomers?: true
+    customerReward?: true
+    customerMissPenaltyAmount?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    communicationMissPenaltyAmount?: true
+    startsAt?: true
+    endedAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserActivityTargetCountAggregateInputType = {
+    id?: true
+    userId?: true
+    cycle?: true
+    activeWeekDays?: true
+    requiredCustomers?: true
+    customerReward?: true
+    customerMissPenaltyAmount?: true
+    requiredCommunications?: true
+    communicationReward?: true
+    communicationMissPenaltyAmount?: true
+    startsAt?: true
+    endedAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserActivityTargetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivityTarget to aggregate.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserActivityTargets
+    **/
+    _count?: true | UserActivityTargetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserActivityTargetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserActivityTargetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserActivityTargetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserActivityTargetMaxAggregateInputType
+  }
+
+  export type GetUserActivityTargetAggregateType<T extends UserActivityTargetAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserActivityTarget]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserActivityTarget[P]>
+      : GetScalarType<T[P], AggregateUserActivityTarget[P]>
+  }
+
+
+
+
+  export type UserActivityTargetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserActivityTargetWhereInput
+    orderBy?: UserActivityTargetOrderByWithAggregationInput | UserActivityTargetOrderByWithAggregationInput[]
+    by: UserActivityTargetScalarFieldEnum[] | UserActivityTargetScalarFieldEnum
+    having?: UserActivityTargetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserActivityTargetCountAggregateInputType | true
+    _avg?: UserActivityTargetAvgAggregateInputType
+    _sum?: UserActivityTargetSumAggregateInputType
+    _min?: UserActivityTargetMinAggregateInputType
+    _max?: UserActivityTargetMaxAggregateInputType
+  }
+
+  export type UserActivityTargetGroupByOutputType = {
+    id: string
+    userId: string
+    cycle: $Enums.ActivityTargetCycle
+    activeWeekDays: $Enums.ActivityWeekDay[]
+    requiredCustomers: number
+    customerReward: number
+    customerMissPenaltyAmount: number
+    requiredCommunications: number
+    communicationReward: number
+    communicationMissPenaltyAmount: number
+    startsAt: Date
+    endedAt: Date | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: UserActivityTargetCountAggregateOutputType | null
+    _avg: UserActivityTargetAvgAggregateOutputType | null
+    _sum: UserActivityTargetSumAggregateOutputType | null
+    _min: UserActivityTargetMinAggregateOutputType | null
+    _max: UserActivityTargetMaxAggregateOutputType | null
+  }
+
+  type GetUserActivityTargetGroupByPayload<T extends UserActivityTargetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserActivityTargetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserActivityTargetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
+            : GetScalarType<T[P], UserActivityTargetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserActivityTargetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    activeWeekDays?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    customerMissPenaltyAmount?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
+    startsAt?: boolean
+    endedAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    activeWeekDays?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    customerMissPenaltyAmount?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
+    startsAt?: boolean
+    endedAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    activeWeekDays?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    customerMissPenaltyAmount?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
+    startsAt?: boolean
+    endedAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivityTarget"]>
+
+  export type UserActivityTargetSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    cycle?: boolean
+    activeWeekDays?: boolean
+    requiredCustomers?: boolean
+    customerReward?: boolean
+    customerMissPenaltyAmount?: boolean
+    requiredCommunications?: boolean
+    communicationReward?: boolean
+    communicationMissPenaltyAmount?: boolean
+    startsAt?: boolean
+    endedAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserActivityTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cycle" | "activeWeekDays" | "requiredCustomers" | "customerReward" | "customerMissPenaltyAmount" | "requiredCommunications" | "communicationReward" | "communicationMissPenaltyAmount" | "startsAt" | "endedAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["userActivityTarget"]>
+  export type UserActivityTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivityTargetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserActivityTargetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserActivityTarget"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      cycle: $Enums.ActivityTargetCycle
+      activeWeekDays: $Enums.ActivityWeekDay[]
+      requiredCustomers: number
+      customerReward: number
+      customerMissPenaltyAmount: number
+      requiredCommunications: number
+      communicationReward: number
+      communicationMissPenaltyAmount: number
+      startsAt: Date
+      endedAt: Date | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userActivityTarget"]>
+    composites: {}
+  }
+
+  type UserActivityTargetGetPayload<S extends boolean | null | undefined | UserActivityTargetDefaultArgs> = $Result.GetResult<Prisma.$UserActivityTargetPayload, S>
+
+  type UserActivityTargetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserActivityTargetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserActivityTargetCountAggregateInputType | true
+    }
+
+  export interface UserActivityTargetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserActivityTarget'], meta: { name: 'UserActivityTarget' } }
+    /**
+     * Find zero or one UserActivityTarget that matches the filter.
+     * @param {UserActivityTargetFindUniqueArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserActivityTargetFindUniqueArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserActivityTarget that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserActivityTargetFindUniqueOrThrowArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserActivityTargetFindUniqueOrThrowArgs>(args: SelectSubset<T, UserActivityTargetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivityTarget that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindFirstArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserActivityTargetFindFirstArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivityTarget that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindFirstOrThrowArgs} args - Arguments to find a UserActivityTarget
+     * @example
+     * // Get one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserActivityTargetFindFirstOrThrowArgs>(args?: SelectSubset<T, UserActivityTargetFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserActivityTargets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserActivityTargets
+     * const userActivityTargets = await prisma.userActivityTarget.findMany()
+     * 
+     * // Get first 10 UserActivityTargets
+     * const userActivityTargets = await prisma.userActivityTarget.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserActivityTargetFindManyArgs>(args?: SelectSubset<T, UserActivityTargetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserActivityTarget.
+     * @param {UserActivityTargetCreateArgs} args - Arguments to create a UserActivityTarget.
+     * @example
+     * // Create one UserActivityTarget
+     * const UserActivityTarget = await prisma.userActivityTarget.create({
+     *   data: {
+     *     // ... data to create a UserActivityTarget
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserActivityTargetCreateArgs>(args: SelectSubset<T, UserActivityTargetCreateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserActivityTargets.
+     * @param {UserActivityTargetCreateManyArgs} args - Arguments to create many UserActivityTargets.
+     * @example
+     * // Create many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserActivityTargetCreateManyArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserActivityTargets and returns the data saved in the database.
+     * @param {UserActivityTargetCreateManyAndReturnArgs} args - Arguments to create many UserActivityTargets.
+     * @example
+     * // Create many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserActivityTargets and only return the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserActivityTargetCreateManyAndReturnArgs>(args?: SelectSubset<T, UserActivityTargetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserActivityTarget.
+     * @param {UserActivityTargetDeleteArgs} args - Arguments to delete one UserActivityTarget.
+     * @example
+     * // Delete one UserActivityTarget
+     * const UserActivityTarget = await prisma.userActivityTarget.delete({
+     *   where: {
+     *     // ... filter to delete one UserActivityTarget
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserActivityTargetDeleteArgs>(args: SelectSubset<T, UserActivityTargetDeleteArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserActivityTarget.
+     * @param {UserActivityTargetUpdateArgs} args - Arguments to update one UserActivityTarget.
+     * @example
+     * // Update one UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserActivityTargetUpdateArgs>(args: SelectSubset<T, UserActivityTargetUpdateArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserActivityTargets.
+     * @param {UserActivityTargetDeleteManyArgs} args - Arguments to filter UserActivityTargets to delete.
+     * @example
+     * // Delete a few UserActivityTargets
+     * const { count } = await prisma.userActivityTarget.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserActivityTargetDeleteManyArgs>(args?: SelectSubset<T, UserActivityTargetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivityTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserActivityTargetUpdateManyArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivityTargets and returns the data updated in the database.
+     * @param {UserActivityTargetUpdateManyAndReturnArgs} args - Arguments to update many UserActivityTargets.
+     * @example
+     * // Update many UserActivityTargets
+     * const userActivityTarget = await prisma.userActivityTarget.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserActivityTargets and only return the `id`
+     * const userActivityTargetWithIdOnly = await prisma.userActivityTarget.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserActivityTargetUpdateManyAndReturnArgs>(args: SelectSubset<T, UserActivityTargetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserActivityTarget.
+     * @param {UserActivityTargetUpsertArgs} args - Arguments to update or create a UserActivityTarget.
+     * @example
+     * // Update or create a UserActivityTarget
+     * const userActivityTarget = await prisma.userActivityTarget.upsert({
+     *   create: {
+     *     // ... data to create a UserActivityTarget
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserActivityTarget we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserActivityTargetUpsertArgs>(args: SelectSubset<T, UserActivityTargetUpsertArgs<ExtArgs>>): Prisma__UserActivityTargetClient<$Result.GetResult<Prisma.$UserActivityTargetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserActivityTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetCountArgs} args - Arguments to filter UserActivityTargets to count.
+     * @example
+     * // Count the number of UserActivityTargets
+     * const count = await prisma.userActivityTarget.count({
+     *   where: {
+     *     // ... the filter for the UserActivityTargets we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserActivityTargetCountArgs>(
+      args?: Subset<T, UserActivityTargetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserActivityTargetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserActivityTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserActivityTargetAggregateArgs>(args: Subset<T, UserActivityTargetAggregateArgs>): Prisma.PrismaPromise<GetUserActivityTargetAggregateType<T>>
+
+    /**
+     * Group by UserActivityTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivityTargetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserActivityTargetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserActivityTargetGroupByArgs['orderBy'] }
+        : { orderBy?: UserActivityTargetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserActivityTargetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserActivityTargetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserActivityTarget model
+   */
+  readonly fields: UserActivityTargetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserActivityTarget.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserActivityTargetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserActivityTarget model
+   */
+  interface UserActivityTargetFieldRefs {
+    readonly id: FieldRef<"UserActivityTarget", 'String'>
+    readonly userId: FieldRef<"UserActivityTarget", 'String'>
+    readonly cycle: FieldRef<"UserActivityTarget", 'ActivityTargetCycle'>
+    readonly activeWeekDays: FieldRef<"UserActivityTarget", 'ActivityWeekDay[]'>
+    readonly requiredCustomers: FieldRef<"UserActivityTarget", 'Int'>
+    readonly customerReward: FieldRef<"UserActivityTarget", 'Float'>
+    readonly customerMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
+    readonly requiredCommunications: FieldRef<"UserActivityTarget", 'Int'>
+    readonly communicationReward: FieldRef<"UserActivityTarget", 'Float'>
+    readonly communicationMissPenaltyAmount: FieldRef<"UserActivityTarget", 'Float'>
+    readonly startsAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly endedAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly isActive: FieldRef<"UserActivityTarget", 'Boolean'>
+    readonly createdAt: FieldRef<"UserActivityTarget", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserActivityTarget", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserActivityTarget findUnique
+   */
+  export type UserActivityTargetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget findUniqueOrThrow
+   */
+  export type UserActivityTargetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget findFirst
+   */
+  export type UserActivityTargetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivityTargets.
+     */
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget findFirstOrThrow
+   */
+  export type UserActivityTargetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTarget to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivityTargets.
+     */
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget findMany
+   */
+  export type UserActivityTargetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivityTargets to fetch.
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivityTargets to fetch.
+     */
+    orderBy?: UserActivityTargetOrderByWithRelationInput | UserActivityTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserActivityTargets.
+     */
+    cursor?: UserActivityTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivityTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivityTargets.
+     */
+    skip?: number
+    distinct?: UserActivityTargetScalarFieldEnum | UserActivityTargetScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivityTarget create
+   */
+  export type UserActivityTargetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserActivityTarget.
+     */
+    data: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
+  }
+
+  /**
+   * UserActivityTarget createMany
+   */
+  export type UserActivityTargetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserActivityTargets.
+     */
+    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserActivityTarget createManyAndReturn
+   */
+  export type UserActivityTargetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserActivityTargets.
+     */
+    data: UserActivityTargetCreateManyInput | UserActivityTargetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivityTarget update
+   */
+  export type UserActivityTargetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserActivityTarget.
+     */
+    data: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
+    /**
+     * Choose, which UserActivityTarget to update.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget updateMany
+   */
+  export type UserActivityTargetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserActivityTargets.
+     */
+    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivityTargets to update
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivityTarget updateManyAndReturn
+   */
+  export type UserActivityTargetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * The data used to update UserActivityTargets.
+     */
+    data: XOR<UserActivityTargetUpdateManyMutationInput, UserActivityTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivityTargets to update
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivityTarget upsert
+   */
+  export type UserActivityTargetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserActivityTarget to update in case it exists.
+     */
+    where: UserActivityTargetWhereUniqueInput
+    /**
+     * In case the UserActivityTarget found by the `where` argument doesn't exist, create a new UserActivityTarget with this data.
+     */
+    create: XOR<UserActivityTargetCreateInput, UserActivityTargetUncheckedCreateInput>
+    /**
+     * In case the UserActivityTarget was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserActivityTargetUpdateInput, UserActivityTargetUncheckedUpdateInput>
+  }
+
+  /**
+   * UserActivityTarget delete
+   */
+  export type UserActivityTargetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
+    /**
+     * Filter which UserActivityTarget to delete.
+     */
+    where: UserActivityTargetWhereUniqueInput
+  }
+
+  /**
+   * UserActivityTarget deleteMany
+   */
+  export type UserActivityTargetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivityTargets to delete
+     */
+    where?: UserActivityTargetWhereInput
+    /**
+     * Limit how many UserActivityTargets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivityTarget without action
+   */
+  export type UserActivityTargetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivityTarget
+     */
+    select?: UserActivityTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivityTarget
+     */
+    omit?: UserActivityTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivityTargetInclude<ExtArgs> | null
   }
 
 
@@ -20365,8 +20791,8 @@ export namespace Prisma {
     userId: string | null
     warehouseId: number | null
     shippingId: number | null
-    createdAt: Date | null
     manualCreatedAt: Date | null
+    createdAt: Date | null
     updatedAt: Date | null
   }
 
@@ -20402,8 +20828,8 @@ export namespace Prisma {
     userId: string | null
     warehouseId: number | null
     shippingId: number | null
-    createdAt: Date | null
     manualCreatedAt: Date | null
+    createdAt: Date | null
     updatedAt: Date | null
   }
 
@@ -20440,8 +20866,8 @@ export namespace Prisma {
     userId: number
     warehouseId: number
     shippingId: number
-    createdAt: number
     manualCreatedAt: number
+    createdAt: number
     updatedAt: number
     _all: number
   }
@@ -20507,8 +20933,8 @@ export namespace Prisma {
     userId?: true
     warehouseId?: true
     shippingId?: true
-    createdAt?: true
     manualCreatedAt?: true
+    createdAt?: true
     updatedAt?: true
   }
 
@@ -20544,8 +20970,8 @@ export namespace Prisma {
     userId?: true
     warehouseId?: true
     shippingId?: true
-    createdAt?: true
     manualCreatedAt?: true
+    createdAt?: true
     updatedAt?: true
   }
 
@@ -20582,8 +21008,8 @@ export namespace Prisma {
     userId?: true
     warehouseId?: true
     shippingId?: true
-    createdAt?: true
     manualCreatedAt?: true
+    createdAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -20707,8 +21133,8 @@ export namespace Prisma {
     userId: string | null
     warehouseId: number | null
     shippingId: number | null
-    createdAt: Date
     manualCreatedAt: Date | null
+    createdAt: Date
     updatedAt: Date
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -20764,14 +21190,15 @@ export namespace Prisma {
     userId?: boolean
     warehouseId?: boolean
     shippingId?: boolean
-    createdAt?: boolean
     manualCreatedAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     warehouse?: boolean | Order$warehouseArgs<ExtArgs>
     shipping?: boolean | Order$shippingArgs<ExtArgs>
+    commissions?: boolean | Order$commissionsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -20808,8 +21235,8 @@ export namespace Prisma {
     userId?: boolean
     warehouseId?: boolean
     shippingId?: boolean
-    createdAt?: boolean
     manualCreatedAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -20850,8 +21277,8 @@ export namespace Prisma {
     userId?: boolean
     warehouseId?: boolean
     shippingId?: boolean
-    createdAt?: boolean
     manualCreatedAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
@@ -20892,18 +21319,19 @@ export namespace Prisma {
     userId?: boolean
     warehouseId?: boolean
     shippingId?: boolean
-    createdAt?: boolean
     manualCreatedAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "carrierCollectionReceivedAt" | "carrierCollectionReceivedAmount" | "carrierCollectionNotes" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "pay" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "createdAt" | "manualCreatedAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "usdToTryRateAtOrder" | "shippingPrice" | "moneyTransferCommission" | "otherCommissions" | "carrierCollectionReceivedAt" | "carrierCollectionReceivedAmount" | "carrierCollectionNotes" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "pay" | "receiverName" | "receiverPhone" | "country" | "city" | "invoiceImage" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "amount" | "amountBank" | "deliveryMethod" | "additionalNotes" | "status" | "customerId" | "userId" | "warehouseId" | "shippingId" | "manualCreatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     user?: boolean | Order$userArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     warehouse?: boolean | Order$warehouseArgs<ExtArgs>
     shipping?: boolean | Order$shippingArgs<ExtArgs>
+    commissions?: boolean | Order$commissionsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20927,6 +21355,7 @@ export namespace Prisma {
       items: Prisma.$OrderItemPayload<ExtArgs>[]
       warehouse: Prisma.$WarehousePayload<ExtArgs> | null
       shipping: Prisma.$shippingPayload<ExtArgs> | null
+      commissions: Prisma.$CommissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -20961,8 +21390,8 @@ export namespace Prisma {
       userId: string | null
       warehouseId: number | null
       shippingId: number | null
-      createdAt: Date
       manualCreatedAt: Date | null
+      createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -21363,6 +21792,7 @@ export namespace Prisma {
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warehouse<T extends Order$warehouseArgs<ExtArgs> = {}>(args?: Subset<T, Order$warehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     shipping<T extends Order$shippingArgs<ExtArgs> = {}>(args?: Subset<T, Order$shippingArgs<ExtArgs>>): Prisma__shippingClient<$Result.GetResult<Prisma.$shippingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    commissions<T extends Order$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, Order$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21424,8 +21854,8 @@ export namespace Prisma {
     readonly userId: FieldRef<"Order", 'String'>
     readonly warehouseId: FieldRef<"Order", 'Int'>
     readonly shippingId: FieldRef<"Order", 'Int'>
-    readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly manualCreatedAt: FieldRef<"Order", 'DateTime'>
+    readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
   }
     
@@ -21901,6 +22331,30 @@ export namespace Prisma {
      */
     include?: shippingInclude<ExtArgs> | null
     where?: shippingWhereInput
+  }
+
+  /**
+   * Order.commissions
+   */
+  export type Order$commissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    where?: CommissionWhereInput
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    cursor?: CommissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
   }
 
   /**
@@ -24277,6 +24731,7 @@ export namespace Prisma {
     discount: number | null
     orderId: number | null
     productId: number | null
+    affiliateLinkId: string | null
   }
 
   export type OrderItemMaxAggregateOutputType = {
@@ -24286,6 +24741,7 @@ export namespace Prisma {
     discount: number | null
     orderId: number | null
     productId: number | null
+    affiliateLinkId: string | null
   }
 
   export type OrderItemCountAggregateOutputType = {
@@ -24295,6 +24751,7 @@ export namespace Prisma {
     discount: number
     orderId: number
     productId: number
+    affiliateLinkId: number
     _all: number
   }
 
@@ -24324,6 +24781,7 @@ export namespace Prisma {
     discount?: true
     orderId?: true
     productId?: true
+    affiliateLinkId?: true
   }
 
   export type OrderItemMaxAggregateInputType = {
@@ -24333,6 +24791,7 @@ export namespace Prisma {
     discount?: true
     orderId?: true
     productId?: true
+    affiliateLinkId?: true
   }
 
   export type OrderItemCountAggregateInputType = {
@@ -24342,6 +24801,7 @@ export namespace Prisma {
     discount?: true
     orderId?: true
     productId?: true
+    affiliateLinkId?: true
     _all?: true
   }
 
@@ -24438,6 +24898,7 @@ export namespace Prisma {
     discount: number
     orderId: number
     productId: number
+    affiliateLinkId: string | null
     _count: OrderItemCountAggregateOutputType | null
     _avg: OrderItemAvgAggregateOutputType | null
     _sum: OrderItemSumAggregateOutputType | null
@@ -24466,8 +24927,10 @@ export namespace Prisma {
     discount?: boolean
     orderId?: boolean
     productId?: boolean
+    affiliateLinkId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -24477,8 +24940,10 @@ export namespace Prisma {
     discount?: boolean
     orderId?: boolean
     productId?: boolean
+    affiliateLinkId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -24488,8 +24953,10 @@ export namespace Prisma {
     discount?: boolean
     orderId?: boolean
     productId?: boolean
+    affiliateLinkId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectScalar = {
@@ -24499,20 +24966,24 @@ export namespace Prisma {
     discount?: boolean
     orderId?: boolean
     productId?: boolean
+    affiliateLinkId?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quantity" | "price" | "discount" | "orderId" | "productId", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quantity" | "price" | "discount" | "orderId" | "productId" | "affiliateLinkId", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }
   export type OrderItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }
   export type OrderItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    affiliateLink?: boolean | OrderItem$affiliateLinkArgs<ExtArgs>
   }
 
   export type $OrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24520,6 +24991,7 @@ export namespace Prisma {
     objects: {
       order: Prisma.$OrderPayload<ExtArgs>
       product: Prisma.$ProductPayload<ExtArgs>
+      affiliateLink: Prisma.$AffiliateLinkPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -24528,6 +25000,7 @@ export namespace Prisma {
       discount: number
       orderId: number
       productId: number
+      affiliateLinkId: string | null
     }, ExtArgs["result"]["orderItem"]>
     composites: {}
   }
@@ -24924,6 +25397,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    affiliateLink<T extends OrderItem$affiliateLinkArgs<ExtArgs> = {}>(args?: Subset<T, OrderItem$affiliateLinkArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24959,6 +25433,7 @@ export namespace Prisma {
     readonly discount: FieldRef<"OrderItem", 'Float'>
     readonly orderId: FieldRef<"OrderItem", 'Int'>
     readonly productId: FieldRef<"OrderItem", 'Int'>
+    readonly affiliateLinkId: FieldRef<"OrderItem", 'String'>
   }
     
 
@@ -25352,6 +25827,25 @@ export namespace Prisma {
      * Limit how many OrderItems to delete.
      */
     limit?: number
+  }
+
+  /**
+   * OrderItem.affiliateLink
+   */
+  export type OrderItem$affiliateLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    where?: AffiliateLinkWhereInput
   }
 
   /**
@@ -28606,6 +29100,2345 @@ export namespace Prisma {
 
 
   /**
+   * Model AffiliateLink
+   */
+
+  export type AggregateAffiliateLink = {
+    _count: AffiliateLinkCountAggregateOutputType | null
+    _avg: AffiliateLinkAvgAggregateOutputType | null
+    _sum: AffiliateLinkSumAggregateOutputType | null
+    _min: AffiliateLinkMinAggregateOutputType | null
+    _max: AffiliateLinkMaxAggregateOutputType | null
+  }
+
+  export type AffiliateLinkAvgAggregateOutputType = {
+    productId: number | null
+    clicks: number | null
+    conversions: number | null
+    commissionRate: number | null
+  }
+
+  export type AffiliateLinkSumAggregateOutputType = {
+    productId: number | null
+    clicks: number | null
+    conversions: number | null
+    commissionRate: number | null
+  }
+
+  export type AffiliateLinkMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    productId: number | null
+    uniqueCode: string | null
+    clicks: number | null
+    conversions: number | null
+    commissionRate: number | null
+    createdAt: Date | null
+  }
+
+  export type AffiliateLinkMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    productId: number | null
+    uniqueCode: string | null
+    clicks: number | null
+    conversions: number | null
+    commissionRate: number | null
+    createdAt: Date | null
+  }
+
+  export type AffiliateLinkCountAggregateOutputType = {
+    id: number
+    userId: number
+    productId: number
+    uniqueCode: number
+    clicks: number
+    conversions: number
+    commissionRate: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AffiliateLinkAvgAggregateInputType = {
+    productId?: true
+    clicks?: true
+    conversions?: true
+    commissionRate?: true
+  }
+
+  export type AffiliateLinkSumAggregateInputType = {
+    productId?: true
+    clicks?: true
+    conversions?: true
+    commissionRate?: true
+  }
+
+  export type AffiliateLinkMinAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    uniqueCode?: true
+    clicks?: true
+    conversions?: true
+    commissionRate?: true
+    createdAt?: true
+  }
+
+  export type AffiliateLinkMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    uniqueCode?: true
+    clicks?: true
+    conversions?: true
+    commissionRate?: true
+    createdAt?: true
+  }
+
+  export type AffiliateLinkCountAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    uniqueCode?: true
+    clicks?: true
+    conversions?: true
+    commissionRate?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AffiliateLinkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateLink to aggregate.
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateLinks to fetch.
+     */
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AffiliateLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AffiliateLinks
+    **/
+    _count?: true | AffiliateLinkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AffiliateLinkAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AffiliateLinkSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AffiliateLinkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AffiliateLinkMaxAggregateInputType
+  }
+
+  export type GetAffiliateLinkAggregateType<T extends AffiliateLinkAggregateArgs> = {
+        [P in keyof T & keyof AggregateAffiliateLink]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAffiliateLink[P]>
+      : GetScalarType<T[P], AggregateAffiliateLink[P]>
+  }
+
+
+
+
+  export type AffiliateLinkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateLinkWhereInput
+    orderBy?: AffiliateLinkOrderByWithAggregationInput | AffiliateLinkOrderByWithAggregationInput[]
+    by: AffiliateLinkScalarFieldEnum[] | AffiliateLinkScalarFieldEnum
+    having?: AffiliateLinkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AffiliateLinkCountAggregateInputType | true
+    _avg?: AffiliateLinkAvgAggregateInputType
+    _sum?: AffiliateLinkSumAggregateInputType
+    _min?: AffiliateLinkMinAggregateInputType
+    _max?: AffiliateLinkMaxAggregateInputType
+  }
+
+  export type AffiliateLinkGroupByOutputType = {
+    id: string
+    userId: string
+    productId: number
+    uniqueCode: string
+    clicks: number
+    conversions: number
+    commissionRate: number
+    createdAt: Date
+    _count: AffiliateLinkCountAggregateOutputType | null
+    _avg: AffiliateLinkAvgAggregateOutputType | null
+    _sum: AffiliateLinkSumAggregateOutputType | null
+    _min: AffiliateLinkMinAggregateOutputType | null
+    _max: AffiliateLinkMaxAggregateOutputType | null
+  }
+
+  type GetAffiliateLinkGroupByPayload<T extends AffiliateLinkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AffiliateLinkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AffiliateLinkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AffiliateLinkGroupByOutputType[P]>
+            : GetScalarType<T[P], AffiliateLinkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AffiliateLinkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    uniqueCode?: boolean
+    clicks?: boolean
+    conversions?: boolean
+    commissionRate?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    orderItems?: boolean | AffiliateLink$orderItemsArgs<ExtArgs>
+    commissions?: boolean | AffiliateLink$commissionsArgs<ExtArgs>
+    _count?: boolean | AffiliateLinkCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateLink"]>
+
+  export type AffiliateLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    uniqueCode?: boolean
+    clicks?: boolean
+    conversions?: boolean
+    commissionRate?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateLink"]>
+
+  export type AffiliateLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    uniqueCode?: boolean
+    clicks?: boolean
+    conversions?: boolean
+    commissionRate?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateLink"]>
+
+  export type AffiliateLinkSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    uniqueCode?: boolean
+    clicks?: boolean
+    conversions?: boolean
+    commissionRate?: boolean
+    createdAt?: boolean
+  }
+
+  export type AffiliateLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "productId" | "uniqueCode" | "clicks" | "conversions" | "commissionRate" | "createdAt", ExtArgs["result"]["affiliateLink"]>
+  export type AffiliateLinkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    orderItems?: boolean | AffiliateLink$orderItemsArgs<ExtArgs>
+    commissions?: boolean | AffiliateLink$commissionsArgs<ExtArgs>
+    _count?: boolean | AffiliateLinkCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AffiliateLinkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type AffiliateLinkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $AffiliateLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AffiliateLink"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+      orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
+      commissions: Prisma.$CommissionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      productId: number
+      uniqueCode: string
+      clicks: number
+      conversions: number
+      commissionRate: number
+      createdAt: Date
+    }, ExtArgs["result"]["affiliateLink"]>
+    composites: {}
+  }
+
+  type AffiliateLinkGetPayload<S extends boolean | null | undefined | AffiliateLinkDefaultArgs> = $Result.GetResult<Prisma.$AffiliateLinkPayload, S>
+
+  type AffiliateLinkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AffiliateLinkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AffiliateLinkCountAggregateInputType | true
+    }
+
+  export interface AffiliateLinkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AffiliateLink'], meta: { name: 'AffiliateLink' } }
+    /**
+     * Find zero or one AffiliateLink that matches the filter.
+     * @param {AffiliateLinkFindUniqueArgs} args - Arguments to find a AffiliateLink
+     * @example
+     * // Get one AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AffiliateLinkFindUniqueArgs>(args: SelectSubset<T, AffiliateLinkFindUniqueArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AffiliateLink that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AffiliateLinkFindUniqueOrThrowArgs} args - Arguments to find a AffiliateLink
+     * @example
+     * // Get one AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AffiliateLinkFindUniqueOrThrowArgs>(args: SelectSubset<T, AffiliateLinkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateLink that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkFindFirstArgs} args - Arguments to find a AffiliateLink
+     * @example
+     * // Get one AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AffiliateLinkFindFirstArgs>(args?: SelectSubset<T, AffiliateLinkFindFirstArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateLink that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkFindFirstOrThrowArgs} args - Arguments to find a AffiliateLink
+     * @example
+     * // Get one AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AffiliateLinkFindFirstOrThrowArgs>(args?: SelectSubset<T, AffiliateLinkFindFirstOrThrowArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AffiliateLinks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AffiliateLinks
+     * const affiliateLinks = await prisma.affiliateLink.findMany()
+     * 
+     * // Get first 10 AffiliateLinks
+     * const affiliateLinks = await prisma.affiliateLink.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const affiliateLinkWithIdOnly = await prisma.affiliateLink.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AffiliateLinkFindManyArgs>(args?: SelectSubset<T, AffiliateLinkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AffiliateLink.
+     * @param {AffiliateLinkCreateArgs} args - Arguments to create a AffiliateLink.
+     * @example
+     * // Create one AffiliateLink
+     * const AffiliateLink = await prisma.affiliateLink.create({
+     *   data: {
+     *     // ... data to create a AffiliateLink
+     *   }
+     * })
+     * 
+     */
+    create<T extends AffiliateLinkCreateArgs>(args: SelectSubset<T, AffiliateLinkCreateArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AffiliateLinks.
+     * @param {AffiliateLinkCreateManyArgs} args - Arguments to create many AffiliateLinks.
+     * @example
+     * // Create many AffiliateLinks
+     * const affiliateLink = await prisma.affiliateLink.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AffiliateLinkCreateManyArgs>(args?: SelectSubset<T, AffiliateLinkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AffiliateLinks and returns the data saved in the database.
+     * @param {AffiliateLinkCreateManyAndReturnArgs} args - Arguments to create many AffiliateLinks.
+     * @example
+     * // Create many AffiliateLinks
+     * const affiliateLink = await prisma.affiliateLink.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AffiliateLinks and only return the `id`
+     * const affiliateLinkWithIdOnly = await prisma.affiliateLink.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AffiliateLinkCreateManyAndReturnArgs>(args?: SelectSubset<T, AffiliateLinkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AffiliateLink.
+     * @param {AffiliateLinkDeleteArgs} args - Arguments to delete one AffiliateLink.
+     * @example
+     * // Delete one AffiliateLink
+     * const AffiliateLink = await prisma.affiliateLink.delete({
+     *   where: {
+     *     // ... filter to delete one AffiliateLink
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AffiliateLinkDeleteArgs>(args: SelectSubset<T, AffiliateLinkDeleteArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AffiliateLink.
+     * @param {AffiliateLinkUpdateArgs} args - Arguments to update one AffiliateLink.
+     * @example
+     * // Update one AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AffiliateLinkUpdateArgs>(args: SelectSubset<T, AffiliateLinkUpdateArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AffiliateLinks.
+     * @param {AffiliateLinkDeleteManyArgs} args - Arguments to filter AffiliateLinks to delete.
+     * @example
+     * // Delete a few AffiliateLinks
+     * const { count } = await prisma.affiliateLink.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AffiliateLinkDeleteManyArgs>(args?: SelectSubset<T, AffiliateLinkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AffiliateLinks
+     * const affiliateLink = await prisma.affiliateLink.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AffiliateLinkUpdateManyArgs>(args: SelectSubset<T, AffiliateLinkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateLinks and returns the data updated in the database.
+     * @param {AffiliateLinkUpdateManyAndReturnArgs} args - Arguments to update many AffiliateLinks.
+     * @example
+     * // Update many AffiliateLinks
+     * const affiliateLink = await prisma.affiliateLink.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AffiliateLinks and only return the `id`
+     * const affiliateLinkWithIdOnly = await prisma.affiliateLink.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AffiliateLinkUpdateManyAndReturnArgs>(args: SelectSubset<T, AffiliateLinkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AffiliateLink.
+     * @param {AffiliateLinkUpsertArgs} args - Arguments to update or create a AffiliateLink.
+     * @example
+     * // Update or create a AffiliateLink
+     * const affiliateLink = await prisma.affiliateLink.upsert({
+     *   create: {
+     *     // ... data to create a AffiliateLink
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AffiliateLink we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AffiliateLinkUpsertArgs>(args: SelectSubset<T, AffiliateLinkUpsertArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AffiliateLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkCountArgs} args - Arguments to filter AffiliateLinks to count.
+     * @example
+     * // Count the number of AffiliateLinks
+     * const count = await prisma.affiliateLink.count({
+     *   where: {
+     *     // ... the filter for the AffiliateLinks we want to count
+     *   }
+     * })
+    **/
+    count<T extends AffiliateLinkCountArgs>(
+      args?: Subset<T, AffiliateLinkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AffiliateLinkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AffiliateLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AffiliateLinkAggregateArgs>(args: Subset<T, AffiliateLinkAggregateArgs>): Prisma.PrismaPromise<GetAffiliateLinkAggregateType<T>>
+
+    /**
+     * Group by AffiliateLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateLinkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AffiliateLinkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AffiliateLinkGroupByArgs['orderBy'] }
+        : { orderBy?: AffiliateLinkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AffiliateLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAffiliateLinkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AffiliateLink model
+   */
+  readonly fields: AffiliateLinkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AffiliateLink.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AffiliateLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    orderItems<T extends AffiliateLink$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateLink$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    commissions<T extends AffiliateLink$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateLink$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AffiliateLink model
+   */
+  interface AffiliateLinkFieldRefs {
+    readonly id: FieldRef<"AffiliateLink", 'String'>
+    readonly userId: FieldRef<"AffiliateLink", 'String'>
+    readonly productId: FieldRef<"AffiliateLink", 'Int'>
+    readonly uniqueCode: FieldRef<"AffiliateLink", 'String'>
+    readonly clicks: FieldRef<"AffiliateLink", 'Int'>
+    readonly conversions: FieldRef<"AffiliateLink", 'Int'>
+    readonly commissionRate: FieldRef<"AffiliateLink", 'Float'>
+    readonly createdAt: FieldRef<"AffiliateLink", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AffiliateLink findUnique
+   */
+  export type AffiliateLinkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateLink to fetch.
+     */
+    where: AffiliateLinkWhereUniqueInput
+  }
+
+  /**
+   * AffiliateLink findUniqueOrThrow
+   */
+  export type AffiliateLinkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateLink to fetch.
+     */
+    where: AffiliateLinkWhereUniqueInput
+  }
+
+  /**
+   * AffiliateLink findFirst
+   */
+  export type AffiliateLinkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateLink to fetch.
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateLinks to fetch.
+     */
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateLinks.
+     */
+    cursor?: AffiliateLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateLinks.
+     */
+    distinct?: AffiliateLinkScalarFieldEnum | AffiliateLinkScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateLink findFirstOrThrow
+   */
+  export type AffiliateLinkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateLink to fetch.
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateLinks to fetch.
+     */
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateLinks.
+     */
+    cursor?: AffiliateLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateLinks.
+     */
+    distinct?: AffiliateLinkScalarFieldEnum | AffiliateLinkScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateLink findMany
+   */
+  export type AffiliateLinkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateLinks to fetch.
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateLinks to fetch.
+     */
+    orderBy?: AffiliateLinkOrderByWithRelationInput | AffiliateLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AffiliateLinks.
+     */
+    cursor?: AffiliateLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateLinks.
+     */
+    skip?: number
+    distinct?: AffiliateLinkScalarFieldEnum | AffiliateLinkScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateLink create
+   */
+  export type AffiliateLinkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AffiliateLink.
+     */
+    data: XOR<AffiliateLinkCreateInput, AffiliateLinkUncheckedCreateInput>
+  }
+
+  /**
+   * AffiliateLink createMany
+   */
+  export type AffiliateLinkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AffiliateLinks.
+     */
+    data: AffiliateLinkCreateManyInput | AffiliateLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AffiliateLink createManyAndReturn
+   */
+  export type AffiliateLinkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * The data used to create many AffiliateLinks.
+     */
+    data: AffiliateLinkCreateManyInput | AffiliateLinkCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateLink update
+   */
+  export type AffiliateLinkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AffiliateLink.
+     */
+    data: XOR<AffiliateLinkUpdateInput, AffiliateLinkUncheckedUpdateInput>
+    /**
+     * Choose, which AffiliateLink to update.
+     */
+    where: AffiliateLinkWhereUniqueInput
+  }
+
+  /**
+   * AffiliateLink updateMany
+   */
+  export type AffiliateLinkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AffiliateLinks.
+     */
+    data: XOR<AffiliateLinkUpdateManyMutationInput, AffiliateLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateLinks to update
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * Limit how many AffiliateLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateLink updateManyAndReturn
+   */
+  export type AffiliateLinkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * The data used to update AffiliateLinks.
+     */
+    data: XOR<AffiliateLinkUpdateManyMutationInput, AffiliateLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateLinks to update
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * Limit how many AffiliateLinks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateLink upsert
+   */
+  export type AffiliateLinkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AffiliateLink to update in case it exists.
+     */
+    where: AffiliateLinkWhereUniqueInput
+    /**
+     * In case the AffiliateLink found by the `where` argument doesn't exist, create a new AffiliateLink with this data.
+     */
+    create: XOR<AffiliateLinkCreateInput, AffiliateLinkUncheckedCreateInput>
+    /**
+     * In case the AffiliateLink was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AffiliateLinkUpdateInput, AffiliateLinkUncheckedUpdateInput>
+  }
+
+  /**
+   * AffiliateLink delete
+   */
+  export type AffiliateLinkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+    /**
+     * Filter which AffiliateLink to delete.
+     */
+    where: AffiliateLinkWhereUniqueInput
+  }
+
+  /**
+   * AffiliateLink deleteMany
+   */
+  export type AffiliateLinkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateLinks to delete
+     */
+    where?: AffiliateLinkWhereInput
+    /**
+     * Limit how many AffiliateLinks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateLink.orderItems
+   */
+  export type AffiliateLink$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderItem
+     */
+    select?: OrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderItem
+     */
+    omit?: OrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderItemInclude<ExtArgs> | null
+    where?: OrderItemWhereInput
+    orderBy?: OrderItemOrderByWithRelationInput | OrderItemOrderByWithRelationInput[]
+    cursor?: OrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateLink.commissions
+   */
+  export type AffiliateLink$commissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    where?: CommissionWhereInput
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    cursor?: CommissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateLink without action
+   */
+  export type AffiliateLinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateLink
+     */
+    select?: AffiliateLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateLink
+     */
+    omit?: AffiliateLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateLinkInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Commission
+   */
+
+  export type AggregateCommission = {
+    _count: CommissionCountAggregateOutputType | null
+    _avg: CommissionAvgAggregateOutputType | null
+    _sum: CommissionSumAggregateOutputType | null
+    _min: CommissionMinAggregateOutputType | null
+    _max: CommissionMaxAggregateOutputType | null
+  }
+
+  export type CommissionAvgAggregateOutputType = {
+    orderId: number | null
+    amount: number | null
+  }
+
+  export type CommissionSumAggregateOutputType = {
+    orderId: number | null
+    amount: number | null
+  }
+
+  export type CommissionMinAggregateOutputType = {
+    id: string | null
+    affiliateLinkId: string | null
+    orderId: number | null
+    amount: number | null
+    status: $Enums.CommissionStatus | null
+    createdAt: Date | null
+    paidAt: Date | null
+  }
+
+  export type CommissionMaxAggregateOutputType = {
+    id: string | null
+    affiliateLinkId: string | null
+    orderId: number | null
+    amount: number | null
+    status: $Enums.CommissionStatus | null
+    createdAt: Date | null
+    paidAt: Date | null
+  }
+
+  export type CommissionCountAggregateOutputType = {
+    id: number
+    affiliateLinkId: number
+    orderId: number
+    amount: number
+    status: number
+    createdAt: number
+    paidAt: number
+    _all: number
+  }
+
+
+  export type CommissionAvgAggregateInputType = {
+    orderId?: true
+    amount?: true
+  }
+
+  export type CommissionSumAggregateInputType = {
+    orderId?: true
+    amount?: true
+  }
+
+  export type CommissionMinAggregateInputType = {
+    id?: true
+    affiliateLinkId?: true
+    orderId?: true
+    amount?: true
+    status?: true
+    createdAt?: true
+    paidAt?: true
+  }
+
+  export type CommissionMaxAggregateInputType = {
+    id?: true
+    affiliateLinkId?: true
+    orderId?: true
+    amount?: true
+    status?: true
+    createdAt?: true
+    paidAt?: true
+  }
+
+  export type CommissionCountAggregateInputType = {
+    id?: true
+    affiliateLinkId?: true
+    orderId?: true
+    amount?: true
+    status?: true
+    createdAt?: true
+    paidAt?: true
+    _all?: true
+  }
+
+  export type CommissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Commission to aggregate.
+     */
+    where?: CommissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Commissions to fetch.
+     */
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CommissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Commissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Commissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Commissions
+    **/
+    _count?: true | CommissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CommissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CommissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommissionMaxAggregateInputType
+  }
+
+  export type GetCommissionAggregateType<T extends CommissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateCommission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCommission[P]>
+      : GetScalarType<T[P], AggregateCommission[P]>
+  }
+
+
+
+
+  export type CommissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionWhereInput
+    orderBy?: CommissionOrderByWithAggregationInput | CommissionOrderByWithAggregationInput[]
+    by: CommissionScalarFieldEnum[] | CommissionScalarFieldEnum
+    having?: CommissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommissionCountAggregateInputType | true
+    _avg?: CommissionAvgAggregateInputType
+    _sum?: CommissionSumAggregateInputType
+    _min?: CommissionMinAggregateInputType
+    _max?: CommissionMaxAggregateInputType
+  }
+
+  export type CommissionGroupByOutputType = {
+    id: string
+    affiliateLinkId: string
+    orderId: number
+    amount: number
+    status: $Enums.CommissionStatus
+    createdAt: Date
+    paidAt: Date | null
+    _count: CommissionCountAggregateOutputType | null
+    _avg: CommissionAvgAggregateOutputType | null
+    _sum: CommissionSumAggregateOutputType | null
+    _min: CommissionMinAggregateOutputType | null
+    _max: CommissionMaxAggregateOutputType | null
+  }
+
+  type GetCommissionGroupByPayload<T extends CommissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommissionGroupByOutputType[P]>
+            : GetScalarType<T[P], CommissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CommissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateLinkId?: boolean
+    orderId?: boolean
+    amount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    paidAt?: boolean
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commission"]>
+
+  export type CommissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateLinkId?: boolean
+    orderId?: boolean
+    amount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    paidAt?: boolean
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commission"]>
+
+  export type CommissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateLinkId?: boolean
+    orderId?: boolean
+    amount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    paidAt?: boolean
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commission"]>
+
+  export type CommissionSelectScalar = {
+    id?: boolean
+    affiliateLinkId?: boolean
+    orderId?: boolean
+    amount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    paidAt?: boolean
+  }
+
+  export type CommissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateLinkId" | "orderId" | "amount" | "status" | "createdAt" | "paidAt", ExtArgs["result"]["commission"]>
+  export type CommissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type CommissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type CommissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliateLink?: boolean | AffiliateLinkDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $CommissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Commission"
+    objects: {
+      affiliateLink: Prisma.$AffiliateLinkPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      affiliateLinkId: string
+      orderId: number
+      amount: number
+      status: $Enums.CommissionStatus
+      createdAt: Date
+      paidAt: Date | null
+    }, ExtArgs["result"]["commission"]>
+    composites: {}
+  }
+
+  type CommissionGetPayload<S extends boolean | null | undefined | CommissionDefaultArgs> = $Result.GetResult<Prisma.$CommissionPayload, S>
+
+  type CommissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CommissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CommissionCountAggregateInputType | true
+    }
+
+  export interface CommissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Commission'], meta: { name: 'Commission' } }
+    /**
+     * Find zero or one Commission that matches the filter.
+     * @param {CommissionFindUniqueArgs} args - Arguments to find a Commission
+     * @example
+     * // Get one Commission
+     * const commission = await prisma.commission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CommissionFindUniqueArgs>(args: SelectSubset<T, CommissionFindUniqueArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Commission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CommissionFindUniqueOrThrowArgs} args - Arguments to find a Commission
+     * @example
+     * // Get one Commission
+     * const commission = await prisma.commission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CommissionFindUniqueOrThrowArgs>(args: SelectSubset<T, CommissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Commission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionFindFirstArgs} args - Arguments to find a Commission
+     * @example
+     * // Get one Commission
+     * const commission = await prisma.commission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CommissionFindFirstArgs>(args?: SelectSubset<T, CommissionFindFirstArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Commission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionFindFirstOrThrowArgs} args - Arguments to find a Commission
+     * @example
+     * // Get one Commission
+     * const commission = await prisma.commission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CommissionFindFirstOrThrowArgs>(args?: SelectSubset<T, CommissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Commissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Commissions
+     * const commissions = await prisma.commission.findMany()
+     * 
+     * // Get first 10 Commissions
+     * const commissions = await prisma.commission.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const commissionWithIdOnly = await prisma.commission.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CommissionFindManyArgs>(args?: SelectSubset<T, CommissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Commission.
+     * @param {CommissionCreateArgs} args - Arguments to create a Commission.
+     * @example
+     * // Create one Commission
+     * const Commission = await prisma.commission.create({
+     *   data: {
+     *     // ... data to create a Commission
+     *   }
+     * })
+     * 
+     */
+    create<T extends CommissionCreateArgs>(args: SelectSubset<T, CommissionCreateArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Commissions.
+     * @param {CommissionCreateManyArgs} args - Arguments to create many Commissions.
+     * @example
+     * // Create many Commissions
+     * const commission = await prisma.commission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CommissionCreateManyArgs>(args?: SelectSubset<T, CommissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Commissions and returns the data saved in the database.
+     * @param {CommissionCreateManyAndReturnArgs} args - Arguments to create many Commissions.
+     * @example
+     * // Create many Commissions
+     * const commission = await prisma.commission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Commissions and only return the `id`
+     * const commissionWithIdOnly = await prisma.commission.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CommissionCreateManyAndReturnArgs>(args?: SelectSubset<T, CommissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Commission.
+     * @param {CommissionDeleteArgs} args - Arguments to delete one Commission.
+     * @example
+     * // Delete one Commission
+     * const Commission = await prisma.commission.delete({
+     *   where: {
+     *     // ... filter to delete one Commission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CommissionDeleteArgs>(args: SelectSubset<T, CommissionDeleteArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Commission.
+     * @param {CommissionUpdateArgs} args - Arguments to update one Commission.
+     * @example
+     * // Update one Commission
+     * const commission = await prisma.commission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CommissionUpdateArgs>(args: SelectSubset<T, CommissionUpdateArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Commissions.
+     * @param {CommissionDeleteManyArgs} args - Arguments to filter Commissions to delete.
+     * @example
+     * // Delete a few Commissions
+     * const { count } = await prisma.commission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CommissionDeleteManyArgs>(args?: SelectSubset<T, CommissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Commissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Commissions
+     * const commission = await prisma.commission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CommissionUpdateManyArgs>(args: SelectSubset<T, CommissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Commissions and returns the data updated in the database.
+     * @param {CommissionUpdateManyAndReturnArgs} args - Arguments to update many Commissions.
+     * @example
+     * // Update many Commissions
+     * const commission = await prisma.commission.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Commissions and only return the `id`
+     * const commissionWithIdOnly = await prisma.commission.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CommissionUpdateManyAndReturnArgs>(args: SelectSubset<T, CommissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Commission.
+     * @param {CommissionUpsertArgs} args - Arguments to update or create a Commission.
+     * @example
+     * // Update or create a Commission
+     * const commission = await prisma.commission.upsert({
+     *   create: {
+     *     // ... data to create a Commission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Commission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CommissionUpsertArgs>(args: SelectSubset<T, CommissionUpsertArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Commissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionCountArgs} args - Arguments to filter Commissions to count.
+     * @example
+     * // Count the number of Commissions
+     * const count = await prisma.commission.count({
+     *   where: {
+     *     // ... the filter for the Commissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends CommissionCountArgs>(
+      args?: Subset<T, CommissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Commission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommissionAggregateArgs>(args: Subset<T, CommissionAggregateArgs>): Prisma.PrismaPromise<GetCommissionAggregateType<T>>
+
+    /**
+     * Group by Commission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CommissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CommissionGroupByArgs['orderBy'] }
+        : { orderBy?: CommissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CommissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Commission model
+   */
+  readonly fields: CommissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Commission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CommissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    affiliateLink<T extends AffiliateLinkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateLinkDefaultArgs<ExtArgs>>): Prisma__AffiliateLinkClient<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Commission model
+   */
+  interface CommissionFieldRefs {
+    readonly id: FieldRef<"Commission", 'String'>
+    readonly affiliateLinkId: FieldRef<"Commission", 'String'>
+    readonly orderId: FieldRef<"Commission", 'Int'>
+    readonly amount: FieldRef<"Commission", 'Float'>
+    readonly status: FieldRef<"Commission", 'CommissionStatus'>
+    readonly createdAt: FieldRef<"Commission", 'DateTime'>
+    readonly paidAt: FieldRef<"Commission", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Commission findUnique
+   */
+  export type CommissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Commission to fetch.
+     */
+    where: CommissionWhereUniqueInput
+  }
+
+  /**
+   * Commission findUniqueOrThrow
+   */
+  export type CommissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Commission to fetch.
+     */
+    where: CommissionWhereUniqueInput
+  }
+
+  /**
+   * Commission findFirst
+   */
+  export type CommissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Commission to fetch.
+     */
+    where?: CommissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Commissions to fetch.
+     */
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Commissions.
+     */
+    cursor?: CommissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Commissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Commissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Commissions.
+     */
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
+  }
+
+  /**
+   * Commission findFirstOrThrow
+   */
+  export type CommissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Commission to fetch.
+     */
+    where?: CommissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Commissions to fetch.
+     */
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Commissions.
+     */
+    cursor?: CommissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Commissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Commissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Commissions.
+     */
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
+  }
+
+  /**
+   * Commission findMany
+   */
+  export type CommissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Commissions to fetch.
+     */
+    where?: CommissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Commissions to fetch.
+     */
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Commissions.
+     */
+    cursor?: CommissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Commissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Commissions.
+     */
+    skip?: number
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
+  }
+
+  /**
+   * Commission create
+   */
+  export type CommissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Commission.
+     */
+    data: XOR<CommissionCreateInput, CommissionUncheckedCreateInput>
+  }
+
+  /**
+   * Commission createMany
+   */
+  export type CommissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Commissions.
+     */
+    data: CommissionCreateManyInput | CommissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Commission createManyAndReturn
+   */
+  export type CommissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Commissions.
+     */
+    data: CommissionCreateManyInput | CommissionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Commission update
+   */
+  export type CommissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Commission.
+     */
+    data: XOR<CommissionUpdateInput, CommissionUncheckedUpdateInput>
+    /**
+     * Choose, which Commission to update.
+     */
+    where: CommissionWhereUniqueInput
+  }
+
+  /**
+   * Commission updateMany
+   */
+  export type CommissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Commissions.
+     */
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyInput>
+    /**
+     * Filter which Commissions to update
+     */
+    where?: CommissionWhereInput
+    /**
+     * Limit how many Commissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Commission updateManyAndReturn
+   */
+  export type CommissionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * The data used to update Commissions.
+     */
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyInput>
+    /**
+     * Filter which Commissions to update
+     */
+    where?: CommissionWhereInput
+    /**
+     * Limit how many Commissions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Commission upsert
+   */
+  export type CommissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Commission to update in case it exists.
+     */
+    where: CommissionWhereUniqueInput
+    /**
+     * In case the Commission found by the `where` argument doesn't exist, create a new Commission with this data.
+     */
+    create: XOR<CommissionCreateInput, CommissionUncheckedCreateInput>
+    /**
+     * In case the Commission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CommissionUpdateInput, CommissionUncheckedUpdateInput>
+  }
+
+  /**
+   * Commission delete
+   */
+  export type CommissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    /**
+     * Filter which Commission to delete.
+     */
+    where: CommissionWhereUniqueInput
+  }
+
+  /**
+   * Commission deleteMany
+   */
+  export type CommissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Commissions to delete
+     */
+    where?: CommissionWhereInput
+    /**
+     * Limit how many Commissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Commission without action
+   */
+  export type CommissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -28634,31 +31467,12 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     permissionId: 'permissionId',
-    parentId: 'parentId'
+    parentId: 'parentId',
+    isAffiliate: 'isAffiliate',
+    affiliateCode: 'affiliateCode'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-  export const UserActivityTargetScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    cycle: 'cycle',
-    activeWeekDays: 'activeWeekDays',
-    requiredCustomers: 'requiredCustomers',
-    customerReward: 'customerReward',
-    customerMissPenaltyAmount: 'customerMissPenaltyAmount',
-    requiredCommunications: 'requiredCommunications',
-    communicationReward: 'communicationReward',
-    communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
-    startsAt: 'startsAt',
-    endedAt: 'endedAt',
-    isActive: 'isActive',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type UserActivityTargetScalarFieldEnum = (typeof UserActivityTargetScalarFieldEnum)[keyof typeof UserActivityTargetScalarFieldEnum]
 
 
   export const PermissionScalarFieldEnum: {
@@ -28706,7 +31520,9 @@ export namespace Prisma {
 
   export const CategoryScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    slug: 'slug',
+    createdAt: 'createdAt'
   };
 
   export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -28718,7 +31534,10 @@ export namespace Prisma {
     description: 'description',
     googleLink: 'googleLink',
     categoryId: 'categoryId',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    seoSlug: 'seoSlug',
+    isActive: 'isActive',
+    affiliatePrice: 'affiliatePrice'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -28773,6 +31592,27 @@ export namespace Prisma {
   };
 
   export type UserTargetScalarFieldEnum = (typeof UserTargetScalarFieldEnum)[keyof typeof UserTargetScalarFieldEnum]
+
+
+  export const UserActivityTargetScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    cycle: 'cycle',
+    activeWeekDays: 'activeWeekDays',
+    requiredCustomers: 'requiredCustomers',
+    customerReward: 'customerReward',
+    customerMissPenaltyAmount: 'customerMissPenaltyAmount',
+    requiredCommunications: 'requiredCommunications',
+    communicationReward: 'communicationReward',
+    communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
+    startsAt: 'startsAt',
+    endedAt: 'endedAt',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserActivityTargetScalarFieldEnum = (typeof UserActivityTargetScalarFieldEnum)[keyof typeof UserActivityTargetScalarFieldEnum]
 
 
   export const TargetProductScalarFieldEnum: {
@@ -28878,8 +31718,8 @@ export namespace Prisma {
     userId: 'userId',
     warehouseId: 'warehouseId',
     shippingId: 'shippingId',
-    createdAt: 'createdAt',
     manualCreatedAt: 'manualCreatedAt',
+    createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
@@ -28921,7 +31761,8 @@ export namespace Prisma {
     price: 'price',
     discount: 'discount',
     orderId: 'orderId',
-    productId: 'productId'
+    productId: 'productId',
+    affiliateLinkId: 'affiliateLinkId'
   };
 
   export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -28964,6 +31805,33 @@ export namespace Prisma {
   };
 
   export type EmployeeSalaryAdjustmentScalarFieldEnum = (typeof EmployeeSalaryAdjustmentScalarFieldEnum)[keyof typeof EmployeeSalaryAdjustmentScalarFieldEnum]
+
+
+  export const AffiliateLinkScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    productId: 'productId',
+    uniqueCode: 'uniqueCode',
+    clicks: 'clicks',
+    conversions: 'conversions',
+    commissionRate: 'commissionRate',
+    createdAt: 'createdAt'
+  };
+
+  export type AffiliateLinkScalarFieldEnum = (typeof AffiliateLinkScalarFieldEnum)[keyof typeof AffiliateLinkScalarFieldEnum]
+
+
+  export const CommissionScalarFieldEnum: {
+    id: 'id',
+    affiliateLinkId: 'affiliateLinkId',
+    orderId: 'orderId',
+    amount: 'amount',
+    status: 'status',
+    createdAt: 'createdAt',
+    paidAt: 'paidAt'
+  };
+
+  export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -29066,6 +31934,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'MovementType'
+   */
+  export type EnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MovementType[]'
+   */
+  export type ListEnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ActivityTargetCycle'
    */
   export type EnumActivityTargetCycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityTargetCycle'>
@@ -29090,27 +31979,6 @@ export namespace Prisma {
    * Reference to a field of type 'ActivityWeekDay'
    */
   export type EnumActivityWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityWeekDay'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'MovementType'
-   */
-  export type EnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType'>
-    
-
-
-  /**
-   * Reference to a field of type 'MovementType[]'
-   */
-  export type ListEnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType[]'>
     
 
 
@@ -29168,6 +32036,20 @@ export namespace Prisma {
    */
   export type ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidFromOffice[]'>
     
+
+
+  /**
+   * Reference to a field of type 'CommissionStatus'
+   */
+  export type EnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CommissionStatus[]'
+   */
+  export type ListEnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -29192,6 +32074,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
     parentId?: StringNullableFilter<"User"> | string | null
+    isAffiliate?: BoolFilter<"User"> | boolean
+    affiliateCode?: StringNullableFilter<"User"> | string | null
     parent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
     orders?: OrderListRelationFilter
@@ -29203,6 +32087,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    affiliateLinks?: AffiliateLinkListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -29221,6 +32106,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissionId?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
+    isAffiliate?: SortOrder
+    affiliateCode?: SortOrderInput | SortOrder
     parent?: UserOrderByWithRelationInput
     subordinates?: UserOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
@@ -29232,11 +32119,13 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    affiliateCode?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -29253,6 +32142,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
     parentId?: StringNullableFilter<"User"> | string | null
+    isAffiliate?: BoolFilter<"User"> | boolean
     parent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
     orders?: OrderListRelationFilter
@@ -29264,7 +32154,8 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentListRelationFilter
     expenses?: ExpenseListRelationFilter
     stockMovements?: StockMovementListRelationFilter
-  }, "id" | "email">
+    affiliateLinks?: AffiliateLinkListRelationFilter
+  }, "id" | "email" | "affiliateCode">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -29282,6 +32173,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissionId?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
+    isAffiliate?: SortOrder
+    affiliateCode?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -29308,113 +32201,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     permissionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     parentId?: StringNullableWithAggregatesFilter<"User"> | string | null
-  }
-
-  export type UserActivityTargetWhereInput = {
-    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
-    OR?: UserActivityTargetWhereInput[]
-    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
-    id?: StringFilter<"UserActivityTarget"> | string
-    userId?: StringFilter<"UserActivityTarget"> | string
-    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
-    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
-    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
-    customerReward?: FloatFilter<"UserActivityTarget"> | number
-    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
-    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
-    communicationReward?: FloatFilter<"UserActivityTarget"> | number
-    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
-    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
-    isActive?: BoolFilter<"UserActivityTarget"> | boolean
-    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type UserActivityTargetOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    cycle?: SortOrder
-    activeWeekDays?: SortOrder
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-    startsAt?: SortOrder
-    endedAt?: SortOrderInput | SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type UserActivityTargetWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
-    OR?: UserActivityTargetWhereInput[]
-    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
-    userId?: StringFilter<"UserActivityTarget"> | string
-    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
-    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
-    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
-    customerReward?: FloatFilter<"UserActivityTarget"> | number
-    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
-    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
-    communicationReward?: FloatFilter<"UserActivityTarget"> | number
-    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
-    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
-    isActive?: BoolFilter<"UserActivityTarget"> | boolean
-    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
-
-  export type UserActivityTargetOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    cycle?: SortOrder
-    activeWeekDays?: SortOrder
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-    startsAt?: SortOrder
-    endedAt?: SortOrderInput | SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: UserActivityTargetCountOrderByAggregateInput
-    _avg?: UserActivityTargetAvgOrderByAggregateInput
-    _max?: UserActivityTargetMaxOrderByAggregateInput
-    _min?: UserActivityTargetMinOrderByAggregateInput
-    _sum?: UserActivityTargetSumOrderByAggregateInput
-  }
-
-  export type UserActivityTargetScalarWhereWithAggregatesInput = {
-    AND?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
-    OR?: UserActivityTargetScalarWhereWithAggregatesInput[]
-    NOT?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"UserActivityTarget"> | string
-    userId?: StringWithAggregatesFilter<"UserActivityTarget"> | string
-    cycle?: EnumActivityTargetCycleWithAggregatesFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
-    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
-    requiredCustomers?: IntWithAggregatesFilter<"UserActivityTarget"> | number
-    customerReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
-    customerMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
-    requiredCommunications?: IntWithAggregatesFilter<"UserActivityTarget"> | number
-    communicationReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
-    communicationMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
-    startsAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
-    endedAt?: DateTimeNullableWithAggregatesFilter<"UserActivityTarget"> | Date | string | null
-    isActive?: BoolWithAggregatesFilter<"UserActivityTarget"> | boolean
-    createdAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    isAffiliate?: BoolWithAggregatesFilter<"User"> | boolean
+    affiliateCode?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type PermissionWhereInput = {
@@ -29638,27 +32426,35 @@ export namespace Prisma {
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     id?: IntFilter<"Category"> | number
     name?: StringFilter<"Category"> | string
+    slug?: StringNullableFilter<"Category"> | string | null
+    createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
   }
 
   export type CategoryOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
   }
 
   export type CategoryWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     name?: string
+    slug?: string
     AND?: CategoryWhereInput | CategoryWhereInput[]
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
+    createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
-  }, "id" | "name">
+  }, "id" | "name" | "slug">
 
   export type CategoryOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _avg?: CategoryAvgOrderByAggregateInput
     _max?: CategoryMaxOrderByAggregateInput
@@ -29672,6 +32468,8 @@ export namespace Prisma {
     NOT?: CategoryScalarWhereWithAggregatesInput | CategoryScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Category"> | number
     name?: StringWithAggregatesFilter<"Category"> | string
+    slug?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
   }
 
   export type ProductWhereInput = {
@@ -29684,6 +32482,9 @@ export namespace Prisma {
     googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    seoSlug?: StringNullableFilter<"Product"> | string | null
+    isActive?: BoolFilter<"Product"> | boolean
+    affiliatePrice?: FloatFilter<"Product"> | number
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -29691,6 +32492,7 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     warrantiesAsProduct?: WarrantyListRelationFilter
+    affiliateLinks?: AffiliateLinkListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -29700,6 +32502,9 @@ export namespace Prisma {
     googleLink?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    seoSlug?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    affiliatePrice?: SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     images?: ProductImageOrderByRelationAggregateInput
@@ -29707,10 +32512,12 @@ export namespace Prisma {
     stocks?: ProductStockOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
     warrantiesAsProduct?: WarrantyOrderByRelationAggregateInput
+    affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    seoSlug?: string
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -29719,6 +32526,8 @@ export namespace Prisma {
     googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    isActive?: BoolFilter<"Product"> | boolean
+    affiliatePrice?: FloatFilter<"Product"> | number
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -29726,7 +32535,8 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     warrantiesAsProduct?: WarrantyListRelationFilter
-  }, "id">
+    affiliateLinks?: AffiliateLinkListRelationFilter
+  }, "id" | "seoSlug">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
@@ -29735,6 +32545,9 @@ export namespace Prisma {
     googleLink?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    seoSlug?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    affiliatePrice?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -29752,6 +32565,9 @@ export namespace Prisma {
     googleLink?: StringNullableWithAggregatesFilter<"Product"> | string | null
     categoryId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+    seoSlug?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Product"> | boolean
+    affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
   }
 
   export type WarehouseWhereInput = {
@@ -30037,6 +32853,113 @@ export namespace Prisma {
     endedAt?: DateTimeNullableWithAggregatesFilter<"UserTarget"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"UserTarget"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"UserTarget"> | Date | string
+  }
+
+  export type UserActivityTargetWhereInput = {
+    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    OR?: UserActivityTargetWhereInput[]
+    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    id?: StringFilter<"UserActivityTarget"> | string
+    userId?: StringFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
+    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
+    customerReward?: FloatFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
+    isActive?: BoolFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserActivityTargetOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    activeWeekDays?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+    startsAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserActivityTargetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    OR?: UserActivityTargetWhereInput[]
+    NOT?: UserActivityTargetWhereInput | UserActivityTargetWhereInput[]
+    userId?: StringFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
+    requiredCustomers?: IntFilter<"UserActivityTarget"> | number
+    customerReward?: FloatFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableFilter<"UserActivityTarget"> | Date | string | null
+    isActive?: BoolFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"UserActivityTarget"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserActivityTargetOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    activeWeekDays?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+    startsAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserActivityTargetCountOrderByAggregateInput
+    _avg?: UserActivityTargetAvgOrderByAggregateInput
+    _max?: UserActivityTargetMaxOrderByAggregateInput
+    _min?: UserActivityTargetMinOrderByAggregateInput
+    _sum?: UserActivityTargetSumOrderByAggregateInput
+  }
+
+  export type UserActivityTargetScalarWhereWithAggregatesInput = {
+    AND?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
+    OR?: UserActivityTargetScalarWhereWithAggregatesInput[]
+    NOT?: UserActivityTargetScalarWhereWithAggregatesInput | UserActivityTargetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserActivityTarget"> | string
+    userId?: StringWithAggregatesFilter<"UserActivityTarget"> | string
+    cycle?: EnumActivityTargetCycleWithAggregatesFilter<"UserActivityTarget"> | $Enums.ActivityTargetCycle
+    activeWeekDays?: EnumActivityWeekDayNullableListFilter<"UserActivityTarget">
+    requiredCustomers?: IntWithAggregatesFilter<"UserActivityTarget"> | number
+    customerReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    customerMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    requiredCommunications?: IntWithAggregatesFilter<"UserActivityTarget"> | number
+    communicationReward?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    communicationMissPenaltyAmount?: FloatWithAggregatesFilter<"UserActivityTarget"> | number
+    startsAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    endedAt?: DateTimeNullableWithAggregatesFilter<"UserActivityTarget"> | Date | string | null
+    isActive?: BoolWithAggregatesFilter<"UserActivityTarget"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserActivityTarget"> | Date | string
   }
 
   export type TargetProductWhereInput = {
@@ -30455,14 +33378,15 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Order"> | string | null
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
     manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: OrderItemListRelationFilter
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     shipping?: XOR<ShippingNullableScalarRelationFilter, shippingWhereInput> | null
+    commissions?: CommissionListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -30498,14 +33422,15 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     warehouseId?: SortOrderInput | SortOrder
     shippingId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
     manualCreatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
     warehouse?: WarehouseOrderByWithRelationInput
     shipping?: shippingOrderByWithRelationInput
+    commissions?: CommissionOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -30544,14 +33469,15 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Order"> | string | null
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
     manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: OrderItemListRelationFilter
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     shipping?: XOR<ShippingNullableScalarRelationFilter, shippingWhereInput> | null
+    commissions?: CommissionListRelationFilter
   }, "id" | "orderNumber">
 
   export type OrderOrderByWithAggregationInput = {
@@ -30587,8 +33513,8 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     warehouseId?: SortOrderInput | SortOrder
     shippingId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
     manualCreatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -30633,8 +33559,8 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     warehouseId?: IntNullableWithAggregatesFilter<"Order"> | number | null
     shippingId?: IntNullableWithAggregatesFilter<"Order"> | number | null
-    createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     manualCreatedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
 
@@ -30797,8 +33723,10 @@ export namespace Prisma {
     discount?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
+    affiliateLinkId?: StringNullableFilter<"OrderItem"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    affiliateLink?: XOR<AffiliateLinkNullableScalarRelationFilter, AffiliateLinkWhereInput> | null
   }
 
   export type OrderItemOrderByWithRelationInput = {
@@ -30808,8 +33736,10 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+    affiliateLinkId?: SortOrderInput | SortOrder
     order?: OrderOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
+    affiliateLink?: AffiliateLinkOrderByWithRelationInput
   }
 
   export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
@@ -30822,8 +33752,10 @@ export namespace Prisma {
     discount?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
+    affiliateLinkId?: StringNullableFilter<"OrderItem"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    affiliateLink?: XOR<AffiliateLinkNullableScalarRelationFilter, AffiliateLinkWhereInput> | null
   }, "id">
 
   export type OrderItemOrderByWithAggregationInput = {
@@ -30833,6 +33765,7 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+    affiliateLinkId?: SortOrderInput | SortOrder
     _count?: OrderItemCountOrderByAggregateInput
     _avg?: OrderItemAvgOrderByAggregateInput
     _max?: OrderItemMaxOrderByAggregateInput
@@ -30850,6 +33783,7 @@ export namespace Prisma {
     discount?: FloatWithAggregatesFilter<"OrderItem"> | number
     orderId?: IntWithAggregatesFilter<"OrderItem"> | number
     productId?: IntWithAggregatesFilter<"OrderItem"> | number
+    affiliateLinkId?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
   }
 
   export type TrakingCompanyWhereInput = {
@@ -31048,6 +33982,157 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"EmployeeSalaryAdjustment"> | Date | string
   }
 
+  export type AffiliateLinkWhereInput = {
+    AND?: AffiliateLinkWhereInput | AffiliateLinkWhereInput[]
+    OR?: AffiliateLinkWhereInput[]
+    NOT?: AffiliateLinkWhereInput | AffiliateLinkWhereInput[]
+    id?: StringFilter<"AffiliateLink"> | string
+    userId?: StringFilter<"AffiliateLink"> | string
+    productId?: IntFilter<"AffiliateLink"> | number
+    uniqueCode?: StringFilter<"AffiliateLink"> | string
+    clicks?: IntFilter<"AffiliateLink"> | number
+    conversions?: IntFilter<"AffiliateLink"> | number
+    commissionRate?: FloatFilter<"AffiliateLink"> | number
+    createdAt?: DateTimeFilter<"AffiliateLink"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    orderItems?: OrderItemListRelationFilter
+    commissions?: CommissionListRelationFilter
+  }
+
+  export type AffiliateLinkOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    uniqueCode?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    orderItems?: OrderItemOrderByRelationAggregateInput
+    commissions?: CommissionOrderByRelationAggregateInput
+  }
+
+  export type AffiliateLinkWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    uniqueCode?: string
+    AND?: AffiliateLinkWhereInput | AffiliateLinkWhereInput[]
+    OR?: AffiliateLinkWhereInput[]
+    NOT?: AffiliateLinkWhereInput | AffiliateLinkWhereInput[]
+    userId?: StringFilter<"AffiliateLink"> | string
+    productId?: IntFilter<"AffiliateLink"> | number
+    clicks?: IntFilter<"AffiliateLink"> | number
+    conversions?: IntFilter<"AffiliateLink"> | number
+    commissionRate?: FloatFilter<"AffiliateLink"> | number
+    createdAt?: DateTimeFilter<"AffiliateLink"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    orderItems?: OrderItemListRelationFilter
+    commissions?: CommissionListRelationFilter
+  }, "id" | "uniqueCode">
+
+  export type AffiliateLinkOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    uniqueCode?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+    createdAt?: SortOrder
+    _count?: AffiliateLinkCountOrderByAggregateInput
+    _avg?: AffiliateLinkAvgOrderByAggregateInput
+    _max?: AffiliateLinkMaxOrderByAggregateInput
+    _min?: AffiliateLinkMinOrderByAggregateInput
+    _sum?: AffiliateLinkSumOrderByAggregateInput
+  }
+
+  export type AffiliateLinkScalarWhereWithAggregatesInput = {
+    AND?: AffiliateLinkScalarWhereWithAggregatesInput | AffiliateLinkScalarWhereWithAggregatesInput[]
+    OR?: AffiliateLinkScalarWhereWithAggregatesInput[]
+    NOT?: AffiliateLinkScalarWhereWithAggregatesInput | AffiliateLinkScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AffiliateLink"> | string
+    userId?: StringWithAggregatesFilter<"AffiliateLink"> | string
+    productId?: IntWithAggregatesFilter<"AffiliateLink"> | number
+    uniqueCode?: StringWithAggregatesFilter<"AffiliateLink"> | string
+    clicks?: IntWithAggregatesFilter<"AffiliateLink"> | number
+    conversions?: IntWithAggregatesFilter<"AffiliateLink"> | number
+    commissionRate?: FloatWithAggregatesFilter<"AffiliateLink"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"AffiliateLink"> | Date | string
+  }
+
+  export type CommissionWhereInput = {
+    AND?: CommissionWhereInput | CommissionWhereInput[]
+    OR?: CommissionWhereInput[]
+    NOT?: CommissionWhereInput | CommissionWhereInput[]
+    id?: StringFilter<"Commission"> | string
+    affiliateLinkId?: StringFilter<"Commission"> | string
+    orderId?: IntFilter<"Commission"> | number
+    amount?: FloatFilter<"Commission"> | number
+    status?: EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+    createdAt?: DateTimeFilter<"Commission"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
+    affiliateLink?: XOR<AffiliateLinkScalarRelationFilter, AffiliateLinkWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }
+
+  export type CommissionOrderByWithRelationInput = {
+    id?: SortOrder
+    affiliateLinkId?: SortOrder
+    orderId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    affiliateLink?: AffiliateLinkOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+  }
+
+  export type CommissionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CommissionWhereInput | CommissionWhereInput[]
+    OR?: CommissionWhereInput[]
+    NOT?: CommissionWhereInput | CommissionWhereInput[]
+    affiliateLinkId?: StringFilter<"Commission"> | string
+    orderId?: IntFilter<"Commission"> | number
+    amount?: FloatFilter<"Commission"> | number
+    status?: EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+    createdAt?: DateTimeFilter<"Commission"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
+    affiliateLink?: XOR<AffiliateLinkScalarRelationFilter, AffiliateLinkWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }, "id">
+
+  export type CommissionOrderByWithAggregationInput = {
+    id?: SortOrder
+    affiliateLinkId?: SortOrder
+    orderId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    _count?: CommissionCountOrderByAggregateInput
+    _avg?: CommissionAvgOrderByAggregateInput
+    _max?: CommissionMaxOrderByAggregateInput
+    _min?: CommissionMinOrderByAggregateInput
+    _sum?: CommissionSumOrderByAggregateInput
+  }
+
+  export type CommissionScalarWhereWithAggregatesInput = {
+    AND?: CommissionScalarWhereWithAggregatesInput | CommissionScalarWhereWithAggregatesInput[]
+    OR?: CommissionScalarWhereWithAggregatesInput[]
+    NOT?: CommissionScalarWhereWithAggregatesInput | CommissionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Commission"> | string
+    affiliateLinkId?: StringWithAggregatesFilter<"Commission"> | string
+    orderId?: IntWithAggregatesFilter<"Commission"> | number
+    amount?: FloatWithAggregatesFilter<"Commission"> | number
+    status?: EnumCommissionStatusWithAggregatesFilter<"Commission"> | $Enums.CommissionStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Commission"> | Date | string
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -31062,6 +34147,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -31073,6 +34160,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -31091,6 +34179,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -31100,6 +34190,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -31116,6 +34207,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -31127,6 +34220,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -31145,6 +34239,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -31154,6 +34250,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -31172,6 +34269,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -31188,6 +34287,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -31206,131 +34307,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type UserActivityTargetCreateInput = {
-    id?: string
-    cycle?: $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: number
-    customerReward?: number
-    customerMissPenaltyAmount?: number
-    requiredCommunications?: number
-    communicationReward?: number
-    communicationMissPenaltyAmount?: number
-    startsAt?: Date | string
-    endedAt?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutActivityTargetsInput
-  }
-
-  export type UserActivityTargetUncheckedCreateInput = {
-    id?: string
-    userId: string
-    cycle?: $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: number
-    customerReward?: number
-    customerMissPenaltyAmount?: number
-    requiredCommunications?: number
-    communicationReward?: number
-    communicationMissPenaltyAmount?: number
-    startsAt?: Date | string
-    endedAt?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserActivityTargetUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutActivityTargetsNestedInput
-  }
-
-  export type UserActivityTargetUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserActivityTargetCreateManyInput = {
-    id?: string
-    userId: string
-    cycle?: $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: number
-    customerReward?: number
-    customerMissPenaltyAmount?: number
-    requiredCommunications?: number
-    communicationReward?: number
-    communicationMissPenaltyAmount?: number
-    startsAt?: Date | string
-    endedAt?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserActivityTargetUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserActivityTargetUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
-    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
-    requiredCustomers?: IntFieldUpdateOperationsInput | number
-    customerReward?: FloatFieldUpdateOperationsInput | number
-    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    requiredCommunications?: IntFieldUpdateOperationsInput | number
-    communicationReward?: FloatFieldUpdateOperationsInput | number
-    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PermissionCreateInput = {
@@ -31619,38 +34597,52 @@ export namespace Prisma {
 
   export type CategoryCreateInput = {
     name: string
+    slug?: string | null
+    createdAt?: Date | string
     products?: ProductCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateInput = {
     id?: number
     name: string
+    slug?: string | null
+    createdAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
     id?: number
     name: string
+    slug?: string | null
+    createdAt?: Date | string
   }
 
   export type CategoryUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductCreateInput = {
@@ -31658,6 +34650,9 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -31665,6 +34660,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -31674,12 +34670,16 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -31687,6 +34687,9 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -31694,6 +34697,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -31703,12 +34707,16 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -31718,6 +34726,9 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -31725,6 +34736,9 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -31734,6 +34748,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type WarehouseCreateInput = {
@@ -32013,6 +35030,131 @@ export namespace Prisma {
     salesRewardValue?: UserTargetUpdatesalesRewardValueInput | number[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetCreateInput = {
+    id?: string
+    cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: number
+    customerReward?: number
+    customerMissPenaltyAmount?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    communicationMissPenaltyAmount?: number
+    startsAt?: Date | string
+    endedAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutActivityTargetsInput
+  }
+
+  export type UserActivityTargetUncheckedCreateInput = {
+    id?: string
+    userId: string
+    cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: number
+    customerReward?: number
+    customerMissPenaltyAmount?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    communicationMissPenaltyAmount?: number
+    startsAt?: Date | string
+    endedAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutActivityTargetsNestedInput
+  }
+
+  export type UserActivityTargetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetCreateManyInput = {
+    id?: string
+    userId: string
+    cycle?: $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetCreateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: number
+    customerReward?: number
+    customerMissPenaltyAmount?: number
+    requiredCommunications?: number
+    communicationReward?: number
+    communicationMissPenaltyAmount?: number
+    startsAt?: Date | string
+    endedAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivityTargetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivityTargetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cycle?: EnumActivityTargetCycleFieldUpdateOperationsInput | $Enums.ActivityTargetCycle
+    activeWeekDays?: UserActivityTargetUpdateactiveWeekDaysInput | $Enums.ActivityWeekDay[]
+    requiredCustomers?: IntFieldUpdateOperationsInput | number
+    customerReward?: FloatFieldUpdateOperationsInput | number
+    customerMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    requiredCommunications?: IntFieldUpdateOperationsInput | number
+    communicationReward?: FloatFieldUpdateOperationsInput | number
+    communicationMissPenaltyAmount?: FloatFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32435,14 +35577,15 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -32478,10 +35621,11 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -32512,14 +35656,15 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -32555,10 +35700,11 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -32594,8 +35740,8 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -32627,8 +35773,8 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32665,8 +35811,8 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32834,6 +35980,7 @@ export namespace Prisma {
     discount: number
     order: OrderCreateNestedOneWithoutItemsInput
     product: ProductCreateNestedOneWithoutOrderItemsInput
+    affiliateLink?: AffiliateLinkCreateNestedOneWithoutOrderItemsInput
   }
 
   export type OrderItemUncheckedCreateInput = {
@@ -32843,6 +35990,7 @@ export namespace Prisma {
     discount: number
     orderId: number
     productId: number
+    affiliateLinkId?: string | null
   }
 
   export type OrderItemUpdateInput = {
@@ -32851,6 +35999,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
     product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
+    affiliateLink?: AffiliateLinkUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateInput = {
@@ -32860,6 +36009,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderItemCreateManyInput = {
@@ -32869,6 +36019,7 @@ export namespace Prisma {
     discount: number
     orderId: number
     productId: number
+    affiliateLinkId?: string | null
   }
 
   export type OrderItemUpdateManyMutationInput = {
@@ -32884,6 +36035,7 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TrakingCompanyCreateInput = {
@@ -33092,6 +36244,157 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AffiliateLinkCreateInput = {
+    id?: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateLinksInput
+    product: ProductCreateNestedOneWithoutAffiliateLinksInput
+    orderItems?: OrderItemCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUncheckedCreateInput = {
+    id?: string
+    userId: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    product?: ProductUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    orderItems?: OrderItemUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkCreateManyInput = {
+    id?: string
+    userId: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+  }
+
+  export type AffiliateLinkUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateLinkUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionCreateInput = {
+    id?: string
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    affiliateLink: AffiliateLinkCreateNestedOneWithoutCommissionsInput
+    order: OrderCreateNestedOneWithoutCommissionsInput
+  }
+
+  export type CommissionUncheckedCreateInput = {
+    id?: string
+    affiliateLinkId: string
+    orderId: number
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+  }
+
+  export type CommissionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateLink?: AffiliateLinkUpdateOneRequiredWithoutCommissionsNestedInput
+    order?: OrderUpdateOneRequiredWithoutCommissionsNestedInput
+  }
+
+  export type CommissionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateLinkId?: StringFieldUpdateOperationsInput | string
+    orderId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CommissionCreateManyInput = {
+    id?: string
+    affiliateLinkId: string
+    orderId: number
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+  }
+
+  export type CommissionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CommissionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateLinkId?: StringFieldUpdateOperationsInput | string
+    orderId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -33162,6 +36465,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -33226,6 +36534,12 @@ export namespace Prisma {
     none?: StockMovementWhereInput
   }
 
+  export type AffiliateLinkListRelationFilter = {
+    every?: AffiliateLinkWhereInput
+    some?: AffiliateLinkWhereInput
+    none?: AffiliateLinkWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -33267,6 +36581,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type AffiliateLinkOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
@@ -33283,6 +36601,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissionId?: SortOrder
     parentId?: SortOrder
+    isAffiliate?: SortOrder
+    affiliateCode?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -33306,6 +36626,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissionId?: SortOrder
     parentId?: SortOrder
+    isAffiliate?: SortOrder
+    affiliateCode?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -33324,6 +36646,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissionId?: SortOrder
     parentId?: SortOrder
+    isAffiliate?: SortOrder
+    affiliateCode?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -33421,136 +36745,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type EnumActivityTargetCycleFilter<$PrismaModel = never> = {
-    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
-  }
-
-  export type EnumActivityWeekDayNullableListFilter<$PrismaModel = never> = {
-    equals?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel> | null
-    has?: $Enums.ActivityWeekDay | EnumActivityWeekDayFieldRefInput<$PrismaModel> | null
-    hasEvery?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
-    hasSome?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type UserActivityTargetCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    cycle?: SortOrder
-    activeWeekDays?: SortOrder
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-    startsAt?: SortOrder
-    endedAt?: SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserActivityTargetAvgOrderByAggregateInput = {
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-  }
-
-  export type UserActivityTargetMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    cycle?: SortOrder
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-    startsAt?: SortOrder
-    endedAt?: SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserActivityTargetMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    cycle?: SortOrder
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-    startsAt?: SortOrder
-    endedAt?: SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserActivityTargetSumOrderByAggregateInput = {
-    requiredCustomers?: SortOrder
-    customerReward?: SortOrder
-    customerMissPenaltyAmount?: SortOrder
-    requiredCommunications?: SortOrder
-    communicationReward?: SortOrder
-    communicationMissPenaltyAmount?: SortOrder
-  }
-
-  export type EnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
-    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -33694,6 +36888,8 @@ export namespace Prisma {
   export type CategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CategoryAvgOrderByAggregateInput = {
@@ -33703,11 +36899,15 @@ export namespace Prisma {
   export type CategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CategoryMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CategorySumOrderByAggregateInput = {
@@ -33787,11 +36987,15 @@ export namespace Prisma {
     googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
+    seoSlug?: SortOrder
+    isActive?: SortOrder
+    affiliatePrice?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
     id?: SortOrder
     categoryId?: SortOrder
+    affiliatePrice?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -33801,6 +37005,9 @@ export namespace Prisma {
     googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
+    seoSlug?: SortOrder
+    isActive?: SortOrder
+    affiliatePrice?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -33810,11 +37017,15 @@ export namespace Prisma {
     googleLink?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
+    seoSlug?: SortOrder
+    isActive?: SortOrder
+    affiliatePrice?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
     id?: SortOrder
     categoryId?: SortOrder
+    affiliatePrice?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -33995,6 +37206,22 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
   export type UserTargetCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -34032,6 +37259,115 @@ export namespace Prisma {
   export type UserTargetSumOrderByAggregateInput = {
     salesTargetValue?: SortOrder
     salesRewardValue?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumActivityTargetCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+  }
+
+  export type EnumActivityWeekDayNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel> | null
+    has?: $Enums.ActivityWeekDay | EnumActivityWeekDayFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.ActivityWeekDay[] | ListEnumActivityWeekDayFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type UserActivityTargetCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    activeWeekDays?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+    startsAt?: SortOrder
+    endedAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetAvgOrderByAggregateInput = {
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+  }
+
+  export type UserActivityTargetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+    startsAt?: SortOrder
+    endedAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cycle?: SortOrder
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+    startsAt?: SortOrder
+    endedAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserActivityTargetSumOrderByAggregateInput = {
+    requiredCustomers?: SortOrder
+    customerReward?: SortOrder
+    customerMissPenaltyAmount?: SortOrder
+    requiredCommunications?: SortOrder
+    communicationReward?: SortOrder
+    communicationMissPenaltyAmount?: SortOrder
+  }
+
+  export type EnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
   }
 
   export type UserTargetScalarRelationFilter = {
@@ -34316,6 +37652,16 @@ export namespace Prisma {
     isNot?: shippingWhereInput | null
   }
 
+  export type CommissionListRelationFilter = {
+    every?: CommissionWhereInput
+    some?: CommissionWhereInput
+    none?: CommissionWhereInput
+  }
+
+  export type CommissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     orderNumber?: SortOrder
@@ -34349,8 +37695,8 @@ export namespace Prisma {
     userId?: SortOrder
     warehouseId?: SortOrder
     shippingId?: SortOrder
-    createdAt?: SortOrder
     manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -34400,8 +37746,8 @@ export namespace Prisma {
     userId?: SortOrder
     warehouseId?: SortOrder
     shippingId?: SortOrder
-    createdAt?: SortOrder
     manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -34437,8 +37783,8 @@ export namespace Prisma {
     userId?: SortOrder
     warehouseId?: SortOrder
     shippingId?: SortOrder
-    createdAt?: SortOrder
     manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -34603,6 +37949,11 @@ export namespace Prisma {
     isNot?: OrderWhereInput
   }
 
+  export type AffiliateLinkNullableScalarRelationFilter = {
+    is?: AffiliateLinkWhereInput | null
+    isNot?: AffiliateLinkWhereInput | null
+  }
+
   export type OrderItemCountOrderByAggregateInput = {
     id?: SortOrder
     quantity?: SortOrder
@@ -34610,6 +37961,7 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+    affiliateLinkId?: SortOrder
   }
 
   export type OrderItemAvgOrderByAggregateInput = {
@@ -34628,6 +37980,7 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+    affiliateLinkId?: SortOrder
   }
 
   export type OrderItemMinOrderByAggregateInput = {
@@ -34637,6 +37990,7 @@ export namespace Prisma {
     discount?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
+    affiliateLinkId?: SortOrder
   }
 
   export type OrderItemSumOrderByAggregateInput = {
@@ -34769,6 +38123,115 @@ export namespace Prisma {
     editedSalary?: SortOrder
   }
 
+  export type AffiliateLinkCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    uniqueCode?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AffiliateLinkAvgOrderByAggregateInput = {
+    productId?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+  }
+
+  export type AffiliateLinkMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    uniqueCode?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AffiliateLinkMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    uniqueCode?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AffiliateLinkSumOrderByAggregateInput = {
+    productId?: SortOrder
+    clicks?: SortOrder
+    conversions?: SortOrder
+    commissionRate?: SortOrder
+  }
+
+  export type EnumCommissionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommissionStatus | EnumCommissionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommissionStatusFilter<$PrismaModel> | $Enums.CommissionStatus
+  }
+
+  export type AffiliateLinkScalarRelationFilter = {
+    is?: AffiliateLinkWhereInput
+    isNot?: AffiliateLinkWhereInput
+  }
+
+  export type CommissionCountOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateLinkId?: SortOrder
+    orderId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionAvgOrderByAggregateInput = {
+    orderId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type CommissionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateLinkId?: SortOrder
+    orderId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionMinOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateLinkId?: SortOrder
+    orderId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionSumOrderByAggregateInput = {
+    orderId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumCommissionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommissionStatus | EnumCommissionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommissionStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommissionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommissionStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommissionStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedOneWithoutSubordinatesInput = {
     create?: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSubordinatesInput
@@ -34843,6 +38306,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type AffiliateLinkCreateNestedManyWithoutUserInput = {
+    create?: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput> | AffiliateLinkCreateWithoutUserInput[] | AffiliateLinkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutUserInput | AffiliateLinkCreateOrConnectWithoutUserInput[]
+    createMany?: AffiliateLinkCreateManyUserInputEnvelope
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutParentInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -34905,6 +38375,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type AffiliateLinkUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput> | AffiliateLinkCreateWithoutUserInput[] | AffiliateLinkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutUserInput | AffiliateLinkCreateOrConnectWithoutUserInput[]
+    createMany?: AffiliateLinkCreateManyUserInputEnvelope
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -34935,6 +38412,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type UserUpdateOneWithoutSubordinatesNestedInput = {
@@ -35082,6 +38563,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type AffiliateLinkUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput> | AffiliateLinkCreateWithoutUserInput[] | AffiliateLinkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutUserInput | AffiliateLinkCreateOrConnectWithoutUserInput[]
+    upsert?: AffiliateLinkUpsertWithWhereUniqueWithoutUserInput | AffiliateLinkUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AffiliateLinkCreateManyUserInputEnvelope
+    set?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    disconnect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    delete?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    update?: AffiliateLinkUpdateWithWhereUniqueWithoutUserInput | AffiliateLinkUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AffiliateLinkUpdateManyWithWhereWithoutUserInput | AffiliateLinkUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutParentNestedInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -35207,39 +38702,18 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
-  export type UserActivityTargetCreateactiveWeekDaysInput = {
-    set: $Enums.ActivityWeekDay[]
-  }
-
-  export type UserCreateNestedOneWithoutActivityTargetsInput = {
-    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumActivityTargetCycleFieldUpdateOperationsInput = {
-    set?: $Enums.ActivityTargetCycle
-  }
-
-  export type UserActivityTargetUpdateactiveWeekDaysInput = {
-    set?: $Enums.ActivityWeekDay[]
-    push?: $Enums.ActivityWeekDay | $Enums.ActivityWeekDay[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type UserUpdateOneRequiredWithoutActivityTargetsNestedInput = {
-    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
-    upsert?: UserUpsertWithoutActivityTargetsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityTargetsInput, UserUpdateWithoutActivityTargetsInput>, UserUncheckedUpdateWithoutActivityTargetsInput>
+  export type AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput> | AffiliateLinkCreateWithoutUserInput[] | AffiliateLinkUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutUserInput | AffiliateLinkCreateOrConnectWithoutUserInput[]
+    upsert?: AffiliateLinkUpsertWithWhereUniqueWithoutUserInput | AffiliateLinkUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AffiliateLinkCreateManyUserInputEnvelope
+    set?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    disconnect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    delete?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    update?: AffiliateLinkUpdateWithWhereUniqueWithoutUserInput | AffiliateLinkUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AffiliateLinkUpdateManyWithWhereWithoutUserInput | AffiliateLinkUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
   }
 
   export type UserCreateNestedManyWithoutPermissionInput = {
@@ -35374,6 +38848,13 @@ export namespace Prisma {
     connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
+  export type AffiliateLinkCreateNestedManyWithoutProductInput = {
+    create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
+    createMany?: AffiliateLinkCreateManyProductInputEnvelope
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -35414,6 +38895,13 @@ export namespace Prisma {
     connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
     createMany?: WarrantyCreateManyProductInputEnvelope
     connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
+  export type AffiliateLinkUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
+    createMany?: AffiliateLinkCreateManyProductInputEnvelope
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
   }
 
   export type OrderItemUpdateManyWithoutProductNestedInput = {
@@ -35510,6 +38998,20 @@ export namespace Prisma {
     deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
   }
 
+  export type AffiliateLinkUpdateManyWithoutProductNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
+    upsert?: AffiliateLinkUpsertWithWhereUniqueWithoutProductInput | AffiliateLinkUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: AffiliateLinkCreateManyProductInputEnvelope
+    set?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    disconnect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    delete?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    update?: AffiliateLinkUpdateWithWhereUniqueWithoutProductInput | AffiliateLinkUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: AffiliateLinkUpdateManyWithWhereWithoutProductInput | AffiliateLinkUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -35600,6 +39102,20 @@ export namespace Prisma {
     update?: WarrantyUpdateWithWhereUniqueWithoutProductInput | WarrantyUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: WarrantyUpdateManyWithWhereWithoutProductInput | WarrantyUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
+  export type AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
+    upsert?: AffiliateLinkUpsertWithWhereUniqueWithoutProductInput | AffiliateLinkUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: AffiliateLinkCreateManyProductInputEnvelope
+    set?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    disconnect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    delete?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
+    update?: AffiliateLinkUpdateWithWhereUniqueWithoutProductInput | AffiliateLinkUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: AffiliateLinkUpdateManyWithWhereWithoutProductInput | AffiliateLinkUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
   }
 
   export type ProductStockCreateNestedManyWithoutWarehouseInput = {
@@ -35884,6 +39400,10 @@ export namespace Prisma {
     push?: number | number[]
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type UserUpdateOneRequiredWithoutTargetsNestedInput = {
     create?: XOR<UserCreateWithoutTargetsInput, UserUncheckedCreateWithoutTargetsInput>
     connectOrCreate?: UserCreateOrConnectWithoutTargetsInput
@@ -35918,6 +39438,33 @@ export namespace Prisma {
     update?: TargetProductUpdateWithWhereUniqueWithoutTargetInput | TargetProductUpdateWithWhereUniqueWithoutTargetInput[]
     updateMany?: TargetProductUpdateManyWithWhereWithoutTargetInput | TargetProductUpdateManyWithWhereWithoutTargetInput[]
     deleteMany?: TargetProductScalarWhereInput | TargetProductScalarWhereInput[]
+  }
+
+  export type UserActivityTargetCreateactiveWeekDaysInput = {
+    set: $Enums.ActivityWeekDay[]
+  }
+
+  export type UserCreateNestedOneWithoutActivityTargetsInput = {
+    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumActivityTargetCycleFieldUpdateOperationsInput = {
+    set?: $Enums.ActivityTargetCycle
+  }
+
+  export type UserActivityTargetUpdateactiveWeekDaysInput = {
+    set?: $Enums.ActivityWeekDay[]
+    push?: $Enums.ActivityWeekDay | $Enums.ActivityWeekDay[]
+  }
+
+  export type UserUpdateOneRequiredWithoutActivityTargetsNestedInput = {
+    create?: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityTargetsInput
+    upsert?: UserUpsertWithoutActivityTargetsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityTargetsInput, UserUpdateWithoutActivityTargetsInput>, UserUncheckedUpdateWithoutActivityTargetsInput>
   }
 
   export type TargetProductCreaterequiredQtyInput = {
@@ -36272,11 +39819,25 @@ export namespace Prisma {
     connect?: shippingWhereUniqueInput
   }
 
+  export type CommissionCreateNestedManyWithoutOrderInput = {
+    create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
+    createMany?: CommissionCreateManyOrderInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type CommissionUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
+    createMany?: CommissionCreateManyOrderInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
   }
 
   export type OrderUpdatereceiverPhoneInput = {
@@ -36336,6 +39897,20 @@ export namespace Prisma {
     update?: XOR<XOR<shippingUpdateToOneWithWhereWithoutOrdersInput, shippingUpdateWithoutOrdersInput>, shippingUncheckedUpdateWithoutOrdersInput>
   }
 
+  export type CommissionUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutOrderInput | CommissionUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: CommissionCreateManyOrderInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutOrderInput | CommissionUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutOrderInput | CommissionUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -36348,6 +39923,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutOrderInput | CommissionUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: CommissionCreateManyOrderInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutOrderInput | CommissionUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutOrderInput | CommissionUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutExpensesInput = {
@@ -36432,6 +40021,12 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput
   }
 
+  export type AffiliateLinkCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<AffiliateLinkCreateWithoutOrderItemsInput, AffiliateLinkUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutOrderItemsInput
+    connect?: AffiliateLinkWhereUniqueInput
+  }
+
   export type OrderUpdateOneRequiredWithoutItemsNestedInput = {
     create?: XOR<OrderCreateWithoutItemsInput, OrderUncheckedCreateWithoutItemsInput>
     connectOrCreate?: OrderCreateOrConnectWithoutItemsInput
@@ -36448,6 +40043,16 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutOrderItemsInput, ProductUpdateWithoutOrderItemsInput>, ProductUncheckedUpdateWithoutOrderItemsInput>
   }
 
+  export type AffiliateLinkUpdateOneWithoutOrderItemsNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutOrderItemsInput, AffiliateLinkUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutOrderItemsInput
+    upsert?: AffiliateLinkUpsertWithoutOrderItemsInput
+    disconnect?: AffiliateLinkWhereInput | boolean
+    delete?: AffiliateLinkWhereInput | boolean
+    connect?: AffiliateLinkWhereUniqueInput
+    update?: XOR<XOR<AffiliateLinkUpdateToOneWithWhereWithoutOrderItemsInput, AffiliateLinkUpdateWithoutOrderItemsInput>, AffiliateLinkUncheckedUpdateWithoutOrderItemsInput>
+  }
+
   export type UserCreateNestedOneWithoutSalaryAdjustmentsInput = {
     create?: XOR<UserCreateWithoutSalaryAdjustmentsInput, UserUncheckedCreateWithoutSalaryAdjustmentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSalaryAdjustmentsInput
@@ -36460,6 +40065,150 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSalaryAdjustmentsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSalaryAdjustmentsInput, UserUpdateWithoutSalaryAdjustmentsInput>, UserUncheckedUpdateWithoutSalaryAdjustmentsInput>
+  }
+
+  export type UserCreateNestedOneWithoutAffiliateLinksInput = {
+    create?: XOR<UserCreateWithoutAffiliateLinksInput, UserUncheckedCreateWithoutAffiliateLinksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateLinksInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutAffiliateLinksInput = {
+    create?: XOR<ProductCreateWithoutAffiliateLinksInput, ProductUncheckedCreateWithoutAffiliateLinksInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutAffiliateLinksInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type OrderItemCreateNestedManyWithoutAffiliateLinkInput = {
+    create?: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput> | OrderItemCreateWithoutAffiliateLinkInput[] | OrderItemUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutAffiliateLinkInput | OrderItemCreateOrConnectWithoutAffiliateLinkInput[]
+    createMany?: OrderItemCreateManyAffiliateLinkInputEnvelope
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type CommissionCreateNestedManyWithoutAffiliateLinkInput = {
+    create?: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput> | CommissionCreateWithoutAffiliateLinkInput[] | CommissionUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutAffiliateLinkInput | CommissionCreateOrConnectWithoutAffiliateLinkInput[]
+    createMany?: CommissionCreateManyAffiliateLinkInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
+  export type OrderItemUncheckedCreateNestedManyWithoutAffiliateLinkInput = {
+    create?: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput> | OrderItemCreateWithoutAffiliateLinkInput[] | OrderItemUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutAffiliateLinkInput | OrderItemCreateOrConnectWithoutAffiliateLinkInput[]
+    createMany?: OrderItemCreateManyAffiliateLinkInputEnvelope
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type CommissionUncheckedCreateNestedManyWithoutAffiliateLinkInput = {
+    create?: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput> | CommissionCreateWithoutAffiliateLinkInput[] | CommissionUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutAffiliateLinkInput | CommissionCreateOrConnectWithoutAffiliateLinkInput[]
+    createMany?: CommissionCreateManyAffiliateLinkInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutAffiliateLinksNestedInput = {
+    create?: XOR<UserCreateWithoutAffiliateLinksInput, UserUncheckedCreateWithoutAffiliateLinksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateLinksInput
+    upsert?: UserUpsertWithoutAffiliateLinksInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateLinksInput, UserUpdateWithoutAffiliateLinksInput>, UserUncheckedUpdateWithoutAffiliateLinksInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutAffiliateLinksNestedInput = {
+    create?: XOR<ProductCreateWithoutAffiliateLinksInput, ProductUncheckedCreateWithoutAffiliateLinksInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutAffiliateLinksInput
+    upsert?: ProductUpsertWithoutAffiliateLinksInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutAffiliateLinksInput, ProductUpdateWithoutAffiliateLinksInput>, ProductUncheckedUpdateWithoutAffiliateLinksInput>
+  }
+
+  export type OrderItemUpdateManyWithoutAffiliateLinkNestedInput = {
+    create?: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput> | OrderItemCreateWithoutAffiliateLinkInput[] | OrderItemUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutAffiliateLinkInput | OrderItemCreateOrConnectWithoutAffiliateLinkInput[]
+    upsert?: OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput | OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput[]
+    createMany?: OrderItemCreateManyAffiliateLinkInputEnvelope
+    set?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    disconnect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    delete?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    update?: OrderItemUpdateWithWhereUniqueWithoutAffiliateLinkInput | OrderItemUpdateWithWhereUniqueWithoutAffiliateLinkInput[]
+    updateMany?: OrderItemUpdateManyWithWhereWithoutAffiliateLinkInput | OrderItemUpdateManyWithWhereWithoutAffiliateLinkInput[]
+    deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type CommissionUpdateManyWithoutAffiliateLinkNestedInput = {
+    create?: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput> | CommissionCreateWithoutAffiliateLinkInput[] | CommissionUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutAffiliateLinkInput | CommissionCreateOrConnectWithoutAffiliateLinkInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutAffiliateLinkInput | CommissionUpsertWithWhereUniqueWithoutAffiliateLinkInput[]
+    createMany?: CommissionCreateManyAffiliateLinkInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutAffiliateLinkInput | CommissionUpdateWithWhereUniqueWithoutAffiliateLinkInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutAffiliateLinkInput | CommissionUpdateManyWithWhereWithoutAffiliateLinkInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+  }
+
+  export type OrderItemUncheckedUpdateManyWithoutAffiliateLinkNestedInput = {
+    create?: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput> | OrderItemCreateWithoutAffiliateLinkInput[] | OrderItemUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutAffiliateLinkInput | OrderItemCreateOrConnectWithoutAffiliateLinkInput[]
+    upsert?: OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput | OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput[]
+    createMany?: OrderItemCreateManyAffiliateLinkInputEnvelope
+    set?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    disconnect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    delete?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    update?: OrderItemUpdateWithWhereUniqueWithoutAffiliateLinkInput | OrderItemUpdateWithWhereUniqueWithoutAffiliateLinkInput[]
+    updateMany?: OrderItemUpdateManyWithWhereWithoutAffiliateLinkInput | OrderItemUpdateManyWithWhereWithoutAffiliateLinkInput[]
+    deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutAffiliateLinkNestedInput = {
+    create?: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput> | CommissionCreateWithoutAffiliateLinkInput[] | CommissionUncheckedCreateWithoutAffiliateLinkInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutAffiliateLinkInput | CommissionCreateOrConnectWithoutAffiliateLinkInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutAffiliateLinkInput | CommissionUpsertWithWhereUniqueWithoutAffiliateLinkInput[]
+    createMany?: CommissionCreateManyAffiliateLinkInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutAffiliateLinkInput | CommissionUpdateWithWhereUniqueWithoutAffiliateLinkInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutAffiliateLinkInput | CommissionUpdateManyWithWhereWithoutAffiliateLinkInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+  }
+
+  export type AffiliateLinkCreateNestedOneWithoutCommissionsInput = {
+    create?: XOR<AffiliateLinkCreateWithoutCommissionsInput, AffiliateLinkUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutCommissionsInput
+    connect?: AffiliateLinkWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutCommissionsInput = {
+    create?: XOR<OrderCreateWithoutCommissionsInput, OrderUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutCommissionsInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type EnumCommissionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CommissionStatus
+  }
+
+  export type AffiliateLinkUpdateOneRequiredWithoutCommissionsNestedInput = {
+    create?: XOR<AffiliateLinkCreateWithoutCommissionsInput, AffiliateLinkUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: AffiliateLinkCreateOrConnectWithoutCommissionsInput
+    upsert?: AffiliateLinkUpsertWithoutCommissionsInput
+    connect?: AffiliateLinkWhereUniqueInput
+    update?: XOR<XOR<AffiliateLinkUpdateToOneWithWhereWithoutCommissionsInput, AffiliateLinkUpdateWithoutCommissionsInput>, AffiliateLinkUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type OrderUpdateOneRequiredWithoutCommissionsNestedInput = {
+    create?: XOR<OrderCreateWithoutCommissionsInput, OrderUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutCommissionsInput
+    upsert?: OrderUpsertWithoutCommissionsInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutCommissionsInput, OrderUpdateWithoutCommissionsInput>, OrderUncheckedUpdateWithoutCommissionsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -36528,6 +40277,11 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -36631,53 +40385,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumActivityTargetCycleFilter<$PrismaModel = never> = {
-    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
-    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
-    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -36728,6 +40435,48 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMovementTypeFilter<$PrismaModel>
     _max?: NestedEnumMovementTypeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumActivityTargetCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+  }
+
+  export type NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityTargetCycle | EnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityTargetCycle[] | ListEnumActivityTargetCycleFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTargetCycleWithAggregatesFilter<$PrismaModel> | $Enums.ActivityTargetCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
+    _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
   }
 
   export type NestedEnumWarrantyTypeFilter<$PrismaModel = never> = {
@@ -36814,6 +40563,23 @@ export namespace Prisma {
     _max?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumCommissionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommissionStatus | EnumCommissionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommissionStatusFilter<$PrismaModel> | $Enums.CommissionStatus
+  }
+
+  export type NestedEnumCommissionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommissionStatus | EnumCommissionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommissionStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommissionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommissionStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommissionStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutSubordinatesInput = {
     id?: string
     username: string
@@ -36828,6 +40594,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     orders?: OrderCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
@@ -36838,6 +40606,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -36856,6 +40625,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -36864,6 +40635,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -36885,6 +40657,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
@@ -36895,6 +40669,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutParentInput = {
@@ -36912,6 +40687,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -36921,6 +40698,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutParentInput = {
@@ -36961,13 +40739,14 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutUserInput = {
@@ -37002,10 +40781,11 @@ export namespace Prisma {
     customerId: string
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutUserInput = {
@@ -37343,6 +41123,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AffiliateLinkCreateWithoutUserInput = {
+    id?: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutAffiliateLinksInput
+    orderItems?: OrderItemCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUncheckedCreateWithoutUserInput = {
+    id?: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkCreateOrConnectWithoutUserInput = {
+    where: AffiliateLinkWhereUniqueInput
+    create: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput>
+  }
+
+  export type AffiliateLinkCreateManyUserInputEnvelope = {
+    data: AffiliateLinkCreateManyUserInput | AffiliateLinkCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutSubordinatesInput = {
     update: XOR<UserUpdateWithoutSubordinatesInput, UserUncheckedUpdateWithoutSubordinatesInput>
     create: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
@@ -37368,6 +41182,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
@@ -37378,6 +41194,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -37396,6 +41213,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -37404,6 +41223,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutParentInput = {
@@ -37441,6 +41261,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     permissionId?: StringNullableFilter<"User"> | string | null
     parentId?: StringNullableFilter<"User"> | string | null
+    isAffiliate?: BoolFilter<"User"> | boolean
+    affiliateCode?: StringNullableFilter<"User"> | string | null
   }
 
   export type OrderUpsertWithWhereUniqueWithoutUserInput = {
@@ -37495,8 +41317,8 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Order"> | string | null
     warehouseId?: IntNullableFilter<"Order"> | number | null
     shippingId?: IntNullableFilter<"Order"> | number | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
     manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
   }
 
@@ -37814,124 +41636,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StockMovement"> | Date | string
   }
 
-  export type UserCreateWithoutActivityTargetsInput = {
-    id?: string
-    username: string
-    email: string
-    phone?: string | null
-    notes?: string | null
-    jobTitle?: string | null
-    avatar?: string | null
-    accountType?: $Enums.AccountType
-    password: string
-    salesCommissionPercent?: number
-    wage?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    parent?: UserCreateNestedOneWithoutSubordinatesInput
-    subordinates?: UserCreateNestedManyWithoutParentInput
-    orders?: OrderCreateNestedManyWithoutUserInput
-    permission?: PermissionCreateNestedOneWithoutUsersInput
-    customers?: CustomerCreateNestedManyWithoutUsersInput
-    message?: MessageCreateNestedManyWithoutUserInput
-    targets?: UserTargetCreateNestedManyWithoutUserInput
-    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
-    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
-    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+  export type AffiliateLinkUpsertWithWhereUniqueWithoutUserInput = {
+    where: AffiliateLinkWhereUniqueInput
+    update: XOR<AffiliateLinkUpdateWithoutUserInput, AffiliateLinkUncheckedUpdateWithoutUserInput>
+    create: XOR<AffiliateLinkCreateWithoutUserInput, AffiliateLinkUncheckedCreateWithoutUserInput>
   }
 
-  export type UserUncheckedCreateWithoutActivityTargetsInput = {
-    id?: string
-    username: string
-    email: string
-    phone?: string | null
-    notes?: string | null
-    jobTitle?: string | null
-    avatar?: string | null
-    accountType?: $Enums.AccountType
-    password: string
-    salesCommissionPercent?: number
-    wage?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    permissionId?: string | null
-    parentId?: string | null
-    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
-    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
-    message?: MessageUncheckedCreateNestedManyWithoutUserInput
-    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
-    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
-    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
-    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  export type AffiliateLinkUpdateWithWhereUniqueWithoutUserInput = {
+    where: AffiliateLinkWhereUniqueInput
+    data: XOR<AffiliateLinkUpdateWithoutUserInput, AffiliateLinkUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserCreateOrConnectWithoutActivityTargetsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+  export type AffiliateLinkUpdateManyWithWhereWithoutUserInput = {
+    where: AffiliateLinkScalarWhereInput
+    data: XOR<AffiliateLinkUpdateManyMutationInput, AffiliateLinkUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type UserUpsertWithoutActivityTargetsInput = {
-    update: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
-    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutActivityTargetsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
-  }
-
-  export type UserUpdateWithoutActivityTargetsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
-    password?: StringFieldUpdateOperationsInput | string
-    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
-    wage?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    parent?: UserUpdateOneWithoutSubordinatesNestedInput
-    subordinates?: UserUpdateManyWithoutParentNestedInput
-    orders?: OrderUpdateManyWithoutUserNestedInput
-    permission?: PermissionUpdateOneWithoutUsersNestedInput
-    customers?: CustomerUpdateManyWithoutUsersNestedInput
-    message?: MessageUpdateManyWithoutUserNestedInput
-    targets?: UserTargetUpdateManyWithoutUserNestedInput
-    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
-    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
-    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutActivityTargetsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
-    password?: StringFieldUpdateOperationsInput | string
-    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
-    wage?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
-    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
-    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
-    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
-    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
-    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
-    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  export type AffiliateLinkScalarWhereInput = {
+    AND?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
+    OR?: AffiliateLinkScalarWhereInput[]
+    NOT?: AffiliateLinkScalarWhereInput | AffiliateLinkScalarWhereInput[]
+    id?: StringFilter<"AffiliateLink"> | string
+    userId?: StringFilter<"AffiliateLink"> | string
+    productId?: IntFilter<"AffiliateLink"> | number
+    uniqueCode?: StringFilter<"AffiliateLink"> | string
+    clicks?: IntFilter<"AffiliateLink"> | number
+    conversions?: IntFilter<"AffiliateLink"> | number
+    commissionRate?: FloatFilter<"AffiliateLink"> | number
+    createdAt?: DateTimeFilter<"AffiliateLink"> | Date | string
   }
 
   export type UserCreateWithoutPermissionInput = {
@@ -37948,6 +41680,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -37958,6 +41692,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPermissionInput = {
@@ -37975,6 +41710,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -37984,6 +41721,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPermissionInput = {
@@ -38017,12 +41755,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -38031,12 +41773,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -38075,6 +41821,9 @@ export namespace Prisma {
     googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    seoSlug?: StringNullableFilter<"Product"> | string | null
+    isActive?: BoolFilter<"Product"> | boolean
+    affiliatePrice?: FloatFilter<"Product"> | number
   }
 
   export type OrderItemCreateWithoutProductInput = {
@@ -38082,6 +41831,7 @@ export namespace Prisma {
     price: number
     discount: number
     order: OrderCreateNestedOneWithoutItemsInput
+    affiliateLink?: AffiliateLinkCreateNestedOneWithoutOrderItemsInput
   }
 
   export type OrderItemUncheckedCreateWithoutProductInput = {
@@ -38090,6 +41840,7 @@ export namespace Prisma {
     price: number
     discount: number
     orderId: number
+    affiliateLinkId?: string | null
   }
 
   export type OrderItemCreateOrConnectWithoutProductInput = {
@@ -38104,11 +41855,15 @@ export namespace Prisma {
 
   export type CategoryCreateWithoutProductsInput = {
     name: string
+    slug?: string | null
+    createdAt?: Date | string
   }
 
   export type CategoryUncheckedCreateWithoutProductsInput = {
     id?: number
     name: string
+    slug?: string | null
+    createdAt?: Date | string
   }
 
   export type CategoryCreateOrConnectWithoutProductsInput = {
@@ -38252,6 +42007,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AffiliateLinkCreateWithoutProductInput = {
+    id?: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateLinksInput
+    orderItems?: OrderItemCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUncheckedCreateWithoutProductInput = {
+    id?: string
+    userId: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutAffiliateLinkInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkCreateOrConnectWithoutProductInput = {
+    where: AffiliateLinkWhereUniqueInput
+    create: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput>
+  }
+
+  export type AffiliateLinkCreateManyProductInputEnvelope = {
+    data: AffiliateLinkCreateManyProductInput | AffiliateLinkCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -38278,6 +42067,7 @@ export namespace Prisma {
     discount?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
+    affiliateLinkId?: StringNullableFilter<"OrderItem"> | string | null
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -38293,11 +42083,15 @@ export namespace Prisma {
 
   export type CategoryUpdateWithoutProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryUncheckedUpdateWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductImageUpsertWithWhereUniqueWithoutProductInput = {
@@ -38430,6 +42224,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Warranty"> | Date | string
   }
 
+  export type AffiliateLinkUpsertWithWhereUniqueWithoutProductInput = {
+    where: AffiliateLinkWhereUniqueInput
+    update: XOR<AffiliateLinkUpdateWithoutProductInput, AffiliateLinkUncheckedUpdateWithoutProductInput>
+    create: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput>
+  }
+
+  export type AffiliateLinkUpdateWithWhereUniqueWithoutProductInput = {
+    where: AffiliateLinkWhereUniqueInput
+    data: XOR<AffiliateLinkUpdateWithoutProductInput, AffiliateLinkUncheckedUpdateWithoutProductInput>
+  }
+
+  export type AffiliateLinkUpdateManyWithWhereWithoutProductInput = {
+    where: AffiliateLinkScalarWhereInput
+    data: XOR<AffiliateLinkUpdateManyMutationInput, AffiliateLinkUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductStockCreateWithoutWarehouseInput = {
     quantity?: number
     price?: number
@@ -38483,13 +42293,14 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutWarehouseInput = {
@@ -38524,10 +42335,11 @@ export namespace Prisma {
     customerId: string
     userId?: string | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutWarehouseInput = {
@@ -38675,12 +42487,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -38690,11 +42506,15 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -38744,12 +42564,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -38759,11 +42583,15 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -38803,12 +42631,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockMovementsInput = {
@@ -38818,11 +42650,15 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockMovementsInput = {
@@ -38870,6 +42706,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -38880,6 +42718,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -38898,6 +42737,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -38906,6 +42747,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -38929,12 +42771,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockMovementsInput = {
@@ -38944,11 +42790,15 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -39008,6 +42858,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -39018,6 +42870,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -39036,6 +42889,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -39044,6 +42899,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -39060,6 +42916,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -39070,6 +42928,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTargetsInput = {
@@ -39088,6 +42947,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -39096,6 +42957,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTargetsInput = {
@@ -39152,6 +43014,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -39162,6 +43026,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTargetsInput = {
@@ -39180,6 +43045,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -39188,6 +43055,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TargetProductUpsertWithWhereUniqueWithoutTargetInput = {
@@ -39204,6 +43072,138 @@ export namespace Prisma {
   export type TargetProductUpdateManyWithWhereWithoutTargetInput = {
     where: TargetProductScalarWhereInput
     data: XOR<TargetProductUpdateManyMutationInput, TargetProductUncheckedUpdateManyWithoutTargetInput>
+  }
+
+  export type UserCreateWithoutActivityTargetsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutActivityTargetsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActivityTargetsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+  }
+
+  export type UserUpsertWithoutActivityTargetsInput = {
+    update: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
+    create: XOR<UserCreateWithoutActivityTargetsInput, UserUncheckedCreateWithoutActivityTargetsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutActivityTargetsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActivityTargetsInput, UserUncheckedUpdateWithoutActivityTargetsInput>
+  }
+
+  export type UserUpdateWithoutActivityTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActivityTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserTargetCreateWithoutProductsInput = {
@@ -39238,12 +43238,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductsInput = {
@@ -39253,11 +43257,15 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductsInput = {
@@ -39314,12 +43322,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductsInput = {
@@ -39329,11 +43341,15 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -39341,12 +43357,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -39356,11 +43376,15 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -39384,12 +43408,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -39399,11 +43427,15 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutCustomerInput = {
@@ -39434,13 +43466,14 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -39475,10 +43508,11 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -39505,6 +43539,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -39515,6 +43551,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCustomersInput = {
@@ -39533,6 +43570,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -39541,6 +43580,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCustomersInput = {
@@ -39679,12 +43719,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWarrantiesAsProductInput = {
@@ -39694,11 +43738,15 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWarrantiesAsProductInput = {
@@ -39793,12 +43841,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWarrantiesAsProductInput = {
@@ -39808,11 +43860,15 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CustomerUpsertWithoutWarrantiesInput = {
@@ -39957,6 +44013,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -39967,6 +44025,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageInput = {
@@ -39985,6 +44044,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -39993,6 +44054,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageInput = {
@@ -40076,6 +44138,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -40086,6 +44150,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageInput = {
@@ -40104,6 +44169,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -40112,6 +44179,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -40173,6 +44241,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
@@ -40183,6 +44253,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -40201,6 +44272,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -40209,6 +44282,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -40221,6 +44295,7 @@ export namespace Prisma {
     price: number
     discount: number
     product: ProductCreateNestedOneWithoutOrderItemsInput
+    affiliateLink?: AffiliateLinkCreateNestedOneWithoutOrderItemsInput
   }
 
   export type OrderItemUncheckedCreateWithoutOrderInput = {
@@ -40229,6 +44304,7 @@ export namespace Prisma {
     price: number
     discount: number
     productId: number
+    affiliateLinkId?: string | null
   }
 
   export type OrderItemCreateOrConnectWithoutOrderInput = {
@@ -40285,6 +44361,34 @@ export namespace Prisma {
   export type shippingCreateOrConnectWithoutOrdersInput = {
     where: shippingWhereUniqueInput
     create: XOR<shippingCreateWithoutOrdersInput, shippingUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type CommissionCreateWithoutOrderInput = {
+    id?: string
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    affiliateLink: AffiliateLinkCreateNestedOneWithoutCommissionsInput
+  }
+
+  export type CommissionUncheckedCreateWithoutOrderInput = {
+    id?: string
+    affiliateLinkId: string
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+  }
+
+  export type CommissionCreateOrConnectWithoutOrderInput = {
+    where: CommissionWhereUniqueInput
+    create: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput>
+  }
+
+  export type CommissionCreateManyOrderInputEnvelope = {
+    data: CommissionCreateManyOrderInput | CommissionCreateManyOrderInput[]
+    skipDuplicates?: boolean
   }
 
   export type CustomerUpsertWithoutOrdersInput = {
@@ -40363,6 +44467,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
@@ -40373,6 +44479,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -40391,6 +44498,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -40399,6 +44508,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -40475,6 +44585,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CommissionUpsertWithWhereUniqueWithoutOrderInput = {
+    where: CommissionWhereUniqueInput
+    update: XOR<CommissionUpdateWithoutOrderInput, CommissionUncheckedUpdateWithoutOrderInput>
+    create: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput>
+  }
+
+  export type CommissionUpdateWithWhereUniqueWithoutOrderInput = {
+    where: CommissionWhereUniqueInput
+    data: XOR<CommissionUpdateWithoutOrderInput, CommissionUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type CommissionUpdateManyWithWhereWithoutOrderInput = {
+    where: CommissionScalarWhereInput
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type CommissionScalarWhereInput = {
+    AND?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+    OR?: CommissionScalarWhereInput[]
+    NOT?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+    id?: StringFilter<"Commission"> | string
+    affiliateLinkId?: StringFilter<"Commission"> | string
+    orderId?: IntFilter<"Commission"> | number
+    amount?: FloatFilter<"Commission"> | number
+    status?: EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+    createdAt?: DateTimeFilter<"Commission"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
+  }
+
   export type UserCreateWithoutExpensesInput = {
     id?: string
     username: string
@@ -40489,6 +44628,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -40499,6 +44640,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutExpensesInput = {
@@ -40517,6 +44659,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -40525,6 +44669,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutExpensesInput = {
@@ -40557,6 +44702,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -40567,6 +44714,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -40585,6 +44733,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -40593,6 +44743,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingInput = {
@@ -40623,13 +44774,14 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutShippingInput = {
@@ -40664,10 +44816,11 @@ export namespace Prisma {
     customerId: string
     userId?: string | null
     warehouseId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutShippingInput = {
@@ -40724,13 +44877,14 @@ export namespace Prisma {
     deliveryMethod?: string | null
     additionalNotes?: string | null
     status?: string
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutOrdersInput
     user?: UserCreateNestedOneWithoutOrdersInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -40766,9 +44920,10 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -40781,12 +44936,16 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -40796,16 +44955,49 @@ export namespace Prisma {
     googleLink?: string | null
     categoryId?: number | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
     where: ProductWhereUniqueInput
     create: XOR<ProductCreateWithoutOrderItemsInput, ProductUncheckedCreateWithoutOrderItemsInput>
+  }
+
+  export type AffiliateLinkCreateWithoutOrderItemsInput = {
+    id?: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateLinksInput
+    product: ProductCreateNestedOneWithoutAffiliateLinksInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    userId: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkCreateOrConnectWithoutOrderItemsInput = {
+    where: AffiliateLinkWhereUniqueInput
+    create: XOR<AffiliateLinkCreateWithoutOrderItemsInput, AffiliateLinkUncheckedCreateWithoutOrderItemsInput>
   }
 
   export type OrderUpsertWithoutItemsInput = {
@@ -40847,13 +45039,14 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -40889,9 +45082,10 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type ProductUpsertWithoutOrderItemsInput = {
@@ -40910,12 +45104,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -40925,11 +45123,50 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type AffiliateLinkUpsertWithoutOrderItemsInput = {
+    update: XOR<AffiliateLinkUpdateWithoutOrderItemsInput, AffiliateLinkUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<AffiliateLinkCreateWithoutOrderItemsInput, AffiliateLinkUncheckedCreateWithoutOrderItemsInput>
+    where?: AffiliateLinkWhereInput
+  }
+
+  export type AffiliateLinkUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: AffiliateLinkWhereInput
+    data: XOR<AffiliateLinkUpdateWithoutOrderItemsInput, AffiliateLinkUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type AffiliateLinkUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    product?: ProductUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateLinkNestedInput
   }
 
   export type UserCreateWithoutSalaryAdjustmentsInput = {
@@ -40946,6 +45183,8 @@ export namespace Prisma {
     wage?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -40956,6 +45195,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
@@ -40974,6 +45214,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissionId?: string | null
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
@@ -40982,6 +45224,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSalaryAdjustmentsInput = {
@@ -41014,6 +45257,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -41024,6 +45269,7 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
@@ -41042,6 +45288,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -41050,6 +45298,546 @@ export namespace Prisma {
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutAffiliateLinksInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateCode?: string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAffiliateLinksInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAffiliateLinksInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAffiliateLinksInput, UserUncheckedCreateWithoutAffiliateLinksInput>
+  }
+
+  export type ProductCreateWithoutAffiliateLinksInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutAffiliateLinksInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutAffiliateLinksInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutAffiliateLinksInput, ProductUncheckedCreateWithoutAffiliateLinksInput>
+  }
+
+  export type OrderItemCreateWithoutAffiliateLinkInput = {
+    quantity?: number
+    price: number
+    discount: number
+    order: OrderCreateNestedOneWithoutItemsInput
+    product: ProductCreateNestedOneWithoutOrderItemsInput
+  }
+
+  export type OrderItemUncheckedCreateWithoutAffiliateLinkInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount: number
+    orderId: number
+    productId: number
+  }
+
+  export type OrderItemCreateOrConnectWithoutAffiliateLinkInput = {
+    where: OrderItemWhereUniqueInput
+    create: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput>
+  }
+
+  export type OrderItemCreateManyAffiliateLinkInputEnvelope = {
+    data: OrderItemCreateManyAffiliateLinkInput | OrderItemCreateManyAffiliateLinkInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommissionCreateWithoutAffiliateLinkInput = {
+    id?: string
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    order: OrderCreateNestedOneWithoutCommissionsInput
+  }
+
+  export type CommissionUncheckedCreateWithoutAffiliateLinkInput = {
+    id?: string
+    orderId: number
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+  }
+
+  export type CommissionCreateOrConnectWithoutAffiliateLinkInput = {
+    where: CommissionWhereUniqueInput
+    create: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput>
+  }
+
+  export type CommissionCreateManyAffiliateLinkInputEnvelope = {
+    data: CommissionCreateManyAffiliateLinkInput | CommissionCreateManyAffiliateLinkInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAffiliateLinksInput = {
+    update: XOR<UserUpdateWithoutAffiliateLinksInput, UserUncheckedUpdateWithoutAffiliateLinksInput>
+    create: XOR<UserCreateWithoutAffiliateLinksInput, UserUncheckedCreateWithoutAffiliateLinksInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAffiliateLinksInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAffiliateLinksInput, UserUncheckedUpdateWithoutAffiliateLinksInput>
+  }
+
+  export type UserUpdateWithoutAffiliateLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAffiliateLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProductUpsertWithoutAffiliateLinksInput = {
+    update: XOR<ProductUpdateWithoutAffiliateLinksInput, ProductUncheckedUpdateWithoutAffiliateLinksInput>
+    create: XOR<ProductCreateWithoutAffiliateLinksInput, ProductUncheckedCreateWithoutAffiliateLinksInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutAffiliateLinksInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutAffiliateLinksInput, ProductUncheckedUpdateWithoutAffiliateLinksInput>
+  }
+
+  export type ProductUpdateWithoutAffiliateLinksInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutAffiliateLinksInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput = {
+    where: OrderItemWhereUniqueInput
+    update: XOR<OrderItemUpdateWithoutAffiliateLinkInput, OrderItemUncheckedUpdateWithoutAffiliateLinkInput>
+    create: XOR<OrderItemCreateWithoutAffiliateLinkInput, OrderItemUncheckedCreateWithoutAffiliateLinkInput>
+  }
+
+  export type OrderItemUpdateWithWhereUniqueWithoutAffiliateLinkInput = {
+    where: OrderItemWhereUniqueInput
+    data: XOR<OrderItemUpdateWithoutAffiliateLinkInput, OrderItemUncheckedUpdateWithoutAffiliateLinkInput>
+  }
+
+  export type OrderItemUpdateManyWithWhereWithoutAffiliateLinkInput = {
+    where: OrderItemScalarWhereInput
+    data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutAffiliateLinkInput>
+  }
+
+  export type CommissionUpsertWithWhereUniqueWithoutAffiliateLinkInput = {
+    where: CommissionWhereUniqueInput
+    update: XOR<CommissionUpdateWithoutAffiliateLinkInput, CommissionUncheckedUpdateWithoutAffiliateLinkInput>
+    create: XOR<CommissionCreateWithoutAffiliateLinkInput, CommissionUncheckedCreateWithoutAffiliateLinkInput>
+  }
+
+  export type CommissionUpdateWithWhereUniqueWithoutAffiliateLinkInput = {
+    where: CommissionWhereUniqueInput
+    data: XOR<CommissionUpdateWithoutAffiliateLinkInput, CommissionUncheckedUpdateWithoutAffiliateLinkInput>
+  }
+
+  export type CommissionUpdateManyWithWhereWithoutAffiliateLinkInput = {
+    where: CommissionScalarWhereInput
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyWithoutAffiliateLinkInput>
+  }
+
+  export type AffiliateLinkCreateWithoutCommissionsInput = {
+    id?: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateLinksInput
+    product: ProductCreateNestedOneWithoutAffiliateLinksInput
+    orderItems?: OrderItemCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkUncheckedCreateWithoutCommissionsInput = {
+    id?: string
+    userId: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutAffiliateLinkInput
+  }
+
+  export type AffiliateLinkCreateOrConnectWithoutCommissionsInput = {
+    where: AffiliateLinkWhereUniqueInput
+    create: XOR<AffiliateLinkCreateWithoutCommissionsInput, AffiliateLinkUncheckedCreateWithoutCommissionsInput>
+  }
+
+  export type OrderCreateWithoutCommissionsInput = {
+    orderNumber: string
+    usdToTryRateAtOrder?: number | null
+    shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    pay?: string | null
+    receiverName?: string | null
+    receiverPhone?: OrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    invoiceImage?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    amount?: string | null
+    amountBank?: string | null
+    deliveryMethod?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    user?: UserCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+    warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
+    shipping?: shippingCreateNestedOneWithoutOrdersInput
+  }
+
+  export type OrderUncheckedCreateWithoutCommissionsInput = {
+    id?: number
+    orderNumber: string
+    usdToTryRateAtOrder?: number | null
+    shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    pay?: string | null
+    receiverName?: string | null
+    receiverPhone?: OrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    invoiceImage?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    amount?: string | null
+    amountBank?: string | null
+    deliveryMethod?: string | null
+    additionalNotes?: string | null
+    status?: string
+    customerId: string
+    userId?: string | null
+    warehouseId?: number | null
+    shippingId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutCommissionsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutCommissionsInput, OrderUncheckedCreateWithoutCommissionsInput>
+  }
+
+  export type AffiliateLinkUpsertWithoutCommissionsInput = {
+    update: XOR<AffiliateLinkUpdateWithoutCommissionsInput, AffiliateLinkUncheckedUpdateWithoutCommissionsInput>
+    create: XOR<AffiliateLinkCreateWithoutCommissionsInput, AffiliateLinkUncheckedCreateWithoutCommissionsInput>
+    where?: AffiliateLinkWhereInput
+  }
+
+  export type AffiliateLinkUpdateToOneWithWhereWithoutCommissionsInput = {
+    where?: AffiliateLinkWhereInput
+    data: XOR<AffiliateLinkUpdateWithoutCommissionsInput, AffiliateLinkUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type AffiliateLinkUpdateWithoutCommissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    product?: ProductUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    orderItems?: OrderItemUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateWithoutCommissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type OrderUpsertWithoutCommissionsInput = {
+    update: XOR<OrderUpdateWithoutCommissionsInput, OrderUncheckedUpdateWithoutCommissionsInput>
+    create: XOR<OrderCreateWithoutCommissionsInput, OrderUncheckedCreateWithoutCommissionsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutCommissionsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutCommissionsInput, OrderUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type OrderUpdateWithoutCommissionsInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceImage?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+    warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
+    shipping?: shippingUpdateOneWithoutOrdersNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutCommissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceImage?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    shippingId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserCreateManyParentInput = {
@@ -41067,6 +45855,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     permissionId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
   }
 
   export type OrderCreateManyUserInput = {
@@ -41101,8 +45891,8 @@ export namespace Prisma {
     customerId: string
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -41173,6 +45963,16 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type AffiliateLinkCreateManyUserInput = {
+    id?: string
+    productId: number
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+  }
+
   export type UserUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
@@ -41187,6 +45987,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
@@ -41197,6 +45999,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutParentInput = {
@@ -41214,6 +46017,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -41223,6 +46028,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutParentInput = {
@@ -41240,6 +46046,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderUpdateWithoutUserInput = {
@@ -41270,13 +46078,14 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutUserInput = {
@@ -41311,10 +46120,11 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutUserInput = {
@@ -41349,8 +46159,8 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -41613,6 +46423,40 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AffiliateLinkUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    orderItems?: OrderItemUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyPermissionInput = {
     id?: string
     username: string
@@ -41628,6 +46472,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parentId?: string | null
+    isAffiliate?: boolean
+    affiliateCode?: string | null
   }
 
   export type UserUpdateWithoutPermissionInput = {
@@ -41644,6 +46490,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -41654,6 +46502,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPermissionInput = {
@@ -41671,6 +46520,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
@@ -41680,6 +46531,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPermissionInput = {
@@ -41697,6 +46549,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCreateManyCategoryInput = {
@@ -41705,6 +46559,9 @@ export namespace Prisma {
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    affiliatePrice?: number
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -41712,12 +46569,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -41726,12 +46587,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -41740,6 +46605,9 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type OrderItemCreateManyProductInput = {
@@ -41748,6 +46616,7 @@ export namespace Prisma {
     price: number
     discount: number
     orderId: number
+    affiliateLinkId?: string | null
   }
 
   export type ProductImageCreateManyProductInput = {
@@ -41794,11 +46663,22 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AffiliateLinkCreateManyProductInput = {
+    id?: string
+    userId: string
+    uniqueCode: string
+    clicks?: number
+    conversions?: number
+    commissionRate?: number
+    createdAt?: Date | string
+  }
+
   export type OrderItemUpdateWithoutProductInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
+    affiliateLink?: AffiliateLinkUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateWithoutProductInput = {
@@ -41807,6 +46687,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderItemUncheckedUpdateManyWithoutProductInput = {
@@ -41815,6 +46696,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductImageUpdateWithoutProductInput = {
@@ -41947,6 +46829,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AffiliateLinkUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateLinksNestedInput
+    orderItems?: OrderItemUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateLinkNestedInput
+  }
+
+  export type AffiliateLinkUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    uniqueCode?: StringFieldUpdateOperationsInput | string
+    clicks?: IntFieldUpdateOperationsInput | number
+    conversions?: IntFieldUpdateOperationsInput | number
+    commissionRate?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProductStockCreateManyWarehouseInput = {
     id?: number
     productId: number
@@ -41987,8 +46903,8 @@ export namespace Prisma {
     customerId: string
     userId?: string | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -42066,13 +46982,14 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutWarehouseInput = {
@@ -42107,10 +47024,11 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutWarehouseInput = {
@@ -42145,8 +47063,8 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42279,8 +47197,8 @@ export namespace Prisma {
     userId?: string | null
     warehouseId?: number | null
     shippingId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -42333,13 +47251,14 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -42374,10 +47293,11 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -42412,8 +47332,8 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42431,6 +47351,8 @@ export namespace Prisma {
     wage?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -42441,6 +47363,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomersInput = {
@@ -42459,6 +47382,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -42467,6 +47392,7 @@ export namespace Prisma {
     salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCustomersInput = {
@@ -42485,6 +47411,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissionId?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateWithoutCustomerInput = {
@@ -42556,6 +47484,16 @@ export namespace Prisma {
     price: number
     discount: number
     productId: number
+    affiliateLinkId?: string | null
+  }
+
+  export type CommissionCreateManyOrderInput = {
+    id?: string
+    affiliateLinkId: string
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
   }
 
   export type OrderItemUpdateWithoutOrderInput = {
@@ -42563,6 +47501,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
+    affiliateLink?: AffiliateLinkUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateWithoutOrderInput = {
@@ -42571,6 +47510,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
@@ -42579,6 +47519,34 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
+    affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CommissionUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateLink?: AffiliateLinkUpdateOneRequiredWithoutCommissionsNestedInput
+  }
+
+  export type CommissionUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateLinkId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateLinkId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type OrderCreateManyShippingInput = {
@@ -42613,8 +47581,8 @@ export namespace Prisma {
     customerId: string
     userId?: string | null
     warehouseId?: number | null
-    createdAt?: Date | string
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -42646,13 +47614,14 @@ export namespace Prisma {
     deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
     additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutShippingInput = {
@@ -42687,10 +47656,11 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutShippingInput = {
@@ -42725,9 +47695,80 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderItemCreateManyAffiliateLinkInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount: number
+    orderId: number
+    productId: number
+  }
+
+  export type CommissionCreateManyAffiliateLinkInput = {
+    id?: string
+    orderId: number
+    amount: number
+    status?: $Enums.CommissionStatus
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+  }
+
+  export type OrderItemUpdateWithoutAffiliateLinkInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    order?: OrderUpdateOneRequiredWithoutItemsNestedInput
+    product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
+  }
+
+  export type OrderItemUncheckedUpdateWithoutAffiliateLinkInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderItemUncheckedUpdateManyWithoutAffiliateLinkInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CommissionUpdateWithoutAffiliateLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    order?: OrderUpdateOneRequiredWithoutCommissionsNestedInput
+  }
+
+  export type CommissionUncheckedUpdateWithoutAffiliateLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutAffiliateLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

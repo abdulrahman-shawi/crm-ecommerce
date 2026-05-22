@@ -135,25 +135,9 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   permissionId: 'permissionId',
-  parentId: 'parentId'
-};
-
-exports.Prisma.UserActivityTargetScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  cycle: 'cycle',
-  activeWeekDays: 'activeWeekDays',
-  requiredCustomers: 'requiredCustomers',
-  customerReward: 'customerReward',
-  customerMissPenaltyAmount: 'customerMissPenaltyAmount',
-  requiredCommunications: 'requiredCommunications',
-  communicationReward: 'communicationReward',
-  communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
-  startsAt: 'startsAt',
-  endedAt: 'endedAt',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  parentId: 'parentId',
+  isAffiliate: 'isAffiliate',
+  affiliateCode: 'affiliateCode'
 };
 
 exports.Prisma.PermissionScalarFieldEnum = {
@@ -198,7 +182,9 @@ exports.Prisma.PermissionScalarFieldEnum = {
 
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -207,7 +193,10 @@ exports.Prisma.ProductScalarFieldEnum = {
   description: 'description',
   googleLink: 'googleLink',
   categoryId: 'categoryId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  seoSlug: 'seoSlug',
+  isActive: 'isActive',
+  affiliatePrice: 'affiliatePrice'
 };
 
 exports.Prisma.WarehouseScalarFieldEnum = {
@@ -245,6 +234,24 @@ exports.Prisma.UserTargetScalarFieldEnum = {
   salesRewardValue: 'salesRewardValue',
   isActive: 'isActive',
   endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserActivityTargetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cycle: 'cycle',
+  activeWeekDays: 'activeWeekDays',
+  requiredCustomers: 'requiredCustomers',
+  customerReward: 'customerReward',
+  customerMissPenaltyAmount: 'customerMissPenaltyAmount',
+  requiredCommunications: 'requiredCommunications',
+  communicationReward: 'communicationReward',
+  communicationMissPenaltyAmount: 'communicationMissPenaltyAmount',
+  startsAt: 'startsAt',
+  endedAt: 'endedAt',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -337,8 +344,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   userId: 'userId',
   warehouseId: 'warehouseId',
   shippingId: 'shippingId',
-  createdAt: 'createdAt',
   manualCreatedAt: 'manualCreatedAt',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -371,7 +378,8 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   price: 'price',
   discount: 'discount',
   orderId: 'orderId',
-  productId: 'productId'
+  productId: 'productId',
+  affiliateLinkId: 'affiliateLinkId'
 };
 
 exports.Prisma.TrakingCompanyScalarFieldEnum = {
@@ -404,6 +412,27 @@ exports.Prisma.EmployeeSalaryAdjustmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AffiliateLinkScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  uniqueCode: 'uniqueCode',
+  clicks: 'clicks',
+  conversions: 'conversions',
+  commissionRate: 'commissionRate',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommissionScalarFieldEnum = {
+  id: 'id',
+  affiliateLinkId: 'affiliateLinkId',
+  orderId: 'orderId',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt',
+  paidAt: 'paidAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -424,6 +453,14 @@ exports.AccountType = exports.$Enums.AccountType = {
   STAFF: 'STAFF'
 };
 
+exports.MovementType = exports.$Enums.MovementType = {
+  IN: 'IN',
+  OUT: 'OUT',
+  TRANSFER: 'TRANSFER',
+  ADJUSTMENT: 'ADJUSTMENT',
+  RETURN: 'RETURN'
+};
+
 exports.ActivityTargetCycle = exports.$Enums.ActivityTargetCycle = {
   DAILY: 'DAILY',
   MONTHLY: 'MONTHLY'
@@ -437,14 +474,6 @@ exports.ActivityWeekDay = exports.$Enums.ActivityWeekDay = {
   WEDNESDAY: 'WEDNESDAY',
   THURSDAY: 'THURSDAY',
   FRIDAY: 'FRIDAY'
-};
-
-exports.MovementType = exports.$Enums.MovementType = {
-  IN: 'IN',
-  OUT: 'OUT',
-  TRANSFER: 'TRANSFER',
-  ADJUSTMENT: 'ADJUSTMENT',
-  RETURN: 'RETURN'
 };
 
 exports.WarrantyType = exports.$Enums.WarrantyType = {
@@ -470,9 +499,14 @@ exports.PaidFromOffice = exports.$Enums.PaidFromOffice = {
   SYRIA: 'SYRIA'
 };
 
+exports.CommissionStatus = exports.$Enums.CommissionStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  UserActivityTarget: 'UserActivityTarget',
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
@@ -480,6 +514,7 @@ exports.Prisma.ModelName = {
   ProductStock: 'ProductStock',
   StockMovement: 'StockMovement',
   UserTarget: 'UserTarget',
+  UserActivityTarget: 'UserActivityTarget',
   TargetProduct: 'TargetProduct',
   ProductImage: 'ProductImage',
   Customer: 'Customer',
@@ -491,7 +526,9 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   TrakingCompany: 'TrakingCompany',
   GeneralSetting: 'GeneralSetting',
-  EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment'
+  EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment',
+  AffiliateLink: 'AffiliateLink',
+  Commission: 'Commission'
 };
 
 /**
