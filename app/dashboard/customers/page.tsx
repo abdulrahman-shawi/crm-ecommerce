@@ -36,6 +36,7 @@ const STATUS_OPTIONS = [
   { label: "جاري المتابعة", value: "جاري المتابعة" },
   { label: "تم البيع", value: "تم البيع" },
   { label: "غير مهتم / ملغي", value: "غير مهتم / ملغي" },
+  { label: "المتجر", value: "المتجر" },
 ];
 
 const LOCKED_STATUS_VALUES = new Set(["جاري المتابعة", "تم البيع"]);
@@ -973,7 +974,9 @@ const CustomrLayout: React.FC = () => {
                   ? "bg-yellow-100 text-yellow-600 border-green-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800"
                   : customer.status === "غير مهتم / ملغي"
                     ? "bg-red-100 text-red-500 border-slate-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
-                    : "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+                    : customer.status === "المتجر"
+                      ? "bg-purple-100 text-purple-600 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800"
+                      : "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
             }
           `}
         >
