@@ -4,19 +4,22 @@ import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 // تأكد من استيراد FormInput من المكان الصحيح في مكوناتك وليس من lucide-react
 import { FormInput } from '@/components/ui/form-input';
+import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { hasPermission } from '@/lib/utils';
 import { createcategory, deletecategory, getallcategory, updatecategory } from '@/server/category';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, Trash2 } from 'lucide-react';
 import * as React from 'react';
+import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import z, { set } from 'zod';
+import z from 'zod';
 
 interface ICategoriesLayoutProps { }
 
 const categorySchema = z.object({
     name: z.string().min(3, "اسم الفئة مطلوب"),
+    files: z.array(z.any()).optional().default([]),
 });
 
 const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props) => {
@@ -34,8 +37,12 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
 
     const handleEdit = (data: any) => {
         setEditId(data.id);
+        const existingImage: FileItem[] = data.image
+            ? [{ url: data.image, type: 'image/*', name: 'category-image' }]
+            : [];
         setFormData({
-            name: data.name
+            name: data.name,
+            files: existingImage,
         });
         setIsOpen(true);
     }
@@ -47,7 +54,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
             if (res.success) {
                 toast.success("تم حذف الفئة بنجاح")
             } else {
-                toast.error("حدث خطأ أثناء حذف المنتج")
+                toast.error("حدث خطأ أثناء حذف الفئة")
             }
         } catch (error: any) {
             toast.error("خطأ", error)
@@ -57,25 +64,29 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
         }
     }
     const onSubmit = async (data: z.infer<typeof categorySchema>) => {
-        const loadingToast = toast.loading(editId ? 'جاري تحديث البيانات...' : 'جاري إنشاء الحساب...');
+        const loadingToast = toast.loading(editId ? 'جاري تحديث البيانات...' : 'جاري إنشاء الفئة...');
         try {
-            if (editId) {
-                console.log("تعديل:", editId);
-                updatecategory(editId, data).then((result) => {
-                    if (result.success) {
-                        toast.success("تم تحديث بيانات الفئة بنجاح");
-                        handleClose(); // نغلق المودال فقط عند النجاح
-                    } else {
-                        toast.error(result.error || "فشل في تحديث بيانات الفئة");
-                    }
-                });
-            } else {
-                // نرسل البيانات مباشرة
-                const result = await createcategory(data);
+            const formData = new FormData();
+            formData.append('name', data.name);
 
+            const fileItem = data.files?.[0];
+            if (fileItem?.rawFile instanceof File && fileItem.rawFile.size > 0) {
+                formData.append('image', fileItem.rawFile);
+            }
+
+            if (editId) {
+                const result = await updatecategory(editId, formData);
+                if (result.success) {
+                    toast.success("تم تحديث بيانات الفئة بنجاح");
+                    handleClose();
+                } else {
+                    toast.error(result.error || "فشل في تحديث بيانات الفئة");
+                }
+            } else {
+                const result = await createcategory(formData);
                 if (result.success) {
                     toast.success("تم إنشاء الفئة بنجاح");
-                    handleClose(); // نغلق المودال فقط عند النجاح
+                    handleClose();
                 } else {
                     toast.error(result.error || "فشل في إنشاء الفئة");
                 }
@@ -85,7 +96,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
             console.error(error);
         } finally {
             toast.dismiss(loadingToast);
-            getData(); // تحديث البيانات بعد الإنشاء أو التعديل
+            getData();
         }
     };
 
@@ -122,6 +133,15 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                             exit={{ opacity: 0, scale: 0.9 }}
                             className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm group hover:border-blue-500 transition-all"
                         >
+                            {cat.image && (
+                                <div className="mb-4 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
+                                    <img
+                                        src={cat.image}
+                                        alt={cat.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                            )}
                             <div className="flex justify-between items-start">
                                 <div>
                                     <h3 className="font-bold text-xl text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
@@ -168,13 +188,24 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                         key={editId || 'create'}
                         submitLabel={editId ? 'تحديث البيانات' : 'إرسال البيانات'}
                     >
-                        {({ register, formState: { errors } }) => (
+                        {({ register, control, formState: { errors } }) => (
                             <div className="grid gap-4">
                                 <FormInput
                                     className='text-gray-800 dark:text-white'
                                     label="اسم الفئة"
                                     {...register("name")}
                                     error={errors.name?.message as string}
+                                />
+                                <Controller
+                                    name="files"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <MultiFileUpload
+                                            label="صورة الفئة"
+                                            value={field.value}
+                                            onChange={(val) => field.onChange(val.slice(0, 1))}
+                                        />
+                                    )}
                                 />
                             </div>
                         )}

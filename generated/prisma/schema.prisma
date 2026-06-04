@@ -181,6 +181,7 @@ model Category {
   name String @unique
 
   // ─── NEW: E-commerce Affiliate columns ───
+  image     String?
   slug      String?  @unique
   createdAt DateTime @default(now())
 

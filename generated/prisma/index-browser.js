@@ -183,6 +183,7 @@ exports.Prisma.PermissionScalarFieldEnum = {
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  image: 'image',
   slug: 'slug',
   createdAt: 'createdAt'
 };
