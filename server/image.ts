@@ -46,6 +46,7 @@ export async function saveProductWithFiles(formData: FormData) {
         const normalizedName = name.trim();
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+        const isActive = formData.get('isActive') === 'true';
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
         let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
@@ -126,6 +127,7 @@ export async function saveProductWithFiles(formData: FormData) {
             data: {
                 name: normalizedName,
                 description,
+                isActive,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
@@ -164,6 +166,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const name = formData.get('name') as string;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+        const isActive = formData.get('isActive') === 'true';
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
         let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
@@ -266,6 +269,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             data: {
                 name,
                 description,
+                isActive,
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
                     deleteMany: {},

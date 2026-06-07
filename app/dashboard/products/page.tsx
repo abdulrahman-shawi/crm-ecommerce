@@ -34,6 +34,7 @@ const productschama = z.object({
             stockDiscount: z.coerce.number().min(0, "يرجى إدخال خصم صحيح").optional().default(0),
         })
     ).min(1, "يجب إضافة مستودع واحد على الأقل"),
+    isActive: z.boolean().optional().default(true),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
 });
 
@@ -202,6 +203,7 @@ const ProductLayout = () => {
                 formData.append('name', data.name);
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
+                formData.append('isActive', String(data.isActive ?? true));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
@@ -230,6 +232,7 @@ const ProductLayout = () => {
                 formData.append('name', data.name);
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
+                formData.append('isActive', String(data.isActive ?? true));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
@@ -347,6 +350,7 @@ const ProductLayout = () => {
                         }))
                         : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
                     // تمرير الصور الحالية إذا كان المكون يدعم عرضها كـ Preview
+                    isActive: data.isActive ?? true,
                     files: data.images || []
                 });
                 console.log("data", data);
@@ -665,6 +669,14 @@ const ProductLayout = () => {
                                 return row?.__stock?.warehouse?.name || "غير محدد";
                             }
                         },
+                        {
+                            header: "العرض في المتجر",
+                            accessor: (row: any) => (
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${row.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
+                                    {row.isActive ? "نعم" : "لا"}
+                                </span>
+                            )
+                        },
 
                     ]}
                 />
@@ -700,6 +712,23 @@ const ProductLayout = () => {
                                     warehouses={warehouses}
                                 />
                                 <textarea {...register("description")} placeholder='الوصف' className='col-span-2 border border-slate-400/30 bg-transparent text-slate-900 dark:text-slate-100' rows={5}></textarea>
+                                <div className="md:col-span-2 flex items-center gap-3">
+                                    <Controller
+                                        name="isActive"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={field.value}
+                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm font-medium text-slate-800 dark:text-slate-200">عرض في المتجر</span>
+                                            </label>
+                                        )}
+                                    />
+                                </div>
                                 <div className="md:col-span-2 border-t pt-4">
                                     <Controller
                                         name="files"
