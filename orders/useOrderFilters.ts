@@ -100,6 +100,7 @@ export const useOrderFilters = (orders: any[], user?: User) => {
     "فشل التسليم مرتجع",
     "تم الغاء الطلب",
     "معلق / نقص معلومات",
+    "المتجر",
     "الكل",
   ];
 

@@ -171,6 +171,9 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                   <option value="معلق / نقص معلومات" className="bg-white text-black">
                     معلق / نقص معلومات
                   </option>
+                  <option value="المتجر" className="bg-white text-black">
+                    المتجر
+                  </option>
                 </select>
               </div>
             );

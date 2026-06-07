@@ -219,6 +219,7 @@ export const statusCardColors: Record<string, string> = {
   "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700",
   "تم الغاء الطلب": "bg-rose-200 text-rose-900 border-rose-300",
   "معلق / نقص معلومات": "bg-gray-200 text-gray-900 border-gray-300",
+  "المتجر": "bg-purple-200 text-purple-900 border-purple-300",
 };
 
 export const statusColors: Record<string, string> = {
@@ -229,6 +230,7 @@ export const statusColors: Record<string, string> = {
   "فشل التسليم مرتجع": "bg-red-600 text-white border-red-700 dark:bg-red-900/40 dark:text-red-200 dark:border-red-800",
   "تم الغاء الطلب": "bg-red-200 text-red-900 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
   "معلق / نقص معلومات": "bg-gray-200 text-gray-900 border-gray-300 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700",
+  "المتجر": "bg-purple-200 text-purple-900 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800",
 };
 
 // قوائم البيانات
