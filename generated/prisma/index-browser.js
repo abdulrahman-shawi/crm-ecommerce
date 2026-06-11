@@ -201,6 +201,18 @@ exports.Prisma.ProductScalarFieldEnum = {
   affiliateCommissionRate: 'affiliateCommissionRate'
 };
 
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  userId: 'userId',
+  name: 'name',
+  rating: 'rating',
+  comment: 'comment',
+  isApproved: 'isApproved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WarehouseScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -512,6 +524,7 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
+  Review: 'Review',
   Warehouse: 'Warehouse',
   ProductStock: 'ProductStock',
   StockMovement: 'StockMovement',
