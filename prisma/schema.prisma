@@ -116,6 +116,7 @@ model User {
 
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks         AffiliateLink[]
+  reviews                Review[]
 }
 
 // ============================================
@@ -193,6 +194,7 @@ model Category {
 // Product (Existing + New columns)
 // ============================================
 
+
 model Product {
   id             Int             @id @default(autoincrement())
   name           String
@@ -202,10 +204,10 @@ model Product {
   createdAt      DateTime        @default(now())
 
   // ─── NEW: E-commerce Affiliate columns ───
-  seoSlug        String?         @unique
-  isActive       Boolean         @default(true)
-  affiliatePrice Float           @default(0)
-  affiliateCommissionRate Float?
+  seoSlug               String?  @unique
+  isActive              Boolean  @default(true)
+  affiliatePrice        Float    @default(0)
+  affiliateCommissionRate Float? @default(10.00)
 
   // ─── Existing Relations ───
   orderItems     OrderItem[]
@@ -218,7 +220,33 @@ model Product {
 
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks AffiliateLink[]
+  reviews        Review[]
 }
+
+// ============================================
+// Review (NEW TABLE)
+// ============================================
+
+model Review {
+  id          String   @id @default(uuid())
+  productId   Int      @map("product_id")
+  userId      String?  @map("user_id")
+  name        String
+  rating      Int
+  comment     String?
+  isApproved  Boolean  @default(true) @map("is_approved")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
 
 // ============================================
 // Warehouse (Existing — Unchanged)
