@@ -197,7 +197,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   createdAt: 'createdAt',
   seoSlug: 'seoSlug',
   isActive: 'isActive',
-  affiliatePrice: 'affiliatePrice'
+  affiliatePrice: 'affiliatePrice',
+  affiliateCommissionRate: 'affiliateCommissionRate'
 };
 
 exports.Prisma.WarehouseScalarFieldEnum = {

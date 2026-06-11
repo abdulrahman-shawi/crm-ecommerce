@@ -205,6 +205,7 @@ model Product {
   seoSlug        String?         @unique
   isActive       Boolean         @default(true)
   affiliatePrice Float           @default(0)
+  affiliateCommissionRate Float?
 
   // ─── Existing Relations ───
   orderItems     OrderItem[]

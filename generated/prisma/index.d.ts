@@ -7705,12 +7705,14 @@ export namespace Prisma {
     id: number | null
     categoryId: number | null
     affiliatePrice: number | null
+    affiliateCommissionRate: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     id: number | null
     categoryId: number | null
     affiliatePrice: number | null
+    affiliateCommissionRate: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -7723,6 +7725,7 @@ export namespace Prisma {
     seoSlug: string | null
     isActive: boolean | null
     affiliatePrice: number | null
+    affiliateCommissionRate: number | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -7735,6 +7738,7 @@ export namespace Prisma {
     seoSlug: string | null
     isActive: boolean | null
     affiliatePrice: number | null
+    affiliateCommissionRate: number | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -7747,6 +7751,7 @@ export namespace Prisma {
     seoSlug: number
     isActive: number
     affiliatePrice: number
+    affiliateCommissionRate: number
     _all: number
   }
 
@@ -7755,12 +7760,14 @@ export namespace Prisma {
     id?: true
     categoryId?: true
     affiliatePrice?: true
+    affiliateCommissionRate?: true
   }
 
   export type ProductSumAggregateInputType = {
     id?: true
     categoryId?: true
     affiliatePrice?: true
+    affiliateCommissionRate?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -7773,6 +7780,7 @@ export namespace Prisma {
     seoSlug?: true
     isActive?: true
     affiliatePrice?: true
+    affiliateCommissionRate?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -7785,6 +7793,7 @@ export namespace Prisma {
     seoSlug?: true
     isActive?: true
     affiliatePrice?: true
+    affiliateCommissionRate?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -7797,6 +7806,7 @@ export namespace Prisma {
     seoSlug?: true
     isActive?: true
     affiliatePrice?: true
+    affiliateCommissionRate?: true
     _all?: true
   }
 
@@ -7896,6 +7906,7 @@ export namespace Prisma {
     seoSlug: string | null
     isActive: boolean
     affiliatePrice: number
+    affiliateCommissionRate: number | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -7927,6 +7938,7 @@ export namespace Prisma {
     seoSlug?: boolean
     isActive?: boolean
     affiliatePrice?: boolean
+    affiliateCommissionRate?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -7948,6 +7960,7 @@ export namespace Prisma {
     seoSlug?: boolean
     isActive?: boolean
     affiliatePrice?: boolean
+    affiliateCommissionRate?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -7961,6 +7974,7 @@ export namespace Prisma {
     seoSlug?: boolean
     isActive?: boolean
     affiliatePrice?: boolean
+    affiliateCommissionRate?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -7974,9 +7988,10 @@ export namespace Prisma {
     seoSlug?: boolean
     isActive?: boolean
     affiliatePrice?: boolean
+    affiliateCommissionRate?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "affiliatePrice", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8017,6 +8032,7 @@ export namespace Prisma {
       seoSlug: string | null
       isActive: boolean
       affiliatePrice: number
+      affiliateCommissionRate: number | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -8457,6 +8473,7 @@ export namespace Prisma {
     readonly seoSlug: FieldRef<"Product", 'String'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly affiliatePrice: FieldRef<"Product", 'Float'>
+    readonly affiliateCommissionRate: FieldRef<"Product", 'Float'>
   }
     
 
@@ -31551,7 +31568,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     seoSlug: 'seoSlug',
     isActive: 'isActive',
-    affiliatePrice: 'affiliatePrice'
+    affiliatePrice: 'affiliatePrice',
+    affiliateCommissionRate: 'affiliateCommissionRate'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -32504,6 +32522,7 @@ export namespace Prisma {
     seoSlug?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
+    affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -32524,6 +32543,7 @@ export namespace Prisma {
     seoSlug?: SortOrderInput | SortOrder
     isActive?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrderInput | SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     images?: ProductImageOrderByRelationAggregateInput
@@ -32547,6 +32567,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Product"> | Date | string
     isActive?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
+    affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -32567,6 +32588,7 @@ export namespace Prisma {
     seoSlug?: SortOrderInput | SortOrder
     isActive?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -32587,6 +32609,7 @@ export namespace Prisma {
     seoSlug?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
+    affiliateCommissionRate?: FloatNullableWithAggregatesFilter<"Product"> | number | null
   }
 
   export type WarehouseWhereInput = {
@@ -34679,6 +34702,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -34699,6 +34723,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -34716,6 +34741,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -34736,6 +34762,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -34755,6 +34782,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -34765,6 +34793,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -34777,6 +34806,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type WarehouseCreateInput = {
@@ -36954,6 +36984,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type OrderItemListRelationFilter = {
     every?: OrderItemWhereInput
     some?: OrderItemWhereInput
@@ -37019,12 +37060,14 @@ export namespace Prisma {
     seoSlug?: SortOrder
     isActive?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
     id?: SortOrder
     categoryId?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -37037,6 +37080,7 @@ export namespace Prisma {
     seoSlug?: SortOrder
     isActive?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -37049,12 +37093,14 @@ export namespace Prisma {
     seoSlug?: SortOrder
     isActive?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
     id?: SortOrder
     categoryId?: SortOrder
     affiliatePrice?: SortOrder
+    affiliateCommissionRate?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -37071,6 +37117,22 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type WarehouseCountOrderByAggregateInput = {
@@ -37544,17 +37606,6 @@ export namespace Prisma {
     not?: NestedEnumWarrantyTypeFilter<$PrismaModel> | $Enums.WarrantyType
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type CustomerScalarRelationFilter = {
     is?: CustomerWhereInput
     isNot?: CustomerWhereInput
@@ -37631,22 +37682,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumWarrantyTypeFilter<$PrismaModel>
     _max?: NestedEnumWarrantyTypeFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type MessageCountOrderByAggregateInput = {
@@ -38933,6 +38968,14 @@ export namespace Prisma {
     connect?: AffiliateLinkWhereUniqueInput | AffiliateLinkWhereUniqueInput[]
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type OrderItemUpdateManyWithoutProductNestedInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -39751,14 +39794,6 @@ export namespace Prisma {
     set?: $Enums.WarrantyType
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput = {
     create?: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
     connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsProductInput
@@ -40422,6 +40457,17 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -40438,7 +40484,7 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -40446,7 +40492,12 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumMovementTypeFilter<$PrismaModel = never> = {
@@ -40523,22 +40574,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumWarrantyTypeFilter<$PrismaModel>
     _max?: NestedEnumWarrantyTypeFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumExpenseTypeFilter<$PrismaModel = never> = {
@@ -41787,6 +41822,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -41805,6 +41841,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -41853,6 +41890,7 @@ export namespace Prisma {
     seoSlug?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
+    affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
   }
 
   export type OrderItemCreateWithoutProductInput = {
@@ -42523,6 +42561,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -42542,6 +42581,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -42600,6 +42640,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -42619,6 +42660,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -42667,6 +42709,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -42686,6 +42729,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -42807,6 +42851,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -42826,6 +42871,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -43274,6 +43320,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -43293,6 +43340,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -43358,6 +43406,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -43377,6 +43426,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -43393,6 +43443,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -43412,6 +43463,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -43444,6 +43496,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -43463,6 +43516,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -43755,6 +43809,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -43774,6 +43829,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -43877,6 +43933,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -43896,6 +43953,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -44972,6 +45030,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -44991,6 +45050,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -45140,6 +45200,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -45159,6 +45220,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -45405,6 +45467,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -45424,6 +45487,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -45580,6 +45644,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -45599,6 +45664,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -46595,6 +46661,7 @@ export namespace Prisma {
     seoSlug?: string | null
     isActive?: boolean
     affiliatePrice?: number
+    affiliateCommissionRate?: number | null
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -46605,6 +46672,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -46623,6 +46691,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -46641,6 +46710,7 @@ export namespace Prisma {
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type OrderItemCreateManyProductInput = {

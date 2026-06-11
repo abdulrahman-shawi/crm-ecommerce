@@ -201,9 +201,10 @@ model Product {
   createdAt   DateTime @default(now())
 
   // ─── NEW: E-commerce Affiliate columns ───
-  seoSlug        String? @unique
-  isActive       Boolean @default(true)
-  affiliatePrice Float   @default(0)
+  seoSlug                 String? @unique
+  isActive                Boolean @default(true)
+  affiliatePrice          Float   @default(0)
+  affiliateCommissionRate Float?
 
   // ─── Existing Relations ───
   orderItems          OrderItem[]
