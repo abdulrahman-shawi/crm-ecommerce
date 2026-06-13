@@ -6,6 +6,7 @@ import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
 import { FormInput } from '@/components/ui/form-input';
 import { FormSelect } from '@/components/ui/select-form';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { getallcategory } from '@/server/category';
@@ -552,58 +553,144 @@ const ProductLayout = () => {
                 onClose={() => setIsPreviewOpen(false)}
             >
                 {selectedProduct && (
-                    <div className="p-6 grid md:grid-cols-2 gap-8 text-right" dir="rtl">
-                        {/* Gallery Preview */}
-                        <div className="space-y-4">
-                            <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 border dark:border-slate-800">
-                                <img
-                                    src={selectedProduct.images?.[0]?.url || "/uploads/icon.png"}
-                                    className="w-full h-full object-contain"
-                                    alt={selectedProduct.name}
-                                />
-                            </div>
-                            <div className="flex gap-2 overflow-x-auto pb-2">
-                                {selectedProduct.images?.map((img: any, idx: number) => (
-                                    <img key={idx} src={img.url} className="w-16 h-16 rounded-md object-cover border cursor-pointer hover:border-blue-500" />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Info Section */}
-                        <div className="flex flex-col gap-4">
-                            <div>
-                                <span className="text-xs text-blue-600 font-semibold bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
-                                    {categories.find(c => c.id === selectedProduct.categoryId)?.name || "تصنيف عام"}
-                                </span>
-                                <h1 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white">{selectedProduct.name}</h1>
-                            </div>
-
-                            <div className="text-3xl font-bold text-blue-600">
-                                {Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)} $
-                                {Number(selectedProduct?.__stock?.discount || 0) > 0 && (
-                                    <span className="text-sm text-slate-400 line-through mr-3 font-normal">
-                                        {Number(selectedProduct?.__stock?.price || 0)} $
-                                    </span>
+                    <div className="p-6 text-right" dir="rtl">
+                        {/* Header */}
+                        <div className="flex flex-col md:flex-row gap-6 mb-6">
+                            {/* Gallery Preview */}
+                            <div className="w-full md:w-2/5 space-y-3">
+                                <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 border dark:border-slate-800">
+                                    <img
+                                        src={selectedProduct.images?.[0]?.url || "/uploads/icon.png"}
+                                        className="w-full h-full object-contain"
+                                        alt={selectedProduct.name}
+                                    />
+                                </div>
+                                {selectedProduct.images?.length > 1 && (
+                                    <div className="flex gap-2 overflow-x-auto pb-2">
+                                        {selectedProduct.images?.map((img: any, idx: number) => (
+                                            <img
+                                                key={idx}
+                                                src={img.url}
+                                                className="w-16 h-16 rounded-md object-cover border cursor-pointer hover:border-blue-500"
+                                                alt={`صورة ${idx + 1}`}
+                                            />
+                                        ))}
+                                    </div>
                                 )}
                             </div>
 
-                            <div className="border-t border-b py-4 dark:border-slate-800">
-                                <h3 className="font-semibold mb-2">الوصف:</h3>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    {selectedProduct.description || "لا يوجد وصف لهذا المنتج حالياً."}
-                                </p>
-                            </div>
+                            {/* Info Section */}
+                            <div className="flex-1 flex flex-col gap-4">
+                                <div>
+                                    <span className="text-xs text-blue-600 font-semibold bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
+                                        {categories.find(c => c.id === selectedProduct.categoryId)?.name || "تصنيف عام"}
+                                    </span>
+                                    <h1 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white">
+                                        {selectedProduct.name}
+                                    </h1>
+                                </div>
 
-                            <div className="mt-auto pt-4 flex gap-2">
-                                <Button className="flex-1" onClick={() => {
-                                    setEditId(selectedProduct.id);
-                                    setIsOpen(true);
-                                    setIsPreviewOpen(false);
-                                }}>
-                                    تعديل البيانات
-                                </Button>
-                                <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>إغلاق</Button>
+                                <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                                    <span>التقييمات 0</span>
+                                    <span>|</span>
+                                    <span>الطلبات {selectedProduct.orderItems?.length || 0}</span>
+                                </div>
+
+                                {selectedProduct.googleLink && (
+                                    <a
+                                        href={selectedProduct.googleLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center gap-2 w-fit px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                                    >
+                                        <span className="w-4 h-4 rounded-full border-2 border-slate-400" />
+                                        View live
+                                    </a>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                    {/* Price information */}
+                                    <div className="border rounded-xl p-4 dark:border-slate-800">
+                                        <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات السعر</h3>
+                                        <div className="space-y-3 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">سعر القطعة</span>
+                                                <span className="font-medium text-slate-800 dark:text-slate-100">
+                                                    {Number(selectedProduct?.__stock?.price || 0).toFixed(2)} $
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">الخصم</span>
+                                                <span className="font-medium text-red-500">
+                                                    {Number(selectedProduct?.__stock?.discount || 0).toFixed(2)} $
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between border-t pt-3 dark:border-slate-800">
+                                                <span className="text-slate-500 dark:text-slate-400">السعر النهائي</span>
+                                                <span className="font-bold text-blue-600">
+                                                    {(Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)).toFixed(2)} $
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* General information */}
+                                    <div className="border rounded-xl p-4 dark:border-slate-800">
+                                        <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات عامة</h3>
+                                        <div className="space-y-3 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">المستودع</span>
+                                                <span className="font-medium text-slate-800 dark:text-slate-100">
+                                                    {selectedProduct?.__stock?.warehouse?.name || "غير محدد"}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">الكمية الحالية</span>
+                                                <span className="font-medium text-slate-800 dark:text-slate-100">
+                                                    {Number(selectedProduct?.__stock?.quantity || 0)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">العرض في المتجر</span>
+                                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${selectedProduct.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
+                                                    {selectedProduct.isActive ? "نعم" : "لا"}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500 dark:text-slate-400">تاريخ الإنشاء</span>
+                                                <span className="font-medium text-slate-800 dark:text-slate-100">
+                                                    {selectedProduct.createdAt ? new Date(selectedProduct.createdAt).toLocaleDateString('ar-EG') : "—"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        {/* Description */}
+                        <div className="border-t pt-4 dark:border-slate-800">
+                            <h3 className="font-semibold mb-2 text-slate-800 dark:text-slate-100">الوصف:</h3>
+                            {selectedProduct.description ? (
+                                <div
+                                    className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed tiptap-description"
+                                    dangerouslySetInnerHTML={{ __html: selectedProduct.description }}
+                                />
+                            ) : (
+                                <p className="text-slate-500 dark:text-slate-400">لا يوجد وصف لهذا المنتج حالياً.</p>
+                            )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="mt-6 pt-4 border-t dark:border-slate-800 flex gap-2">
+                            <Button className="flex-1" onClick={() => {
+                                setEditId(selectedProduct.id);
+                                setIsOpen(true);
+                                setIsPreviewOpen(false);
+                            }}>
+                                تعديل البيانات
+                            </Button>
+                            <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>إغلاق</Button>
                         </div>
                     </div>
                 )}
@@ -711,7 +798,21 @@ const ProductLayout = () => {
                                     errors={errors}
                                     warehouses={warehouses}
                                 />
-                                <textarea {...register("description")} placeholder='الوصف' className='col-span-2 border border-slate-400/30 bg-transparent text-slate-900 dark:text-slate-100' rows={5}></textarea>
+                                <div className="col-span-2">
+                                    <Controller
+                                        name="description"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <RichTextEditor
+                                                label="وصف المنتج"
+                                                placeholder="اكتب وصف المنتج هنا..."
+                                                value={field.value || ""}
+                                                onChange={field.onChange}
+                                                error={errors.description?.message as string}
+                                            />
+                                        )}
+                                    />
+                                </div>
                                 <div className="md:col-span-2 flex items-center gap-3">
                                     <Controller
                                         name="isActive"
