@@ -269,10 +269,25 @@ const ProductLayout = () => {
         }
     };
 
-    const handleEdit = (id: string | number) => {
-        setEditId(id);
+    const openEditForm = (data: any) => {
+        setEditId(data.id);
+        setFormData({
+            name: data.name,
+            categoryId: data.categoryId,
+            description: data.description,
+            warehouseStocks: data.stocks?.length
+                ? data.stocks.map((stock: any) => ({
+                    warehouseId: stock.warehouseId,
+                    quantity: stock.quantity,
+                    stockPrice: stock.price ?? 0,
+                    stockDiscount: stock.discount ?? 0,
+                }))
+                : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
+            isActive: data.isActive ?? true,
+            files: data.images || []
+        });
         setIsOpen(true);
-    }
+    };
 
 
 
@@ -337,25 +352,7 @@ const ProductLayout = () => {
             label: "تعديل",
             icon: <Mail size={14} />,
             onClick: (data: any) => {
-                setEditId(data.id);
-                setFormData({
-                    name: data.name,
-                    categoryId: data.categoryId,
-                    description: data.description,
-                    warehouseStocks: data.stocks?.length
-                        ? data.stocks.map((stock: any) => ({
-                            warehouseId: stock.warehouseId,
-                            quantity: stock.quantity,
-                            stockPrice: stock.price ?? 0,
-                            stockDiscount: stock.discount ?? 0,
-                        }))
-                        : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
-                    // تمرير الصور الحالية إذا كان المكون يدعم عرضها كـ Preview
-                    isActive: data.isActive ?? true,
-                    files: data.images || []
-                });
-                console.log("data", data);
-                setIsOpen(true);
+                openEditForm(data);
             }
         },
         (user && (user.accountType === "ADMIN" || user.permission?.deleteProducts === true)) &&
@@ -737,8 +734,7 @@ const ProductLayout = () => {
                         {/* Actions */}
                         <div className="mt-6 pt-4 border-t dark:border-slate-800 flex gap-2">
                             <Button className="flex-1" onClick={() => {
-                                setEditId(selectedProduct.id);
-                                setIsOpen(true);
+                                openEditForm(selectedProduct);
                                 setIsPreviewOpen(false);
                             }}>
                                 تعديل البيانات
