@@ -10,7 +10,8 @@ import {
   Download,
   Warehouse,
   Truck,
-  Wallet
+  Wallet,
+  MessageCircle
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -139,6 +140,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       items: [
         (user && isAdmin(user)) &&
         { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
+        (user && isAdmin(user)) &&
+        { icon: MessageCircle, label: "التعليقات", href: "/dashboard/comments" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];
