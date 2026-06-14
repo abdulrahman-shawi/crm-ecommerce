@@ -18,6 +18,18 @@ export async function getProduct() {
     return JSON.parse(JSON.stringify(products));
 }
 
+export async function toggleProductActive(productId: number, isActive: boolean) {
+    try {
+        await prisma.product.update({
+            where: { id: productId },
+            data: { isActive }
+        });
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error?.message || "فشل تحديث حالة المنتج" };
+    }
+}
+
 export async function getProductCatalog() {
     const products = await prisma.product.findMany({
         orderBy: { createdAt: 'desc' },

@@ -13,6 +13,16 @@ function sanitizeFileName(fileName: string) {
         .toLowerCase();
 }
 
+function generateSeoSlug(name: string) {
+    const base = name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\u0621-\u064a\u0660-\u0669]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    const suffix = Date.now().toString(36);
+    return `${base || 'product'}-${suffix}`;
+}
+
 async function uploadSingleFile(file: File) {
     const fileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
     
@@ -128,6 +138,7 @@ export async function saveProductWithFiles(formData: FormData) {
                 name: normalizedName,
                 description,
                 isActive,
+                seoSlug: generateSeoSlug(normalizedName),
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
@@ -237,33 +248,55 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
 
         // 1. جلب الملفات الجديدة من الـ FormData
         const allEntries = formData.getAll('files');
-        const files = allEntries.filter((entry): entry is File => entry instanceof File && entry.size > 0);
+        const newFiles = allEntries.filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
-        let fileDataArray: any[] = [];
-
-        // 2. إذا وجد ملفات جديدة، نقوم بعملية التنظيف والإضافة
-        if (files.length > 0) {
-            // أ. رفع الملفات الجديدة أولاً
-            fileDataArray = await Promise.all(files.map(uploadSingleFile));
-
-            // ب. جلب بيانات الصور القديمة لحذفها من Vercel Blob
-            const currentProduct = await prisma.product.findUnique({
-                where: { id: productId },
-                include: { images: true }
-            });
-
-            if (currentProduct?.images) {
-                for (const img of currentProduct.images) {
-                    try {
-                        await del(img.url);
-                    } catch (err) {
-                        console.error(`Could not delete blob: ${img.url}`, err);
-                    }
-                }
+        // 2. جلب قائمة الملفات النهائية المرسلة من الواجهة (بعد الحذف/الإضافة)
+        let existingFiles: Array<{ url?: string; type?: string; rawFile?: any }> = [];
+        const existingFilesRaw = formData.get('existingFiles') as string | null;
+        if (existingFilesRaw) {
+            try {
+                existingFiles = JSON.parse(existingFilesRaw);
+            } catch {
+                existingFiles = [];
             }
         }
 
-        // 3. تحديث البيانات في Prisma
+        // 3. جلب الملفات الحالية في قاعدة البيانات
+        const currentProduct = await prisma.product.findUnique({
+            where: { id: productId },
+            include: { images: true }
+        });
+
+        const currentImages = currentProduct?.images || [];
+        const keptFileUrls = new Set(existingFiles.map(f => f.url).filter(Boolean));
+
+        // 4. تحديد الملفات المحذوفة (موجودة في DB وليست في القائمة النهائية)
+        const removedImages = currentImages.filter(img => !keptFileUrls.has(img.url));
+
+        // 5. حذف الملفات المحذوفة من Vercel Blob
+        for (const img of removedImages) {
+            try {
+                await del(img.url);
+            } catch (err) {
+                console.error(`Could not delete blob: ${img.url}`, err);
+            }
+        }
+
+        // 6. رفع الملفات الجديدة
+        let newFileDataArray: any[] = [];
+        if (newFiles.length > 0) {
+            newFileDataArray = await Promise.all(newFiles.map(uploadSingleFile));
+        }
+
+        // 7. بناء قائمة الملفات النهائية للحفظ
+        const finalImages = [
+            ...existingFiles
+                .filter(f => f.url && !f.rawFile)
+                .map(f => ({ url: f.url!, type: f.type || 'application/octet-stream' })),
+            ...newFileDataArray
+        ];
+
+        // 8. تحديث البيانات في Prisma
         const product = await prisma.product.update({
             where: { id: productId },
             data: {
@@ -280,16 +313,13 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                         discount: item.stockDiscount,
                     })),
                 },
-                // تحديث الصور فقط إذا تم رفع صور جديدة
-                ...(files.length > 0 ? {
-                    images: {
-                        deleteMany: {}, // حذف السجلات القديمة من قاعدة البيانات
-                        create: fileDataArray.map(file => ({
-                            url: file.url,
-                            type: file.type,
-                        }))
-                    }
-                } : {})
+                images: {
+                    deleteMany: {},
+                    create: finalImages.map(file => ({
+                        url: file.url,
+                        type: file.type,
+                    }))
+                }
             },
             include: { images: true }
         });

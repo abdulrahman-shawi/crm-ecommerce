@@ -11,7 +11,7 @@ import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { getallcategory } from '@/server/category';
 import { deleteProductFromWarehouse, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
-import { getProduct } from '@/server/product';
+import { getProduct, toggleProductActive } from '@/server/product';
 import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
 import { image } from 'framer-motion/client';
@@ -207,7 +207,8 @@ const ProductLayout = () => {
                 formData.append('isActive', String(data.isActive ?? true));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
-                // معالجة الملفات - استخراج الملف الحقيقي rawFile
+                // معالجة الملفات - إرسال قائمة الملفات النهائية + الملفات الجديدة
+                formData.append('existingFiles', JSON.stringify(data.files || []));
                 if (data.files && data.files.length > 0) {
                     data.files.forEach((fileItem: any) => {
                         if (fileItem.rawFile instanceof File) {
@@ -808,9 +809,31 @@ const ProductLayout = () => {
                         {
                             header: "العرض في المتجر",
                             accessor: (row: any) => (
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${row.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
-                                    {row.isActive ? "نعم" : "لا"}
-                                </span>
+                                <button
+                                    onClick={async () => {
+                                        const loadingToast = toast.loading("جاري تحديث الحالة...");
+                                        try {
+                                            const res = await toggleProductActive(Number(row.id), !row.isActive);
+                                            if (res.success) {
+                                                toast.success("تم تحديث حالة العرض");
+                                                const updated = await getProduct();
+                                                setProducts(updated);
+                                            } else {
+                                                toast.error(res.error || "فشل تحديث الحالة");
+                                            }
+                                        } catch (err) {
+                                            toast.error("حدث خطأ أثناء التحديث");
+                                        } finally {
+                                            toast.dismiss(loadingToast);
+                                        }
+                                    }}
+                                    disabled={!(user && (user.accountType === "ADMIN" || user.permission?.editProducts === true))}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${row.isActive ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-700"}`}
+                                >
+                                    <span
+                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${row.isActive ? "translate-x-6" : "translate-x-1"}`}
+                                    />
+                                </button>
                             )
                         },
 
