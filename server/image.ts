@@ -13,14 +13,40 @@ function sanitizeFileName(fileName: string) {
         .toLowerCase();
 }
 
-function generateSeoSlug(name: string) {
-    const base = name
+function slugify(name: string) {
+    return name
         .trim()
         .toLowerCase()
         .replace(/[^a-z0-9\u0621-\u064a\u0660-\u0669]+/g, '-')
         .replace(/^-+|-+$/g, '');
-    const suffix = Date.now().toString(36);
-    return `${base || 'product'}-${suffix}`;
+}
+
+async function generateSeoSlug(name: string) {
+    const base = slugify(name) || 'product';
+
+    // إذا كان الـ slug الأساسي غير مستخدم، استخدمه مباشرة
+    const existing = await prisma.product.findFirst({
+        where: { seoSlug: base },
+        select: { id: true }
+    });
+
+    if (!existing) {
+        return base;
+    }
+
+    // إذا كان مستخدمًا، أضف رقم تسلسلي
+    let counter = 2;
+    while (true) {
+        const candidate = `${base}-${counter}`;
+        const conflict = await prisma.product.findFirst({
+            where: { seoSlug: candidate },
+            select: { id: true }
+        });
+        if (!conflict) {
+            return candidate;
+        }
+        counter++;
+    }
 }
 
 async function uploadSingleFile(file: File) {
@@ -131,14 +157,17 @@ export async function saveProductWithFiles(formData: FormData) {
         // 1. رفع الملفات بالتوازي
         const fileDataArray = await Promise.all(files.map(uploadSingleFile));
 
-        // 2. حفظ البيانات في Prisma
+        // 2. توليد seoSlug فريد
+        const seoSlug = await generateSeoSlug(normalizedName);
+
+        // 3. حفظ البيانات في Prisma
         // تم استخدام transaction لضمان عدم إنشاء منتج إذا فشلت عملية ربط الصور (اختياري ولكن أفضل)
         const product = await prisma.product.create({
             data: {
                 name: normalizedName,
                 description,
                 isActive,
-                seoSlug: generateSeoSlug(normalizedName),
+                seoSlug,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
