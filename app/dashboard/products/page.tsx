@@ -15,7 +15,7 @@ import { getProduct } from '@/server/product';
 import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
 import { image } from 'framer-motion/client';
-import { FileDown, Mail, Plus, Warehouse } from 'lucide-react';
+import { FileDown, Mail, Plus, Warehouse, FileText } from 'lucide-react';
 import * as React from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -549,15 +549,16 @@ const ProductLayout = () => {
             {/* --- مودال عرض تفاصيل المنتج --- */}
             <AppModal
                 title="تفاصيل المنتج"
+                size="xl"
                 isOpen={isPreviewOpen}
                 onClose={() => setIsPreviewOpen(false)}
             >
                 {selectedProduct && (
-                    <div className="p-6 text-right" dir="rtl">
-                        {/* Header */}
+                    <div className="p-2 md:p-4 text-right" dir="rtl">
+                        {/* Header: صورة + اسم + معلومات أساسية */}
                         <div className="flex flex-col md:flex-row gap-6 mb-6">
-                            {/* Gallery Preview */}
-                            <div className="w-full md:w-2/5 space-y-3">
+                            {/* Main Image */}
+                            <div className="w-full md:w-2/5">
                                 <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 border dark:border-slate-800">
                                     <img
                                         src={selectedProduct.images?.[0]?.url || "/uploads/icon.png"}
@@ -565,18 +566,6 @@ const ProductLayout = () => {
                                         alt={selectedProduct.name}
                                     />
                                 </div>
-                                {selectedProduct.images?.length > 1 && (
-                                    <div className="flex gap-2 overflow-x-auto pb-2">
-                                        {selectedProduct.images?.map((img: any, idx: number) => (
-                                            <img
-                                                key={idx}
-                                                src={img.url}
-                                                className="w-16 h-16 rounded-md object-cover border cursor-pointer hover:border-blue-500"
-                                                alt={`صورة ${idx + 1}`}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Info Section */}
@@ -591,7 +580,7 @@ const ProductLayout = () => {
                                 </div>
 
                                 <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
-                                    <span>التقييمات 0</span>
+                                    <span>التقييمات {selectedProduct.reviews?.length || 0}</span>
                                     <span>|</span>
                                     <span>الطلبات {selectedProduct.orderItems?.length || 0}</span>
                                 </div>
@@ -607,62 +596,63 @@ const ProductLayout = () => {
                                         View live
                                     </a>
                                 )}
+                            </div>
+                        </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                                    {/* Price information */}
-                                    <div className="border rounded-xl p-4 dark:border-slate-800">
-                                        <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات السعر</h3>
-                                        <div className="space-y-3 text-sm">
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">سعر القطعة</span>
-                                                <span className="font-medium text-slate-800 dark:text-slate-100">
-                                                    {Number(selectedProduct?.__stock?.price || 0).toFixed(2)} $
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">الخصم</span>
-                                                <span className="font-medium text-red-500">
-                                                    {Number(selectedProduct?.__stock?.discount || 0).toFixed(2)} $
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between border-t pt-3 dark:border-slate-800">
-                                                <span className="text-slate-500 dark:text-slate-400">السعر النهائي</span>
-                                                <span className="font-bold text-blue-600">
-                                                    {(Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)).toFixed(2)} $
-                                                </span>
-                                            </div>
-                                        </div>
+                        {/* معلومات السعر + معلومات عامة تحت الصورة والاسم */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            {/* Price information */}
+                            <div className="border rounded-xl p-4 dark:border-slate-800">
+                                <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات السعر</h3>
+                                <div className="space-y-3 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">سعر القطعة</span>
+                                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                                            {Number(selectedProduct?.__stock?.price || 0).toFixed(2)} $
+                                        </span>
                                     </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">الخصم</span>
+                                        <span className="font-medium text-red-500">
+                                            {Number(selectedProduct?.__stock?.discount || 0).toFixed(2)} $
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between border-t pt-3 dark:border-slate-800">
+                                        <span className="text-slate-500 dark:text-slate-400">السعر النهائي</span>
+                                        <span className="font-bold text-blue-600">
+                                            {(Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)).toFixed(2)} $
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-                                    {/* General information */}
-                                    <div className="border rounded-xl p-4 dark:border-slate-800">
-                                        <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات عامة</h3>
-                                        <div className="space-y-3 text-sm">
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">المستودع</span>
-                                                <span className="font-medium text-slate-800 dark:text-slate-100">
-                                                    {selectedProduct?.__stock?.warehouse?.name || "غير محدد"}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">الكمية الحالية</span>
-                                                <span className="font-medium text-slate-800 dark:text-slate-100">
-                                                    {Number(selectedProduct?.__stock?.quantity || 0)}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">العرض في المتجر</span>
-                                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${selectedProduct.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
-                                                    {selectedProduct.isActive ? "نعم" : "لا"}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-slate-400">تاريخ الإنشاء</span>
-                                                <span className="font-medium text-slate-800 dark:text-slate-100">
-                                                    {selectedProduct.createdAt ? new Date(selectedProduct.createdAt).toLocaleDateString('ar-EG') : "—"}
-                                                </span>
-                                            </div>
-                                        </div>
+                            {/* General information */}
+                            <div className="border rounded-xl p-4 dark:border-slate-800">
+                                <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4">معلومات عامة</h3>
+                                <div className="space-y-3 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">المستودع</span>
+                                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                                            {selectedProduct?.__stock?.warehouse?.name || "غير محدد"}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">الكمية الحالية</span>
+                                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                                            {Number(selectedProduct?.__stock?.quantity || 0)}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">العرض في المتجر</span>
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${selectedProduct.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
+                                            {selectedProduct.isActive ? "نعم" : "لا"}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500 dark:text-slate-400">تاريخ الإنشاء</span>
+                                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                                            {selectedProduct.createdAt ? new Date(selectedProduct.createdAt).toLocaleDateString('ar-EG') : "—"}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -678,6 +668,69 @@ const ProductLayout = () => {
                                 />
                             ) : (
                                 <p className="text-slate-500 dark:text-slate-400">لا يوجد وصف لهذا المنتج حالياً.</p>
+                            )}
+                        </div>
+
+                        {/* الصور والملفات المرتبطة بالمنتج */}
+                        <div className="border-t pt-4 mt-6 dark:border-slate-800">
+                            <h3 className="font-semibold mb-4 text-slate-800 dark:text-slate-100">الصور والملفات المرتبطة:</h3>
+                            {selectedProduct.images?.length > 0 ? (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    {selectedProduct.images.map((file: any, idx: number) => {
+                                        const isImage = file.type?.startsWith('image/');
+                                        const isVideo = file.type?.startsWith('video/');
+                                        const isPdf = file.type === 'application/pdf' || file.url?.toLowerCase().endsWith('.pdf');
+
+                                        return (
+                                            <div key={idx} className="border rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900 dark:border-slate-800 hover:shadow-md transition-shadow">
+                                                {isImage && (
+                                                    <a href={file.url} target="_blank" rel="noopener noreferrer" className="block aspect-square">
+                                                        <img
+                                                            src={file.url}
+                                                            alt={`ملف ${idx + 1}`}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </a>
+                                                )}
+                                                {isVideo && (
+                                                    <div className="aspect-square">
+                                                        <video
+                                                            src={file.url}
+                                                            controls
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+                                                {isPdf && (
+                                                    <a
+                                                        href={file.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex flex-col items-center justify-center aspect-square p-4 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                                    >
+                                                        <FileText className="w-12 h-12 text-red-500 mb-2" />
+                                                        <span className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">ملف PDF</span>
+                                                        <span className="text-xs text-blue-600 mt-1">فتح الملف</span>
+                                                    </a>
+                                                )}
+                                                {!isImage && !isVideo && !isPdf && (
+                                                    <a
+                                                        href={file.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex flex-col items-center justify-center aspect-square p-4 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                                    >
+                                                        <FileText className="w-12 h-12 text-slate-400 mb-2" />
+                                                        <span className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">ملف مرفق</span>
+                                                        <span className="text-xs text-blue-600 mt-1">فتح الملف</span>
+                                                    </a>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <p className="text-slate-500 dark:text-slate-400">لا توجد صور أو ملفات مرتبطة بهذا المنتج.</p>
                             )}
                         </div>
 
