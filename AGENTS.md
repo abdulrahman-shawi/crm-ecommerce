@@ -216,6 +216,7 @@ Warranty records (`server/warranty.ts`) now require a **warehouse** and **quanti
 - Creating a warranty decrements stock from the selected warehouse and logs a `StockMovement` of type `OUT`.
 - `REPLACEMENT` warranties create a matching `Order` record and store its id on the warranty.
 - Deleting a warranty restores the quantity to the linked warehouse. For replacements, the linked order is deleted first; for `DAMAGED`/`MAINTENANCE`, a `StockMovement` of type `RETURN` is also logged.
+- `customerId` is optional. The customer field is hidden for `DAMAGED` and optional for `MAINTENANCE`, but it is still required for `REPLACEMENT` because an order must be linked to a customer.
 
 ### Cron Jobs
 `lib/cron.ts` runs a monthly job (1st of month at 00:00 UTC) that deactivates active `UserTarget` records. It is imported in the root layout so it initializes once per server process.

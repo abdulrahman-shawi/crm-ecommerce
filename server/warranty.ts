@@ -7,7 +7,7 @@ import { getCurrentSessionUser } from "@/server/order";
 type WarrantyPayload = {
   type: "REPLACEMENT" | "MAINTENANCE" | "DAMAGED";
   productId: number;
-  customerId: string;
+  customerId?: string | null;
   warehouseId?: number | null;
   quantity?: number;
   maintenanceLaborCost?: number | null;
@@ -46,8 +46,12 @@ export async function getWarrantyData() {
 
 export async function createWarrantyAction(payload: WarrantyPayload) {
   try {
-    if (!payload.customerId || !payload.productId || !payload.type) {
+    if (!payload.productId || !payload.type) {
       return { success: false, error: "البيانات الأساسية غير مكتملة" };
+    }
+
+    if (payload.type === "REPLACEMENT" && !payload.customerId) {
+      return { success: false, error: "يرجى اختيار العميل لتسجيل طلب التبديل" };
     }
 
     if (!payload.warehouseId) {
@@ -108,14 +112,20 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
             where: { id: warehouseId },
             select: { id: true, location: true },
           }),
-          tx.customer.findUnique({
-            where: { id: payload.customerId },
-            select: { id: true, name: true },
-          }),
+          payload.customerId
+            ? tx.customer.findUnique({
+                where: { id: payload.customerId },
+                select: { id: true, name: true },
+              })
+            : null,
         ]);
 
         if (!warehouse) {
           throw new Error("المستودع المختار غير موجود");
+        }
+
+        if (!customer) {
+          throw new Error("العميل المختار غير موجود");
         }
 
         const price = Number(currentStock.price || 0);
@@ -132,10 +142,10 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
             totalAmount,
             discount: discount * quantity,
             finalAmount,
-            receiverName: customer?.name || null,
+            receiverName: customer.name || null,
             receiverPhone: [],
             country: warehouse.location,
-            customer: { connect: { id: payload.customerId } },
+            customer: { connect: { id: payload.customerId! } },
             ...(currentUser ? { user: { connect: { id: currentUser.id } } } : {}),
             warehouse: { connect: { id: warehouseId } },
             items: {
@@ -158,7 +168,7 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
         data: {
           type: payload.type,
           productId,
-          customerId: payload.customerId,
+          customerId: payload.customerId || null,
           warehouseId,
           orderId,
           quantity,

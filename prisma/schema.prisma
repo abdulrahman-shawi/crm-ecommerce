@@ -403,7 +403,7 @@ model Warranty {
   id                   String       @id @default(uuid())
   type                 WarrantyType
   productId            Int
-  customerId           String
+  customerId           String?
   warehouseId          Int?
   orderId              Int?
   quantity             Int          @default(1)
@@ -414,7 +414,7 @@ model Warranty {
   updatedAt            DateTime     @updatedAt
 
   product            Product   @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
-  customer           Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customer           Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
   warehouse          Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
   order              Order?     @relation(fields: [orderId], references: [id], onDelete: SetNull)
 

@@ -16,7 +16,7 @@ import z from "zod";
 
 const warrantySchema = z.object({
   type: z.enum(["REPLACEMENT", "MAINTENANCE", "DAMAGED"]),
-  customerId: z.string().min(1, "العميل مطلوب"),
+  customerId: z.string().optional(),
   productId: z.coerce.number().min(1, "المنتج مطلوب"),
   warehouseId: z.coerce.number().min(1, "المستودع مطلوب"),
   quantity: z.coerce.number().min(1, "الكمية يجب أن تكون 1 على الأقل").default(1),
@@ -333,6 +333,9 @@ export default function WarrantyPage() {
                       onChange: (e) => {
                         const nextType = e.target.value as "REPLACEMENT" | "MAINTENANCE" | "DAMAGED";
                         setWarrantyType(nextType);
+                        if (nextType === "DAMAGED") {
+                          setValue("customerId", "" as any);
+                        }
                         if (nextType !== "MAINTENANCE") {
                           setValue("maintenanceLaborCost", undefined as any);
                         }
@@ -341,13 +344,15 @@ export default function WarrantyPage() {
                     error={errors.type?.message as string}
                   />
 
-                  <FormSelect
-                    className="text-gray-800 dark:text-white"
-                    label="العميل"
-                    options={customerOptions}
-                    {...register("customerId")}
-                    error={errors.customerId?.message as string}
-                  />
+                  {currentType !== "DAMAGED" && (
+                    <FormSelect
+                      className="text-gray-800 dark:text-white"
+                      label="العميل"
+                      options={customerOptions}
+                      {...register("customerId")}
+                      error={errors.customerId?.message as string}
+                    />
+                  )}
 
                   <FormSelect
                     className="text-gray-800 dark:text-white"
