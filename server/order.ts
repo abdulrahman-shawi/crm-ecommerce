@@ -124,7 +124,7 @@ function getAllowedWarehouseLocations(user: any) {
     return locations;
 }
 
-async function getCurrentSessionUser() {
+export async function getCurrentSessionUser() {
     try {
         const session = cookies().get("skynova")?.value;
         if (!session) return null;

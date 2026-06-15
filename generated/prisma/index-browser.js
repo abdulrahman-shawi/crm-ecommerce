@@ -308,6 +308,7 @@ exports.Prisma.WarrantyScalarFieldEnum = {
   productId: 'productId',
   customerId: 'customerId',
   warehouseId: 'warehouseId',
+  orderId: 'orderId',
   quantity: 'quantity',
   maintenanceLaborCost: 'maintenanceLaborCost',
   shippingCost: 'shippingCost',

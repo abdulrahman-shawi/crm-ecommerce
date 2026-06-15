@@ -18,7 +18,7 @@ const warrantySchema = z.object({
   type: z.enum(["REPLACEMENT", "MAINTENANCE", "DAMAGED"]),
   customerId: z.string().min(1, "العميل مطلوب"),
   productId: z.coerce.number().min(1, "المنتج مطلوب"),
-  warehouseId: z.coerce.number().optional(),
+  warehouseId: z.coerce.number().min(1, "المستودع مطلوب"),
   quantity: z.coerce.number().min(1, "الكمية يجب أن تكون 1 على الأقل").default(1),
   maintenanceLaborCost: z.coerce.number().optional(),
   shippingCost: z.coerce.number().optional(),
@@ -192,6 +192,9 @@ export default function WarrantyPage() {
           columns={[
             { header: "العميل", accessor: (row: any) => row.customer?.name || "-" },
             { header: "المنتج المرتجع", accessor: (row: any) => row.product?.name || "-" },
+            { header: "المستودع", accessor: (row: any) => row.warehouse?.name || "-" },
+            { header: "الكمية", accessor: (row: any) => <span className="font-black text-red-600">-{row.quantity}</span> },
+            { header: "رقم الطلب", accessor: (row: any) => row.order?.orderNumber || "-" },
             {
               header: "التاريخ",
               accessor: (row: any) =>
@@ -229,6 +232,8 @@ export default function WarrantyPage() {
           columns={[
             { header: "العميل", accessor: (row: any) => row.customer?.name || "-" },
             { header: "المنتج", accessor: (row: any) => row.product?.name || "-" },
+            { header: "المستودع", accessor: (row: any) => row.warehouse?.name || "-" },
+            { header: "الكمية", accessor: (row: any) => <span className="font-black text-red-600">-{row.quantity}</span> },
             { header: "أجور الصيانة", accessor: (row: any) => (row.maintenanceLaborCost != null ? Number(row.maintenanceLaborCost).toLocaleString() : "-") },
             { header: "أجور الشحن", accessor: (row: any) => (row.shippingCost != null ? Number(row.shippingCost).toLocaleString() : "-") },
             {
@@ -328,9 +333,6 @@ export default function WarrantyPage() {
                       onChange: (e) => {
                         const nextType = e.target.value as "REPLACEMENT" | "MAINTENANCE" | "DAMAGED";
                         setWarrantyType(nextType);
-                        if (nextType !== "DAMAGED") {
-                          setValue("warehouseId", undefined as any);
-                        }
                         if (nextType !== "MAINTENANCE") {
                           setValue("maintenanceLaborCost", undefined as any);
                         }
@@ -355,26 +357,22 @@ export default function WarrantyPage() {
                     error={errors.productId?.message as string}
                   />
 
-                  {currentType === "DAMAGED" && (
-                    <FormSelect
-                      className="text-gray-800 dark:text-white"
-                      label="المستودع"
-                      options={warehouseOptions}
-                      {...register("warehouseId")}
-                      error={errors.warehouseId?.message as string}
-                    />
-                  )}
+                  <FormSelect
+                    className="text-gray-800 dark:text-white"
+                    label="المستودع"
+                    options={warehouseOptions}
+                    {...register("warehouseId")}
+                    error={errors.warehouseId?.message as string}
+                  />
 
-                  {(currentType === "DAMAGED" || currentType === "REPLACEMENT") && (
-                    <FormInput
-                      className="text-gray-800 dark:text-white"
-                      type="number"
-                      min={1}
-                      label="الكمية"
-                      {...register("quantity")}
-                      error={errors.quantity?.message as string}
-                    />
-                  )}
+                  <FormInput
+                    className="text-gray-800 dark:text-white"
+                    type="number"
+                    min={1}
+                    label="الكمية"
+                    {...register("quantity")}
+                    error={errors.quantity?.message as string}
+                  />
 
                   {currentType === "MAINTENANCE" && (
                     <>

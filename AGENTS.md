@@ -211,6 +211,12 @@ Orders affect stock in real time via `applyOrderStockChange` in `server/order.ts
 - Cancelled/returned statuses **restore** stock.
 - Warehouses are located in either Turkey or Syria; stock lookups fall back by location name when `warehouseId` is absent.
 
+### Warranty
+Warranty records (`server/warranty.ts`) now require a **warehouse** and **quantity** for every type:
+- Creating a warranty decrements stock from the selected warehouse and logs a `StockMovement` of type `OUT`.
+- `REPLACEMENT` warranties create a matching `Order` record and store its id on the warranty.
+- Deleting a warranty restores the quantity to the linked warehouse. For replacements, the linked order is deleted first; for `DAMAGED`/`MAINTENANCE`, a `StockMovement` of type `RETURN` is also logged.
+
 ### Cron Jobs
 `lib/cron.ts` runs a monthly job (1st of month at 00:00 UTC) that deactivates active `UserTarget` records. It is imported in the root layout so it initializes once per server process.
 

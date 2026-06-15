@@ -3519,11 +3519,13 @@ export namespace Prisma {
 
   export type OrderCountOutputType = {
     items: number
+    warranties: number
     commissions: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | OrderCountOutputTypeCountItemsArgs
+    warranties?: boolean | OrderCountOutputTypeCountWarrantiesArgs
     commissions?: boolean | OrderCountOutputTypeCountCommissionsArgs
   }
 
@@ -3543,6 +3545,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountWarrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarrantyWhereInput
   }
 
   /**
@@ -19804,6 +19813,7 @@ export namespace Prisma {
   export type WarrantyAvgAggregateOutputType = {
     productId: number | null
     warehouseId: number | null
+    orderId: number | null
     quantity: number | null
     maintenanceLaborCost: number | null
     shippingCost: number | null
@@ -19812,6 +19822,7 @@ export namespace Prisma {
   export type WarrantySumAggregateOutputType = {
     productId: number | null
     warehouseId: number | null
+    orderId: number | null
     quantity: number | null
     maintenanceLaborCost: number | null
     shippingCost: number | null
@@ -19823,6 +19834,7 @@ export namespace Prisma {
     productId: number | null
     customerId: string | null
     warehouseId: number | null
+    orderId: number | null
     quantity: number | null
     maintenanceLaborCost: number | null
     shippingCost: number | null
@@ -19837,6 +19849,7 @@ export namespace Prisma {
     productId: number | null
     customerId: string | null
     warehouseId: number | null
+    orderId: number | null
     quantity: number | null
     maintenanceLaborCost: number | null
     shippingCost: number | null
@@ -19851,6 +19864,7 @@ export namespace Prisma {
     productId: number
     customerId: number
     warehouseId: number
+    orderId: number
     quantity: number
     maintenanceLaborCost: number
     shippingCost: number
@@ -19864,6 +19878,7 @@ export namespace Prisma {
   export type WarrantyAvgAggregateInputType = {
     productId?: true
     warehouseId?: true
+    orderId?: true
     quantity?: true
     maintenanceLaborCost?: true
     shippingCost?: true
@@ -19872,6 +19887,7 @@ export namespace Prisma {
   export type WarrantySumAggregateInputType = {
     productId?: true
     warehouseId?: true
+    orderId?: true
     quantity?: true
     maintenanceLaborCost?: true
     shippingCost?: true
@@ -19883,6 +19899,7 @@ export namespace Prisma {
     productId?: true
     customerId?: true
     warehouseId?: true
+    orderId?: true
     quantity?: true
     maintenanceLaborCost?: true
     shippingCost?: true
@@ -19897,6 +19914,7 @@ export namespace Prisma {
     productId?: true
     customerId?: true
     warehouseId?: true
+    orderId?: true
     quantity?: true
     maintenanceLaborCost?: true
     shippingCost?: true
@@ -19911,6 +19929,7 @@ export namespace Prisma {
     productId?: true
     customerId?: true
     warehouseId?: true
+    orderId?: true
     quantity?: true
     maintenanceLaborCost?: true
     shippingCost?: true
@@ -20012,6 +20031,7 @@ export namespace Prisma {
     productId: number
     customerId: string
     warehouseId: number | null
+    orderId: number | null
     quantity: number
     maintenanceLaborCost: number | null
     shippingCost: number | null
@@ -20045,6 +20065,7 @@ export namespace Prisma {
     productId?: boolean
     customerId?: boolean
     warehouseId?: boolean
+    orderId?: boolean
     quantity?: boolean
     maintenanceLaborCost?: boolean
     shippingCost?: boolean
@@ -20054,6 +20075,7 @@ export namespace Prisma {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }, ExtArgs["result"]["warranty"]>
 
   export type WarrantySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20062,6 +20084,7 @@ export namespace Prisma {
     productId?: boolean
     customerId?: boolean
     warehouseId?: boolean
+    orderId?: boolean
     quantity?: boolean
     maintenanceLaborCost?: boolean
     shippingCost?: boolean
@@ -20071,6 +20094,7 @@ export namespace Prisma {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }, ExtArgs["result"]["warranty"]>
 
   export type WarrantySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20079,6 +20103,7 @@ export namespace Prisma {
     productId?: boolean
     customerId?: boolean
     warehouseId?: boolean
+    orderId?: boolean
     quantity?: boolean
     maintenanceLaborCost?: boolean
     shippingCost?: boolean
@@ -20088,6 +20113,7 @@ export namespace Prisma {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }, ExtArgs["result"]["warranty"]>
 
   export type WarrantySelectScalar = {
@@ -20096,6 +20122,7 @@ export namespace Prisma {
     productId?: boolean
     customerId?: boolean
     warehouseId?: boolean
+    orderId?: boolean
     quantity?: boolean
     maintenanceLaborCost?: boolean
     shippingCost?: boolean
@@ -20104,21 +20131,24 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WarrantyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "productId" | "customerId" | "warehouseId" | "quantity" | "maintenanceLaborCost" | "shippingCost" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["warranty"]>
+  export type WarrantyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "productId" | "customerId" | "warehouseId" | "orderId" | "quantity" | "maintenanceLaborCost" | "shippingCost" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["warranty"]>
   export type WarrantyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }
   export type WarrantyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }
   export type WarrantyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     warehouse?: boolean | Warranty$warehouseArgs<ExtArgs>
+    order?: boolean | Warranty$orderArgs<ExtArgs>
   }
 
   export type $WarrantyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20127,6 +20157,7 @@ export namespace Prisma {
       product: Prisma.$ProductPayload<ExtArgs>
       customer: Prisma.$CustomerPayload<ExtArgs>
       warehouse: Prisma.$WarehousePayload<ExtArgs> | null
+      order: Prisma.$OrderPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20134,6 +20165,7 @@ export namespace Prisma {
       productId: number
       customerId: string
       warehouseId: number | null
+      orderId: number | null
       quantity: number
       maintenanceLaborCost: number | null
       shippingCost: number | null
@@ -20537,6 +20569,7 @@ export namespace Prisma {
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     warehouse<T extends Warranty$warehouseArgs<ExtArgs> = {}>(args?: Subset<T, Warranty$warehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    order<T extends Warranty$orderArgs<ExtArgs> = {}>(args?: Subset<T, Warranty$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20571,6 +20604,7 @@ export namespace Prisma {
     readonly productId: FieldRef<"Warranty", 'Int'>
     readonly customerId: FieldRef<"Warranty", 'String'>
     readonly warehouseId: FieldRef<"Warranty", 'Int'>
+    readonly orderId: FieldRef<"Warranty", 'Int'>
     readonly quantity: FieldRef<"Warranty", 'Int'>
     readonly maintenanceLaborCost: FieldRef<"Warranty", 'Float'>
     readonly shippingCost: FieldRef<"Warranty", 'Float'>
@@ -20989,6 +21023,25 @@ export namespace Prisma {
      */
     include?: WarehouseInclude<ExtArgs> | null
     where?: WarehouseWhereInput
+  }
+
+  /**
+   * Warranty.order
+   */
+  export type Warranty$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
   }
 
   /**
@@ -22568,6 +22621,7 @@ export namespace Prisma {
     items?: boolean | Order$itemsArgs<ExtArgs>
     warehouse?: boolean | Order$warehouseArgs<ExtArgs>
     shipping?: boolean | Order$shippingArgs<ExtArgs>
+    warranties?: boolean | Order$warrantiesArgs<ExtArgs>
     commissions?: boolean | Order$commissionsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -22701,6 +22755,7 @@ export namespace Prisma {
     items?: boolean | Order$itemsArgs<ExtArgs>
     warehouse?: boolean | Order$warehouseArgs<ExtArgs>
     shipping?: boolean | Order$shippingArgs<ExtArgs>
+    warranties?: boolean | Order$warrantiesArgs<ExtArgs>
     commissions?: boolean | Order$commissionsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -22725,6 +22780,7 @@ export namespace Prisma {
       items: Prisma.$OrderItemPayload<ExtArgs>[]
       warehouse: Prisma.$WarehousePayload<ExtArgs> | null
       shipping: Prisma.$shippingPayload<ExtArgs> | null
+      warranties: Prisma.$WarrantyPayload<ExtArgs>[]
       commissions: Prisma.$CommissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -23162,6 +23218,7 @@ export namespace Prisma {
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warehouse<T extends Order$warehouseArgs<ExtArgs> = {}>(args?: Subset<T, Order$warehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     shipping<T extends Order$shippingArgs<ExtArgs> = {}>(args?: Subset<T, Order$shippingArgs<ExtArgs>>): Prisma__shippingClient<$Result.GetResult<Prisma.$shippingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    warranties<T extends Order$warrantiesArgs<ExtArgs> = {}>(args?: Subset<T, Order$warrantiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     commissions<T extends Order$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, Order$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -23701,6 +23758,30 @@ export namespace Prisma {
      */
     include?: shippingInclude<ExtArgs> | null
     where?: shippingWhereInput
+  }
+
+  /**
+   * Order.warranties
+   */
+  export type Order$warrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warranty
+     */
+    select?: WarrantySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warranty
+     */
+    omit?: WarrantyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarrantyInclude<ExtArgs> | null
+    where?: WarrantyWhereInput
+    orderBy?: WarrantyOrderByWithRelationInput | WarrantyOrderByWithRelationInput[]
+    cursor?: WarrantyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarrantyScalarFieldEnum | WarrantyScalarFieldEnum[]
   }
 
   /**
@@ -33049,6 +33130,7 @@ export namespace Prisma {
     productId: 'productId',
     customerId: 'customerId',
     warehouseId: 'warehouseId',
+    orderId: 'orderId',
     quantity: 'quantity',
     maintenanceLaborCost: 'maintenanceLaborCost',
     shippingCost: 'shippingCost',
@@ -34678,6 +34760,7 @@ export namespace Prisma {
     productId?: IntFilter<"Warranty"> | number
     customerId?: StringFilter<"Warranty"> | string
     warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    orderId?: IntNullableFilter<"Warranty"> | number | null
     quantity?: IntFilter<"Warranty"> | number
     maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
     shippingCost?: FloatNullableFilter<"Warranty"> | number | null
@@ -34687,6 +34770,7 @@ export namespace Prisma {
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
   }
 
   export type WarrantyOrderByWithRelationInput = {
@@ -34695,6 +34779,7 @@ export namespace Prisma {
     productId?: SortOrder
     customerId?: SortOrder
     warehouseId?: SortOrderInput | SortOrder
+    orderId?: SortOrderInput | SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrderInput | SortOrder
     shippingCost?: SortOrderInput | SortOrder
@@ -34704,6 +34789,7 @@ export namespace Prisma {
     product?: ProductOrderByWithRelationInput
     customer?: CustomerOrderByWithRelationInput
     warehouse?: WarehouseOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
   }
 
   export type WarrantyWhereUniqueInput = Prisma.AtLeast<{
@@ -34715,6 +34801,7 @@ export namespace Prisma {
     productId?: IntFilter<"Warranty"> | number
     customerId?: StringFilter<"Warranty"> | string
     warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    orderId?: IntNullableFilter<"Warranty"> | number | null
     quantity?: IntFilter<"Warranty"> | number
     maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
     shippingCost?: FloatNullableFilter<"Warranty"> | number | null
@@ -34724,6 +34811,7 @@ export namespace Prisma {
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
   }, "id">
 
   export type WarrantyOrderByWithAggregationInput = {
@@ -34732,6 +34820,7 @@ export namespace Prisma {
     productId?: SortOrder
     customerId?: SortOrder
     warehouseId?: SortOrderInput | SortOrder
+    orderId?: SortOrderInput | SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrderInput | SortOrder
     shippingCost?: SortOrderInput | SortOrder
@@ -34754,6 +34843,7 @@ export namespace Prisma {
     productId?: IntWithAggregatesFilter<"Warranty"> | number
     customerId?: StringWithAggregatesFilter<"Warranty"> | string
     warehouseId?: IntNullableWithAggregatesFilter<"Warranty"> | number | null
+    orderId?: IntNullableWithAggregatesFilter<"Warranty"> | number | null
     quantity?: IntWithAggregatesFilter<"Warranty"> | number
     maintenanceLaborCost?: FloatNullableWithAggregatesFilter<"Warranty"> | number | null
     shippingCost?: FloatNullableWithAggregatesFilter<"Warranty"> | number | null
@@ -34869,6 +34959,7 @@ export namespace Prisma {
     items?: OrderItemListRelationFilter
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     shipping?: XOR<ShippingNullableScalarRelationFilter, shippingWhereInput> | null
+    warranties?: WarrantyListRelationFilter
     commissions?: CommissionListRelationFilter
   }
 
@@ -34913,6 +35004,7 @@ export namespace Prisma {
     items?: OrderItemOrderByRelationAggregateInput
     warehouse?: WarehouseOrderByWithRelationInput
     shipping?: shippingOrderByWithRelationInput
+    warranties?: WarrantyOrderByRelationAggregateInput
     commissions?: CommissionOrderByRelationAggregateInput
   }
 
@@ -34960,6 +35052,7 @@ export namespace Prisma {
     items?: OrderItemListRelationFilter
     warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     shipping?: XOR<ShippingNullableScalarRelationFilter, shippingWhereInput> | null
+    warranties?: WarrantyListRelationFilter
     commissions?: CommissionListRelationFilter
   }, "id" | "orderNumber">
 
@@ -36992,6 +37085,7 @@ export namespace Prisma {
     product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
     customer: CustomerCreateNestedOneWithoutWarrantiesInput
     warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+    order?: OrderCreateNestedOneWithoutWarrantiesInput
   }
 
   export type WarrantyUncheckedCreateInput = {
@@ -37000,6 +37094,7 @@ export namespace Prisma {
     productId: number
     customerId: string
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -37020,6 +37115,7 @@ export namespace Prisma {
     product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
     customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
     warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+    order?: OrderUpdateOneWithoutWarrantiesNestedInput
   }
 
   export type WarrantyUncheckedUpdateInput = {
@@ -37028,6 +37124,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -37042,6 +37139,7 @@ export namespace Prisma {
     productId: number
     customerId: string
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -37067,6 +37165,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -37172,6 +37271,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -37212,6 +37312,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -37251,6 +37352,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -37291,6 +37393,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -39203,12 +39306,18 @@ export namespace Prisma {
     isNot?: WarehouseWhereInput | null
   }
 
+  export type OrderNullableScalarRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
   export type WarrantyCountOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
     productId?: SortOrder
     customerId?: SortOrder
     warehouseId?: SortOrder
+    orderId?: SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrder
     shippingCost?: SortOrder
@@ -39220,6 +39329,7 @@ export namespace Prisma {
   export type WarrantyAvgOrderByAggregateInput = {
     productId?: SortOrder
     warehouseId?: SortOrder
+    orderId?: SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrder
     shippingCost?: SortOrder
@@ -39231,6 +39341,7 @@ export namespace Prisma {
     productId?: SortOrder
     customerId?: SortOrder
     warehouseId?: SortOrder
+    orderId?: SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrder
     shippingCost?: SortOrder
@@ -39245,6 +39356,7 @@ export namespace Prisma {
     productId?: SortOrder
     customerId?: SortOrder
     warehouseId?: SortOrder
+    orderId?: SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrder
     shippingCost?: SortOrder
@@ -39256,6 +39368,7 @@ export namespace Prisma {
   export type WarrantySumOrderByAggregateInput = {
     productId?: SortOrder
     warehouseId?: SortOrder
+    orderId?: SortOrder
     quantity?: SortOrder
     maintenanceLaborCost?: SortOrder
     shippingCost?: SortOrder
@@ -41491,6 +41604,12 @@ export namespace Prisma {
     connect?: WarehouseWhereUniqueInput
   }
 
+  export type OrderCreateNestedOneWithoutWarrantiesInput = {
+    create?: XOR<OrderCreateWithoutWarrantiesInput, OrderUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutWarrantiesInput
+    connect?: OrderWhereUniqueInput
+  }
+
   export type EnumWarrantyTypeFieldUpdateOperationsInput = {
     set?: $Enums.WarrantyType
   }
@@ -41519,6 +41638,16 @@ export namespace Prisma {
     delete?: WarehouseWhereInput | boolean
     connect?: WarehouseWhereUniqueInput
     update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutWarrantiesInput, WarehouseUpdateWithoutWarrantiesInput>, WarehouseUncheckedUpdateWithoutWarrantiesInput>
+  }
+
+  export type OrderUpdateOneWithoutWarrantiesNestedInput = {
+    create?: XOR<OrderCreateWithoutWarrantiesInput, OrderUncheckedCreateWithoutWarrantiesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutWarrantiesInput
+    upsert?: OrderUpsertWithoutWarrantiesInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutWarrantiesInput, OrderUpdateWithoutWarrantiesInput>, OrderUncheckedUpdateWithoutWarrantiesInput>
   }
 
   export type CustomerCreateNestedOneWithoutMessageInput = {
@@ -41584,6 +41713,13 @@ export namespace Prisma {
     connect?: shippingWhereUniqueInput
   }
 
+  export type WarrantyCreateNestedManyWithoutOrderInput = {
+    create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput> | WarrantyCreateWithoutOrderInput[] | WarrantyUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput | WarrantyCreateOrConnectWithoutOrderInput[]
+    createMany?: WarrantyCreateManyOrderInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
   export type CommissionCreateNestedManyWithoutOrderInput = {
     create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
@@ -41596,6 +41732,13 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type WarrantyUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput> | WarrantyCreateWithoutOrderInput[] | WarrantyUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput | WarrantyCreateOrConnectWithoutOrderInput[]
+    createMany?: WarrantyCreateManyOrderInputEnvelope
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
   export type CommissionUncheckedCreateNestedManyWithoutOrderInput = {
@@ -41662,6 +41805,20 @@ export namespace Prisma {
     update?: XOR<XOR<shippingUpdateToOneWithWhereWithoutOrdersInput, shippingUpdateWithoutOrdersInput>, shippingUncheckedUpdateWithoutOrdersInput>
   }
 
+  export type WarrantyUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput> | WarrantyCreateWithoutOrderInput[] | WarrantyUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput | WarrantyCreateOrConnectWithoutOrderInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutOrderInput | WarrantyUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: WarrantyCreateManyOrderInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutOrderInput | WarrantyUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutOrderInput | WarrantyUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
   export type CommissionUpdateManyWithoutOrderNestedInput = {
     create?: XOR<CommissionCreateWithoutOrderInput, CommissionUncheckedCreateWithoutOrderInput> | CommissionCreateWithoutOrderInput[] | CommissionUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: CommissionCreateOrConnectWithoutOrderInput | CommissionCreateOrConnectWithoutOrderInput[]
@@ -41688,6 +41845,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput> | WarrantyCreateWithoutOrderInput[] | WarrantyUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput | WarrantyCreateOrConnectWithoutOrderInput[]
+    upsert?: WarrantyUpsertWithWhereUniqueWithoutOrderInput | WarrantyUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: WarrantyCreateManyOrderInputEnvelope
+    set?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    disconnect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    delete?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+    update?: WarrantyUpdateWithWhereUniqueWithoutOrderInput | WarrantyUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: WarrantyUpdateManyWithWhereWithoutOrderInput | WarrantyUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
   }
 
   export type CommissionUncheckedUpdateManyWithoutOrderNestedInput = {
@@ -42515,6 +42686,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -42554,6 +42726,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -43825,6 +43998,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     customer: CustomerCreateNestedOneWithoutWarrantiesInput
     warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+    order?: OrderCreateNestedOneWithoutWarrantiesInput
   }
 
   export type WarrantyUncheckedCreateWithoutProductInput = {
@@ -43832,6 +44006,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     customerId: string
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -44093,6 +44268,7 @@ export namespace Prisma {
     productId?: IntFilter<"Warranty"> | number
     customerId?: StringFilter<"Warranty"> | string
     warehouseId?: IntNullableFilter<"Warranty"> | number | null
+    orderId?: IntNullableFilter<"Warranty"> | number | null
     quantity?: IntFilter<"Warranty"> | number
     maintenanceLaborCost?: FloatNullableFilter<"Warranty"> | number | null
     shippingCost?: FloatNullableFilter<"Warranty"> | number | null
@@ -44423,6 +44599,7 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -44462,6 +44639,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -44516,6 +44694,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
     customer: CustomerCreateNestedOneWithoutWarrantiesInput
+    order?: OrderCreateNestedOneWithoutWarrantiesInput
   }
 
   export type WarrantyUncheckedCreateWithoutWarehouseInput = {
@@ -44523,6 +44702,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     productId: number
     customerId: string
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -45640,6 +45820,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -45679,6 +45860,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -45794,6 +45976,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
     warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+    order?: OrderCreateNestedOneWithoutWarrantiesInput
   }
 
   export type WarrantyUncheckedCreateWithoutCustomerInput = {
@@ -45801,6 +45984,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     productId: number
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -45998,6 +46182,90 @@ export namespace Prisma {
     create: XOR<WarehouseCreateWithoutWarrantiesInput, WarehouseUncheckedCreateWithoutWarrantiesInput>
   }
 
+  export type OrderCreateWithoutWarrantiesInput = {
+    orderNumber: string
+    usdToTryRateAtOrder?: number | null
+    shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    pay?: string | null
+    receiverName?: string | null
+    receiverPhone?: OrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    invoiceImage?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    amount?: string | null
+    amountBank?: string | null
+    deliveryMethod?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    user?: UserCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+    warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
+    shipping?: shippingCreateNestedOneWithoutOrdersInput
+    commissions?: CommissionCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutWarrantiesInput = {
+    id?: number
+    orderNumber: string
+    usdToTryRateAtOrder?: number | null
+    shippingPrice?: number | null
+    moneyTransferCommission?: number | null
+    otherCommissions?: number | null
+    carrierCollectionReceivedAt?: Date | string | null
+    carrierCollectionReceivedAmount?: number | null
+    carrierCollectionNotes?: string | null
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    pay?: string | null
+    receiverName?: string | null
+    receiverPhone?: OrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    invoiceImage?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    amount?: string | null
+    amountBank?: string | null
+    deliveryMethod?: string | null
+    additionalNotes?: string | null
+    status?: string
+    customerId: string
+    userId?: string | null
+    warehouseId?: number | null
+    shippingId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutWarrantiesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutWarrantiesInput, OrderUncheckedCreateWithoutWarrantiesInput>
+  }
+
   export type ProductUpsertWithoutWarrantiesAsProductInput = {
     update: XOR<ProductUpdateWithoutWarrantiesAsProductInput, ProductUncheckedUpdateWithoutWarrantiesAsProductInput>
     create: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
@@ -46129,6 +46397,96 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type OrderUpsertWithoutWarrantiesInput = {
+    update: XOR<OrderUpdateWithoutWarrantiesInput, OrderUncheckedUpdateWithoutWarrantiesInput>
+    create: XOR<OrderCreateWithoutWarrantiesInput, OrderUncheckedCreateWithoutWarrantiesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutWarrantiesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutWarrantiesInput, OrderUncheckedUpdateWithoutWarrantiesInput>
+  }
+
+  export type OrderUpdateWithoutWarrantiesInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceImage?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+    warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
+    shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    commissions?: CommissionUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutWarrantiesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    usdToTryRateAtOrder?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    moneyTransferCommission?: NullableFloatFieldUpdateOperationsInput | number | null
+    otherCommissions?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionReceivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    carrierCollectionReceivedAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    carrierCollectionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    pay?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: OrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceImage?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    shippingId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type CustomerCreateWithoutMessageInput = {
@@ -46546,6 +46904,44 @@ export namespace Prisma {
     create: XOR<shippingCreateWithoutOrdersInput, shippingUncheckedCreateWithoutOrdersInput>
   }
 
+  export type WarrantyCreateWithoutOrderInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWarrantiesAsProductInput
+    customer: CustomerCreateNestedOneWithoutWarrantiesInput
+    warehouse?: WarehouseCreateNestedOneWithoutWarrantiesInput
+  }
+
+  export type WarrantyUncheckedCreateWithoutOrderInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarrantyCreateOrConnectWithoutOrderInput = {
+    where: WarrantyWhereUniqueInput
+    create: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
+  }
+
+  export type WarrantyCreateManyOrderInputEnvelope = {
+    data: WarrantyCreateManyOrderInput | WarrantyCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CommissionCreateWithoutOrderInput = {
     id?: string
     amount: number
@@ -46770,6 +47166,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WarrantyUpsertWithWhereUniqueWithoutOrderInput = {
+    where: WarrantyWhereUniqueInput
+    update: XOR<WarrantyUpdateWithoutOrderInput, WarrantyUncheckedUpdateWithoutOrderInput>
+    create: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
+  }
+
+  export type WarrantyUpdateWithWhereUniqueWithoutOrderInput = {
+    where: WarrantyWhereUniqueInput
+    data: XOR<WarrantyUpdateWithoutOrderInput, WarrantyUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type WarrantyUpdateManyWithWhereWithoutOrderInput = {
+    where: WarrantyScalarWhereInput
+    data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutOrderInput>
+  }
+
   export type CommissionUpsertWithWhereUniqueWithoutOrderInput = {
     where: CommissionWhereUniqueInput
     update: XOR<CommissionUpdateWithoutOrderInput, CommissionUncheckedUpdateWithoutOrderInput>
@@ -46970,6 +47382,7 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -47009,6 +47422,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -47073,6 +47487,7 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutOrdersInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
     commissions?: CommissionCreateNestedManyWithoutOrderInput
   }
 
@@ -47112,6 +47527,7 @@ export namespace Prisma {
     manualCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -47239,6 +47655,7 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutOrdersNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -47278,6 +47695,7 @@ export namespace Prisma {
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -47884,6 +48302,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     warehouse?: WarehouseCreateNestedOneWithoutOrdersInput
     shipping?: shippingCreateNestedOneWithoutOrdersInput
+    warranties?: WarrantyCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCommissionsInput = {
@@ -47923,6 +48342,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCommissionsInput = {
@@ -48012,6 +48432,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCommissionsInput = {
@@ -48051,6 +48472,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserCreateManyParentInput = {
@@ -48311,6 +48733,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -48350,6 +48773,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -48922,6 +49346,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     customerId: string
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -49079,6 +49504,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
     warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+    order?: OrderUpdateOneWithoutWarrantiesNestedInput
   }
 
   export type WarrantyUncheckedUpdateWithoutProductInput = {
@@ -49086,6 +49512,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49099,6 +49526,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     customerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49234,6 +49662,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     productId: number
     customerId: string
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -49300,6 +49729,7 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -49339,6 +49769,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -49420,6 +49851,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
     customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+    order?: OrderUpdateOneWithoutWarrantiesNestedInput
   }
 
   export type WarrantyUncheckedUpdateWithoutWarehouseInput = {
@@ -49427,6 +49859,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     productId?: IntFieldUpdateOperationsInput | number
     customerId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49440,6 +49873,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     productId?: IntFieldUpdateOperationsInput | number
     customerId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49526,6 +49960,7 @@ export namespace Prisma {
     type: $Enums.WarrantyType
     productId: number
     warehouseId?: number | null
+    orderId?: number | null
     quantity?: number
     maintenanceLaborCost?: number | null
     shippingCost?: number | null
@@ -49569,6 +50004,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
     shipping?: shippingUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -49608,6 +50044,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -49763,6 +50200,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
     warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+    order?: OrderUpdateOneWithoutWarrantiesNestedInput
   }
 
   export type WarrantyUncheckedUpdateWithoutCustomerInput = {
@@ -49770,6 +50208,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     productId?: IntFieldUpdateOperationsInput | number
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49783,6 +50222,7 @@ export namespace Prisma {
     type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
     productId?: IntFieldUpdateOperationsInput | number
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     quantity?: IntFieldUpdateOperationsInput | number
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49798,6 +50238,20 @@ export namespace Prisma {
     discount: number
     productId: number
     affiliateLinkId?: string | null
+  }
+
+  export type WarrantyCreateManyOrderInput = {
+    id?: string
+    type: $Enums.WarrantyType
+    productId: number
+    customerId: string
+    warehouseId?: number | null
+    quantity?: number
+    maintenanceLaborCost?: number | null
+    shippingCost?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CommissionCreateManyOrderInput = {
@@ -49833,6 +50287,48 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
     affiliateLinkId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type WarrantyUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWarrantiesAsProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutWarrantiesNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWarrantiesNestedInput
+  }
+
+  export type WarrantyUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarrantyUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumWarrantyTypeFieldUpdateOperationsInput | $Enums.WarrantyType
+    productId?: IntFieldUpdateOperationsInput | number
+    customerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommissionUpdateWithoutOrderInput = {
@@ -49934,6 +50430,7 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     warehouse?: WarehouseUpdateOneWithoutOrdersNestedInput
+    warranties?: WarrantyUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUpdateManyWithoutOrderNestedInput
   }
 
@@ -49973,6 +50470,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutOrderNestedInput
   }
 

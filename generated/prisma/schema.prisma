@@ -402,6 +402,7 @@ model Warranty {
   productId            Int
   customerId           String
   warehouseId          Int?
+  orderId              Int?
   quantity             Int          @default(1)
   maintenanceLaborCost Float?
   shippingCost         Float?
@@ -412,6 +413,9 @@ model Warranty {
   product   Product    @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
   customer  Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
   warehouse Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+  order     Order?     @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
 }
 
 // ============================================
@@ -471,11 +475,12 @@ model Order {
   updatedAt                       DateTime  @updatedAt
 
   // ─── Existing Relations ───
-  customer  Customer    @relation(fields: [customerId], references: [id])
-  user      User?       @relation(fields: [userId], references: [id])
-  items     OrderItem[]
-  warehouse Warehouse?  @relation(fields: [warehouseId], references: [id])
-  shipping  shipping?   @relation(fields: [shippingId], references: [id])
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
+  items      OrderItem[]
+  warehouse  Warehouse?  @relation(fields: [warehouseId], references: [id])
+  shipping   shipping?   @relation(fields: [shippingId], references: [id])
+  warranties Warranty[]
 
   // ─── NEW: E-commerce Affiliate Relations ───
   commissions Commission[]
