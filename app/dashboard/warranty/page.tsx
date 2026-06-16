@@ -6,6 +6,7 @@ import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
 import { FormSelect } from "@/components/ui/select-form";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission } from "@/lib/utils";
 import { createWarrantyAction, deleteWarrantyAction, getWarrantyData } from "@/server/warranty";
@@ -13,6 +14,7 @@ import { Plus, Trash2 } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import z from "zod";
+import { Controller } from "react-hook-form";
 
 const warrantySchema = z.object({
   type: z.enum(["REPLACEMENT", "MAINTENANCE", "DAMAGED"]),
@@ -304,7 +306,7 @@ export default function WarrantyPage() {
               notes: "",
             }}
           >
-            {({ register, watch, setValue, formState: { errors } }) => {
+            {({ register, watch, setValue, control, formState: { errors } }) => {
               const currentType = watch("type") || warrantyType;
               const productOptions = products.map((product) => ({
                 value: String(product.id),
@@ -312,7 +314,7 @@ export default function WarrantyPage() {
               }));
               const customerOptions = customers.map((customer) => ({
                 value: customer.id,
-                label: customer.name,
+                label: `${customer.name} ${customer.phone?.[0] ? `(${customer.phone[0]})` : ""}`.trim(),
               }));
               const warehouseOptions = warehouses.map((warehouse) => ({
                 value: String(warehouse.id),
@@ -345,21 +347,37 @@ export default function WarrantyPage() {
                   />
 
                   {currentType !== "DAMAGED" && (
-                    <FormSelect
-                      className="text-gray-800 dark:text-white"
-                      label="العميل"
-                      options={customerOptions}
-                      {...register("customerId")}
-                      error={errors.customerId?.message as string}
+                    <Controller
+                      name="customerId"
+                      control={control}
+                      render={({ field }) => (
+                        <SearchableSelect
+                          label="العميل"
+                          placeholder="اختر العميل..."
+                          searchPlaceholder="ابحث بالاسم أو رقم الهاتف..."
+                          options={customerOptions}
+                          value={field.value}
+                          onChange={(val) => field.onChange(String(val))}
+                          error={errors.customerId?.message as string}
+                        />
+                      )}
                     />
                   )}
 
-                  <FormSelect
-                    className="text-gray-800 dark:text-white"
-                    label={currentType === "REPLACEMENT" ? "المنتج المرتجع" : "المنتج"}
-                    options={productOptions}
-                    {...register("productId")}
-                    error={errors.productId?.message as string}
+                  <Controller
+                    name="productId"
+                    control={control}
+                    render={({ field }) => (
+                      <SearchableSelect
+                        label={currentType === "REPLACEMENT" ? "المنتج المرتجع" : "المنتج"}
+                        placeholder="اختر المنتج..."
+                        searchPlaceholder="ابحث باسم المنتج..."
+                        options={productOptions}
+                        value={field.value}
+                        onChange={(val) => field.onChange(Number(val))}
+                        error={errors.productId?.message as string}
+                      />
+                    )}
                   />
 
                   <FormSelect
