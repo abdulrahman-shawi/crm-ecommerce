@@ -176,6 +176,10 @@ exports.Prisma.PermissionScalarFieldEnum = {
   editPermissions: 'editPermissions',
   addPermissions: 'addPermissions',
   deletePermissions: 'deletePermissions',
+  viewPages: 'viewPages',
+  addPages: 'addPages',
+  editPages: 'editPages',
+  deletePages: 'deletePages',
   accessSyria: 'accessSyria',
   accessTurkey: 'accessTurkey'
 };
@@ -427,6 +431,18 @@ exports.Prisma.EmployeeSalaryAdjustmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  content: 'content',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  isPublished: 'isPublished',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AffiliateLinkScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -543,6 +559,7 @@ exports.Prisma.ModelName = {
   TrakingCompany: 'TrakingCompany',
   GeneralSetting: 'GeneralSetting',
   EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment',
+  Page: 'Page',
   AffiliateLink: 'AffiliateLink',
   Commission: 'Commission'
 };

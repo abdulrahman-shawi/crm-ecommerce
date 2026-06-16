@@ -72,8 +72,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         <p className="font-bold text-slate-900 dark:text-white mb-2">تثبيت على iPhone</p>
         <ol className="text-sm text-slate-600 dark:text-slate-400 space-y-1 list-decimal list-inside mb-3">
           <li>اضغط على زر المشاركة <span className="inline-block">⬆️</span></li>
-          <li>اختر "أضف إلى شاشتك الرئيسية"</li>
-          <li>اضغط "إضافة"</li>
+          <li>اختر &quot;أضف إلى شاشتك الرئيسية&quot;</li>
+          <li>اضغط &quot;إضافة&quot;</li>
         </ol>
         <button 
           onClick={() => toast.dismiss(t.id)}
@@ -142,6 +142,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
         (user && isAdmin(user)) &&
         { icon: MessageCircle, label: "التعليقات", href: "/dashboard/comments" },
+        (user && hasAnyPermission(user, ["viewPages", "addPages", "editPages", "deletePages"])) &&
+        { icon: FileText, label: "الصفحات", href: "/dashboard/pages" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];

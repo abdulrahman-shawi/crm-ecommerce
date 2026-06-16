@@ -160,7 +160,7 @@ npx prisma migrate deploy
 
 Connection is configured via `DATABASE_URL` in `.env`. A `prisma.config.ts` file is also present for Prisma's new configuration format.
 
-**Important models:** `User`, `Permission`, `Order`, `OrderItem`, `Product`, `ProductStock`, `Warehouse`, `Customer`, `Expense`, `Shipping`, `Warranty`, `AffiliateLink`, `Commission`.
+**Important models:** `User`, `Permission`, `Order`, `OrderItem`, `Product`, `ProductStock`, `Warehouse`, `Customer`, `Expense`, `Shipping`, `Warranty`, `Page`, `AffiliateLink`, `Commission`.
 
 ---
 
@@ -171,7 +171,7 @@ Connection is configured via `DATABASE_URL` in `.env`. A `prisma.config.ts` file
   - Redirects unauthenticated users from `/dashboard/*` to `/`.
   - Redirects authenticated users from `/` to `/dashboard`.
 - **Roles:** `ADMIN`, `MANAGER`, `STAFF`.
-- **Permissions:** Granular CRUD permissions per module (products, orders, customers, employees, expenses, categories, permissions, analytics). Admins bypass all permission checks.
+- **Permissions:** Granular CRUD permissions per module (products, orders, customers, employees, expenses, categories, permissions, pages, analytics). Admins bypass all permission checks.
 - **Impersonation:** Admins can impersonate other users via `?asUser=<id>` query param or session storage key `skynova_as_user_id`. Stop impersonation with `?asUser=me`.
 
 ### Security Considerations

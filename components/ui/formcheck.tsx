@@ -14,7 +14,8 @@ interface FormCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
 export const FormCheckbox = React.forwardRef<HTMLInputElement, FormCheckboxProps>(
   ({ label, description, error, className, id, ...props }, ref) => {
     // توليد ID عشوائي إذا لم يتوفر لربط الليبل بالـ input
-    const checkboxId = id || React.useId();
+    const generatedId = React.useId();
+    const checkboxId = id || generatedId;
 
     return (
       <div className="w-full">

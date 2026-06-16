@@ -44,6 +44,11 @@ export interface Permission {
   editPermissions: boolean;
   deletePermissions: boolean;
 
+  viewPages: boolean;
+  addPages: boolean;
+  editPages: boolean;
+  deletePages: boolean;
+
   accessTurkey: boolean;
   accessSyria: boolean;
 
