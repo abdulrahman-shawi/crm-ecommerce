@@ -585,6 +585,12 @@ model GeneralSetting {
   companyPhone    String?
   siteCurrency    String?  @default("USD")
   usdToTryRate    Float?   @default(0)
+  logo            String?
+  facebookUrl     String?
+  instagramUrl    String?
+  topBannerText   String?
+  primaryColor    String?  @default("#10b981")
+  secondaryColor  String?  @default("#0f766e")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -622,6 +628,25 @@ model Page {
   updatedAt       DateTime @updatedAt
 
   @@map("pages")
+}
+
+// ============================================
+// HeroSlide (E-commerce Homepage Slider)
+// ============================================
+
+model HeroSlide {
+  id          String   @id @default(cuid())
+  title       String?
+  subtitle    String?
+  image       String
+  buttonText  String?
+  buttonLink  String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("hero_slides")
 }
 
 // ╔══════════════════════════════════════════════════════════════╗

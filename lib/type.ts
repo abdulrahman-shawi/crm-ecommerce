@@ -92,3 +92,33 @@ export interface NavItem {
   isMega?: boolean;
   sections?: NavSection[]; // الأقسام التي تظهر في المنيو الكبير
 }
+
+export interface GeneralSetting {
+  id: number;
+  siteName?: string | null;
+  companyEmail?: string | null;
+  companyPhone?: string | null;
+  siteCurrency?: string | null;
+  usdToTryRate?: number | null;
+  logo?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  topBannerText?: string | null;
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface HeroSlide {
+  id: string;
+  title?: string | null;
+  subtitle?: string | null;
+  image: string;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

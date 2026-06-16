@@ -4,6 +4,7 @@ import * as React from "react";
 import toast from "react-hot-toast";
 import { getGeneralSettings, upsertGeneralSettings } from "@/server/general-settings";
 import { Button } from "@/components/ui/button";
+import { MultiFileUpload, FileItem } from "@/components/ui/ImageUpload";
 
 type FormState = {
   siteName: string;
@@ -11,6 +12,12 @@ type FormState = {
   companyPhone: string;
   siteCurrency: string;
   usdToTryRate: string;
+  logo: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  topBannerText: string;
+  primaryColor: string;
+  secondaryColor: string;
 };
 
 const initialForm: FormState = {
@@ -19,10 +26,17 @@ const initialForm: FormState = {
   companyPhone: "",
   siteCurrency: "USD",
   usdToTryRate: "0",
+  logo: "",
+  facebookUrl: "",
+  instagramUrl: "",
+  topBannerText: "",
+  primaryColor: "#10b981",
+  secondaryColor: "#0f766e",
 };
 
 export default function GeneralSettingsPage() {
   const [form, setForm] = React.useState<FormState>(initialForm);
+  const [logoFiles, setLogoFiles] = React.useState<FileItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [exporting, setExporting] = React.useState(false);
@@ -51,7 +65,17 @@ export default function GeneralSettingsPage() {
         companyPhone: data.companyPhone || "",
         siteCurrency: data.siteCurrency || "USD",
         usdToTryRate: String(data.usdToTryRate ?? 0),
+        logo: data.logo || "",
+        facebookUrl: data.facebookUrl || "",
+        instagramUrl: data.instagramUrl || "",
+        topBannerText: data.topBannerText || "",
+        primaryColor: data.primaryColor || "#10b981",
+        secondaryColor: data.secondaryColor || "#0f766e",
       });
+
+      if (data.logo) {
+        setLogoFiles([{ url: data.logo, type: "image/*", name: "site-logo" }]);
+      }
     }
 
     setLoading(false);
@@ -66,13 +90,28 @@ export default function GeneralSettingsPage() {
     const loadingToast = toast.loading("جاري حفظ الإعدادات...");
 
     try {
-      const res = await upsertGeneralSettings({
-        siteName: form.siteName,
-        companyEmail: form.companyEmail,
-        companyPhone: form.companyPhone,
-        siteCurrency: form.siteCurrency,
-        usdToTryRate: Number(form.usdToTryRate || 0),
-      });
+      const formData = new FormData();
+      formData.append("siteName", form.siteName);
+      formData.append("companyEmail", form.companyEmail);
+      formData.append("companyPhone", form.companyPhone);
+      formData.append("siteCurrency", form.siteCurrency);
+      formData.append("usdToTryRate", form.usdToTryRate);
+      formData.append("facebookUrl", form.facebookUrl);
+      formData.append("instagramUrl", form.instagramUrl);
+      formData.append("topBannerText", form.topBannerText);
+      formData.append("primaryColor", form.primaryColor);
+      formData.append("secondaryColor", form.secondaryColor);
+
+      const logoFile = logoFiles[0]?.rawFile;
+      if (logoFile instanceof File && logoFile.size > 0) {
+        formData.append("logo", logoFile);
+      } else if (form.logo && !logoFiles.length) {
+        // تم مسح اللوجو
+      } else if (form.logo) {
+        formData.append("logo", form.logo);
+      }
+
+      const res = await upsertGeneralSettings(formData);
 
       if (res.success) {
         toast.success("تم حفظ الإعدادات العامة بنجاح");
@@ -228,6 +267,93 @@ export default function GeneralSettingsPage() {
             className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
             placeholder="0"
             disabled={loading}
+          />
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">نص البانر العلوي</label>
+          <input
+            type="text"
+            value={form.topBannerText}
+            onChange={(e) => handleChange("topBannerText", e.target.value)}
+            className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+            placeholder="مثال: شحن مجاني للطلبات فوق 100$"
+            disabled={loading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">رابط فيسبوك</label>
+          <input
+            type="url"
+            value={form.facebookUrl}
+            onChange={(e) => handleChange("facebookUrl", e.target.value)}
+            className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+            placeholder="https://facebook.com/..."
+            disabled={loading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">رابط إنستغرام</label>
+          <input
+            type="url"
+            value={form.instagramUrl}
+            onChange={(e) => handleChange("instagramUrl", e.target.value)}
+            className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+            placeholder="https://instagram.com/..."
+            disabled={loading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">اللون الأساسي</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={form.primaryColor}
+              onChange={(e) => handleChange("primaryColor", e.target.value)}
+              className="h-10 w-14 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+              disabled={loading}
+            />
+            <input
+              type="text"
+              value={form.primaryColor}
+              onChange={(e) => handleChange("primaryColor", e.target.value)}
+              className="flex-1 p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+              placeholder="#10b981"
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">اللون الثانوي</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={form.secondaryColor}
+              onChange={(e) => handleChange("secondaryColor", e.target.value)}
+              className="h-10 w-14 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+              disabled={loading}
+            />
+            <input
+              type="text"
+              value={form.secondaryColor}
+              onChange={(e) => handleChange("secondaryColor", e.target.value)}
+              className="flex-1 p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+              placeholder="#0f766e"
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">لوجو الموقع</label>
+          <MultiFileUpload
+            label=""
+            value={logoFiles}
+            onChange={(files) => setLogoFiles(files.slice(0, 1))}
           />
         </div>
       </div>

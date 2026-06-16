@@ -11,7 +11,8 @@ import {
   Warehouse,
   Truck,
   Wallet,
-  MessageCircle
+  MessageCircle,
+  ImageIcon
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -144,6 +145,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: MessageCircle, label: "التعليقات", href: "/dashboard/comments" },
         (user && hasAnyPermission(user, ["viewPages", "addPages", "editPages", "deletePages"])) &&
         { icon: FileText, label: "الصفحات", href: "/dashboard/pages" },
+        (user && isAdmin(user)) &&
+        { icon: ImageIcon, label: "سلايدر الرئيسية", href: "/dashboard/hero-slides" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];

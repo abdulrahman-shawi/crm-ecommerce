@@ -418,6 +418,12 @@ exports.Prisma.GeneralSettingScalarFieldEnum = {
   companyPhone: 'companyPhone',
   siteCurrency: 'siteCurrency',
   usdToTryRate: 'usdToTryRate',
+  logo: 'logo',
+  facebookUrl: 'facebookUrl',
+  instagramUrl: 'instagramUrl',
+  topBannerText: 'topBannerText',
+  primaryColor: 'primaryColor',
+  secondaryColor: 'secondaryColor',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -439,6 +445,19 @@ exports.Prisma.PageScalarFieldEnum = {
   metaTitle: 'metaTitle',
   metaDescription: 'metaDescription',
   isPublished: 'isPublished',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HeroSlideScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  image: 'image',
+  buttonText: 'buttonText',
+  buttonLink: 'buttonLink',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -560,6 +579,7 @@ exports.Prisma.ModelName = {
   GeneralSetting: 'GeneralSetting',
   EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment',
   Page: 'Page',
+  HeroSlide: 'HeroSlide',
   AffiliateLink: 'AffiliateLink',
   Commission: 'Commission'
 };
