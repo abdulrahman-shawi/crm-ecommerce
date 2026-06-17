@@ -34,6 +34,11 @@ export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
  */
 export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
 /**
+ * Model ProductLandingPage
+ * 
+ */
+export type ProductLandingPage = $Result.DefaultSelection<Prisma.$ProductLandingPagePayload>
+/**
  * Model Review
  * 
  */
@@ -439,6 +444,16 @@ export class PrismaClient<
     * ```
     */
   get product(): Prisma.ProductDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.productLandingPage`: Exposes CRUD operations for the **ProductLandingPage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductLandingPages
+    * const productLandingPages = await prisma.productLandingPage.findMany()
+    * ```
+    */
+  get productLandingPage(): Prisma.ProductLandingPageDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.review`: Exposes CRUD operations for the **Review** model.
@@ -1097,6 +1112,7 @@ export namespace Prisma {
     Permission: 'Permission',
     Category: 'Category',
     Product: 'Product',
+    ProductLandingPage: 'ProductLandingPage',
     Review: 'Review',
     Warehouse: 'Warehouse',
     ProductStock: 'ProductStock',
@@ -1134,7 +1150,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "commission"
+      modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "commission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1431,6 +1447,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ProductCountArgs<ExtArgs>
             result: $Utils.Optional<ProductCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProductLandingPage: {
+        payload: Prisma.$ProductLandingPagePayload<ExtArgs>
+        fields: Prisma.ProductLandingPageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductLandingPageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductLandingPageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          findFirst: {
+            args: Prisma.ProductLandingPageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductLandingPageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          findMany: {
+            args: Prisma.ProductLandingPageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>[]
+          }
+          create: {
+            args: Prisma.ProductLandingPageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          createMany: {
+            args: Prisma.ProductLandingPageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductLandingPageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>[]
+          }
+          delete: {
+            args: Prisma.ProductLandingPageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          update: {
+            args: Prisma.ProductLandingPageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductLandingPageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductLandingPageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductLandingPageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductLandingPageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductLandingPagePayload>
+          }
+          aggregate: {
+            args: Prisma.ProductLandingPageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductLandingPage>
+          }
+          groupBy: {
+            args: Prisma.ProductLandingPageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductLandingPageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductLandingPageCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductLandingPageCountAggregateOutputType> | number
           }
         }
       }
@@ -3174,6 +3264,7 @@ export namespace Prisma {
     permission?: PermissionOmit
     category?: CategoryOmit
     product?: ProductOmit
+    productLandingPage?: ProductLandingPageOmit
     review?: ReviewOmit
     warehouse?: WarehouseOmit
     productStock?: ProductStockOmit
@@ -8104,6 +8195,7 @@ export namespace Prisma {
     createdAt: Date | null
     seoSlug: string | null
     isActive: boolean | null
+    showInAds: boolean | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
   }
@@ -8117,6 +8209,7 @@ export namespace Prisma {
     createdAt: Date | null
     seoSlug: string | null
     isActive: boolean | null
+    showInAds: boolean | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
   }
@@ -8130,6 +8223,7 @@ export namespace Prisma {
     createdAt: number
     seoSlug: number
     isActive: number
+    showInAds: number
     affiliatePrice: number
     affiliateCommissionRate: number
     _all: number
@@ -8159,6 +8253,7 @@ export namespace Prisma {
     createdAt?: true
     seoSlug?: true
     isActive?: true
+    showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
   }
@@ -8172,6 +8267,7 @@ export namespace Prisma {
     createdAt?: true
     seoSlug?: true
     isActive?: true
+    showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
   }
@@ -8185,6 +8281,7 @@ export namespace Prisma {
     createdAt?: true
     seoSlug?: true
     isActive?: true
+    showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
     _all?: true
@@ -8285,6 +8382,7 @@ export namespace Prisma {
     createdAt: Date
     seoSlug: string | null
     isActive: boolean
+    showInAds: boolean
     affiliatePrice: number
     affiliateCommissionRate: number | null
     _count: ProductCountAggregateOutputType | null
@@ -8317,6 +8415,7 @@ export namespace Prisma {
     createdAt?: boolean
     seoSlug?: boolean
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
@@ -8328,6 +8427,7 @@ export namespace Prisma {
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
+    landingPage?: boolean | Product$landingPageArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -8340,6 +8440,7 @@ export namespace Prisma {
     createdAt?: boolean
     seoSlug?: boolean
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8354,6 +8455,7 @@ export namespace Prisma {
     createdAt?: boolean
     seoSlug?: boolean
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8368,11 +8470,12 @@ export namespace Prisma {
     createdAt?: boolean
     seoSlug?: boolean
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "showInAds" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8383,6 +8486,7 @@ export namespace Prisma {
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
+    landingPage?: boolean | Product$landingPageArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8404,6 +8508,7 @@ export namespace Prisma {
       warrantiesAsProduct: Prisma.$WarrantyPayload<ExtArgs>[]
       affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      landingPage: Prisma.$ProductLandingPagePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8414,6 +8519,7 @@ export namespace Prisma {
       createdAt: Date
       seoSlug: string | null
       isActive: boolean
+      showInAds: boolean
       affiliatePrice: number
       affiliateCommissionRate: number | null
     }, ExtArgs["result"]["product"]>
@@ -8819,6 +8925,7 @@ export namespace Prisma {
     warrantiesAsProduct<T extends Product$warrantiesAsProductArgs<ExtArgs> = {}>(args?: Subset<T, Product$warrantiesAsProductArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     affiliateLinks<T extends Product$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, Product$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    landingPage<T extends Product$landingPageArgs<ExtArgs> = {}>(args?: Subset<T, Product$landingPageArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8856,6 +8963,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly seoSlug: FieldRef<"Product", 'String'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
+    readonly showInAds: FieldRef<"Product", 'Boolean'>
     readonly affiliatePrice: FieldRef<"Product", 'Float'>
     readonly affiliateCommissionRate: FieldRef<"Product", 'Float'>
   }
@@ -9465,6 +9573,25 @@ export namespace Prisma {
   }
 
   /**
+   * Product.landingPage
+   */
+  export type Product$landingPageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    where?: ProductLandingPageWhereInput
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9480,6 +9607,1241 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProductLandingPage
+   */
+
+  export type AggregateProductLandingPage = {
+    _count: ProductLandingPageCountAggregateOutputType | null
+    _avg: ProductLandingPageAvgAggregateOutputType | null
+    _sum: ProductLandingPageSumAggregateOutputType | null
+    _min: ProductLandingPageMinAggregateOutputType | null
+    _max: ProductLandingPageMaxAggregateOutputType | null
+  }
+
+  export type ProductLandingPageAvgAggregateOutputType = {
+    productId: number | null
+    discountPercent: number | null
+  }
+
+  export type ProductLandingPageSumAggregateOutputType = {
+    productId: number | null
+    discountPercent: number | null
+  }
+
+  export type ProductLandingPageMinAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    heroTitle: string | null
+    heroSubtitle: string | null
+    heroDescription: string | null
+    badgeText: string | null
+    discountPercent: number | null
+    showReviews: boolean | null
+    showGuarantee: boolean | null
+    guaranteeTitle: string | null
+    guaranteeText: string | null
+    ctaText: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductLandingPageMaxAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    heroTitle: string | null
+    heroSubtitle: string | null
+    heroDescription: string | null
+    badgeText: string | null
+    discountPercent: number | null
+    showReviews: boolean | null
+    showGuarantee: boolean | null
+    guaranteeTitle: string | null
+    guaranteeText: string | null
+    ctaText: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductLandingPageCountAggregateOutputType = {
+    id: number
+    productId: number
+    heroTitle: number
+    heroSubtitle: number
+    heroDescription: number
+    badgeText: number
+    discountPercent: number
+    features: number
+    showReviews: number
+    showGuarantee: number
+    guaranteeTitle: number
+    guaranteeText: number
+    ctaText: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProductLandingPageAvgAggregateInputType = {
+    productId?: true
+    discountPercent?: true
+  }
+
+  export type ProductLandingPageSumAggregateInputType = {
+    productId?: true
+    discountPercent?: true
+  }
+
+  export type ProductLandingPageMinAggregateInputType = {
+    id?: true
+    productId?: true
+    heroTitle?: true
+    heroSubtitle?: true
+    heroDescription?: true
+    badgeText?: true
+    discountPercent?: true
+    showReviews?: true
+    showGuarantee?: true
+    guaranteeTitle?: true
+    guaranteeText?: true
+    ctaText?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductLandingPageMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    heroTitle?: true
+    heroSubtitle?: true
+    heroDescription?: true
+    badgeText?: true
+    discountPercent?: true
+    showReviews?: true
+    showGuarantee?: true
+    guaranteeTitle?: true
+    guaranteeText?: true
+    ctaText?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductLandingPageCountAggregateInputType = {
+    id?: true
+    productId?: true
+    heroTitle?: true
+    heroSubtitle?: true
+    heroDescription?: true
+    badgeText?: true
+    discountPercent?: true
+    features?: true
+    showReviews?: true
+    showGuarantee?: true
+    guaranteeTitle?: true
+    guaranteeText?: true
+    ctaText?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProductLandingPageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductLandingPage to aggregate.
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductLandingPages to fetch.
+     */
+    orderBy?: ProductLandingPageOrderByWithRelationInput | ProductLandingPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductLandingPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductLandingPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductLandingPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductLandingPages
+    **/
+    _count?: true | ProductLandingPageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductLandingPageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductLandingPageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductLandingPageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductLandingPageMaxAggregateInputType
+  }
+
+  export type GetProductLandingPageAggregateType<T extends ProductLandingPageAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductLandingPage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductLandingPage[P]>
+      : GetScalarType<T[P], AggregateProductLandingPage[P]>
+  }
+
+
+
+
+  export type ProductLandingPageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductLandingPageWhereInput
+    orderBy?: ProductLandingPageOrderByWithAggregationInput | ProductLandingPageOrderByWithAggregationInput[]
+    by: ProductLandingPageScalarFieldEnum[] | ProductLandingPageScalarFieldEnum
+    having?: ProductLandingPageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductLandingPageCountAggregateInputType | true
+    _avg?: ProductLandingPageAvgAggregateInputType
+    _sum?: ProductLandingPageSumAggregateInputType
+    _min?: ProductLandingPageMinAggregateInputType
+    _max?: ProductLandingPageMaxAggregateInputType
+  }
+
+  export type ProductLandingPageGroupByOutputType = {
+    id: string
+    productId: number
+    heroTitle: string | null
+    heroSubtitle: string | null
+    heroDescription: string | null
+    badgeText: string | null
+    discountPercent: number | null
+    features: JsonValue | null
+    showReviews: boolean
+    showGuarantee: boolean
+    guaranteeTitle: string | null
+    guaranteeText: string | null
+    ctaText: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ProductLandingPageCountAggregateOutputType | null
+    _avg: ProductLandingPageAvgAggregateOutputType | null
+    _sum: ProductLandingPageSumAggregateOutputType | null
+    _min: ProductLandingPageMinAggregateOutputType | null
+    _max: ProductLandingPageMaxAggregateOutputType | null
+  }
+
+  type GetProductLandingPageGroupByPayload<T extends ProductLandingPageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductLandingPageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductLandingPageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductLandingPageGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductLandingPageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductLandingPageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    heroTitle?: boolean
+    heroSubtitle?: boolean
+    heroDescription?: boolean
+    badgeText?: boolean
+    discountPercent?: boolean
+    features?: boolean
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: boolean
+    guaranteeText?: boolean
+    ctaText?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productLandingPage"]>
+
+  export type ProductLandingPageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    heroTitle?: boolean
+    heroSubtitle?: boolean
+    heroDescription?: boolean
+    badgeText?: boolean
+    discountPercent?: boolean
+    features?: boolean
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: boolean
+    guaranteeText?: boolean
+    ctaText?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productLandingPage"]>
+
+  export type ProductLandingPageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    heroTitle?: boolean
+    heroSubtitle?: boolean
+    heroDescription?: boolean
+    badgeText?: boolean
+    discountPercent?: boolean
+    features?: boolean
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: boolean
+    guaranteeText?: boolean
+    ctaText?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productLandingPage"]>
+
+  export type ProductLandingPageSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    heroTitle?: boolean
+    heroSubtitle?: boolean
+    heroDescription?: boolean
+    badgeText?: boolean
+    discountPercent?: boolean
+    features?: boolean
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: boolean
+    guaranteeText?: boolean
+    ctaText?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProductLandingPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "heroTitle" | "heroSubtitle" | "heroDescription" | "badgeText" | "discountPercent" | "features" | "showReviews" | "showGuarantee" | "guaranteeTitle" | "guaranteeText" | "ctaText" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["productLandingPage"]>
+  export type ProductLandingPageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductLandingPageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductLandingPageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $ProductLandingPagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductLandingPage"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: number
+      heroTitle: string | null
+      heroSubtitle: string | null
+      heroDescription: string | null
+      badgeText: string | null
+      discountPercent: number | null
+      features: Prisma.JsonValue | null
+      showReviews: boolean
+      showGuarantee: boolean
+      guaranteeTitle: string | null
+      guaranteeText: string | null
+      ctaText: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["productLandingPage"]>
+    composites: {}
+  }
+
+  type ProductLandingPageGetPayload<S extends boolean | null | undefined | ProductLandingPageDefaultArgs> = $Result.GetResult<Prisma.$ProductLandingPagePayload, S>
+
+  type ProductLandingPageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductLandingPageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductLandingPageCountAggregateInputType | true
+    }
+
+  export interface ProductLandingPageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductLandingPage'], meta: { name: 'ProductLandingPage' } }
+    /**
+     * Find zero or one ProductLandingPage that matches the filter.
+     * @param {ProductLandingPageFindUniqueArgs} args - Arguments to find a ProductLandingPage
+     * @example
+     * // Get one ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductLandingPageFindUniqueArgs>(args: SelectSubset<T, ProductLandingPageFindUniqueArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProductLandingPage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductLandingPageFindUniqueOrThrowArgs} args - Arguments to find a ProductLandingPage
+     * @example
+     * // Get one ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductLandingPageFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductLandingPageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductLandingPage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageFindFirstArgs} args - Arguments to find a ProductLandingPage
+     * @example
+     * // Get one ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductLandingPageFindFirstArgs>(args?: SelectSubset<T, ProductLandingPageFindFirstArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductLandingPage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageFindFirstOrThrowArgs} args - Arguments to find a ProductLandingPage
+     * @example
+     * // Get one ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductLandingPageFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductLandingPageFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProductLandingPages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductLandingPages
+     * const productLandingPages = await prisma.productLandingPage.findMany()
+     * 
+     * // Get first 10 ProductLandingPages
+     * const productLandingPages = await prisma.productLandingPage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productLandingPageWithIdOnly = await prisma.productLandingPage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductLandingPageFindManyArgs>(args?: SelectSubset<T, ProductLandingPageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProductLandingPage.
+     * @param {ProductLandingPageCreateArgs} args - Arguments to create a ProductLandingPage.
+     * @example
+     * // Create one ProductLandingPage
+     * const ProductLandingPage = await prisma.productLandingPage.create({
+     *   data: {
+     *     // ... data to create a ProductLandingPage
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductLandingPageCreateArgs>(args: SelectSubset<T, ProductLandingPageCreateArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProductLandingPages.
+     * @param {ProductLandingPageCreateManyArgs} args - Arguments to create many ProductLandingPages.
+     * @example
+     * // Create many ProductLandingPages
+     * const productLandingPage = await prisma.productLandingPage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductLandingPageCreateManyArgs>(args?: SelectSubset<T, ProductLandingPageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProductLandingPages and returns the data saved in the database.
+     * @param {ProductLandingPageCreateManyAndReturnArgs} args - Arguments to create many ProductLandingPages.
+     * @example
+     * // Create many ProductLandingPages
+     * const productLandingPage = await prisma.productLandingPage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProductLandingPages and only return the `id`
+     * const productLandingPageWithIdOnly = await prisma.productLandingPage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductLandingPageCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductLandingPageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProductLandingPage.
+     * @param {ProductLandingPageDeleteArgs} args - Arguments to delete one ProductLandingPage.
+     * @example
+     * // Delete one ProductLandingPage
+     * const ProductLandingPage = await prisma.productLandingPage.delete({
+     *   where: {
+     *     // ... filter to delete one ProductLandingPage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductLandingPageDeleteArgs>(args: SelectSubset<T, ProductLandingPageDeleteArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProductLandingPage.
+     * @param {ProductLandingPageUpdateArgs} args - Arguments to update one ProductLandingPage.
+     * @example
+     * // Update one ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductLandingPageUpdateArgs>(args: SelectSubset<T, ProductLandingPageUpdateArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProductLandingPages.
+     * @param {ProductLandingPageDeleteManyArgs} args - Arguments to filter ProductLandingPages to delete.
+     * @example
+     * // Delete a few ProductLandingPages
+     * const { count } = await prisma.productLandingPage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductLandingPageDeleteManyArgs>(args?: SelectSubset<T, ProductLandingPageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductLandingPages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductLandingPages
+     * const productLandingPage = await prisma.productLandingPage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductLandingPageUpdateManyArgs>(args: SelectSubset<T, ProductLandingPageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductLandingPages and returns the data updated in the database.
+     * @param {ProductLandingPageUpdateManyAndReturnArgs} args - Arguments to update many ProductLandingPages.
+     * @example
+     * // Update many ProductLandingPages
+     * const productLandingPage = await prisma.productLandingPage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProductLandingPages and only return the `id`
+     * const productLandingPageWithIdOnly = await prisma.productLandingPage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductLandingPageUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductLandingPageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProductLandingPage.
+     * @param {ProductLandingPageUpsertArgs} args - Arguments to update or create a ProductLandingPage.
+     * @example
+     * // Update or create a ProductLandingPage
+     * const productLandingPage = await prisma.productLandingPage.upsert({
+     *   create: {
+     *     // ... data to create a ProductLandingPage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductLandingPage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductLandingPageUpsertArgs>(args: SelectSubset<T, ProductLandingPageUpsertArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProductLandingPages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageCountArgs} args - Arguments to filter ProductLandingPages to count.
+     * @example
+     * // Count the number of ProductLandingPages
+     * const count = await prisma.productLandingPage.count({
+     *   where: {
+     *     // ... the filter for the ProductLandingPages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductLandingPageCountArgs>(
+      args?: Subset<T, ProductLandingPageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductLandingPageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductLandingPage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductLandingPageAggregateArgs>(args: Subset<T, ProductLandingPageAggregateArgs>): Prisma.PrismaPromise<GetProductLandingPageAggregateType<T>>
+
+    /**
+     * Group by ProductLandingPage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductLandingPageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductLandingPageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductLandingPageGroupByArgs['orderBy'] }
+        : { orderBy?: ProductLandingPageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductLandingPageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductLandingPageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProductLandingPage model
+   */
+  readonly fields: ProductLandingPageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductLandingPage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductLandingPageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProductLandingPage model
+   */
+  interface ProductLandingPageFieldRefs {
+    readonly id: FieldRef<"ProductLandingPage", 'String'>
+    readonly productId: FieldRef<"ProductLandingPage", 'Int'>
+    readonly heroTitle: FieldRef<"ProductLandingPage", 'String'>
+    readonly heroSubtitle: FieldRef<"ProductLandingPage", 'String'>
+    readonly heroDescription: FieldRef<"ProductLandingPage", 'String'>
+    readonly badgeText: FieldRef<"ProductLandingPage", 'String'>
+    readonly discountPercent: FieldRef<"ProductLandingPage", 'Int'>
+    readonly features: FieldRef<"ProductLandingPage", 'Json'>
+    readonly showReviews: FieldRef<"ProductLandingPage", 'Boolean'>
+    readonly showGuarantee: FieldRef<"ProductLandingPage", 'Boolean'>
+    readonly guaranteeTitle: FieldRef<"ProductLandingPage", 'String'>
+    readonly guaranteeText: FieldRef<"ProductLandingPage", 'String'>
+    readonly ctaText: FieldRef<"ProductLandingPage", 'String'>
+    readonly isActive: FieldRef<"ProductLandingPage", 'Boolean'>
+    readonly createdAt: FieldRef<"ProductLandingPage", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProductLandingPage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProductLandingPage findUnique
+   */
+  export type ProductLandingPageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductLandingPage to fetch.
+     */
+    where: ProductLandingPageWhereUniqueInput
+  }
+
+  /**
+   * ProductLandingPage findUniqueOrThrow
+   */
+  export type ProductLandingPageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductLandingPage to fetch.
+     */
+    where: ProductLandingPageWhereUniqueInput
+  }
+
+  /**
+   * ProductLandingPage findFirst
+   */
+  export type ProductLandingPageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductLandingPage to fetch.
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductLandingPages to fetch.
+     */
+    orderBy?: ProductLandingPageOrderByWithRelationInput | ProductLandingPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductLandingPages.
+     */
+    cursor?: ProductLandingPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductLandingPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductLandingPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductLandingPages.
+     */
+    distinct?: ProductLandingPageScalarFieldEnum | ProductLandingPageScalarFieldEnum[]
+  }
+
+  /**
+   * ProductLandingPage findFirstOrThrow
+   */
+  export type ProductLandingPageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductLandingPage to fetch.
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductLandingPages to fetch.
+     */
+    orderBy?: ProductLandingPageOrderByWithRelationInput | ProductLandingPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductLandingPages.
+     */
+    cursor?: ProductLandingPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductLandingPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductLandingPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductLandingPages.
+     */
+    distinct?: ProductLandingPageScalarFieldEnum | ProductLandingPageScalarFieldEnum[]
+  }
+
+  /**
+   * ProductLandingPage findMany
+   */
+  export type ProductLandingPageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductLandingPages to fetch.
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductLandingPages to fetch.
+     */
+    orderBy?: ProductLandingPageOrderByWithRelationInput | ProductLandingPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductLandingPages.
+     */
+    cursor?: ProductLandingPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductLandingPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductLandingPages.
+     */
+    skip?: number
+    distinct?: ProductLandingPageScalarFieldEnum | ProductLandingPageScalarFieldEnum[]
+  }
+
+  /**
+   * ProductLandingPage create
+   */
+  export type ProductLandingPageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProductLandingPage.
+     */
+    data: XOR<ProductLandingPageCreateInput, ProductLandingPageUncheckedCreateInput>
+  }
+
+  /**
+   * ProductLandingPage createMany
+   */
+  export type ProductLandingPageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProductLandingPages.
+     */
+    data: ProductLandingPageCreateManyInput | ProductLandingPageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProductLandingPage createManyAndReturn
+   */
+  export type ProductLandingPageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProductLandingPages.
+     */
+    data: ProductLandingPageCreateManyInput | ProductLandingPageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductLandingPage update
+   */
+  export type ProductLandingPageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProductLandingPage.
+     */
+    data: XOR<ProductLandingPageUpdateInput, ProductLandingPageUncheckedUpdateInput>
+    /**
+     * Choose, which ProductLandingPage to update.
+     */
+    where: ProductLandingPageWhereUniqueInput
+  }
+
+  /**
+   * ProductLandingPage updateMany
+   */
+  export type ProductLandingPageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProductLandingPages.
+     */
+    data: XOR<ProductLandingPageUpdateManyMutationInput, ProductLandingPageUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductLandingPages to update
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * Limit how many ProductLandingPages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductLandingPage updateManyAndReturn
+   */
+  export type ProductLandingPageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * The data used to update ProductLandingPages.
+     */
+    data: XOR<ProductLandingPageUpdateManyMutationInput, ProductLandingPageUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductLandingPages to update
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * Limit how many ProductLandingPages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductLandingPage upsert
+   */
+  export type ProductLandingPageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProductLandingPage to update in case it exists.
+     */
+    where: ProductLandingPageWhereUniqueInput
+    /**
+     * In case the ProductLandingPage found by the `where` argument doesn't exist, create a new ProductLandingPage with this data.
+     */
+    create: XOR<ProductLandingPageCreateInput, ProductLandingPageUncheckedCreateInput>
+    /**
+     * In case the ProductLandingPage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductLandingPageUpdateInput, ProductLandingPageUncheckedUpdateInput>
+  }
+
+  /**
+   * ProductLandingPage delete
+   */
+  export type ProductLandingPageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
+    /**
+     * Filter which ProductLandingPage to delete.
+     */
+    where: ProductLandingPageWhereUniqueInput
+  }
+
+  /**
+   * ProductLandingPage deleteMany
+   */
+  export type ProductLandingPageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductLandingPages to delete
+     */
+    where?: ProductLandingPageWhereInput
+    /**
+     * Limit how many ProductLandingPages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductLandingPage without action
+   */
+  export type ProductLandingPageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductLandingPage
+     */
+    select?: ProductLandingPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductLandingPage
+     */
+    omit?: ProductLandingPageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductLandingPageInclude<ExtArgs> | null
   }
 
 
@@ -35465,11 +36827,34 @@ export namespace Prisma {
     createdAt: 'createdAt',
     seoSlug: 'seoSlug',
     isActive: 'isActive',
+    showInAds: 'showInAds',
     affiliatePrice: 'affiliatePrice',
     affiliateCommissionRate: 'affiliateCommissionRate'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+  export const ProductLandingPageScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    heroTitle: 'heroTitle',
+    heroSubtitle: 'heroSubtitle',
+    heroDescription: 'heroDescription',
+    badgeText: 'badgeText',
+    discountPercent: 'discountPercent',
+    features: 'features',
+    showReviews: 'showReviews',
+    showGuarantee: 'showGuarantee',
+    guaranteeTitle: 'guaranteeTitle',
+    guaranteeText: 'guaranteeText',
+    ctaText: 'ctaText',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProductLandingPageScalarFieldEnum = (typeof ProductLandingPageScalarFieldEnum)[keyof typeof ProductLandingPageScalarFieldEnum]
 
 
   export const ReviewScalarFieldEnum: {
@@ -35824,6 +37209,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -35838,6 +37231,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -35919,6 +37321,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -36494,6 +37910,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Product"> | Date | string
     seoSlug?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
+    showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
     orderItems?: OrderItemListRelationFilter
@@ -36505,6 +37922,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
+    landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -36516,6 +37934,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     seoSlug?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrderInput | SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
@@ -36527,6 +37946,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyOrderByRelationAggregateInput
     affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
+    landingPage?: ProductLandingPageOrderByWithRelationInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -36541,6 +37961,7 @@ export namespace Prisma {
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     isActive?: BoolFilter<"Product"> | boolean
+    showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
     orderItems?: OrderItemListRelationFilter
@@ -36552,6 +37973,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
+    landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
   }, "id" | "seoSlug">
 
   export type ProductOrderByWithAggregationInput = {
@@ -36563,6 +37985,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     seoSlug?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -36584,8 +38007,121 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     seoSlug?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
+    showInAds?: BoolWithAggregatesFilter<"Product"> | boolean
     affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+  }
+
+  export type ProductLandingPageWhereInput = {
+    AND?: ProductLandingPageWhereInput | ProductLandingPageWhereInput[]
+    OR?: ProductLandingPageWhereInput[]
+    NOT?: ProductLandingPageWhereInput | ProductLandingPageWhereInput[]
+    id?: StringFilter<"ProductLandingPage"> | string
+    productId?: IntFilter<"ProductLandingPage"> | number
+    heroTitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    heroSubtitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    heroDescription?: StringNullableFilter<"ProductLandingPage"> | string | null
+    badgeText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    discountPercent?: IntNullableFilter<"ProductLandingPage"> | number | null
+    features?: JsonNullableFilter<"ProductLandingPage">
+    showReviews?: BoolFilter<"ProductLandingPage"> | boolean
+    showGuarantee?: BoolFilter<"ProductLandingPage"> | boolean
+    guaranteeTitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    guaranteeText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    ctaText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    isActive?: BoolFilter<"ProductLandingPage"> | boolean
+    createdAt?: DateTimeFilter<"ProductLandingPage"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductLandingPage"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type ProductLandingPageOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    heroTitle?: SortOrderInput | SortOrder
+    heroSubtitle?: SortOrderInput | SortOrder
+    heroDescription?: SortOrderInput | SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    discountPercent?: SortOrderInput | SortOrder
+    features?: SortOrderInput | SortOrder
+    showReviews?: SortOrder
+    showGuarantee?: SortOrder
+    guaranteeTitle?: SortOrderInput | SortOrder
+    guaranteeText?: SortOrderInput | SortOrder
+    ctaText?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type ProductLandingPageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    productId?: number
+    AND?: ProductLandingPageWhereInput | ProductLandingPageWhereInput[]
+    OR?: ProductLandingPageWhereInput[]
+    NOT?: ProductLandingPageWhereInput | ProductLandingPageWhereInput[]
+    heroTitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    heroSubtitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    heroDescription?: StringNullableFilter<"ProductLandingPage"> | string | null
+    badgeText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    discountPercent?: IntNullableFilter<"ProductLandingPage"> | number | null
+    features?: JsonNullableFilter<"ProductLandingPage">
+    showReviews?: BoolFilter<"ProductLandingPage"> | boolean
+    showGuarantee?: BoolFilter<"ProductLandingPage"> | boolean
+    guaranteeTitle?: StringNullableFilter<"ProductLandingPage"> | string | null
+    guaranteeText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    ctaText?: StringNullableFilter<"ProductLandingPage"> | string | null
+    isActive?: BoolFilter<"ProductLandingPage"> | boolean
+    createdAt?: DateTimeFilter<"ProductLandingPage"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductLandingPage"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id" | "productId">
+
+  export type ProductLandingPageOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    heroTitle?: SortOrderInput | SortOrder
+    heroSubtitle?: SortOrderInput | SortOrder
+    heroDescription?: SortOrderInput | SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    discountPercent?: SortOrderInput | SortOrder
+    features?: SortOrderInput | SortOrder
+    showReviews?: SortOrder
+    showGuarantee?: SortOrder
+    guaranteeTitle?: SortOrderInput | SortOrder
+    guaranteeText?: SortOrderInput | SortOrder
+    ctaText?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProductLandingPageCountOrderByAggregateInput
+    _avg?: ProductLandingPageAvgOrderByAggregateInput
+    _max?: ProductLandingPageMaxOrderByAggregateInput
+    _min?: ProductLandingPageMinOrderByAggregateInput
+    _sum?: ProductLandingPageSumOrderByAggregateInput
+  }
+
+  export type ProductLandingPageScalarWhereWithAggregatesInput = {
+    AND?: ProductLandingPageScalarWhereWithAggregatesInput | ProductLandingPageScalarWhereWithAggregatesInput[]
+    OR?: ProductLandingPageScalarWhereWithAggregatesInput[]
+    NOT?: ProductLandingPageScalarWhereWithAggregatesInput | ProductLandingPageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProductLandingPage"> | string
+    productId?: IntWithAggregatesFilter<"ProductLandingPage"> | number
+    heroTitle?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    heroSubtitle?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    heroDescription?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    badgeText?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    discountPercent?: IntNullableWithAggregatesFilter<"ProductLandingPage"> | number | null
+    features?: JsonNullableWithAggregatesFilter<"ProductLandingPage">
+    showReviews?: BoolWithAggregatesFilter<"ProductLandingPage"> | boolean
+    showGuarantee?: BoolWithAggregatesFilter<"ProductLandingPage"> | boolean
+    guaranteeTitle?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    guaranteeText?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    ctaText?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
+    isActive?: BoolWithAggregatesFilter<"ProductLandingPage"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ProductLandingPage"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProductLandingPage"> | Date | string
   }
 
   export type ReviewWhereInput = {
@@ -38981,6 +40517,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -38992,6 +40529,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -39003,6 +40541,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -39013,6 +40552,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -39022,6 +40562,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -39033,6 +40574,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -39044,6 +40586,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -39054,6 +40597,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -39065,6 +40609,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
   }
@@ -39076,6 +40621,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
   }
@@ -39089,8 +40635,141 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ProductLandingPageCreateInput = {
+    id?: string
+    heroTitle?: string | null
+    heroSubtitle?: string | null
+    heroDescription?: string | null
+    badgeText?: string | null
+    discountPercent?: number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: string | null
+    guaranteeText?: string | null
+    ctaText?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutLandingPageInput
+  }
+
+  export type ProductLandingPageUncheckedCreateInput = {
+    id?: string
+    productId: number
+    heroTitle?: string | null
+    heroSubtitle?: string | null
+    heroDescription?: string | null
+    badgeText?: string | null
+    discountPercent?: number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: string | null
+    guaranteeText?: string | null
+    ctaText?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductLandingPageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutLandingPageNestedInput
+  }
+
+  export type ProductLandingPageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductLandingPageCreateManyInput = {
+    id?: string
+    productId: number
+    heroTitle?: string | null
+    heroSubtitle?: string | null
+    heroDescription?: string | null
+    badgeText?: string | null
+    discountPercent?: number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: string | null
+    guaranteeText?: string | null
+    ctaText?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductLandingPageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductLandingPageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewCreateInput = {
@@ -41645,6 +43324,11 @@ export namespace Prisma {
     none?: WarrantyWhereInput
   }
 
+  export type ProductLandingPageNullableScalarRelationFilter = {
+    is?: ProductLandingPageWhereInput | null
+    isNot?: ProductLandingPageWhereInput | null
+  }
+
   export type OrderItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -41674,6 +43358,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     seoSlug?: SortOrder
     isActive?: SortOrder
+    showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
   }
@@ -41694,6 +43379,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     seoSlug?: SortOrder
     isActive?: SortOrder
+    showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
   }
@@ -41707,6 +43393,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     seoSlug?: SortOrder
     isActive?: SortOrder
+    showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
   }
@@ -41749,10 +43436,124 @@ export namespace Prisma {
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type ProductScalarRelationFilter = {
     is?: ProductWhereInput
     isNot?: ProductWhereInput
+  }
+
+  export type ProductLandingPageCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    heroTitle?: SortOrder
+    heroSubtitle?: SortOrder
+    heroDescription?: SortOrder
+    badgeText?: SortOrder
+    discountPercent?: SortOrder
+    features?: SortOrder
+    showReviews?: SortOrder
+    showGuarantee?: SortOrder
+    guaranteeTitle?: SortOrder
+    guaranteeText?: SortOrder
+    ctaText?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductLandingPageAvgOrderByAggregateInput = {
+    productId?: SortOrder
+    discountPercent?: SortOrder
+  }
+
+  export type ProductLandingPageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    heroTitle?: SortOrder
+    heroSubtitle?: SortOrder
+    heroDescription?: SortOrder
+    badgeText?: SortOrder
+    discountPercent?: SortOrder
+    showReviews?: SortOrder
+    showGuarantee?: SortOrder
+    guaranteeTitle?: SortOrder
+    guaranteeText?: SortOrder
+    ctaText?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductLandingPageMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    heroTitle?: SortOrder
+    heroSubtitle?: SortOrder
+    heroDescription?: SortOrder
+    badgeText?: SortOrder
+    discountPercent?: SortOrder
+    showReviews?: SortOrder
+    showGuarantee?: SortOrder
+    guaranteeTitle?: SortOrder
+    guaranteeText?: SortOrder
+    ctaText?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductLandingPageSumOrderByAggregateInput = {
+    productId?: SortOrder
+    discountPercent?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type ReviewCountOrderByAggregateInput = {
@@ -43745,6 +45546,12 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type ProductLandingPageCreateNestedOneWithoutProductInput = {
+    create?: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+    connectOrCreate?: ProductLandingPageCreateOrConnectWithoutProductInput
+    connect?: ProductLandingPageWhereUniqueInput
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -43799,6 +45606,12 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutProductInput | ReviewCreateOrConnectWithoutProductInput[]
     createMany?: ReviewCreateManyProductInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type ProductLandingPageUncheckedCreateNestedOneWithoutProductInput = {
+    create?: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+    connectOrCreate?: ProductLandingPageCreateOrConnectWithoutProductInput
+    connect?: ProductLandingPageWhereUniqueInput
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -43931,6 +45744,16 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type ProductLandingPageUpdateOneWithoutProductNestedInput = {
+    create?: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+    connectOrCreate?: ProductLandingPageCreateOrConnectWithoutProductInput
+    upsert?: ProductLandingPageUpsertWithoutProductInput
+    disconnect?: ProductLandingPageWhereInput | boolean
+    delete?: ProductLandingPageWhereInput | boolean
+    connect?: ProductLandingPageWhereUniqueInput
+    update?: XOR<XOR<ProductLandingPageUpdateToOneWithWhereWithoutProductInput, ProductLandingPageUpdateWithoutProductInput>, ProductLandingPageUncheckedUpdateWithoutProductInput>
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -44049,6 +45872,30 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutProductInput | ReviewUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutProductInput | ReviewUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput = {
+    create?: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+    connectOrCreate?: ProductLandingPageCreateOrConnectWithoutProductInput
+    upsert?: ProductLandingPageUpsertWithoutProductInput
+    disconnect?: ProductLandingPageWhereInput | boolean
+    delete?: ProductLandingPageWhereInput | boolean
+    connect?: ProductLandingPageWhereUniqueInput
+    update?: XOR<XOR<ProductLandingPageUpdateToOneWithWhereWithoutProductInput, ProductLandingPageUpdateWithoutProductInput>, ProductLandingPageUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductCreateNestedOneWithoutLandingPageInput = {
+    create?: XOR<ProductCreateWithoutLandingPageInput, ProductUncheckedCreateWithoutLandingPageInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutLandingPageInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutLandingPageNestedInput = {
+    create?: XOR<ProductCreateWithoutLandingPageInput, ProductUncheckedCreateWithoutLandingPageInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutLandingPageInput
+    upsert?: ProductUpsertWithoutLandingPageInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutLandingPageInput, ProductUpdateWithoutLandingPageInput>, ProductUncheckedUpdateWithoutLandingPageInput>
   }
 
   export type ProductCreateNestedOneWithoutReviewsInput = {
@@ -45449,6 +47296,29 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumMovementTypeFilter<$PrismaModel = never> = {
@@ -46861,6 +48731,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -46871,6 +48742,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -46881,6 +48753,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -46891,6 +48764,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -46931,6 +48805,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Product"> | Date | string
     seoSlug?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
+    showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
   }
@@ -47186,6 +49061,47 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductLandingPageCreateWithoutProductInput = {
+    id?: string
+    heroTitle?: string | null
+    heroSubtitle?: string | null
+    heroDescription?: string | null
+    badgeText?: string | null
+    discountPercent?: number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: string | null
+    guaranteeText?: string | null
+    ctaText?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductLandingPageUncheckedCreateWithoutProductInput = {
+    id?: string
+    heroTitle?: string | null
+    heroSubtitle?: string | null
+    heroDescription?: string | null
+    badgeText?: string | null
+    discountPercent?: number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: boolean
+    showGuarantee?: boolean
+    guaranteeTitle?: string | null
+    guaranteeText?: string | null
+    ctaText?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductLandingPageCreateOrConnectWithoutProductInput = {
+    where: ProductLandingPageWhereUniqueInput
+    create: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -47404,13 +49320,61 @@ export namespace Prisma {
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutProductInput>
   }
 
-  export type ProductCreateWithoutReviewsInput = {
+  export type ProductLandingPageUpsertWithoutProductInput = {
+    update: XOR<ProductLandingPageUpdateWithoutProductInput, ProductLandingPageUncheckedUpdateWithoutProductInput>
+    create: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
+    where?: ProductLandingPageWhereInput
+  }
+
+  export type ProductLandingPageUpdateToOneWithWhereWithoutProductInput = {
+    where?: ProductLandingPageWhereInput
+    data: XOR<ProductLandingPageUpdateWithoutProductInput, ProductLandingPageUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductLandingPageUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductLandingPageUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroSubtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    showReviews?: BoolFieldUpdateOperationsInput | boolean
+    showGuarantee?: BoolFieldUpdateOperationsInput | boolean
+    guaranteeTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    guaranteeText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductCreateWithoutLandingPageInput = {
     name: string
     description?: string | null
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -47421,6 +49385,109 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutLandingPageInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutLandingPageInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutLandingPageInput, ProductUncheckedCreateWithoutLandingPageInput>
+  }
+
+  export type ProductUpsertWithoutLandingPageInput = {
+    update: XOR<ProductUpdateWithoutLandingPageInput, ProductUncheckedUpdateWithoutLandingPageInput>
+    create: XOR<ProductCreateWithoutLandingPageInput, ProductUncheckedCreateWithoutLandingPageInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutLandingPageInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutLandingPageInput, ProductUncheckedUpdateWithoutLandingPageInput>
+  }
+
+  export type ProductUpdateWithoutLandingPageInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutLandingPageInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductCreateWithoutReviewsInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -47432,6 +49499,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -47441,6 +49509,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -47531,6 +49600,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -47541,6 +49611,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -47552,6 +49623,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -47561,6 +49633,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -47887,6 +49960,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -47897,6 +49971,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -47908,6 +49983,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -47917,6 +49993,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -47968,6 +50045,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -47978,6 +50056,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -47989,6 +50068,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -47998,6 +50078,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -48039,6 +50120,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -48049,6 +50131,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockMovementsInput = {
@@ -48060,6 +50143,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -48069,6 +50153,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockMovementsInput = {
@@ -48185,6 +50270,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -48195,6 +50281,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockMovementsInput = {
@@ -48206,6 +50293,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -48215,6 +50303,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -48666,6 +50755,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -48676,6 +50766,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductsInput = {
@@ -48687,6 +50778,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -48696,6 +50788,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductsInput = {
@@ -48754,6 +50847,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -48764,6 +50858,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductsInput = {
@@ -48775,6 +50870,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -48784,6 +50880,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -48793,6 +50890,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -48803,6 +50901,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -48814,6 +50913,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -48823,6 +50923,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -48848,6 +50949,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -48858,6 +50960,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -48869,6 +50972,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -48878,6 +50982,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutCustomerInput = {
@@ -49169,6 +51274,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -49179,6 +51285,7 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWarrantiesAsProductInput = {
@@ -49190,6 +51297,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -49199,6 +51307,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWarrantiesAsProductInput = {
@@ -49379,6 +51488,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -49389,6 +51499,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWarrantiesAsProductInput = {
@@ -49400,6 +51511,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -49409,6 +51521,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type CustomerUpsertWithoutWarrantiesInput = {
@@ -50638,6 +52751,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -50648,6 +52762,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -50659,6 +52774,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
@@ -50668,6 +52784,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -50812,6 +52929,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -50822,6 +52940,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -50833,6 +52952,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
@@ -50842,6 +52962,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type AffiliateLinkUpsertWithoutOrderItemsInput = {
@@ -51087,6 +53208,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -51097,6 +53219,7 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutAffiliateLinksInput = {
@@ -51108,6 +53231,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -51117,6 +53241,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutAffiliateLinksInput = {
@@ -51268,6 +53393,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -51278,6 +53404,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -51289,6 +53416,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -51298,6 +53426,7 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput = {
@@ -52341,6 +54470,7 @@ export namespace Prisma {
     createdAt?: Date | string
     seoSlug?: string | null
     isActive?: boolean
+    showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
   }
@@ -52352,6 +54482,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -52362,6 +54493,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -52372,6 +54504,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -52382,6 +54515,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -52392,6 +54526,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
   }

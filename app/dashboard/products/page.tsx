@@ -11,7 +11,7 @@ import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { getallcategory } from '@/server/category';
 import { deleteProductFromWarehouse, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
-import { getProduct, toggleProductActive } from '@/server/product';
+import { getProduct, toggleProductActive, toggleProductShowInAds, upsertProductLandingPage, LandingPageInput } from '@/server/product';
 import { getWarehouse } from '@/server/warehouse';
 import { error } from 'console';
 import { image } from 'framer-motion/client';
@@ -38,6 +38,75 @@ const productschama = z.object({
     isActive: z.boolean().optional().default(true),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
 });
+
+const landingPageSchema = z.object({
+    heroTitle: z.string().optional().nullable(),
+    heroSubtitle: z.string().optional().nullable(),
+    heroDescription: z.string().optional().nullable(),
+    badgeText: z.string().optional().nullable(),
+    discountPercent: z.coerce.number().min(0).max(100).optional().nullable(),
+    features: z.array(
+        z.object({
+            title: z.string().min(1, "عنوان الميزة مطلوب"),
+            description: z.string().optional().nullable(),
+        })
+    ).optional().default([]),
+    showReviews: z.boolean().optional().default(true),
+    showGuarantee: z.boolean().optional().default(true),
+    guaranteeTitle: z.string().optional().nullable(),
+    guaranteeText: z.string().optional().nullable(),
+    ctaText: z.string().optional().nullable(),
+    isActive: z.boolean().optional().default(true),
+});
+
+const FeaturesFields = ({ control, register, errors }: any) => {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'features'
+    });
+
+    return (
+        <div className="md:col-span-2 border rounded-lg p-3 border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-slate-800 dark:text-slate-200">مميزات المنتج</h3>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => append({ title: '', description: '' })}
+                >
+                    إضافة ميزة
+                </Button>
+            </div>
+
+            <div className="grid gap-3">
+                {fields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
+                        <FormInput
+                            label="عنوان الميزة"
+                            {...register(`features.${index}.title`)}
+                            error={errors?.features?.[index]?.title?.message as string}
+                        />
+                        <FormInput
+                            label="وصف الميزة"
+                            {...register(`features.${index}.description`)}
+                            error={errors?.features?.[index]?.description?.message as string}
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => remove(index)}
+                        >
+                            حذف
+                        </Button>
+                    </div>
+                ))}
+                {fields.length === 0 && (
+                    <p className="text-sm text-slate-500 dark:text-slate-400">لا توجد مميزات مضافة.</p>
+                )}
+            </div>
+        </div>
+    );
+};
 
 const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) => {
     const { fields, append, remove } = useFieldArray({
@@ -128,6 +197,8 @@ const ProductLayout = () => {
     const [tab, setTab] = React.useState<'table' | "grid">('table');
     const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
+    const [isLandingOpen, setIsLandingOpen] = React.useState(false);
+    const [landingProduct, setLandingProduct] = React.useState<any>(null);
     const [forData, setFormData] = React.useState<any>(null);
     const [page, setPage] = React.useState(1);
     const [selectedWarehouseFilter, setSelectedWarehouseFilter] = React.useState<string>('all');
@@ -195,6 +266,22 @@ const ProductLayout = () => {
         setSelectedProduct(product);
         setIsPreviewOpen(true);
     };
+
+    const openLandingModal = (product: any) => {
+        setLandingProduct(product);
+        setIsLandingOpen(true);
+    };
+
+    const closeLandingModal = () => {
+        setIsLandingOpen(false);
+        setLandingProduct(null);
+    };
+
+    const refreshProducts = React.useCallback(() => {
+        getProduct().then((products) => {
+            setProducts(products);
+        }).catch(console.error);
+    }, []);
 
     const onSubmit = async (data: z.infer<typeof productschama>) => {
         const loadingToast = toast.loading(editId ? 'جاري تحديث المنتج...' : 'جاري اضافة المنتج...');
@@ -816,8 +903,7 @@ const ProductLayout = () => {
                                             const res = await toggleProductActive(Number(row.id), !row.isActive);
                                             if (res.success) {
                                                 toast.success("تم تحديث حالة العرض");
-                                                const updated = await getProduct();
-                                                setProducts(updated);
+                                                refreshProducts();
                                             } else {
                                                 toast.error(res.error || "فشل تحديث الحالة");
                                             }
@@ -832,6 +918,43 @@ const ProductLayout = () => {
                                 >
                                     <span
                                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${row.isActive ? "translate-x-6" : "translate-x-1"}`}
+                                    />
+                                </button>
+                            )
+                        },
+                        {
+                            header: "عرض في الإعلانات",
+                            accessor: (row: any) => (
+                                <button
+                                    onClick={async () => {
+                                        const canEdit = user && (user.accountType === "ADMIN" || user.permission?.editProducts === true);
+                                        if (!canEdit) return;
+
+                                        if (!row.showInAds) {
+                                            openLandingModal(row);
+                                            return;
+                                        }
+
+                                        const loadingToast = toast.loading("جاري تحديث الحالة...");
+                                        try {
+                                            const res = await toggleProductShowInAds(Number(row.id), false);
+                                            if (res.success) {
+                                                toast.success("تم إيقاف عرض الإعلان");
+                                                refreshProducts();
+                                            } else {
+                                                toast.error(res.error || "فشل تحديث الحالة");
+                                            }
+                                        } catch (err) {
+                                            toast.error("حدث خطأ أثناء التحديث");
+                                        } finally {
+                                            toast.dismiss(loadingToast);
+                                        }
+                                    }}
+                                    disabled={!(user && (user.accountType === "ADMIN" || user.permission?.editProducts === true))}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${row.showInAds ? "bg-blue-500" : "bg-slate-300 dark:bg-slate-700"}`}
+                                >
+                                    <span
+                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${row.showInAds ? "translate-x-6" : "translate-x-1"}`}
                                     />
                                 </button>
                             )
@@ -912,6 +1035,143 @@ const ProductLayout = () => {
                                                 value={field.value}
                                                 onChange={field.onChange}
                                             />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </DynamicForm>
+                </div>
+            </AppModal>
+
+            <AppModal
+                title={`إعدادات صفحة الهبوط - ${landingProduct?.name || ''}`}
+                size="xl"
+                isOpen={isLandingOpen}
+                onClose={closeLandingModal}
+            >
+                <div className="p-4">
+                    <DynamicForm
+                        schema={landingPageSchema}
+                        onSubmit={async (data: z.infer<typeof landingPageSchema>) => {
+                            const loadingToast = toast.loading('جاري حفظ صفحة الهبوط...');
+                            try {
+                                const payload: LandingPageInput = {
+                                    ...data,
+                                    features: (data.features || []).map(f => ({
+                                        title: f.title,
+                                        description: f.description || '',
+                                    })),
+                                };
+                                const res = await upsertProductLandingPage(Number(landingProduct.id), payload);
+                                if (res.success) {
+                                    toast.success('تم حفظ صفحة الهبوط وتفعيل الإعلان بنجاح');
+                                    closeLandingModal();
+                                    refreshProducts();
+                                } else {
+                                    toast.error(res.error || 'فشل حفظ صفحة الهبوط');
+                                }
+                            } catch (err) {
+                                toast.error('حدث خطأ أثناء الحفظ');
+                            } finally {
+                                toast.dismiss(loadingToast);
+                            }
+                        }}
+                        defaultValues={landingProduct?.landingPage ? {
+                            heroTitle: landingProduct.landingPage.heroTitle || '',
+                            heroSubtitle: landingProduct.landingPage.heroSubtitle || '',
+                            heroDescription: landingProduct.landingPage.heroDescription || '',
+                            badgeText: landingProduct.landingPage.badgeText || '',
+                            discountPercent: landingProduct.landingPage.discountPercent ?? null,
+                            features: Array.isArray(landingProduct.landingPage.features)
+                                ? landingProduct.landingPage.features.map((f: any) => ({
+                                    title: f.title || '',
+                                    description: f.description || '',
+                                }))
+                                : [],
+                            showReviews: landingProduct.landingPage.showReviews ?? true,
+                            showGuarantee: landingProduct.landingPage.showGuarantee ?? true,
+                            guaranteeTitle: landingProduct.landingPage.guaranteeTitle || '',
+                            guaranteeText: landingProduct.landingPage.guaranteeText || '',
+                            ctaText: landingProduct.landingPage.ctaText || '',
+                            isActive: landingProduct.landingPage.isActive ?? true,
+                        } : {
+                            features: [],
+                            showReviews: true,
+                            showGuarantee: true,
+                            isActive: true,
+                        }}
+                        submitLabel="حفظ صفحة الهبوط"
+                    >
+                        {({ register, control, formState: { errors } }) => (
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <FormInput label="عنوان الهيرو" {...register("heroTitle")} error={errors.heroTitle?.message as string} />
+                                <FormInput label="العنوان الفرعي" {...register("heroSubtitle")} error={errors.heroSubtitle?.message as string} />
+                                <div className="md:col-span-2">
+                                    <Controller
+                                        name="heroDescription"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <RichTextEditor
+                                                label="وصف الهيرو"
+                                                placeholder="اكتب وصف الهيرو هنا..."
+                                                value={field.value || ""}
+                                                onChange={field.onChange}
+                                                error={errors.heroDescription?.message as string}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                <FormInput label="نص الشارة" {...register("badgeText")} error={errors.badgeText?.message as string} />
+                                <FormInput type="number" label="نسبة الخصم (%)" {...register("discountPercent")} error={errors.discountPercent?.message as string} />
+                                <FeaturesFields control={control} register={register} errors={errors} />
+                                <FormInput label="عنوان الضمان" {...register("guaranteeTitle")} error={errors.guaranteeTitle?.message as string} />
+                                <FormInput label="نص الضمان" {...register("guaranteeText")} error={errors.guaranteeText?.message as string} />
+                                <FormInput label="نص زر الدعوة" {...register("ctaText")} error={errors.ctaText?.message as string} />
+                                <div className="md:col-span-2 flex flex-wrap items-center gap-6">
+                                    <Controller
+                                        name="showReviews"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={field.value}
+                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm font-medium text-slate-800 dark:text-slate-200">عرض التقييمات</span>
+                                            </label>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="showGuarantee"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={field.value}
+                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm font-medium text-slate-800 dark:text-slate-200">عرض الضمان</span>
+                                            </label>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="isActive"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={field.value}
+                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm font-medium text-slate-800 dark:text-slate-200">صفحة الهبوط نشطة</span>
+                                            </label>
                                         )}
                                     />
                                 </div>

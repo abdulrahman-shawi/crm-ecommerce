@@ -209,6 +209,7 @@ model Product {
   // ─── NEW: E-commerce Affiliate columns ───
   seoSlug                 String? @unique
   isActive                Boolean @default(true)
+  showInAds               Boolean @default(false)
   affiliatePrice          Float   @default(0)
   affiliateCommissionRate Float?  @default(10.00)
 
@@ -224,6 +225,44 @@ model Product {
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks AffiliateLink[]
   reviews        Review[]
+  landingPage    ProductLandingPage?
+}
+
+// ============================================
+// ProductLandingPage (Landing Page Content per Product)
+// ============================================
+
+model ProductLandingPage {
+  id        String  @id @default(cuid())
+  productId Int     @unique
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // Hero content overrides
+  heroTitle       String?
+  heroSubtitle    String?
+  heroDescription String?
+  badgeText       String?
+  discountPercent Int?
+
+  // Features section (JSON array of { title, description })
+  features Json? @default("[]")
+
+  // Trust / Guarantee
+  showReviews    Boolean @default(true)
+  showGuarantee  Boolean @default(true)
+  guaranteeTitle String?
+  guaranteeText  String?
+
+  // CTA
+  ctaText String?
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("product_landing_pages")
 }
 
 // ============================================

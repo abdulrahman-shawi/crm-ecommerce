@@ -201,8 +201,28 @@ exports.Prisma.ProductScalarFieldEnum = {
   createdAt: 'createdAt',
   seoSlug: 'seoSlug',
   isActive: 'isActive',
+  showInAds: 'showInAds',
   affiliatePrice: 'affiliatePrice',
   affiliateCommissionRate: 'affiliateCommissionRate'
+};
+
+exports.Prisma.ProductLandingPageScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  heroTitle: 'heroTitle',
+  heroSubtitle: 'heroSubtitle',
+  heroDescription: 'heroDescription',
+  badgeText: 'badgeText',
+  discountPercent: 'discountPercent',
+  features: 'features',
+  showReviews: 'showReviews',
+  showGuarantee: 'showGuarantee',
+  guaranteeTitle: 'guaranteeTitle',
+  guaranteeText: 'guaranteeText',
+  ctaText: 'ctaText',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -488,6 +508,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -496,6 +521,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.AccountType = exports.$Enums.AccountType = {
   ADMIN: 'ADMIN',
@@ -560,6 +591,7 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
+  ProductLandingPage: 'ProductLandingPage',
   Review: 'Review',
   Warehouse: 'Warehouse',
   ProductStock: 'ProductStock',
