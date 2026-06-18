@@ -195,6 +195,269 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
   }
 }
 
+export async function updateWarrantyAction(id: string, payload: WarrantyPayload) {
+  try {
+    if (!id) {
+      return { success: false, error: "معرف الكفالة غير صالح" };
+    }
+
+    if (!payload.productId || !payload.type) {
+      return { success: false, error: "البيانات الأساسية غير مكتملة" };
+    }
+
+    if (payload.type === "REPLACEMENT" && !payload.customerId) {
+      return { success: false, error: "يرجى اختيار العميل لتسجيل طلب التبديل" };
+    }
+
+    if (!payload.warehouseId) {
+      return { success: false, error: "يرجى اختيار المستودع" };
+    }
+
+    if (!payload.quantity || Number(payload.quantity) <= 0) {
+      return { success: false, error: "يرجى إدخال كمية صحيحة" };
+    }
+
+    const currentUser = await getCurrentSessionUser();
+
+    const existing = await prisma.warranty.findUnique({
+      where: { id },
+      include: {
+        product: { select: { id: true, name: true } },
+        warehouse: { select: { id: true, name: true, location: true } },
+        order: {
+          include: {
+            items: { select: { productId: true, quantity: true } },
+          },
+        },
+      },
+    });
+
+    if (!existing) {
+      return { success: false, error: "سجل الكفالة غير موجود" };
+    }
+
+    const newProductId = Number(payload.productId);
+    const newWarehouseId = Number(payload.warehouseId);
+    const newQuantity = Math.max(1, Number(payload.quantity || 1));
+
+    const stockChanged =
+      existing.type !== payload.type ||
+      existing.productId !== newProductId ||
+      existing.warehouseId !== newWarehouseId ||
+      existing.quantity !== newQuantity;
+
+    const result = await prisma.$transaction(async (tx) => {
+      let orderId: number | null = existing.orderId;
+
+      if (stockChanged) {
+        // إرجاع الآثار القديمة على المخزون
+        if (existing.type === "REPLACEMENT" && existing.orderId && existing.order) {
+          // إعادة كميات الطلب المرتبط إلى المستودع ثم حذفه
+          for (const item of existing.order.items) {
+            await tx.productStock.upsert({
+              where: {
+                productId_warehouseId: {
+                  productId: item.productId,
+                  warehouseId: existing.warehouseId!,
+                },
+              },
+              update: {
+                quantity: { increment: item.quantity },
+              },
+              create: {
+                productId: item.productId,
+                warehouseId: existing.warehouseId!,
+                quantity: item.quantity,
+              },
+            });
+          }
+
+          await tx.order.delete({
+            where: { id: existing.orderId },
+          });
+          orderId = null;
+        } else if (existing.warehouseId) {
+          // إعادة الكمية إلى المستودع المرتبط
+          await tx.productStock.upsert({
+            where: {
+              productId_warehouseId: {
+                productId: existing.productId,
+                warehouseId: existing.warehouseId,
+              },
+            },
+            update: {
+              quantity: { increment: existing.quantity },
+            },
+            create: {
+              productId: existing.productId,
+              warehouseId: existing.warehouseId,
+              quantity: existing.quantity,
+            },
+          });
+
+          await tx.stockMovement.create({
+            data: {
+              productId: existing.productId,
+              warehouseId: existing.warehouseId,
+              quantity: existing.quantity,
+              type: "RETURN",
+              reason: `تعديل كفالة - إرجاع مخزون ${typeLabel[existing.type]}${existing.notes ? `: ${existing.notes}` : ""}`,
+            },
+          });
+        }
+
+        // تطبيق الآثار الجديدة على المخزون
+        const currentStock = await tx.productStock.findUnique({
+          where: {
+            productId_warehouseId: {
+              productId: newProductId,
+              warehouseId: newWarehouseId,
+            },
+          },
+        });
+
+        if (!currentStock || currentStock.quantity < newQuantity) {
+          throw new Error("الكمية غير كافية في المخزون لتنفيذ حركة الكفالة");
+        }
+
+        await tx.productStock.update({
+          where: {
+            productId_warehouseId: {
+              productId: newProductId,
+              warehouseId: newWarehouseId,
+            },
+          },
+          data: {
+            quantity: { decrement: newQuantity },
+          },
+        });
+
+        await tx.stockMovement.create({
+          data: {
+            productId: newProductId,
+            warehouseId: newWarehouseId,
+            quantity: newQuantity,
+            type: "OUT",
+            reason: `${typeLabel[payload.type]} - كفالة${payload.notes ? `: ${payload.notes}` : ""}`,
+          },
+        });
+
+        // إنشاء طلب جديد في حالة التبديل
+        if (payload.type === "REPLACEMENT") {
+          const [warehouse, customer] = await Promise.all([
+            tx.warehouse.findUnique({
+              where: { id: newWarehouseId },
+              select: { id: true, location: true },
+            }),
+            payload.customerId
+              ? tx.customer.findUnique({
+                  where: { id: payload.customerId },
+                  select: { id: true, name: true },
+                })
+              : null,
+          ]);
+
+          if (!warehouse) {
+            throw new Error("المستودع المختار غير موجود");
+          }
+
+          if (!customer) {
+            throw new Error("العميل المختار غير موجود");
+          }
+
+          const price = Number(currentStock.price || 0);
+          const discount = Number(currentStock.discount || 0);
+          const totalAmount = price * newQuantity;
+          const finalAmount = (price - discount) * newQuantity;
+          const orderNumber = `ORD-${Date.now()}`;
+
+          const newOrder = await tx.order.create({
+            data: {
+              orderNumber,
+              status: "طلب جديد",
+              paymentMethod: "عند الاستلام",
+              totalAmount,
+              discount: discount * newQuantity,
+              finalAmount,
+              receiverName: customer.name || null,
+              receiverPhone: [],
+              country: warehouse.location,
+              customer: { connect: { id: payload.customerId! } },
+              ...(currentUser ? { user: { connect: { id: currentUser.id } } } : {}),
+              warehouse: { connect: { id: newWarehouseId } },
+              items: {
+                create: [
+                  {
+                    productId: newProductId,
+                    quantity: newQuantity,
+                    price,
+                    discount,
+                  },
+                ],
+              },
+            },
+          });
+
+          orderId = newOrder.id;
+        }
+      } else if (
+        payload.type === "REPLACEMENT" &&
+        existing.type === "REPLACEMENT" &&
+        payload.customerId &&
+        existing.customerId !== payload.customerId &&
+        existing.orderId
+      ) {
+        // تغيّر العميل فقط لكفالة تبديل: تحديث الطلب المرتبط
+        const customer = await tx.customer.findUnique({
+          where: { id: payload.customerId },
+          select: { id: true, name: true },
+        });
+
+        if (!customer) {
+          throw new Error("العميل المختار غير موجود");
+        }
+
+        await tx.order.update({
+          where: { id: existing.orderId },
+          data: {
+            receiverName: customer.name || null,
+            customer: { connect: { id: payload.customerId } },
+          },
+        });
+      }
+
+      const warranty = await tx.warranty.update({
+        where: { id },
+        data: {
+          type: payload.type,
+          productId: newProductId,
+          customerId: payload.customerId || null,
+          warehouseId: newWarehouseId,
+          orderId,
+          quantity: newQuantity,
+          maintenanceLaborCost:
+            payload.type === "MAINTENANCE" && payload.maintenanceLaborCost != null
+              ? Number(payload.maintenanceLaborCost)
+              : null,
+          shippingCost: payload.shippingCost != null ? Number(payload.shippingCost) : null,
+          notes: payload.notes?.trim() || null,
+        },
+      });
+
+      return warranty;
+    });
+
+    revalidatePath("/dashboard/warranty");
+    revalidatePath("/dashboard/inventories");
+    if (result.orderId) {
+      revalidatePath("/dashboard/orders");
+    }
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error?.message || "تعذر تحديث حركة الكفالة" };
+  }
+}
+
 export async function deleteWarrantyAction(id: string) {
   try {
     const warranty = await prisma.warranty.findUnique({

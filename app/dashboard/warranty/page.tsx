@@ -9,8 +9,8 @@ import { FormSelect } from "@/components/ui/select-form";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission } from "@/lib/utils";
-import { createWarrantyAction, deleteWarrantyAction, getWarrantyData } from "@/server/warranty";
-import { Plus, Trash2 } from "lucide-react";
+import { createWarrantyAction, deleteWarrantyAction, getWarrantyData, updateWarrantyAction } from "@/server/warranty";
+import { Plus, Trash2, Edit } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import z from "zod";
@@ -37,10 +37,13 @@ export default function WarrantyPage() {
   const { user } = useAuth();
   const canView = user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]);
   const canAdd = user && hasAnyPermission(user, ["addOrders", "editOrders"]);
+  const canEdit = user && hasAnyPermission(user, ["editOrders"]);
   const canDelete = user && hasAnyPermission(user, ["deleteOrders"]);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [editId, setEditId] = React.useState<string | null>(null);
+  const [formData, setFormData] = React.useState<any>(null);
   const [warrantyType, setWarrantyType] = React.useState<"REPLACEMENT" | "MAINTENANCE" | "DAMAGED">("REPLACEMENT");
   const [records, setRecords] = React.useState<any[]>([]);
   const [products, setProducts] = React.useState<any[]>([]);
@@ -73,12 +76,30 @@ export default function WarrantyPage() {
 
   const handleClose = () => {
     setIsOpen(false);
+    setEditId(null);
+    setFormData(null);
     setWarrantyType("REPLACEMENT");
+  };
+
+  const handleEdit = (item: any) => {
+    setEditId(item.id);
+    setWarrantyType(item.type);
+    setFormData({
+      type: item.type,
+      customerId: item.customerId || "",
+      productId: item.productId,
+      warehouseId: item.warehouseId,
+      quantity: item.quantity,
+      maintenanceLaborCost: item.maintenanceLaborCost ?? undefined,
+      shippingCost: item.shippingCost ?? undefined,
+      notes: item.notes || "",
+    });
+    setIsOpen(true);
   };
 
   const onSubmit = async (data: z.infer<typeof warrantySchema>) => {
     setLoading(true);
-    const loadingToast = toast.loading("جاري حفظ حركة الكفالة...");
+    const loadingToast = toast.loading(editId ? "جاري تحديث حركة الكفالة..." : "جاري حفظ حركة الكفالة...");
     try {
       const payload = {
         type: data.type,
@@ -94,16 +115,18 @@ export default function WarrantyPage() {
         notes: data.notes || null,
       };
 
-      const res = await createWarrantyAction(payload as any);
+      const res = editId
+        ? await updateWarrantyAction(editId, payload as any)
+        : await createWarrantyAction(payload as any);
       if (!res.success) {
-        throw new Error(String(res.error || "فشل حفظ الكفالة"));
+        throw new Error(String(res.error || (editId ? "فشل تحديث الكفالة" : "فشل حفظ الكفالة")));
       }
 
-      toast.success("تمت إضافة حركة الكفالة بنجاح");
+      toast.success(editId ? "تم تحديث حركة الكفالة بنجاح" : "تمت إضافة حركة الكفالة بنجاح");
       handleClose();
       loadData();
     } catch (error: any) {
-      toast.error(error?.message || "حدث خطأ أثناء حفظ حركة الكفالة");
+      toast.error(error?.message || (editId ? "حدث خطأ أثناء تحديث حركة الكفالة" : "حدث خطأ أثناء حفظ حركة الكفالة"));
     } finally {
       setLoading(false);
       toast.dismiss(loadingToast);
@@ -180,14 +203,28 @@ export default function WarrantyPage() {
           currentPage={replacementPage}
           onPageChange={(page) => setReplacementPage(page)}
           actions={
-            canDelete
+            canEdit || canDelete
               ? [
-                  {
-                    label: "حذف",
-                    icon: <Trash2 size={14} />,
-                    variant: "danger",
-                    onClick: onDelete,
-                  },
+                  ...(canEdit
+                    ? [
+                        {
+                          label: "تعديل",
+                          icon: <Edit size={14} />,
+                          variant: "default" as const,
+                          onClick: handleEdit,
+                        },
+                      ]
+                    : []),
+                  ...(canDelete
+                    ? [
+                        {
+                          label: "حذف",
+                          icon: <Trash2 size={14} />,
+                          variant: "danger" as const,
+                          onClick: onDelete,
+                        },
+                      ]
+                    : []),
                 ]
               : undefined
           }
@@ -220,14 +257,28 @@ export default function WarrantyPage() {
           currentPage={maintenancePage}
           onPageChange={(page) => setMaintenancePage(page)}
           actions={
-            canDelete
+            canEdit || canDelete
               ? [
-                  {
-                    label: "حذف",
-                    icon: <Trash2 size={14} />,
-                    variant: "danger",
-                    onClick: onDelete,
-                  },
+                  ...(canEdit
+                    ? [
+                        {
+                          label: "تعديل",
+                          icon: <Edit size={14} />,
+                          variant: "default" as const,
+                          onClick: handleEdit,
+                        },
+                      ]
+                    : []),
+                  ...(canDelete
+                    ? [
+                        {
+                          label: "حذف",
+                          icon: <Trash2 size={14} />,
+                          variant: "danger" as const,
+                          onClick: onDelete,
+                        },
+                      ]
+                    : []),
                 ]
               : undefined
           }
@@ -260,14 +311,28 @@ export default function WarrantyPage() {
           currentPage={damagedPage}
           onPageChange={(page) => setDamagedPage(page)}
           actions={
-            canDelete
+            canEdit || canDelete
               ? [
-                  {
-                    label: "حذف",
-                    icon: <Trash2 size={14} />,
-                    variant: "danger",
-                    onClick: onDelete,
-                  },
+                  ...(canEdit
+                    ? [
+                        {
+                          label: "تعديل",
+                          icon: <Edit size={14} />,
+                          variant: "default" as const,
+                          onClick: handleEdit,
+                        },
+                      ]
+                    : []),
+                  ...(canDelete
+                    ? [
+                        {
+                          label: "حذف",
+                          icon: <Trash2 size={14} />,
+                          variant: "danger" as const,
+                          onClick: onDelete,
+                        },
+                      ]
+                    : []),
                 ]
               : undefined
           }
@@ -289,22 +354,24 @@ export default function WarrantyPage() {
         />
       </div>
 
-      <AppModal title="إضافة حركة كفالة" isOpen={isOpen} onClose={handleClose}>
+      <AppModal title={editId ? "تعديل حركة كفالة" : "إضافة حركة كفالة"} isOpen={isOpen} onClose={handleClose}>
         <div className="p-2">
           <DynamicForm
             schema={warrantySchema}
             onSubmit={onSubmit}
-            submitLabel={loading ? "جاري الحفظ..." : "حفظ"}
-            defaultValues={{
-              type: warrantyType,
-              customerId: "",
-              productId: undefined,
-              warehouseId: undefined,
-              quantity: 1,
-              maintenanceLaborCost: undefined,
-              shippingCost: undefined,
-              notes: "",
-            }}
+            submitLabel={loading ? (editId ? "جاري التحديث..." : "جاري الحفظ...") : (editId ? "تحديث" : "حفظ")}
+            defaultValues={
+              formData || {
+                type: warrantyType,
+                customerId: "",
+                productId: undefined,
+                warehouseId: undefined,
+                quantity: 1,
+                maintenanceLaborCost: undefined,
+                shippingCost: undefined,
+                notes: "",
+              }
+            }
           >
             {({ register, watch, setValue, control, formState: { errors } }) => {
               const currentType = watch("type") || warrantyType;
