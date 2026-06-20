@@ -131,7 +131,6 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
         const price = Number(currentStock.price || 0);
         const discount = Number(currentStock.discount || 0);
         const totalAmount = price * quantity;
-        const finalAmount = (price - discount) * quantity;
         const orderNumber = `ORD-${Date.now()}`;
 
         const newOrder = await tx.order.create({
@@ -140,8 +139,8 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
             status: "طلب جديد",
             paymentMethod: "عند الاستلام",
             totalAmount,
-            discount: discount * quantity,
-            finalAmount,
+            discount: totalAmount,
+            finalAmount: 0,
             receiverName: customer.name || null,
             receiverPhone: [],
             country: warehouse.location,
@@ -368,7 +367,6 @@ export async function updateWarrantyAction(id: string, payload: WarrantyPayload)
           const price = Number(currentStock.price || 0);
           const discount = Number(currentStock.discount || 0);
           const totalAmount = price * newQuantity;
-          const finalAmount = (price - discount) * newQuantity;
           const orderNumber = `ORD-${Date.now()}`;
 
           const newOrder = await tx.order.create({
@@ -377,8 +375,8 @@ export async function updateWarrantyAction(id: string, payload: WarrantyPayload)
               status: "طلب جديد",
               paymentMethod: "عند الاستلام",
               totalAmount,
-              discount: discount * newQuantity,
-              finalAmount,
+              discount: totalAmount,
+              finalAmount: 0,
               receiverName: customer.name || null,
               receiverPhone: [],
               country: warehouse.location,
