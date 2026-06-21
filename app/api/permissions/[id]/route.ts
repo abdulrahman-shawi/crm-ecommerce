@@ -35,6 +35,12 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
                 editOrders: Boolean(data.editOrders),
                 deleteOrders: Boolean(data.deleteOrders),
 
+                // الكفالة
+                viewWarranty: Boolean(data.viewWarranty),
+                addWarranty: Boolean(data.addWarranty),
+                editWarranty: Boolean(data.editWarranty),
+                deleteWarranty: Boolean(data.deleteWarranty),
+
                 // العملاء
                 viewCustomers: Boolean(data.viewCustomers),
                 addCustomers: Boolean(data.addCustomers),

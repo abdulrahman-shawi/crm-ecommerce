@@ -184,6 +184,7 @@ export default function PermissionsPage() {
                                         <PermissionRow title="تصنيف المنتجات" suffix="Categories" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="التقارير" suffix="Reports" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الطلبات" suffix="Orders" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="الكفالة" suffix="Warranty" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="المصاريف" suffix="Expenses" role={selectedRole} onToggle={togglePermission} />

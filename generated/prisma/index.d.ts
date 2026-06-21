@@ -5543,6 +5543,10 @@ export namespace Prisma {
     addOrders: boolean | null
     editOrders: boolean | null
     deleteOrders: boolean | null
+    viewWarranty: boolean | null
+    addWarranty: boolean | null
+    editWarranty: boolean | null
+    deleteWarranty: boolean | null
     viewCustomers: boolean | null
     addCustomers: boolean | null
     editCustomers: boolean | null
@@ -5587,6 +5591,10 @@ export namespace Prisma {
     addOrders: boolean | null
     editOrders: boolean | null
     deleteOrders: boolean | null
+    viewWarranty: boolean | null
+    addWarranty: boolean | null
+    editWarranty: boolean | null
+    deleteWarranty: boolean | null
     viewCustomers: boolean | null
     addCustomers: boolean | null
     editCustomers: boolean | null
@@ -5631,6 +5639,10 @@ export namespace Prisma {
     addOrders: number
     editOrders: number
     deleteOrders: number
+    viewWarranty: number
+    addWarranty: number
+    editWarranty: number
+    deleteWarranty: number
     viewCustomers: number
     addCustomers: number
     editCustomers: number
@@ -5677,6 +5689,10 @@ export namespace Prisma {
     addOrders?: true
     editOrders?: true
     deleteOrders?: true
+    viewWarranty?: true
+    addWarranty?: true
+    editWarranty?: true
+    deleteWarranty?: true
     viewCustomers?: true
     addCustomers?: true
     editCustomers?: true
@@ -5721,6 +5737,10 @@ export namespace Prisma {
     addOrders?: true
     editOrders?: true
     deleteOrders?: true
+    viewWarranty?: true
+    addWarranty?: true
+    editWarranty?: true
+    deleteWarranty?: true
     viewCustomers?: true
     addCustomers?: true
     editCustomers?: true
@@ -5765,6 +5785,10 @@ export namespace Prisma {
     addOrders?: true
     editOrders?: true
     deleteOrders?: true
+    viewWarranty?: true
+    addWarranty?: true
+    editWarranty?: true
+    deleteWarranty?: true
     viewCustomers?: true
     addCustomers?: true
     editCustomers?: true
@@ -5882,6 +5906,10 @@ export namespace Prisma {
     addOrders: boolean
     editOrders: boolean
     deleteOrders: boolean
+    viewWarranty: boolean
+    addWarranty: boolean
+    editWarranty: boolean
+    deleteWarranty: boolean
     viewCustomers: boolean
     addCustomers: boolean
     editCustomers: boolean
@@ -5943,6 +5971,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -5989,6 +6021,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -6033,6 +6069,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -6077,6 +6117,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -6106,7 +6150,7 @@ export namespace Prisma {
     accessTurkey?: boolean
   }
 
-  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "accessSyria" | "accessTurkey", ExtArgs["result"]["permission"]>
+  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "accessSyria" | "accessTurkey", ExtArgs["result"]["permission"]>
   export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
@@ -6134,6 +6178,10 @@ export namespace Prisma {
       addOrders: boolean
       editOrders: boolean
       deleteOrders: boolean
+      viewWarranty: boolean
+      addWarranty: boolean
+      editWarranty: boolean
+      deleteWarranty: boolean
       viewCustomers: boolean
       addCustomers: boolean
       editCustomers: boolean
@@ -6599,6 +6647,10 @@ export namespace Prisma {
     readonly addOrders: FieldRef<"Permission", 'Boolean'>
     readonly editOrders: FieldRef<"Permission", 'Boolean'>
     readonly deleteOrders: FieldRef<"Permission", 'Boolean'>
+    readonly viewWarranty: FieldRef<"Permission", 'Boolean'>
+    readonly addWarranty: FieldRef<"Permission", 'Boolean'>
+    readonly editWarranty: FieldRef<"Permission", 'Boolean'>
+    readonly deleteWarranty: FieldRef<"Permission", 'Boolean'>
     readonly viewCustomers: FieldRef<"Permission", 'Boolean'>
     readonly addCustomers: FieldRef<"Permission", 'Boolean'>
     readonly editCustomers: FieldRef<"Permission", 'Boolean'>
@@ -36775,6 +36827,10 @@ export namespace Prisma {
     addOrders: 'addOrders',
     editOrders: 'editOrders',
     deleteOrders: 'deleteOrders',
+    viewWarranty: 'viewWarranty',
+    addWarranty: 'addWarranty',
+    editWarranty: 'editWarranty',
+    deleteWarranty: 'deleteWarranty',
     viewCustomers: 'viewCustomers',
     addCustomers: 'addCustomers',
     editCustomers: 'editCustomers',
@@ -37624,6 +37680,10 @@ export namespace Prisma {
     addOrders?: BoolFilter<"Permission"> | boolean
     editOrders?: BoolFilter<"Permission"> | boolean
     deleteOrders?: BoolFilter<"Permission"> | boolean
+    viewWarranty?: BoolFilter<"Permission"> | boolean
+    addWarranty?: BoolFilter<"Permission"> | boolean
+    editWarranty?: BoolFilter<"Permission"> | boolean
+    deleteWarranty?: BoolFilter<"Permission"> | boolean
     viewCustomers?: BoolFilter<"Permission"> | boolean
     addCustomers?: BoolFilter<"Permission"> | boolean
     editCustomers?: BoolFilter<"Permission"> | boolean
@@ -37669,6 +37729,10 @@ export namespace Prisma {
     addOrders?: SortOrder
     editOrders?: SortOrder
     deleteOrders?: SortOrder
+    viewWarranty?: SortOrder
+    addWarranty?: SortOrder
+    editWarranty?: SortOrder
+    deleteWarranty?: SortOrder
     viewCustomers?: SortOrder
     addCustomers?: SortOrder
     editCustomers?: SortOrder
@@ -37717,6 +37781,10 @@ export namespace Prisma {
     addOrders?: BoolFilter<"Permission"> | boolean
     editOrders?: BoolFilter<"Permission"> | boolean
     deleteOrders?: BoolFilter<"Permission"> | boolean
+    viewWarranty?: BoolFilter<"Permission"> | boolean
+    addWarranty?: BoolFilter<"Permission"> | boolean
+    editWarranty?: BoolFilter<"Permission"> | boolean
+    deleteWarranty?: BoolFilter<"Permission"> | boolean
     viewCustomers?: BoolFilter<"Permission"> | boolean
     addCustomers?: BoolFilter<"Permission"> | boolean
     editCustomers?: BoolFilter<"Permission"> | boolean
@@ -37762,6 +37830,10 @@ export namespace Prisma {
     addOrders?: SortOrder
     editOrders?: SortOrder
     deleteOrders?: SortOrder
+    viewWarranty?: SortOrder
+    addWarranty?: SortOrder
+    editWarranty?: SortOrder
+    deleteWarranty?: SortOrder
     viewCustomers?: SortOrder
     addCustomers?: SortOrder
     editCustomers?: SortOrder
@@ -37812,6 +37884,10 @@ export namespace Prisma {
     addOrders?: BoolWithAggregatesFilter<"Permission"> | boolean
     editOrders?: BoolWithAggregatesFilter<"Permission"> | boolean
     deleteOrders?: BoolWithAggregatesFilter<"Permission"> | boolean
+    viewWarranty?: BoolWithAggregatesFilter<"Permission"> | boolean
+    addWarranty?: BoolWithAggregatesFilter<"Permission"> | boolean
+    editWarranty?: BoolWithAggregatesFilter<"Permission"> | boolean
+    deleteWarranty?: BoolWithAggregatesFilter<"Permission"> | boolean
     viewCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
     addCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
     editCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
@@ -40156,6 +40232,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -40201,6 +40281,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -40246,6 +40330,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
@@ -40291,6 +40379,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
@@ -40336,6 +40428,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -40380,6 +40476,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
@@ -40424,6 +40524,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
@@ -43108,6 +43212,10 @@ export namespace Prisma {
     addOrders?: SortOrder
     editOrders?: SortOrder
     deleteOrders?: SortOrder
+    viewWarranty?: SortOrder
+    addWarranty?: SortOrder
+    editWarranty?: SortOrder
+    deleteWarranty?: SortOrder
     viewCustomers?: SortOrder
     addCustomers?: SortOrder
     editCustomers?: SortOrder
@@ -43152,6 +43260,10 @@ export namespace Prisma {
     addOrders?: SortOrder
     editOrders?: SortOrder
     deleteOrders?: SortOrder
+    viewWarranty?: SortOrder
+    addWarranty?: SortOrder
+    editWarranty?: SortOrder
+    deleteWarranty?: SortOrder
     viewCustomers?: SortOrder
     addCustomers?: SortOrder
     editCustomers?: SortOrder
@@ -43196,6 +43308,10 @@ export namespace Prisma {
     addOrders?: SortOrder
     editOrders?: SortOrder
     deleteOrders?: SortOrder
+    viewWarranty?: SortOrder
+    addWarranty?: SortOrder
+    editWarranty?: SortOrder
+    deleteWarranty?: SortOrder
     viewCustomers?: SortOrder
     addCustomers?: SortOrder
     editCustomers?: SortOrder
@@ -47704,6 +47820,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -47748,6 +47868,10 @@ export namespace Prisma {
     addOrders?: boolean
     editOrders?: boolean
     deleteOrders?: boolean
+    viewWarranty?: boolean
+    addWarranty?: boolean
+    editWarranty?: boolean
+    deleteWarranty?: boolean
     viewCustomers?: boolean
     addCustomers?: boolean
     editCustomers?: boolean
@@ -48281,6 +48405,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
@@ -48325,6 +48453,10 @@ export namespace Prisma {
     addOrders?: BoolFieldUpdateOperationsInput | boolean
     editOrders?: BoolFieldUpdateOperationsInput | boolean
     deleteOrders?: BoolFieldUpdateOperationsInput | boolean
+    viewWarranty?: BoolFieldUpdateOperationsInput | boolean
+    addWarranty?: BoolFieldUpdateOperationsInput | boolean
+    editWarranty?: BoolFieldUpdateOperationsInput | boolean
+    deleteWarranty?: BoolFieldUpdateOperationsInput | boolean
     viewCustomers?: BoolFieldUpdateOperationsInput | boolean
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean

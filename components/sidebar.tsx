@@ -119,7 +119,12 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   // 
   (user && isAdmin(user)) &&
   { icon: Wallet, label: "التحصيلات", href: "/dashboard/collections" },
-  (user && isAdmin(user)) &&
+  (user && hasAnyPermission(user, [
+    "viewWarranty", "viewOrders",
+    "addWarranty", "addOrders",
+    "editWarranty", "editOrders",
+    "deleteWarranty", "deleteOrders",
+  ])) &&
   { icon: ShieldCheck, label: "الكفالة", href: "/dashboard/warranty" },
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },

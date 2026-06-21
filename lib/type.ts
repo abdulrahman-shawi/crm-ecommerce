@@ -17,6 +17,11 @@ export interface Permission {
   editOrders: boolean;
   deleteOrders: boolean;
 
+  viewWarranty: boolean;
+  addWarranty: boolean;
+  editWarranty: boolean;
+  deleteWarranty: boolean;
+
   viewCustomers: boolean;
   addCustomers: boolean;
   editCustomers: boolean;

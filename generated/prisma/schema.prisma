@@ -141,6 +141,11 @@ model Permission {
   editOrders   Boolean @default(false)
   deleteOrders Boolean @default(false)
 
+  viewWarranty   Boolean @default(false)
+  addWarranty    Boolean @default(false)
+  editWarranty   Boolean @default(false)
+  deleteWarranty Boolean @default(false)
+
   viewCustomers   Boolean @default(false)
   addCustomers    Boolean @default(false)
   editCustomers   Boolean @default(false)

@@ -25,6 +25,16 @@ export async function POST(req: NextRequest) {
                 viewProducts: false, addProducts: false, editProducts: false, deleteProducts: false,
                 viewReports: false, addReports: false, editReports: false, deleteReports: false,
                 viewOrders: false, addOrders: false, editOrders: false, deleteOrders: false,
+                viewWarranty: false, addWarranty: false, editWarranty: false, deleteWarranty: false,
+                viewCustomers: false, addCustomers: false, editCustomers: false, deleteCustomers: false,
+                viewEmployees: false, addEmployees: false, editEmployees: false, deleteEmployees: false,
+                viewExpenses: false, addExpenses: false, editExpenses: false, deleteExpenses: false,
+                viewCategories: false, addCategories: false, editCategories: false, deleteCategories: false,
+                viewPermissions: false, addPermissions: false, editPermissions: false, deletePermissions: false,
+                viewPages: false, addPages: false, editPages: false, deletePages: false,
+                viewAnalytics: false,
+                accessSyria: false,
+                accessTurkey: false,
             }
         });
         

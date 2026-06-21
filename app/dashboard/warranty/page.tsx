@@ -35,10 +35,15 @@ const typeLabel: Record<string, string> = {
 
 export default function WarrantyPage() {
   const { user } = useAuth();
-  const canView = user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]);
-  const canAdd = user && hasAnyPermission(user, ["addOrders", "editOrders"]);
-  const canEdit = user && hasAnyPermission(user, ["editOrders"]);
-  const canDelete = user && hasAnyPermission(user, ["deleteOrders"]);
+  const canView = user && hasAnyPermission(user, [
+    "viewWarranty", "viewOrders",
+    "addWarranty", "addOrders",
+    "editWarranty", "editOrders",
+    "deleteWarranty", "deleteOrders",
+  ]);
+  const canAdd = user && hasAnyPermission(user, ["addWarranty", "addOrders"]);
+  const canEdit = user && hasAnyPermission(user, ["editWarranty", "editOrders"]);
+  const canDelete = user && hasAnyPermission(user, ["deleteWarranty", "deleteOrders"]);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
