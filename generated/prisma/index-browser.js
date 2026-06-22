@@ -497,6 +497,42 @@ exports.Prisma.AffiliateLinkScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.OfferScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  description: 'description',
+  badgeText: 'badgeText',
+  image: 'image',
+  ctaText: 'ctaText',
+  ctaLink: 'ctaLink',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  countdownEndsAt: 'countdownEndsAt',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OfferDiscountScalarFieldEnum = {
+  id: 'id',
+  offerId: 'offerId',
+  productId: 'productId',
+  categoryId: 'categoryId',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  maxDiscountValue: 'maxDiscountValue',
+  minOrderAmount: 'minOrderAmount',
+  usageLimit: 'usageLimit',
+  usedCount: 'usedCount',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CommissionScalarFieldEnum = {
   id: 'id',
   affiliateLinkId: 'affiliateLinkId',
@@ -584,6 +620,11 @@ exports.PaidFromOffice = exports.$Enums.PaidFromOffice = {
   SYRIA: 'SYRIA'
 };
 
+exports.DiscountType = exports.$Enums.DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
 exports.CommissionStatus = exports.$Enums.CommissionStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',
@@ -617,6 +658,8 @@ exports.Prisma.ModelName = {
   Page: 'Page',
   HeroSlide: 'HeroSlide',
   AffiliateLink: 'AffiliateLink',
+  Offer: 'Offer',
+  OfferDiscount: 'OfferDiscount',
   Commission: 'Commission'
 };
 

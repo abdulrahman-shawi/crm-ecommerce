@@ -76,6 +76,11 @@ enum CommissionStatus {
   CANCELLED
 }
 
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
 // ============================================
 // User (Existing + New columns)
 // ============================================
@@ -197,7 +202,8 @@ model Category {
   slug     String?   @unique
   createdAt DateTime @default(now())
 
-  products Product[]
+  products       Product[]
+  offerDiscounts OfferDiscount[]
 }
 
 // ============================================
@@ -232,7 +238,8 @@ model Product {
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks AffiliateLink[]
   reviews        Review[]
-landingPage    ProductLandingPage?
+  landingPage    ProductLandingPage?
+  offerDiscounts OfferDiscount[]
 }
 
 // ============================================
@@ -721,6 +728,68 @@ model AffiliateLink {
   @@index([productId])
   @@index([uniqueCode])
   @@map("affiliate_links")
+}
+
+// ============================================
+// Offer (Homepage / Marketing Offers)
+// ============================================
+
+model Offer {
+  id               String          @id @default(cuid())
+  title            String?
+  subtitle         String?
+  description      String?         @db.Text
+  badgeText        String?
+  image            String?
+  ctaText          String?
+  ctaLink          String?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  countdownEndsAt  DateTime?
+  isActive         Boolean         @default(true)
+  sortOrder        Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  discounts        OfferDiscount[]
+
+  @@index([isActive, sortOrder])
+  @@index([startsAt, endsAt])
+  @@map("offers")
+}
+
+// ============================================
+// OfferDiscount (Discount Rules for Offers)
+// ============================================
+
+model OfferDiscount {
+  id               String        @id @default(cuid())
+  offerId          String
+  offer            Offer         @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  // Optional targeting (can stay null)
+  productId        Int?
+  product          Product?      @relation(fields: [productId], references: [id], onDelete: SetNull)
+  categoryId       Int?
+  category         Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  discountType     DiscountType  @default(PERCENTAGE)
+  discountValue    Float?
+  maxDiscountValue Float?
+  minOrderAmount   Float?
+  usageLimit       Int?
+  usedCount        Int           @default(0)
+  startsAt         DateTime?
+  endsAt           DateTime?
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([offerId, isActive])
+  @@index([productId])
+  @@index([categoryId])
+  @@index([startsAt, endsAt])
+  @@map("offer_discounts")
 }
 
 // ============================================

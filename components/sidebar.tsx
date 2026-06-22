@@ -12,7 +12,9 @@ import {
   Truck,
   Wallet,
   MessageCircle,
-  ImageIcon
+  ImageIcon,
+  BadgePercent,
+  Ticket
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -152,6 +154,10 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: FileText, label: "الصفحات", href: "/dashboard/pages" },
         (user && isAdmin(user)) &&
         { icon: ImageIcon, label: "سلايدر الرئيسية", href: "/dashboard/hero-slides" },
+        (user && isAdmin(user)) &&
+        { icon: Ticket, label: "العروض", href: "/dashboard/offers" },
+        (user && isAdmin(user)) &&
+        { icon: BadgePercent, label: "خصومات العروض", href: "/dashboard/offer-discounts" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];

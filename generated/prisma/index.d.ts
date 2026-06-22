@@ -144,6 +144,16 @@ export type HeroSlide = $Result.DefaultSelection<Prisma.$HeroSlidePayload>
  */
 export type AffiliateLink = $Result.DefaultSelection<Prisma.$AffiliateLinkPayload>
 /**
+ * Model Offer
+ * 
+ */
+export type Offer = $Result.DefaultSelection<Prisma.$OfferPayload>
+/**
+ * Model OfferDiscount
+ * 
+ */
+export type OfferDiscount = $Result.DefaultSelection<Prisma.$OfferDiscountPayload>
+/**
  * Model Commission
  * 
  */
@@ -246,6 +256,14 @@ export const CommissionStatus: {
 
 export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
 
+
+export const DiscountType: {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
 }
 
 export type ActivityTargetCycle = $Enums.ActivityTargetCycle
@@ -287,6 +305,10 @@ export const EcommerceRole: typeof $Enums.EcommerceRole
 export type CommissionStatus = $Enums.CommissionStatus
 
 export const CommissionStatus: typeof $Enums.CommissionStatus
+
+export type DiscountType = $Enums.DiscountType
+
+export const DiscountType: typeof $Enums.DiscountType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -664,6 +686,26 @@ export class PrismaClient<
     * ```
     */
   get affiliateLink(): Prisma.AffiliateLinkDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.offer`: Exposes CRUD operations for the **Offer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Offers
+    * const offers = await prisma.offer.findMany()
+    * ```
+    */
+  get offer(): Prisma.OfferDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.offerDiscount`: Exposes CRUD operations for the **OfferDiscount** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OfferDiscounts
+    * const offerDiscounts = await prisma.offerDiscount.findMany()
+    * ```
+    */
+  get offerDiscount(): Prisma.OfferDiscountDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.commission`: Exposes CRUD operations for the **Commission** model.
@@ -1134,6 +1176,8 @@ export namespace Prisma {
     Page: 'Page',
     HeroSlide: 'HeroSlide',
     AffiliateLink: 'AffiliateLink',
+    Offer: 'Offer',
+    OfferDiscount: 'OfferDiscount',
     Commission: 'Commission'
   };
 
@@ -1150,7 +1194,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "commission"
+      modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3078,6 +3122,154 @@ export namespace Prisma {
           }
         }
       }
+      Offer: {
+        payload: Prisma.$OfferPayload<ExtArgs>
+        fields: Prisma.OfferFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OfferFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OfferFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          findFirst: {
+            args: Prisma.OfferFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OfferFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          findMany: {
+            args: Prisma.OfferFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          create: {
+            args: Prisma.OfferCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          createMany: {
+            args: Prisma.OfferCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OfferCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          delete: {
+            args: Prisma.OfferDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          update: {
+            args: Prisma.OfferUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          deleteMany: {
+            args: Prisma.OfferDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OfferUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OfferUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          upsert: {
+            args: Prisma.OfferUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          aggregate: {
+            args: Prisma.OfferAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOffer>
+          }
+          groupBy: {
+            args: Prisma.OfferGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OfferGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OfferCountArgs<ExtArgs>
+            result: $Utils.Optional<OfferCountAggregateOutputType> | number
+          }
+        }
+      }
+      OfferDiscount: {
+        payload: Prisma.$OfferDiscountPayload<ExtArgs>
+        fields: Prisma.OfferDiscountFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OfferDiscountFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OfferDiscountFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          findFirst: {
+            args: Prisma.OfferDiscountFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OfferDiscountFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          findMany: {
+            args: Prisma.OfferDiscountFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>[]
+          }
+          create: {
+            args: Prisma.OfferDiscountCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          createMany: {
+            args: Prisma.OfferDiscountCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OfferDiscountCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>[]
+          }
+          delete: {
+            args: Prisma.OfferDiscountDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          update: {
+            args: Prisma.OfferDiscountUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          deleteMany: {
+            args: Prisma.OfferDiscountDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OfferDiscountUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OfferDiscountUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>[]
+          }
+          upsert: {
+            args: Prisma.OfferDiscountUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferDiscountPayload>
+          }
+          aggregate: {
+            args: Prisma.OfferDiscountAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOfferDiscount>
+          }
+          groupBy: {
+            args: Prisma.OfferDiscountGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OfferDiscountGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OfferDiscountCountArgs<ExtArgs>
+            result: $Utils.Optional<OfferDiscountCountAggregateOutputType> | number
+          }
+        }
+      }
       Commission: {
         payload: Prisma.$CommissionPayload<ExtArgs>
         fields: Prisma.CommissionFieldRefs
@@ -3286,6 +3478,8 @@ export namespace Prisma {
     page?: PageOmit
     heroSlide?: HeroSlideOmit
     affiliateLink?: AffiliateLinkOmit
+    offer?: OfferOmit
+    offerDiscount?: OfferDiscountOmit
     commission?: CommissionOmit
   }
 
@@ -3520,10 +3714,12 @@ export namespace Prisma {
 
   export type CategoryCountOutputType = {
     products: number
+    offerDiscounts: number
   }
 
   export type CategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | CategoryCountOutputTypeCountProductsArgs
+    offerDiscounts?: boolean | CategoryCountOutputTypeCountOfferDiscountsArgs
   }
 
   // Custom InputTypes
@@ -3544,6 +3740,13 @@ export namespace Prisma {
     where?: ProductWhereInput
   }
 
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeCountOfferDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferDiscountWhereInput
+  }
+
 
   /**
    * Count Type ProductCountOutputType
@@ -3558,6 +3761,7 @@ export namespace Prisma {
     warrantiesAsProduct: number
     affiliateLinks: number
     reviews: number
+    offerDiscounts: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3569,6 +3773,7 @@ export namespace Prisma {
     warrantiesAsProduct?: boolean | ProductCountOutputTypeCountWarrantiesAsProductArgs
     affiliateLinks?: boolean | ProductCountOutputTypeCountAffiliateLinksArgs
     reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
+    offerDiscounts?: boolean | ProductCountOutputTypeCountOfferDiscountsArgs
   }
 
   // Custom InputTypes
@@ -3636,6 +3841,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountOfferDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferDiscountWhereInput
   }
 
 
@@ -3903,6 +4115,37 @@ export namespace Prisma {
    */
   export type AffiliateLinkCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommissionWhereInput
+  }
+
+
+  /**
+   * Count Type OfferCountOutputType
+   */
+
+  export type OfferCountOutputType = {
+    discounts: number
+  }
+
+  export type OfferCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    discounts?: boolean | OfferCountOutputTypeCountDiscountsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OfferCountOutputType without action
+   */
+  export type OfferCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferCountOutputType
+     */
+    select?: OfferCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OfferCountOutputType without action
+   */
+  export type OfferCountOutputTypeCountDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferDiscountWhereInput
   }
 
 
@@ -7307,6 +7550,7 @@ export namespace Prisma {
     slug?: boolean
     createdAt?: boolean
     products?: boolean | Category$productsArgs<ExtArgs>
+    offerDiscounts?: boolean | Category$offerDiscountsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
@@ -7337,6 +7581,7 @@ export namespace Prisma {
   export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "image" | "slug" | "createdAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
+    offerDiscounts?: boolean | Category$offerDiscountsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7346,6 +7591,7 @@ export namespace Prisma {
     name: "Category"
     objects: {
       products: Prisma.$ProductPayload<ExtArgs>[]
+      offerDiscounts: Prisma.$OfferDiscountPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7748,6 +7994,7 @@ export namespace Prisma {
   export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     products<T extends Category$productsArgs<ExtArgs> = {}>(args?: Subset<T, Category$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offerDiscounts<T extends Category$offerDiscountsArgs<ExtArgs> = {}>(args?: Subset<T, Category$offerDiscountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8194,6 +8441,30 @@ export namespace Prisma {
   }
 
   /**
+   * Category.offerDiscounts
+   */
+  export type Category$offerDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    where?: OfferDiscountWhereInput
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    cursor?: OfferDiscountWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
    * Category without action
    */
   export type CategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8480,6 +8751,7 @@ export namespace Prisma {
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
+    offerDiscounts?: boolean | Product$offerDiscountsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -8539,6 +8811,7 @@ export namespace Prisma {
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
+    offerDiscounts?: boolean | Product$offerDiscountsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8561,6 +8834,7 @@ export namespace Prisma {
       affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       landingPage: Prisma.$ProductLandingPagePayload<ExtArgs> | null
+      offerDiscounts: Prisma.$OfferDiscountPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8978,6 +9252,7 @@ export namespace Prisma {
     affiliateLinks<T extends Product$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, Product$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     landingPage<T extends Product$landingPageArgs<ExtArgs> = {}>(args?: Subset<T, Product$landingPageArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    offerDiscounts<T extends Product$offerDiscountsArgs<ExtArgs> = {}>(args?: Subset<T, Product$offerDiscountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9641,6 +9916,30 @@ export namespace Prisma {
      */
     include?: ProductLandingPageInclude<ExtArgs> | null
     where?: ProductLandingPageWhereInput
+  }
+
+  /**
+   * Product.offerDiscounts
+   */
+  export type Product$offerDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    where?: OfferDiscountWhereInput
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    cursor?: OfferDiscountWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
   }
 
   /**
@@ -35646,6 +35945,2540 @@ export namespace Prisma {
 
 
   /**
+   * Model Offer
+   */
+
+  export type AggregateOffer = {
+    _count: OfferCountAggregateOutputType | null
+    _avg: OfferAvgAggregateOutputType | null
+    _sum: OfferSumAggregateOutputType | null
+    _min: OfferMinAggregateOutputType | null
+    _max: OfferMaxAggregateOutputType | null
+  }
+
+  export type OfferAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type OfferSumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type OfferMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    badgeText: string | null
+    image: string | null
+    ctaText: string | null
+    ctaLink: string | null
+    startsAt: Date | null
+    endsAt: Date | null
+    countdownEndsAt: Date | null
+    isActive: boolean | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfferMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    badgeText: string | null
+    image: string | null
+    ctaText: string | null
+    ctaLink: string | null
+    startsAt: Date | null
+    endsAt: Date | null
+    countdownEndsAt: Date | null
+    isActive: boolean | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfferCountAggregateOutputType = {
+    id: number
+    title: number
+    subtitle: number
+    description: number
+    badgeText: number
+    image: number
+    ctaText: number
+    ctaLink: number
+    startsAt: number
+    endsAt: number
+    countdownEndsAt: number
+    isActive: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OfferAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type OfferSumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type OfferMinAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    badgeText?: true
+    image?: true
+    ctaText?: true
+    ctaLink?: true
+    startsAt?: true
+    endsAt?: true
+    countdownEndsAt?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfferMaxAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    badgeText?: true
+    image?: true
+    ctaText?: true
+    ctaLink?: true
+    startsAt?: true
+    endsAt?: true
+    countdownEndsAt?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfferCountAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    badgeText?: true
+    image?: true
+    ctaText?: true
+    ctaLink?: true
+    startsAt?: true
+    endsAt?: true
+    countdownEndsAt?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OfferAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Offer to aggregate.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Offers
+    **/
+    _count?: true | OfferCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OfferAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OfferSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OfferMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OfferMaxAggregateInputType
+  }
+
+  export type GetOfferAggregateType<T extends OfferAggregateArgs> = {
+        [P in keyof T & keyof AggregateOffer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOffer[P]>
+      : GetScalarType<T[P], AggregateOffer[P]>
+  }
+
+
+
+
+  export type OfferGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferWhereInput
+    orderBy?: OfferOrderByWithAggregationInput | OfferOrderByWithAggregationInput[]
+    by: OfferScalarFieldEnum[] | OfferScalarFieldEnum
+    having?: OfferScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OfferCountAggregateInputType | true
+    _avg?: OfferAvgAggregateInputType
+    _sum?: OfferSumAggregateInputType
+    _min?: OfferMinAggregateInputType
+    _max?: OfferMaxAggregateInputType
+  }
+
+  export type OfferGroupByOutputType = {
+    id: string
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    badgeText: string | null
+    image: string | null
+    ctaText: string | null
+    ctaLink: string | null
+    startsAt: Date | null
+    endsAt: Date | null
+    countdownEndsAt: Date | null
+    isActive: boolean
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: OfferCountAggregateOutputType | null
+    _avg: OfferAvgAggregateOutputType | null
+    _sum: OfferSumAggregateOutputType | null
+    _min: OfferMinAggregateOutputType | null
+    _max: OfferMaxAggregateOutputType | null
+  }
+
+  type GetOfferGroupByPayload<T extends OfferGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OfferGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OfferGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OfferGroupByOutputType[P]>
+            : GetScalarType<T[P], OfferGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OfferSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    badgeText?: boolean
+    image?: boolean
+    ctaText?: boolean
+    ctaLink?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    countdownEndsAt?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    discounts?: boolean | Offer$discountsArgs<ExtArgs>
+    _count?: boolean | OfferCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    badgeText?: boolean
+    image?: boolean
+    ctaText?: boolean
+    ctaLink?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    countdownEndsAt?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    badgeText?: boolean
+    image?: boolean
+    ctaText?: boolean
+    ctaLink?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    countdownEndsAt?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectScalar = {
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    badgeText?: boolean
+    image?: boolean
+    ctaText?: boolean
+    ctaLink?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    countdownEndsAt?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OfferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "subtitle" | "description" | "badgeText" | "image" | "ctaText" | "ctaLink" | "startsAt" | "endsAt" | "countdownEndsAt" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+  export type OfferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    discounts?: boolean | Offer$discountsArgs<ExtArgs>
+    _count?: boolean | OfferCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type OfferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OfferIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $OfferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Offer"
+    objects: {
+      discounts: Prisma.$OfferDiscountPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string | null
+      subtitle: string | null
+      description: string | null
+      badgeText: string | null
+      image: string | null
+      ctaText: string | null
+      ctaLink: string | null
+      startsAt: Date | null
+      endsAt: Date | null
+      countdownEndsAt: Date | null
+      isActive: boolean
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["offer"]>
+    composites: {}
+  }
+
+  type OfferGetPayload<S extends boolean | null | undefined | OfferDefaultArgs> = $Result.GetResult<Prisma.$OfferPayload, S>
+
+  type OfferCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OfferFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OfferCountAggregateInputType | true
+    }
+
+  export interface OfferDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Offer'], meta: { name: 'Offer' } }
+    /**
+     * Find zero or one Offer that matches the filter.
+     * @param {OfferFindUniqueArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OfferFindUniqueArgs>(args: SelectSubset<T, OfferFindUniqueArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Offer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OfferFindUniqueOrThrowArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OfferFindUniqueOrThrowArgs>(args: SelectSubset<T, OfferFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Offer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindFirstArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OfferFindFirstArgs>(args?: SelectSubset<T, OfferFindFirstArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Offer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindFirstOrThrowArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OfferFindFirstOrThrowArgs>(args?: SelectSubset<T, OfferFindFirstOrThrowArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Offers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Offers
+     * const offers = await prisma.offer.findMany()
+     * 
+     * // Get first 10 Offers
+     * const offers = await prisma.offer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const offerWithIdOnly = await prisma.offer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OfferFindManyArgs>(args?: SelectSubset<T, OfferFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Offer.
+     * @param {OfferCreateArgs} args - Arguments to create a Offer.
+     * @example
+     * // Create one Offer
+     * const Offer = await prisma.offer.create({
+     *   data: {
+     *     // ... data to create a Offer
+     *   }
+     * })
+     * 
+     */
+    create<T extends OfferCreateArgs>(args: SelectSubset<T, OfferCreateArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Offers.
+     * @param {OfferCreateManyArgs} args - Arguments to create many Offers.
+     * @example
+     * // Create many Offers
+     * const offer = await prisma.offer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OfferCreateManyArgs>(args?: SelectSubset<T, OfferCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Offers and returns the data saved in the database.
+     * @param {OfferCreateManyAndReturnArgs} args - Arguments to create many Offers.
+     * @example
+     * // Create many Offers
+     * const offer = await prisma.offer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Offers and only return the `id`
+     * const offerWithIdOnly = await prisma.offer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OfferCreateManyAndReturnArgs>(args?: SelectSubset<T, OfferCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Offer.
+     * @param {OfferDeleteArgs} args - Arguments to delete one Offer.
+     * @example
+     * // Delete one Offer
+     * const Offer = await prisma.offer.delete({
+     *   where: {
+     *     // ... filter to delete one Offer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OfferDeleteArgs>(args: SelectSubset<T, OfferDeleteArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Offer.
+     * @param {OfferUpdateArgs} args - Arguments to update one Offer.
+     * @example
+     * // Update one Offer
+     * const offer = await prisma.offer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OfferUpdateArgs>(args: SelectSubset<T, OfferUpdateArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Offers.
+     * @param {OfferDeleteManyArgs} args - Arguments to filter Offers to delete.
+     * @example
+     * // Delete a few Offers
+     * const { count } = await prisma.offer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OfferDeleteManyArgs>(args?: SelectSubset<T, OfferDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Offers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Offers
+     * const offer = await prisma.offer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OfferUpdateManyArgs>(args: SelectSubset<T, OfferUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Offers and returns the data updated in the database.
+     * @param {OfferUpdateManyAndReturnArgs} args - Arguments to update many Offers.
+     * @example
+     * // Update many Offers
+     * const offer = await prisma.offer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Offers and only return the `id`
+     * const offerWithIdOnly = await prisma.offer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OfferUpdateManyAndReturnArgs>(args: SelectSubset<T, OfferUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Offer.
+     * @param {OfferUpsertArgs} args - Arguments to update or create a Offer.
+     * @example
+     * // Update or create a Offer
+     * const offer = await prisma.offer.upsert({
+     *   create: {
+     *     // ... data to create a Offer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Offer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OfferUpsertArgs>(args: SelectSubset<T, OfferUpsertArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Offers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferCountArgs} args - Arguments to filter Offers to count.
+     * @example
+     * // Count the number of Offers
+     * const count = await prisma.offer.count({
+     *   where: {
+     *     // ... the filter for the Offers we want to count
+     *   }
+     * })
+    **/
+    count<T extends OfferCountArgs>(
+      args?: Subset<T, OfferCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OfferCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Offer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OfferAggregateArgs>(args: Subset<T, OfferAggregateArgs>): Prisma.PrismaPromise<GetOfferAggregateType<T>>
+
+    /**
+     * Group by Offer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OfferGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OfferGroupByArgs['orderBy'] }
+        : { orderBy?: OfferGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OfferGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfferGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Offer model
+   */
+  readonly fields: OfferFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Offer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OfferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    discounts<T extends Offer$discountsArgs<ExtArgs> = {}>(args?: Subset<T, Offer$discountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Offer model
+   */
+  interface OfferFieldRefs {
+    readonly id: FieldRef<"Offer", 'String'>
+    readonly title: FieldRef<"Offer", 'String'>
+    readonly subtitle: FieldRef<"Offer", 'String'>
+    readonly description: FieldRef<"Offer", 'String'>
+    readonly badgeText: FieldRef<"Offer", 'String'>
+    readonly image: FieldRef<"Offer", 'String'>
+    readonly ctaText: FieldRef<"Offer", 'String'>
+    readonly ctaLink: FieldRef<"Offer", 'String'>
+    readonly startsAt: FieldRef<"Offer", 'DateTime'>
+    readonly endsAt: FieldRef<"Offer", 'DateTime'>
+    readonly countdownEndsAt: FieldRef<"Offer", 'DateTime'>
+    readonly isActive: FieldRef<"Offer", 'Boolean'>
+    readonly sortOrder: FieldRef<"Offer", 'Int'>
+    readonly createdAt: FieldRef<"Offer", 'DateTime'>
+    readonly updatedAt: FieldRef<"Offer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Offer findUnique
+   */
+  export type OfferFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer findUniqueOrThrow
+   */
+  export type OfferFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer findFirst
+   */
+  export type OfferFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Offers.
+     */
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer findFirstOrThrow
+   */
+  export type OfferFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Offers.
+     */
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer findMany
+   */
+  export type OfferFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offers to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer create
+   */
+  export type OfferCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Offer.
+     */
+    data: XOR<OfferCreateInput, OfferUncheckedCreateInput>
+  }
+
+  /**
+   * Offer createMany
+   */
+  export type OfferCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Offers.
+     */
+    data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Offer createManyAndReturn
+   */
+  export type OfferCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * The data used to create many Offers.
+     */
+    data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Offer update
+   */
+  export type OfferUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Offer.
+     */
+    data: XOR<OfferUpdateInput, OfferUncheckedUpdateInput>
+    /**
+     * Choose, which Offer to update.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer updateMany
+   */
+  export type OfferUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Offers.
+     */
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyInput>
+    /**
+     * Filter which Offers to update
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Offer updateManyAndReturn
+   */
+  export type OfferUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * The data used to update Offers.
+     */
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyInput>
+    /**
+     * Filter which Offers to update
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Offer upsert
+   */
+  export type OfferUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Offer to update in case it exists.
+     */
+    where: OfferWhereUniqueInput
+    /**
+     * In case the Offer found by the `where` argument doesn't exist, create a new Offer with this data.
+     */
+    create: XOR<OfferCreateInput, OfferUncheckedCreateInput>
+    /**
+     * In case the Offer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OfferUpdateInput, OfferUncheckedUpdateInput>
+  }
+
+  /**
+   * Offer delete
+   */
+  export type OfferDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter which Offer to delete.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer deleteMany
+   */
+  export type OfferDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Offers to delete
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Offer.discounts
+   */
+  export type Offer$discountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    where?: OfferDiscountWhereInput
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    cursor?: OfferDiscountWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Offer without action
+   */
+  export type OfferDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OfferDiscount
+   */
+
+  export type AggregateOfferDiscount = {
+    _count: OfferDiscountCountAggregateOutputType | null
+    _avg: OfferDiscountAvgAggregateOutputType | null
+    _sum: OfferDiscountSumAggregateOutputType | null
+    _min: OfferDiscountMinAggregateOutputType | null
+    _max: OfferDiscountMaxAggregateOutputType | null
+  }
+
+  export type OfferDiscountAvgAggregateOutputType = {
+    productId: number | null
+    categoryId: number | null
+    discountValue: number | null
+    maxDiscountValue: number | null
+    minOrderAmount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+  }
+
+  export type OfferDiscountSumAggregateOutputType = {
+    productId: number | null
+    categoryId: number | null
+    discountValue: number | null
+    maxDiscountValue: number | null
+    minOrderAmount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+  }
+
+  export type OfferDiscountMinAggregateOutputType = {
+    id: string | null
+    offerId: string | null
+    productId: number | null
+    categoryId: number | null
+    discountType: $Enums.DiscountType | null
+    discountValue: number | null
+    maxDiscountValue: number | null
+    minOrderAmount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    startsAt: Date | null
+    endsAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfferDiscountMaxAggregateOutputType = {
+    id: string | null
+    offerId: string | null
+    productId: number | null
+    categoryId: number | null
+    discountType: $Enums.DiscountType | null
+    discountValue: number | null
+    maxDiscountValue: number | null
+    minOrderAmount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    startsAt: Date | null
+    endsAt: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfferDiscountCountAggregateOutputType = {
+    id: number
+    offerId: number
+    productId: number
+    categoryId: number
+    discountType: number
+    discountValue: number
+    maxDiscountValue: number
+    minOrderAmount: number
+    usageLimit: number
+    usedCount: number
+    startsAt: number
+    endsAt: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OfferDiscountAvgAggregateInputType = {
+    productId?: true
+    categoryId?: true
+    discountValue?: true
+    maxDiscountValue?: true
+    minOrderAmount?: true
+    usageLimit?: true
+    usedCount?: true
+  }
+
+  export type OfferDiscountSumAggregateInputType = {
+    productId?: true
+    categoryId?: true
+    discountValue?: true
+    maxDiscountValue?: true
+    minOrderAmount?: true
+    usageLimit?: true
+    usedCount?: true
+  }
+
+  export type OfferDiscountMinAggregateInputType = {
+    id?: true
+    offerId?: true
+    productId?: true
+    categoryId?: true
+    discountType?: true
+    discountValue?: true
+    maxDiscountValue?: true
+    minOrderAmount?: true
+    usageLimit?: true
+    usedCount?: true
+    startsAt?: true
+    endsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfferDiscountMaxAggregateInputType = {
+    id?: true
+    offerId?: true
+    productId?: true
+    categoryId?: true
+    discountType?: true
+    discountValue?: true
+    maxDiscountValue?: true
+    minOrderAmount?: true
+    usageLimit?: true
+    usedCount?: true
+    startsAt?: true
+    endsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfferDiscountCountAggregateInputType = {
+    id?: true
+    offerId?: true
+    productId?: true
+    categoryId?: true
+    discountType?: true
+    discountValue?: true
+    maxDiscountValue?: true
+    minOrderAmount?: true
+    usageLimit?: true
+    usedCount?: true
+    startsAt?: true
+    endsAt?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OfferDiscountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfferDiscount to aggregate.
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfferDiscounts to fetch.
+     */
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OfferDiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfferDiscounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfferDiscounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OfferDiscounts
+    **/
+    _count?: true | OfferDiscountCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OfferDiscountAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OfferDiscountSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OfferDiscountMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OfferDiscountMaxAggregateInputType
+  }
+
+  export type GetOfferDiscountAggregateType<T extends OfferDiscountAggregateArgs> = {
+        [P in keyof T & keyof AggregateOfferDiscount]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOfferDiscount[P]>
+      : GetScalarType<T[P], AggregateOfferDiscount[P]>
+  }
+
+
+
+
+  export type OfferDiscountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferDiscountWhereInput
+    orderBy?: OfferDiscountOrderByWithAggregationInput | OfferDiscountOrderByWithAggregationInput[]
+    by: OfferDiscountScalarFieldEnum[] | OfferDiscountScalarFieldEnum
+    having?: OfferDiscountScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OfferDiscountCountAggregateInputType | true
+    _avg?: OfferDiscountAvgAggregateInputType
+    _sum?: OfferDiscountSumAggregateInputType
+    _min?: OfferDiscountMinAggregateInputType
+    _max?: OfferDiscountMaxAggregateInputType
+  }
+
+  export type OfferDiscountGroupByOutputType = {
+    id: string
+    offerId: string
+    productId: number | null
+    categoryId: number | null
+    discountType: $Enums.DiscountType
+    discountValue: number | null
+    maxDiscountValue: number | null
+    minOrderAmount: number | null
+    usageLimit: number | null
+    usedCount: number
+    startsAt: Date | null
+    endsAt: Date | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: OfferDiscountCountAggregateOutputType | null
+    _avg: OfferDiscountAvgAggregateOutputType | null
+    _sum: OfferDiscountSumAggregateOutputType | null
+    _min: OfferDiscountMinAggregateOutputType | null
+    _max: OfferDiscountMaxAggregateOutputType | null
+  }
+
+  type GetOfferDiscountGroupByPayload<T extends OfferDiscountGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OfferDiscountGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OfferDiscountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OfferDiscountGroupByOutputType[P]>
+            : GetScalarType<T[P], OfferDiscountGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OfferDiscountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    offerId?: boolean
+    productId?: boolean
+    categoryId?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    maxDiscountValue?: boolean
+    minOrderAmount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }, ExtArgs["result"]["offerDiscount"]>
+
+  export type OfferDiscountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    offerId?: boolean
+    productId?: boolean
+    categoryId?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    maxDiscountValue?: boolean
+    minOrderAmount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }, ExtArgs["result"]["offerDiscount"]>
+
+  export type OfferDiscountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    offerId?: boolean
+    productId?: boolean
+    categoryId?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    maxDiscountValue?: boolean
+    minOrderAmount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }, ExtArgs["result"]["offerDiscount"]>
+
+  export type OfferDiscountSelectScalar = {
+    id?: boolean
+    offerId?: boolean
+    productId?: boolean
+    categoryId?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    maxDiscountValue?: boolean
+    minOrderAmount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OfferDiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "offerId" | "productId" | "categoryId" | "discountType" | "discountValue" | "maxDiscountValue" | "minOrderAmount" | "usageLimit" | "usedCount" | "startsAt" | "endsAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["offerDiscount"]>
+  export type OfferDiscountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }
+  export type OfferDiscountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }
+  export type OfferDiscountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    offer?: boolean | OfferDefaultArgs<ExtArgs>
+    product?: boolean | OfferDiscount$productArgs<ExtArgs>
+    category?: boolean | OfferDiscount$categoryArgs<ExtArgs>
+  }
+
+  export type $OfferDiscountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OfferDiscount"
+    objects: {
+      offer: Prisma.$OfferPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs> | null
+      category: Prisma.$CategoryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      offerId: string
+      productId: number | null
+      categoryId: number | null
+      discountType: $Enums.DiscountType
+      discountValue: number | null
+      maxDiscountValue: number | null
+      minOrderAmount: number | null
+      usageLimit: number | null
+      usedCount: number
+      startsAt: Date | null
+      endsAt: Date | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["offerDiscount"]>
+    composites: {}
+  }
+
+  type OfferDiscountGetPayload<S extends boolean | null | undefined | OfferDiscountDefaultArgs> = $Result.GetResult<Prisma.$OfferDiscountPayload, S>
+
+  type OfferDiscountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OfferDiscountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OfferDiscountCountAggregateInputType | true
+    }
+
+  export interface OfferDiscountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OfferDiscount'], meta: { name: 'OfferDiscount' } }
+    /**
+     * Find zero or one OfferDiscount that matches the filter.
+     * @param {OfferDiscountFindUniqueArgs} args - Arguments to find a OfferDiscount
+     * @example
+     * // Get one OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OfferDiscountFindUniqueArgs>(args: SelectSubset<T, OfferDiscountFindUniqueArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OfferDiscount that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OfferDiscountFindUniqueOrThrowArgs} args - Arguments to find a OfferDiscount
+     * @example
+     * // Get one OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OfferDiscountFindUniqueOrThrowArgs>(args: SelectSubset<T, OfferDiscountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfferDiscount that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountFindFirstArgs} args - Arguments to find a OfferDiscount
+     * @example
+     * // Get one OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OfferDiscountFindFirstArgs>(args?: SelectSubset<T, OfferDiscountFindFirstArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfferDiscount that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountFindFirstOrThrowArgs} args - Arguments to find a OfferDiscount
+     * @example
+     * // Get one OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OfferDiscountFindFirstOrThrowArgs>(args?: SelectSubset<T, OfferDiscountFindFirstOrThrowArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OfferDiscounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OfferDiscounts
+     * const offerDiscounts = await prisma.offerDiscount.findMany()
+     * 
+     * // Get first 10 OfferDiscounts
+     * const offerDiscounts = await prisma.offerDiscount.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const offerDiscountWithIdOnly = await prisma.offerDiscount.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OfferDiscountFindManyArgs>(args?: SelectSubset<T, OfferDiscountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OfferDiscount.
+     * @param {OfferDiscountCreateArgs} args - Arguments to create a OfferDiscount.
+     * @example
+     * // Create one OfferDiscount
+     * const OfferDiscount = await prisma.offerDiscount.create({
+     *   data: {
+     *     // ... data to create a OfferDiscount
+     *   }
+     * })
+     * 
+     */
+    create<T extends OfferDiscountCreateArgs>(args: SelectSubset<T, OfferDiscountCreateArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OfferDiscounts.
+     * @param {OfferDiscountCreateManyArgs} args - Arguments to create many OfferDiscounts.
+     * @example
+     * // Create many OfferDiscounts
+     * const offerDiscount = await prisma.offerDiscount.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OfferDiscountCreateManyArgs>(args?: SelectSubset<T, OfferDiscountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OfferDiscounts and returns the data saved in the database.
+     * @param {OfferDiscountCreateManyAndReturnArgs} args - Arguments to create many OfferDiscounts.
+     * @example
+     * // Create many OfferDiscounts
+     * const offerDiscount = await prisma.offerDiscount.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OfferDiscounts and only return the `id`
+     * const offerDiscountWithIdOnly = await prisma.offerDiscount.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OfferDiscountCreateManyAndReturnArgs>(args?: SelectSubset<T, OfferDiscountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OfferDiscount.
+     * @param {OfferDiscountDeleteArgs} args - Arguments to delete one OfferDiscount.
+     * @example
+     * // Delete one OfferDiscount
+     * const OfferDiscount = await prisma.offerDiscount.delete({
+     *   where: {
+     *     // ... filter to delete one OfferDiscount
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OfferDiscountDeleteArgs>(args: SelectSubset<T, OfferDiscountDeleteArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OfferDiscount.
+     * @param {OfferDiscountUpdateArgs} args - Arguments to update one OfferDiscount.
+     * @example
+     * // Update one OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OfferDiscountUpdateArgs>(args: SelectSubset<T, OfferDiscountUpdateArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OfferDiscounts.
+     * @param {OfferDiscountDeleteManyArgs} args - Arguments to filter OfferDiscounts to delete.
+     * @example
+     * // Delete a few OfferDiscounts
+     * const { count } = await prisma.offerDiscount.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OfferDiscountDeleteManyArgs>(args?: SelectSubset<T, OfferDiscountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OfferDiscounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OfferDiscounts
+     * const offerDiscount = await prisma.offerDiscount.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OfferDiscountUpdateManyArgs>(args: SelectSubset<T, OfferDiscountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OfferDiscounts and returns the data updated in the database.
+     * @param {OfferDiscountUpdateManyAndReturnArgs} args - Arguments to update many OfferDiscounts.
+     * @example
+     * // Update many OfferDiscounts
+     * const offerDiscount = await prisma.offerDiscount.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OfferDiscounts and only return the `id`
+     * const offerDiscountWithIdOnly = await prisma.offerDiscount.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OfferDiscountUpdateManyAndReturnArgs>(args: SelectSubset<T, OfferDiscountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OfferDiscount.
+     * @param {OfferDiscountUpsertArgs} args - Arguments to update or create a OfferDiscount.
+     * @example
+     * // Update or create a OfferDiscount
+     * const offerDiscount = await prisma.offerDiscount.upsert({
+     *   create: {
+     *     // ... data to create a OfferDiscount
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OfferDiscount we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OfferDiscountUpsertArgs>(args: SelectSubset<T, OfferDiscountUpsertArgs<ExtArgs>>): Prisma__OfferDiscountClient<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OfferDiscounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountCountArgs} args - Arguments to filter OfferDiscounts to count.
+     * @example
+     * // Count the number of OfferDiscounts
+     * const count = await prisma.offerDiscount.count({
+     *   where: {
+     *     // ... the filter for the OfferDiscounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends OfferDiscountCountArgs>(
+      args?: Subset<T, OfferDiscountCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OfferDiscountCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OfferDiscount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OfferDiscountAggregateArgs>(args: Subset<T, OfferDiscountAggregateArgs>): Prisma.PrismaPromise<GetOfferDiscountAggregateType<T>>
+
+    /**
+     * Group by OfferDiscount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferDiscountGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OfferDiscountGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OfferDiscountGroupByArgs['orderBy'] }
+        : { orderBy?: OfferDiscountGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OfferDiscountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfferDiscountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OfferDiscount model
+   */
+  readonly fields: OfferDiscountFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OfferDiscount.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OfferDiscountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    offer<T extends OfferDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OfferDefaultArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends OfferDiscount$productArgs<ExtArgs> = {}>(args?: Subset<T, OfferDiscount$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    category<T extends OfferDiscount$categoryArgs<ExtArgs> = {}>(args?: Subset<T, OfferDiscount$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OfferDiscount model
+   */
+  interface OfferDiscountFieldRefs {
+    readonly id: FieldRef<"OfferDiscount", 'String'>
+    readonly offerId: FieldRef<"OfferDiscount", 'String'>
+    readonly productId: FieldRef<"OfferDiscount", 'Int'>
+    readonly categoryId: FieldRef<"OfferDiscount", 'Int'>
+    readonly discountType: FieldRef<"OfferDiscount", 'DiscountType'>
+    readonly discountValue: FieldRef<"OfferDiscount", 'Float'>
+    readonly maxDiscountValue: FieldRef<"OfferDiscount", 'Float'>
+    readonly minOrderAmount: FieldRef<"OfferDiscount", 'Float'>
+    readonly usageLimit: FieldRef<"OfferDiscount", 'Int'>
+    readonly usedCount: FieldRef<"OfferDiscount", 'Int'>
+    readonly startsAt: FieldRef<"OfferDiscount", 'DateTime'>
+    readonly endsAt: FieldRef<"OfferDiscount", 'DateTime'>
+    readonly isActive: FieldRef<"OfferDiscount", 'Boolean'>
+    readonly createdAt: FieldRef<"OfferDiscount", 'DateTime'>
+    readonly updatedAt: FieldRef<"OfferDiscount", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OfferDiscount findUnique
+   */
+  export type OfferDiscountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter, which OfferDiscount to fetch.
+     */
+    where: OfferDiscountWhereUniqueInput
+  }
+
+  /**
+   * OfferDiscount findUniqueOrThrow
+   */
+  export type OfferDiscountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter, which OfferDiscount to fetch.
+     */
+    where: OfferDiscountWhereUniqueInput
+  }
+
+  /**
+   * OfferDiscount findFirst
+   */
+  export type OfferDiscountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter, which OfferDiscount to fetch.
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfferDiscounts to fetch.
+     */
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfferDiscounts.
+     */
+    cursor?: OfferDiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfferDiscounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfferDiscounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfferDiscounts.
+     */
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
+   * OfferDiscount findFirstOrThrow
+   */
+  export type OfferDiscountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter, which OfferDiscount to fetch.
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfferDiscounts to fetch.
+     */
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfferDiscounts.
+     */
+    cursor?: OfferDiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfferDiscounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfferDiscounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfferDiscounts.
+     */
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
+   * OfferDiscount findMany
+   */
+  export type OfferDiscountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter, which OfferDiscounts to fetch.
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfferDiscounts to fetch.
+     */
+    orderBy?: OfferDiscountOrderByWithRelationInput | OfferDiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OfferDiscounts.
+     */
+    cursor?: OfferDiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfferDiscounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfferDiscounts.
+     */
+    skip?: number
+    distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
+   * OfferDiscount create
+   */
+  export type OfferDiscountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OfferDiscount.
+     */
+    data: XOR<OfferDiscountCreateInput, OfferDiscountUncheckedCreateInput>
+  }
+
+  /**
+   * OfferDiscount createMany
+   */
+  export type OfferDiscountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OfferDiscounts.
+     */
+    data: OfferDiscountCreateManyInput | OfferDiscountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OfferDiscount createManyAndReturn
+   */
+  export type OfferDiscountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * The data used to create many OfferDiscounts.
+     */
+    data: OfferDiscountCreateManyInput | OfferDiscountCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OfferDiscount update
+   */
+  export type OfferDiscountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OfferDiscount.
+     */
+    data: XOR<OfferDiscountUpdateInput, OfferDiscountUncheckedUpdateInput>
+    /**
+     * Choose, which OfferDiscount to update.
+     */
+    where: OfferDiscountWhereUniqueInput
+  }
+
+  /**
+   * OfferDiscount updateMany
+   */
+  export type OfferDiscountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OfferDiscounts.
+     */
+    data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyInput>
+    /**
+     * Filter which OfferDiscounts to update
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * Limit how many OfferDiscounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfferDiscount updateManyAndReturn
+   */
+  export type OfferDiscountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * The data used to update OfferDiscounts.
+     */
+    data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyInput>
+    /**
+     * Filter which OfferDiscounts to update
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * Limit how many OfferDiscounts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OfferDiscount upsert
+   */
+  export type OfferDiscountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OfferDiscount to update in case it exists.
+     */
+    where: OfferDiscountWhereUniqueInput
+    /**
+     * In case the OfferDiscount found by the `where` argument doesn't exist, create a new OfferDiscount with this data.
+     */
+    create: XOR<OfferDiscountCreateInput, OfferDiscountUncheckedCreateInput>
+    /**
+     * In case the OfferDiscount was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OfferDiscountUpdateInput, OfferDiscountUncheckedUpdateInput>
+  }
+
+  /**
+   * OfferDiscount delete
+   */
+  export type OfferDiscountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+    /**
+     * Filter which OfferDiscount to delete.
+     */
+    where: OfferDiscountWhereUniqueInput
+  }
+
+  /**
+   * OfferDiscount deleteMany
+   */
+  export type OfferDiscountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfferDiscounts to delete
+     */
+    where?: OfferDiscountWhereInput
+    /**
+     * Limit how many OfferDiscounts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfferDiscount.product
+   */
+  export type OfferDiscount$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * OfferDiscount.category
+   */
+  export type OfferDiscount$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Category
+     */
+    omit?: CategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
+  }
+
+  /**
+   * OfferDiscount without action
+   */
+  export type OfferDiscountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferDiscount
+     */
+    select?: OfferDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfferDiscount
+     */
+    omit?: OfferDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferDiscountInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Commission
    */
 
@@ -37244,6 +40077,48 @@ export namespace Prisma {
   export type AffiliateLinkScalarFieldEnum = (typeof AffiliateLinkScalarFieldEnum)[keyof typeof AffiliateLinkScalarFieldEnum]
 
 
+  export const OfferScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    subtitle: 'subtitle',
+    description: 'description',
+    badgeText: 'badgeText',
+    image: 'image',
+    ctaText: 'ctaText',
+    ctaLink: 'ctaLink',
+    startsAt: 'startsAt',
+    endsAt: 'endsAt',
+    countdownEndsAt: 'countdownEndsAt',
+    isActive: 'isActive',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
+  export const OfferDiscountScalarFieldEnum: {
+    id: 'id',
+    offerId: 'offerId',
+    productId: 'productId',
+    categoryId: 'categoryId',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    maxDiscountValue: 'maxDiscountValue',
+    minOrderAmount: 'minOrderAmount',
+    usageLimit: 'usageLimit',
+    usedCount: 'usedCount',
+    startsAt: 'startsAt',
+    endsAt: 'endsAt',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OfferDiscountScalarFieldEnum = (typeof OfferDiscountScalarFieldEnum)[keyof typeof OfferDiscountScalarFieldEnum]
+
+
   export const CommissionScalarFieldEnum: {
     id: 'id',
     affiliateLinkId: 'affiliateLinkId',
@@ -37489,6 +40364,20 @@ export namespace Prisma {
    * Reference to a field of type 'PaidFromOffice[]'
    */
   export type ListEnumPaidFromOfficeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidFromOffice[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountType'
+   */
+  export type EnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountType[]'
+   */
+  export type ListEnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType[]'>
     
 
 
@@ -37927,6 +40816,7 @@ export namespace Prisma {
     slug?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
+    offerDiscounts?: OfferDiscountListRelationFilter
   }
 
   export type CategoryOrderByWithRelationInput = {
@@ -37936,6 +40826,7 @@ export namespace Prisma {
     slug?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
+    offerDiscounts?: OfferDiscountOrderByRelationAggregateInput
   }
 
   export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -37948,6 +40839,7 @@ export namespace Prisma {
     image?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
+    offerDiscounts?: OfferDiscountListRelationFilter
   }, "id" | "name" | "slug">
 
   export type CategoryOrderByWithAggregationInput = {
@@ -37999,6 +40891,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
+    offerDiscounts?: OfferDiscountListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -38023,6 +40916,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     landingPage?: ProductLandingPageOrderByWithRelationInput
+    offerDiscounts?: OfferDiscountOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -38050,6 +40944,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
+    offerDiscounts?: OfferDiscountListRelationFilter
   }, "id" | "seoSlug">
 
   export type ProductOrderByWithAggregationInput = {
@@ -39965,6 +42860,226 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AffiliateLink"> | Date | string
   }
 
+  export type OfferWhereInput = {
+    AND?: OfferWhereInput | OfferWhereInput[]
+    OR?: OfferWhereInput[]
+    NOT?: OfferWhereInput | OfferWhereInput[]
+    id?: StringFilter<"Offer"> | string
+    title?: StringNullableFilter<"Offer"> | string | null
+    subtitle?: StringNullableFilter<"Offer"> | string | null
+    description?: StringNullableFilter<"Offer"> | string | null
+    badgeText?: StringNullableFilter<"Offer"> | string | null
+    image?: StringNullableFilter<"Offer"> | string | null
+    ctaText?: StringNullableFilter<"Offer"> | string | null
+    ctaLink?: StringNullableFilter<"Offer"> | string | null
+    startsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    countdownEndsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    isActive?: BoolFilter<"Offer"> | boolean
+    sortOrder?: IntFilter<"Offer"> | number
+    createdAt?: DateTimeFilter<"Offer"> | Date | string
+    updatedAt?: DateTimeFilter<"Offer"> | Date | string
+    discounts?: OfferDiscountListRelationFilter
+  }
+
+  export type OfferOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    ctaText?: SortOrderInput | SortOrder
+    ctaLink?: SortOrderInput | SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    countdownEndsAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    discounts?: OfferDiscountOrderByRelationAggregateInput
+  }
+
+  export type OfferWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OfferWhereInput | OfferWhereInput[]
+    OR?: OfferWhereInput[]
+    NOT?: OfferWhereInput | OfferWhereInput[]
+    title?: StringNullableFilter<"Offer"> | string | null
+    subtitle?: StringNullableFilter<"Offer"> | string | null
+    description?: StringNullableFilter<"Offer"> | string | null
+    badgeText?: StringNullableFilter<"Offer"> | string | null
+    image?: StringNullableFilter<"Offer"> | string | null
+    ctaText?: StringNullableFilter<"Offer"> | string | null
+    ctaLink?: StringNullableFilter<"Offer"> | string | null
+    startsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    countdownEndsAt?: DateTimeNullableFilter<"Offer"> | Date | string | null
+    isActive?: BoolFilter<"Offer"> | boolean
+    sortOrder?: IntFilter<"Offer"> | number
+    createdAt?: DateTimeFilter<"Offer"> | Date | string
+    updatedAt?: DateTimeFilter<"Offer"> | Date | string
+    discounts?: OfferDiscountListRelationFilter
+  }, "id">
+
+  export type OfferOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    ctaText?: SortOrderInput | SortOrder
+    ctaLink?: SortOrderInput | SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    countdownEndsAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OfferCountOrderByAggregateInput
+    _avg?: OfferAvgOrderByAggregateInput
+    _max?: OfferMaxOrderByAggregateInput
+    _min?: OfferMinOrderByAggregateInput
+    _sum?: OfferSumOrderByAggregateInput
+  }
+
+  export type OfferScalarWhereWithAggregatesInput = {
+    AND?: OfferScalarWhereWithAggregatesInput | OfferScalarWhereWithAggregatesInput[]
+    OR?: OfferScalarWhereWithAggregatesInput[]
+    NOT?: OfferScalarWhereWithAggregatesInput | OfferScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Offer"> | string
+    title?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    subtitle?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    description?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    badgeText?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    image?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    ctaText?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    ctaLink?: StringNullableWithAggregatesFilter<"Offer"> | string | null
+    startsAt?: DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+    endsAt?: DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+    countdownEndsAt?: DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+    isActive?: BoolWithAggregatesFilter<"Offer"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"Offer"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Offer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Offer"> | Date | string
+  }
+
+  export type OfferDiscountWhereInput = {
+    AND?: OfferDiscountWhereInput | OfferDiscountWhereInput[]
+    OR?: OfferDiscountWhereInput[]
+    NOT?: OfferDiscountWhereInput | OfferDiscountWhereInput[]
+    id?: StringFilter<"OfferDiscount"> | string
+    offerId?: StringFilter<"OfferDiscount"> | string
+    productId?: IntNullableFilter<"OfferDiscount"> | number | null
+    categoryId?: IntNullableFilter<"OfferDiscount"> | number | null
+    discountType?: EnumDiscountTypeFilter<"OfferDiscount"> | $Enums.DiscountType
+    discountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    maxDiscountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    minOrderAmount?: FloatNullableFilter<"OfferDiscount"> | number | null
+    usageLimit?: IntNullableFilter<"OfferDiscount"> | number | null
+    usedCount?: IntFilter<"OfferDiscount"> | number
+    startsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    isActive?: BoolFilter<"OfferDiscount"> | boolean
+    createdAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+    updatedAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+    offer?: XOR<OfferScalarRelationFilter, OfferWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+  }
+
+  export type OfferDiscountOrderByWithRelationInput = {
+    id?: SortOrder
+    offerId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrderInput | SortOrder
+    maxDiscountValue?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrderInput | SortOrder
+    usageLimit?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    offer?: OfferOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    category?: CategoryOrderByWithRelationInput
+  }
+
+  export type OfferDiscountWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OfferDiscountWhereInput | OfferDiscountWhereInput[]
+    OR?: OfferDiscountWhereInput[]
+    NOT?: OfferDiscountWhereInput | OfferDiscountWhereInput[]
+    offerId?: StringFilter<"OfferDiscount"> | string
+    productId?: IntNullableFilter<"OfferDiscount"> | number | null
+    categoryId?: IntNullableFilter<"OfferDiscount"> | number | null
+    discountType?: EnumDiscountTypeFilter<"OfferDiscount"> | $Enums.DiscountType
+    discountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    maxDiscountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    minOrderAmount?: FloatNullableFilter<"OfferDiscount"> | number | null
+    usageLimit?: IntNullableFilter<"OfferDiscount"> | number | null
+    usedCount?: IntFilter<"OfferDiscount"> | number
+    startsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    isActive?: BoolFilter<"OfferDiscount"> | boolean
+    createdAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+    updatedAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+    offer?: XOR<OfferScalarRelationFilter, OfferWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+  }, "id">
+
+  export type OfferDiscountOrderByWithAggregationInput = {
+    id?: SortOrder
+    offerId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrderInput | SortOrder
+    maxDiscountValue?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrderInput | SortOrder
+    usageLimit?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OfferDiscountCountOrderByAggregateInput
+    _avg?: OfferDiscountAvgOrderByAggregateInput
+    _max?: OfferDiscountMaxOrderByAggregateInput
+    _min?: OfferDiscountMinOrderByAggregateInput
+    _sum?: OfferDiscountSumOrderByAggregateInput
+  }
+
+  export type OfferDiscountScalarWhereWithAggregatesInput = {
+    AND?: OfferDiscountScalarWhereWithAggregatesInput | OfferDiscountScalarWhereWithAggregatesInput[]
+    OR?: OfferDiscountScalarWhereWithAggregatesInput[]
+    NOT?: OfferDiscountScalarWhereWithAggregatesInput | OfferDiscountScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OfferDiscount"> | string
+    offerId?: StringWithAggregatesFilter<"OfferDiscount"> | string
+    productId?: IntNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    categoryId?: IntNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    discountType?: EnumDiscountTypeWithAggregatesFilter<"OfferDiscount"> | $Enums.DiscountType
+    discountValue?: FloatNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    maxDiscountValue?: FloatNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    minOrderAmount?: FloatNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    usageLimit?: IntNullableWithAggregatesFilter<"OfferDiscount"> | number | null
+    usedCount?: IntWithAggregatesFilter<"OfferDiscount"> | number
+    startsAt?: DateTimeNullableWithAggregatesFilter<"OfferDiscount"> | Date | string | null
+    endsAt?: DateTimeNullableWithAggregatesFilter<"OfferDiscount"> | Date | string | null
+    isActive?: BoolWithAggregatesFilter<"OfferDiscount"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"OfferDiscount"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OfferDiscount"> | Date | string
+  }
+
   export type CommissionWhereInput = {
     AND?: CommissionWhereInput | CommissionWhereInput[]
     OR?: CommissionWhereInput[]
@@ -40563,6 +43678,7 @@ export namespace Prisma {
     slug?: string | null
     createdAt?: Date | string
     products?: ProductCreateNestedManyWithoutCategoryInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateInput = {
@@ -40572,6 +43688,7 @@ export namespace Prisma {
     slug?: string | null
     createdAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUpdateInput = {
@@ -40580,6 +43697,7 @@ export namespace Prisma {
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutCategoryNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
@@ -40589,6 +43707,7 @@ export namespace Prisma {
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
@@ -40634,6 +43753,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -40657,6 +43777,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -40679,6 +43800,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -40702,6 +43824,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -42759,6 +45882,259 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OfferCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    badgeText?: string | null
+    image?: string | null
+    ctaText?: string | null
+    ctaLink?: string | null
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    countdownEndsAt?: Date | string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    discounts?: OfferDiscountCreateNestedManyWithoutOfferInput
+  }
+
+  export type OfferUncheckedCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    badgeText?: string | null
+    image?: string | null
+    ctaText?: string | null
+    ctaLink?: string | null
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    countdownEndsAt?: Date | string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    discounts?: OfferDiscountUncheckedCreateNestedManyWithoutOfferInput
+  }
+
+  export type OfferUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    discounts?: OfferDiscountUpdateManyWithoutOfferNestedInput
+  }
+
+  export type OfferUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    discounts?: OfferDiscountUncheckedUpdateManyWithoutOfferNestedInput
+  }
+
+  export type OfferCreateManyInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    badgeText?: string | null
+    image?: string | null
+    ctaText?: string | null
+    ctaLink?: string | null
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    countdownEndsAt?: Date | string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountCreateInput = {
+    id?: string
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    offer: OfferCreateNestedOneWithoutDiscountsInput
+    product?: ProductCreateNestedOneWithoutOfferDiscountsInput
+    category?: CategoryCreateNestedOneWithoutOfferDiscountsInput
+  }
+
+  export type OfferDiscountUncheckedCreateInput = {
+    id?: string
+    offerId: string
+    productId?: number | null
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offer?: OfferUpdateOneRequiredWithoutDiscountsNestedInput
+    product?: ProductUpdateOneWithoutOfferDiscountsNestedInput
+    category?: CategoryUpdateOneWithoutOfferDiscountsNestedInput
+  }
+
+  export type OfferDiscountUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountCreateManyInput = {
+    id?: string
+    offerId: string
+    productId?: number | null
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CommissionCreateInput = {
     id?: string
     amount: number
@@ -43347,7 +46723,17 @@ export namespace Prisma {
     none?: ProductWhereInput
   }
 
+  export type OfferDiscountListRelationFilter = {
+    every?: OfferDiscountWhereInput
+    some?: OfferDiscountWhereInput
+    none?: OfferDiscountWhereInput
+  }
+
   export type ProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OfferDiscountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -44928,6 +48314,169 @@ export namespace Prisma {
     commissionRate?: SortOrder
   }
 
+  export type OfferCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    badgeText?: SortOrder
+    image?: SortOrder
+    ctaText?: SortOrder
+    ctaLink?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    countdownEndsAt?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type OfferMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    badgeText?: SortOrder
+    image?: SortOrder
+    ctaText?: SortOrder
+    ctaLink?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    countdownEndsAt?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    badgeText?: SortOrder
+    image?: SortOrder
+    ctaText?: SortOrder
+    ctaLink?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    countdownEndsAt?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type EnumDiscountTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeFilter<$PrismaModel> | $Enums.DiscountType
+  }
+
+  export type OfferScalarRelationFilter = {
+    is?: OfferWhereInput
+    isNot?: OfferWhereInput
+  }
+
+  export type ProductNullableScalarRelationFilter = {
+    is?: ProductWhereInput | null
+    isNot?: ProductWhereInput | null
+  }
+
+  export type OfferDiscountCountOrderByAggregateInput = {
+    id?: SortOrder
+    offerId?: SortOrder
+    productId?: SortOrder
+    categoryId?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    maxDiscountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferDiscountAvgOrderByAggregateInput = {
+    productId?: SortOrder
+    categoryId?: SortOrder
+    discountValue?: SortOrder
+    maxDiscountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+  }
+
+  export type OfferDiscountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    offerId?: SortOrder
+    productId?: SortOrder
+    categoryId?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    maxDiscountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferDiscountMinOrderByAggregateInput = {
+    id?: SortOrder
+    offerId?: SortOrder
+    productId?: SortOrder
+    categoryId?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    maxDiscountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfferDiscountSumOrderByAggregateInput = {
+    productId?: SortOrder
+    categoryId?: SortOrder
+    discountValue?: SortOrder
+    maxDiscountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+  }
+
+  export type EnumDiscountTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTypeFilter<$PrismaModel>
+  }
+
   export type EnumCommissionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CommissionStatus | EnumCommissionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CommissionStatus[] | ListEnumCommissionStatusFieldRefInput<$PrismaModel>
@@ -45565,11 +49114,25 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
+  export type OfferDiscountCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput> | OfferDiscountCreateWithoutCategoryInput[] | OfferDiscountUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutCategoryInput | OfferDiscountCreateOrConnectWithoutCategoryInput[]
+    createMany?: OfferDiscountCreateManyCategoryInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+  }
+
   export type ProductUncheckedCreateNestedManyWithoutCategoryInput = {
     create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput> | ProductCreateWithoutCategoryInput[] | ProductUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
     createMany?: ProductCreateManyCategoryInputEnvelope
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type OfferDiscountUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput> | OfferDiscountCreateWithoutCategoryInput[] | OfferDiscountUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutCategoryInput | OfferDiscountCreateOrConnectWithoutCategoryInput[]
+    createMany?: OfferDiscountCreateManyCategoryInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
   }
 
   export type ProductUpdateManyWithoutCategoryNestedInput = {
@@ -45586,6 +49149,20 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type OfferDiscountUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput> | OfferDiscountCreateWithoutCategoryInput[] | OfferDiscountUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutCategoryInput | OfferDiscountCreateOrConnectWithoutCategoryInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput | OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: OfferDiscountCreateManyCategoryInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutCategoryInput | OfferDiscountUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutCategoryInput | OfferDiscountUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutCategoryNestedInput = {
     create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput> | ProductCreateWithoutCategoryInput[] | ProductUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
@@ -45598,6 +49175,20 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutCategoryInput | ProductUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutCategoryInput | ProductUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput> | OfferDiscountCreateWithoutCategoryInput[] | OfferDiscountUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutCategoryInput | OfferDiscountCreateOrConnectWithoutCategoryInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput | OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: OfferDiscountCreateManyCategoryInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutCategoryInput | OfferDiscountUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutCategoryInput | OfferDiscountUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
   }
 
   export type OrderItemCreateNestedManyWithoutProductInput = {
@@ -45668,6 +49259,13 @@ export namespace Prisma {
     connect?: ProductLandingPageWhereUniqueInput
   }
 
+  export type OfferDiscountCreateNestedManyWithoutProductInput = {
+    create?: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput> | OfferDiscountCreateWithoutProductInput[] | OfferDiscountUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutProductInput | OfferDiscountCreateOrConnectWithoutProductInput[]
+    createMany?: OfferDiscountCreateManyProductInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -45728,6 +49326,13 @@ export namespace Prisma {
     create?: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
     connectOrCreate?: ProductLandingPageCreateOrConnectWithoutProductInput
     connect?: ProductLandingPageWhereUniqueInput
+  }
+
+  export type OfferDiscountUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput> | OfferDiscountCreateWithoutProductInput[] | OfferDiscountUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutProductInput | OfferDiscountCreateOrConnectWithoutProductInput[]
+    createMany?: OfferDiscountCreateManyProductInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -45870,6 +49475,20 @@ export namespace Prisma {
     update?: XOR<XOR<ProductLandingPageUpdateToOneWithWhereWithoutProductInput, ProductLandingPageUpdateWithoutProductInput>, ProductLandingPageUncheckedUpdateWithoutProductInput>
   }
 
+  export type OfferDiscountUpdateManyWithoutProductNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput> | OfferDiscountCreateWithoutProductInput[] | OfferDiscountUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutProductInput | OfferDiscountCreateOrConnectWithoutProductInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutProductInput | OfferDiscountUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: OfferDiscountCreateManyProductInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutProductInput | OfferDiscountUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutProductInput | OfferDiscountUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -45998,6 +49617,20 @@ export namespace Prisma {
     delete?: ProductLandingPageWhereInput | boolean
     connect?: ProductLandingPageWhereUniqueInput
     update?: XOR<XOR<ProductLandingPageUpdateToOneWithWhereWithoutProductInput, ProductLandingPageUpdateWithoutProductInput>, ProductLandingPageUncheckedUpdateWithoutProductInput>
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput> | OfferDiscountCreateWithoutProductInput[] | OfferDiscountUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutProductInput | OfferDiscountCreateOrConnectWithoutProductInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutProductInput | OfferDiscountUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: OfferDiscountCreateManyProductInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutProductInput | OfferDiscountUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutProductInput | OfferDiscountUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutLandingPageInput = {
@@ -47157,6 +50790,98 @@ export namespace Prisma {
     deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
+  export type OfferDiscountCreateNestedManyWithoutOfferInput = {
+    create?: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput> | OfferDiscountCreateWithoutOfferInput[] | OfferDiscountUncheckedCreateWithoutOfferInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutOfferInput | OfferDiscountCreateOrConnectWithoutOfferInput[]
+    createMany?: OfferDiscountCreateManyOfferInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+  }
+
+  export type OfferDiscountUncheckedCreateNestedManyWithoutOfferInput = {
+    create?: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput> | OfferDiscountCreateWithoutOfferInput[] | OfferDiscountUncheckedCreateWithoutOfferInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutOfferInput | OfferDiscountCreateOrConnectWithoutOfferInput[]
+    createMany?: OfferDiscountCreateManyOfferInputEnvelope
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+  }
+
+  export type OfferDiscountUpdateManyWithoutOfferNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput> | OfferDiscountCreateWithoutOfferInput[] | OfferDiscountUncheckedCreateWithoutOfferInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutOfferInput | OfferDiscountCreateOrConnectWithoutOfferInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutOfferInput | OfferDiscountUpsertWithWhereUniqueWithoutOfferInput[]
+    createMany?: OfferDiscountCreateManyOfferInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutOfferInput | OfferDiscountUpdateWithWhereUniqueWithoutOfferInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutOfferInput | OfferDiscountUpdateManyWithWhereWithoutOfferInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutOfferNestedInput = {
+    create?: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput> | OfferDiscountCreateWithoutOfferInput[] | OfferDiscountUncheckedCreateWithoutOfferInput[]
+    connectOrCreate?: OfferDiscountCreateOrConnectWithoutOfferInput | OfferDiscountCreateOrConnectWithoutOfferInput[]
+    upsert?: OfferDiscountUpsertWithWhereUniqueWithoutOfferInput | OfferDiscountUpsertWithWhereUniqueWithoutOfferInput[]
+    createMany?: OfferDiscountCreateManyOfferInputEnvelope
+    set?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    disconnect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    delete?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+    update?: OfferDiscountUpdateWithWhereUniqueWithoutOfferInput | OfferDiscountUpdateWithWhereUniqueWithoutOfferInput[]
+    updateMany?: OfferDiscountUpdateManyWithWhereWithoutOfferInput | OfferDiscountUpdateManyWithWhereWithoutOfferInput[]
+    deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
+  export type OfferCreateNestedOneWithoutDiscountsInput = {
+    create?: XOR<OfferCreateWithoutDiscountsInput, OfferUncheckedCreateWithoutDiscountsInput>
+    connectOrCreate?: OfferCreateOrConnectWithoutDiscountsInput
+    connect?: OfferWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutOfferDiscountsInput = {
+    create?: XOR<ProductCreateWithoutOfferDiscountsInput, ProductUncheckedCreateWithoutOfferDiscountsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutOfferDiscountsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type CategoryCreateNestedOneWithoutOfferDiscountsInput = {
+    create?: XOR<CategoryCreateWithoutOfferDiscountsInput, CategoryUncheckedCreateWithoutOfferDiscountsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutOfferDiscountsInput
+    connect?: CategoryWhereUniqueInput
+  }
+
+  export type EnumDiscountTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DiscountType
+  }
+
+  export type OfferUpdateOneRequiredWithoutDiscountsNestedInput = {
+    create?: XOR<OfferCreateWithoutDiscountsInput, OfferUncheckedCreateWithoutDiscountsInput>
+    connectOrCreate?: OfferCreateOrConnectWithoutDiscountsInput
+    upsert?: OfferUpsertWithoutDiscountsInput
+    connect?: OfferWhereUniqueInput
+    update?: XOR<XOR<OfferUpdateToOneWithWhereWithoutDiscountsInput, OfferUpdateWithoutDiscountsInput>, OfferUncheckedUpdateWithoutDiscountsInput>
+  }
+
+  export type ProductUpdateOneWithoutOfferDiscountsNestedInput = {
+    create?: XOR<ProductCreateWithoutOfferDiscountsInput, ProductUncheckedCreateWithoutOfferDiscountsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutOfferDiscountsInput
+    upsert?: ProductUpsertWithoutOfferDiscountsInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutOfferDiscountsInput, ProductUpdateWithoutOfferDiscountsInput>, ProductUncheckedUpdateWithoutOfferDiscountsInput>
+  }
+
+  export type CategoryUpdateOneWithoutOfferDiscountsNestedInput = {
+    create?: XOR<CategoryCreateWithoutOfferDiscountsInput, CategoryUncheckedCreateWithoutOfferDiscountsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutOfferDiscountsInput
+    upsert?: CategoryUpsertWithoutOfferDiscountsInput
+    disconnect?: CategoryWhereInput | boolean
+    delete?: CategoryWhereInput | boolean
+    connect?: CategoryWhereUniqueInput
+    update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutOfferDiscountsInput, CategoryUpdateWithoutOfferDiscountsInput>, CategoryUncheckedUpdateWithoutOfferDiscountsInput>
+  }
+
   export type AffiliateLinkCreateNestedOneWithoutCommissionsInput = {
     create?: XOR<AffiliateLinkCreateWithoutCommissionsInput, AffiliateLinkUncheckedCreateWithoutCommissionsInput>
     connectOrCreate?: AffiliateLinkCreateOrConnectWithoutCommissionsInput
@@ -47562,6 +51287,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
     _max?: NestedEnumPaidFromOfficeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDiscountTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeFilter<$PrismaModel> | $Enums.DiscountType
+  }
+
+  export type NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumCommissionStatusFilter<$PrismaModel = never> = {
@@ -48875,6 +52617,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -48897,6 +52640,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -48906,6 +52650,50 @@ export namespace Prisma {
 
   export type ProductCreateManyCategoryInputEnvelope = {
     data: ProductCreateManyCategoryInput | ProductCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfferDiscountCreateWithoutCategoryInput = {
+    id?: string
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    offer: OfferCreateNestedOneWithoutDiscountsInput
+    product?: ProductCreateNestedOneWithoutOfferDiscountsInput
+  }
+
+  export type OfferDiscountUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    offerId: string
+    productId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountCreateOrConnectWithoutCategoryInput = {
+    where: OfferDiscountWhereUniqueInput
+    create: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type OfferDiscountCreateManyCategoryInputEnvelope = {
+    data: OfferDiscountCreateManyCategoryInput | OfferDiscountCreateManyCategoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -48942,6 +52730,43 @@ export namespace Prisma {
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
   }
 
+  export type OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: OfferDiscountWhereUniqueInput
+    update: XOR<OfferDiscountUpdateWithoutCategoryInput, OfferDiscountUncheckedUpdateWithoutCategoryInput>
+    create: XOR<OfferDiscountCreateWithoutCategoryInput, OfferDiscountUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type OfferDiscountUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: OfferDiscountWhereUniqueInput
+    data: XOR<OfferDiscountUpdateWithoutCategoryInput, OfferDiscountUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type OfferDiscountUpdateManyWithWhereWithoutCategoryInput = {
+    where: OfferDiscountScalarWhereInput
+    data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type OfferDiscountScalarWhereInput = {
+    AND?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+    OR?: OfferDiscountScalarWhereInput[]
+    NOT?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+    id?: StringFilter<"OfferDiscount"> | string
+    offerId?: StringFilter<"OfferDiscount"> | string
+    productId?: IntNullableFilter<"OfferDiscount"> | number | null
+    categoryId?: IntNullableFilter<"OfferDiscount"> | number | null
+    discountType?: EnumDiscountTypeFilter<"OfferDiscount"> | $Enums.DiscountType
+    discountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    maxDiscountValue?: FloatNullableFilter<"OfferDiscount"> | number | null
+    minOrderAmount?: FloatNullableFilter<"OfferDiscount"> | number | null
+    usageLimit?: IntNullableFilter<"OfferDiscount"> | number | null
+    usedCount?: IntFilter<"OfferDiscount"> | number
+    startsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"OfferDiscount"> | Date | string | null
+    isActive?: BoolFilter<"OfferDiscount"> | boolean
+    createdAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+    updatedAt?: DateTimeFilter<"OfferDiscount"> | Date | string
+  }
+
   export type OrderItemCreateWithoutProductInput = {
     quantity?: number
     price: number
@@ -48974,6 +52799,7 @@ export namespace Prisma {
     image?: string | null
     slug?: string | null
     createdAt?: Date | string
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateWithoutProductsInput = {
@@ -48982,6 +52808,7 @@ export namespace Prisma {
     image?: string | null
     slug?: string | null
     createdAt?: Date | string
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryCreateOrConnectWithoutProductsInput = {
@@ -49234,6 +53061,50 @@ export namespace Prisma {
     create: XOR<ProductLandingPageCreateWithoutProductInput, ProductLandingPageUncheckedCreateWithoutProductInput>
   }
 
+  export type OfferDiscountCreateWithoutProductInput = {
+    id?: string
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    offer: OfferCreateNestedOneWithoutDiscountsInput
+    category?: CategoryCreateNestedOneWithoutOfferDiscountsInput
+  }
+
+  export type OfferDiscountUncheckedCreateWithoutProductInput = {
+    id?: string
+    offerId: string
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountCreateOrConnectWithoutProductInput = {
+    where: OfferDiscountWhereUniqueInput
+    create: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput>
+  }
+
+  export type OfferDiscountCreateManyProductInputEnvelope = {
+    data: OfferDiscountCreateManyProductInput | OfferDiscountCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -49279,6 +53150,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerDiscounts?: OfferDiscountUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateWithoutProductsInput = {
@@ -49287,6 +53159,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type ProductImageUpsertWithWhereUniqueWithoutProductInput = {
@@ -49499,6 +53372,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OfferDiscountUpsertWithWhereUniqueWithoutProductInput = {
+    where: OfferDiscountWhereUniqueInput
+    update: XOR<OfferDiscountUpdateWithoutProductInput, OfferDiscountUncheckedUpdateWithoutProductInput>
+    create: XOR<OfferDiscountCreateWithoutProductInput, OfferDiscountUncheckedCreateWithoutProductInput>
+  }
+
+  export type OfferDiscountUpdateWithWhereUniqueWithoutProductInput = {
+    where: OfferDiscountWhereUniqueInput
+    data: XOR<OfferDiscountUpdateWithoutProductInput, OfferDiscountUncheckedUpdateWithoutProductInput>
+  }
+
+  export type OfferDiscountUpdateManyWithWhereWithoutProductInput = {
+    where: OfferDiscountScalarWhereInput
+    data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutLandingPageInput = {
     name: string
     description?: string | null
@@ -49518,6 +53407,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutLandingPageInput = {
@@ -49540,6 +53430,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutLandingPageInput = {
@@ -49577,6 +53468,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutLandingPageInput = {
@@ -49599,6 +53491,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutReviewsInput = {
@@ -49620,6 +53513,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -49642,6 +53536,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -49744,6 +53639,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -49766,6 +53662,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -50104,6 +54001,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -50126,6 +54024,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -50189,6 +54088,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -50211,6 +54111,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -50264,6 +54165,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockMovementsInput = {
@@ -50286,6 +54188,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockMovementsInput = {
@@ -50414,6 +54317,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockMovementsInput = {
@@ -50436,6 +54340,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -50899,6 +54804,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductsInput = {
@@ -50921,6 +54827,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductsInput = {
@@ -50991,6 +54898,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductsInput = {
@@ -51013,6 +54921,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -51034,6 +54943,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -51056,6 +54966,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -51093,6 +55004,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -51115,6 +55027,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutCustomerInput = {
@@ -51418,6 +55331,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWarrantiesAsProductInput = {
@@ -51440,6 +55354,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWarrantiesAsProductInput = {
@@ -51632,6 +55547,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWarrantiesAsProductInput = {
@@ -51654,6 +55570,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CustomerUpsertWithoutWarrantiesInput = {
@@ -52895,6 +56812,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -52917,6 +56835,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -53073,6 +56992,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -53095,6 +57015,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type AffiliateLinkUpsertWithoutOrderItemsInput = {
@@ -53352,6 +57273,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutAffiliateLinksInput = {
@@ -53374,6 +57296,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutAffiliateLinksInput = {
@@ -53537,6 +57460,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -53559,6 +57483,7 @@ export namespace Prisma {
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput = {
@@ -53591,6 +57516,310 @@ export namespace Prisma {
   export type CommissionUpdateManyWithWhereWithoutAffiliateLinkInput = {
     where: CommissionScalarWhereInput
     data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyWithoutAffiliateLinkInput>
+  }
+
+  export type OfferDiscountCreateWithoutOfferInput = {
+    id?: string
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product?: ProductCreateNestedOneWithoutOfferDiscountsInput
+    category?: CategoryCreateNestedOneWithoutOfferDiscountsInput
+  }
+
+  export type OfferDiscountUncheckedCreateWithoutOfferInput = {
+    id?: string
+    productId?: number | null
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountCreateOrConnectWithoutOfferInput = {
+    where: OfferDiscountWhereUniqueInput
+    create: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput>
+  }
+
+  export type OfferDiscountCreateManyOfferInputEnvelope = {
+    data: OfferDiscountCreateManyOfferInput | OfferDiscountCreateManyOfferInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfferDiscountUpsertWithWhereUniqueWithoutOfferInput = {
+    where: OfferDiscountWhereUniqueInput
+    update: XOR<OfferDiscountUpdateWithoutOfferInput, OfferDiscountUncheckedUpdateWithoutOfferInput>
+    create: XOR<OfferDiscountCreateWithoutOfferInput, OfferDiscountUncheckedCreateWithoutOfferInput>
+  }
+
+  export type OfferDiscountUpdateWithWhereUniqueWithoutOfferInput = {
+    where: OfferDiscountWhereUniqueInput
+    data: XOR<OfferDiscountUpdateWithoutOfferInput, OfferDiscountUncheckedUpdateWithoutOfferInput>
+  }
+
+  export type OfferDiscountUpdateManyWithWhereWithoutOfferInput = {
+    where: OfferDiscountScalarWhereInput
+    data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyWithoutOfferInput>
+  }
+
+  export type OfferCreateWithoutDiscountsInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    badgeText?: string | null
+    image?: string | null
+    ctaText?: string | null
+    ctaLink?: string | null
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    countdownEndsAt?: Date | string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferUncheckedCreateWithoutDiscountsInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    badgeText?: string | null
+    image?: string | null
+    ctaText?: string | null
+    ctaLink?: string | null
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    countdownEndsAt?: Date | string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferCreateOrConnectWithoutDiscountsInput = {
+    where: OfferWhereUniqueInput
+    create: XOR<OfferCreateWithoutDiscountsInput, OfferUncheckedCreateWithoutDiscountsInput>
+  }
+
+  export type ProductCreateWithoutOfferDiscountsInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutOfferDiscountsInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutOfferDiscountsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutOfferDiscountsInput, ProductUncheckedCreateWithoutOfferDiscountsInput>
+  }
+
+  export type CategoryCreateWithoutOfferDiscountsInput = {
+    name: string
+    image?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    products?: ProductCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryUncheckedCreateWithoutOfferDiscountsInput = {
+    id?: number
+    name: string
+    image?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryCreateOrConnectWithoutOfferDiscountsInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutOfferDiscountsInput, CategoryUncheckedCreateWithoutOfferDiscountsInput>
+  }
+
+  export type OfferUpsertWithoutDiscountsInput = {
+    update: XOR<OfferUpdateWithoutDiscountsInput, OfferUncheckedUpdateWithoutDiscountsInput>
+    create: XOR<OfferCreateWithoutDiscountsInput, OfferUncheckedCreateWithoutDiscountsInput>
+    where?: OfferWhereInput
+  }
+
+  export type OfferUpdateToOneWithWhereWithoutDiscountsInput = {
+    where?: OfferWhereInput
+    data: XOR<OfferUpdateWithoutDiscountsInput, OfferUncheckedUpdateWithoutDiscountsInput>
+  }
+
+  export type OfferUpdateWithoutDiscountsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferUncheckedUpdateWithoutDiscountsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaText?: NullableStringFieldUpdateOperationsInput | string | null
+    ctaLink?: NullableStringFieldUpdateOperationsInput | string | null
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    countdownEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductUpsertWithoutOfferDiscountsInput = {
+    update: XOR<ProductUpdateWithoutOfferDiscountsInput, ProductUncheckedUpdateWithoutOfferDiscountsInput>
+    create: XOR<ProductCreateWithoutOfferDiscountsInput, ProductUncheckedCreateWithoutOfferDiscountsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutOfferDiscountsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutOfferDiscountsInput, ProductUncheckedUpdateWithoutOfferDiscountsInput>
+  }
+
+  export type ProductUpdateWithoutOfferDiscountsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutOfferDiscountsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+  }
+
+  export type CategoryUpsertWithoutOfferDiscountsInput = {
+    update: XOR<CategoryUpdateWithoutOfferDiscountsInput, CategoryUncheckedUpdateWithoutOfferDiscountsInput>
+    create: XOR<CategoryCreateWithoutOfferDiscountsInput, CategoryUncheckedCreateWithoutOfferDiscountsInput>
+    where?: CategoryWhereInput
+  }
+
+  export type CategoryUpdateToOneWithWhereWithoutOfferDiscountsInput = {
+    where?: CategoryWhereInput
+    data: XOR<CategoryUpdateWithoutOfferDiscountsInput, CategoryUncheckedUpdateWithoutOfferDiscountsInput>
+  }
+
+  export type CategoryUpdateWithoutOfferDiscountsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutOfferDiscountsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type AffiliateLinkCreateWithoutCommissionsInput = {
@@ -54607,6 +58836,23 @@ export namespace Prisma {
     affiliateCommissionRate?: number | null
   }
 
+  export type OfferDiscountCreateManyCategoryInput = {
+    id?: string
+    offerId: string
+    productId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProductUpdateWithoutCategoryInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54626,6 +58872,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -54648,6 +58895,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -54661,6 +58909,57 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type OfferDiscountUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offer?: OfferUpdateOneRequiredWithoutDiscountsNestedInput
+    product?: ProductUpdateOneWithoutOfferDiscountsNestedInput
+  }
+
+  export type OfferDiscountUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderItemCreateManyProductInput = {
@@ -54734,6 +59033,23 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     isApproved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountCreateManyProductInput = {
+    id?: string
+    offerId: string
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -54960,6 +59276,57 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     isApproved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offer?: OfferUpdateOneRequiredWithoutDiscountsNestedInput
+    category?: CategoryUpdateOneWithoutOfferDiscountsNestedInput
+  }
+
+  export type OfferDiscountUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55942,6 +60309,74 @@ export namespace Prisma {
     status?: EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfferDiscountCreateManyOfferInput = {
+    id?: string
+    productId?: number | null
+    categoryId?: number | null
+    discountType?: $Enums.DiscountType
+    discountValue?: number | null
+    maxDiscountValue?: number | null
+    minOrderAmount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfferDiscountUpdateWithoutOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneWithoutOfferDiscountsNestedInput
+    category?: CategoryUpdateOneWithoutOfferDiscountsNestedInput
+  }
+
+  export type OfferDiscountUncheckedUpdateWithoutOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferDiscountUncheckedUpdateManyWithoutOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    discountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxDiscountValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
