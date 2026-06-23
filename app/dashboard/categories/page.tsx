@@ -2,6 +2,7 @@
 import { DynamicForm } from '@/components/shared/dynamic-form';
 import { AppModal } from '@/components/ui/app-modal';
 import { Button } from '@/components/ui/button';
+import { FormCheckbox } from '@/components/ui/formcheck';
 // تأكد من استيراد FormInput من المكان الصحيح في مكوناتك وليس من lucide-react
 import { FormInput } from '@/components/ui/form-input';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
@@ -20,7 +21,14 @@ interface ICategoriesLayoutProps { }
 const categorySchema = z.object({
     name: z.string().min(3, "اسم الفئة مطلوب"),
     files: z.array(z.any()).optional().default([]),
+    isVisible: z.boolean().default(false),
 });
+
+const emptyCategoryForm = {
+    name: '',
+    files: [],
+    isVisible: false,
+};
 
 const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props) => {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -43,6 +51,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
         setFormData({
             name: data.name,
             files: existingImage,
+            isVisible: Boolean(data.isVisible),
         });
         setIsOpen(true);
     }
@@ -68,6 +77,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
         try {
             const formData = new FormData();
             formData.append('name', data.name);
+            formData.append('isVisible', String(data.isVisible));
 
             const fileItem = data.files?.[0];
             if (fileItem?.rawFile instanceof File && fileItem.rawFile.size > 0) {
@@ -114,7 +124,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                 {
                     user && hasPermission(user, "addCategories") && (
                         <Button
-                            onClick={() => { setEditId(null); setFormData(null); setIsOpen(true); }}
+                            onClick={() => { setEditId(null); setFormData(emptyCategoryForm); setIsOpen(true); }}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-6"
                         >
                             إضافة فئة جديدة
@@ -147,6 +157,9 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                     <h3 className="font-bold text-xl text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
                                         {cat.name}
                                     </h3>
+                                    <p className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-medium ${cat.isVisible ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}`}>
+                                        {cat.isVisible ? 'ظاهر' : 'مخفي'}
+                                    </p>
                                     <p className="text-sm text-slate-500 mt-1">
                                         {(cat.products?.length || 0)} منتج مرتبط
                                     </p>
@@ -184,7 +197,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                     <DynamicForm
                         schema={categorySchema}
                         onSubmit={onSubmit}
-                        defaultValues={formData}
+                        defaultValues={formData ?? emptyCategoryForm}
                         key={editId || 'create'}
                         submitLabel={editId ? 'تحديث البيانات' : 'إرسال البيانات'}
                     >
@@ -204,6 +217,18 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                                             label="صورة الفئة"
                                             value={field.value}
                                             onChange={(val) => field.onChange(val.slice(0, 1))}
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="isVisible"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <FormCheckbox
+                                            label="تفعيل الظهور"
+                                            description="عند التفعيل، يمكن إظهار هذا القسم في الواجهات العامة المرتبطة به"
+                                            checked={Boolean(field.value)}
+                                            onChange={(event) => field.onChange(event.target.checked)}
                                         />
                                     )}
                                 />

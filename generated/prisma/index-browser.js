@@ -193,6 +193,7 @@ exports.Prisma.CategoryScalarFieldEnum = {
   name: 'name',
   image: 'image',
   slug: 'slug',
+  isVisible: 'isVisible',
   createdAt: 'createdAt'
 };
 

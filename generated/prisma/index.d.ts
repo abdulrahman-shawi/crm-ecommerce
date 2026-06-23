@@ -7376,6 +7376,7 @@ export namespace Prisma {
     name: string | null
     image: string | null
     slug: string | null
+    isVisible: boolean | null
     createdAt: Date | null
   }
 
@@ -7384,6 +7385,7 @@ export namespace Prisma {
     name: string | null
     image: string | null
     slug: string | null
+    isVisible: boolean | null
     createdAt: Date | null
   }
 
@@ -7392,6 +7394,7 @@ export namespace Prisma {
     name: number
     image: number
     slug: number
+    isVisible: number
     createdAt: number
     _all: number
   }
@@ -7410,6 +7413,7 @@ export namespace Prisma {
     name?: true
     image?: true
     slug?: true
+    isVisible?: true
     createdAt?: true
   }
 
@@ -7418,6 +7422,7 @@ export namespace Prisma {
     name?: true
     image?: true
     slug?: true
+    isVisible?: true
     createdAt?: true
   }
 
@@ -7426,6 +7431,7 @@ export namespace Prisma {
     name?: true
     image?: true
     slug?: true
+    isVisible?: true
     createdAt?: true
     _all?: true
   }
@@ -7521,6 +7527,7 @@ export namespace Prisma {
     name: string
     image: string | null
     slug: string | null
+    isVisible: boolean
     createdAt: Date
     _count: CategoryCountAggregateOutputType | null
     _avg: CategoryAvgAggregateOutputType | null
@@ -7548,6 +7555,7 @@ export namespace Prisma {
     name?: boolean
     image?: boolean
     slug?: boolean
+    isVisible?: boolean
     createdAt?: boolean
     products?: boolean | Category$productsArgs<ExtArgs>
     offerDiscounts?: boolean | Category$offerDiscountsArgs<ExtArgs>
@@ -7559,6 +7567,7 @@ export namespace Prisma {
     name?: boolean
     image?: boolean
     slug?: boolean
+    isVisible?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["category"]>
 
@@ -7567,6 +7576,7 @@ export namespace Prisma {
     name?: boolean
     image?: boolean
     slug?: boolean
+    isVisible?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["category"]>
 
@@ -7575,10 +7585,11 @@ export namespace Prisma {
     name?: boolean
     image?: boolean
     slug?: boolean
+    isVisible?: boolean
     createdAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "image" | "slug" | "createdAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "image" | "slug" | "isVisible" | "createdAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
     offerDiscounts?: boolean | Category$offerDiscountsArgs<ExtArgs>
@@ -7598,6 +7609,7 @@ export namespace Prisma {
       name: string
       image: string | null
       slug: string | null
+      isVisible: boolean
       createdAt: Date
     }, ExtArgs["result"]["category"]>
     composites: {}
@@ -8028,6 +8040,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Category", 'String'>
     readonly image: FieldRef<"Category", 'String'>
     readonly slug: FieldRef<"Category", 'String'>
+    readonly isVisible: FieldRef<"Category", 'Boolean'>
     readonly createdAt: FieldRef<"Category", 'DateTime'>
   }
     
@@ -39701,6 +39714,7 @@ export namespace Prisma {
     name: 'name',
     image: 'image',
     slug: 'slug',
+    isVisible: 'isVisible',
     createdAt: 'createdAt'
   };
 
@@ -40814,6 +40828,7 @@ export namespace Prisma {
     name?: StringFilter<"Category"> | string
     image?: StringNullableFilter<"Category"> | string | null
     slug?: StringNullableFilter<"Category"> | string | null
+    isVisible?: BoolFilter<"Category"> | boolean
     createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
     offerDiscounts?: OfferDiscountListRelationFilter
@@ -40824,6 +40839,7 @@ export namespace Prisma {
     name?: SortOrder
     image?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
+    isVisible?: SortOrder
     createdAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
     offerDiscounts?: OfferDiscountOrderByRelationAggregateInput
@@ -40837,6 +40853,7 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     image?: StringNullableFilter<"Category"> | string | null
+    isVisible?: BoolFilter<"Category"> | boolean
     createdAt?: DateTimeFilter<"Category"> | Date | string
     products?: ProductListRelationFilter
     offerDiscounts?: OfferDiscountListRelationFilter
@@ -40847,6 +40864,7 @@ export namespace Prisma {
     name?: SortOrder
     image?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
+    isVisible?: SortOrder
     createdAt?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _avg?: CategoryAvgOrderByAggregateInput
@@ -40863,6 +40881,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Category"> | string
     image?: StringNullableWithAggregatesFilter<"Category"> | string | null
     slug?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    isVisible?: BoolWithAggregatesFilter<"Category"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
   }
 
@@ -43676,6 +43695,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     products?: ProductCreateNestedManyWithoutCategoryInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutCategoryInput
@@ -43686,6 +43706,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutCategoryInput
@@ -43695,6 +43716,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutCategoryNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutCategoryNestedInput
@@ -43705,6 +43727,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutCategoryNestedInput
@@ -43715,6 +43738,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
   }
 
@@ -43722,6 +43746,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -43730,6 +43755,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -46742,6 +46768,7 @@ export namespace Prisma {
     name?: SortOrder
     image?: SortOrder
     slug?: SortOrder
+    isVisible?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -46754,6 +46781,7 @@ export namespace Prisma {
     name?: SortOrder
     image?: SortOrder
     slug?: SortOrder
+    isVisible?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -46762,6 +46790,7 @@ export namespace Prisma {
     name?: SortOrder
     image?: SortOrder
     slug?: SortOrder
+    isVisible?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -52798,6 +52827,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutCategoryInput
   }
@@ -52807,6 +52837,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -53149,6 +53180,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerDiscounts?: OfferDiscountUpdateManyWithoutCategoryNestedInput
   }
@@ -53158,6 +53190,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutCategoryNestedInput
   }
@@ -57673,6 +57706,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     products?: ProductCreateNestedManyWithoutCategoryInput
   }
@@ -57682,6 +57716,7 @@ export namespace Prisma {
     name: string
     image?: string | null
     slug?: string | null
+    isVisible?: boolean
     createdAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -57809,6 +57844,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutCategoryNestedInput
   }
@@ -57818,6 +57854,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    isVisible?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }

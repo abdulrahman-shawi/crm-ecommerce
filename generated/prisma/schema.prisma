@@ -199,6 +199,7 @@ model Category {
   // ─── NEW: E-commerce Affiliate columns ───
   image     String?
   slug      String?  @unique
+  isVisible Boolean  @default(false)
   createdAt DateTime @default(now())
 
   products       Product[]

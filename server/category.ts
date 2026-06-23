@@ -34,6 +34,7 @@ export async function getallcategory() {
 export async function createcategory(formData: FormData) {
   try {
     const name = String(formData.get('name') || '').trim();
+    const isVisible = String(formData.get('isVisible') || '').toLowerCase() === 'true';
     const fileEntry = formData.get('image');
     const file = fileEntry instanceof File && fileEntry.size > 0 ? fileEntry : null;
 
@@ -46,6 +47,7 @@ export async function createcategory(formData: FormData) {
     const category = await prisma.category.create({
       data: {
         name,
+        isVisible,
         ...(imageUrl ? { image: imageUrl } : {}),
       },
     });
@@ -66,6 +68,7 @@ export async function createcategory(formData: FormData) {
 export async function updatecategory(id: string, formData: FormData) {
   try {
     const name = String(formData.get('name') || '').trim();
+    const isVisible = String(formData.get('isVisible') || '').toLowerCase() === 'true';
     const fileEntry = formData.get('image');
     const file = fileEntry instanceof File && fileEntry.size > 0 ? fileEntry : null;
 
@@ -87,6 +90,7 @@ export async function updatecategory(id: string, formData: FormData) {
         where: { id: Number(id) },
         data: {
             name,
+        isVisible,
             ...(imageUrl ? { image: imageUrl } : {}),
         },
     });
