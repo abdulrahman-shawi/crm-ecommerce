@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs"; //
 import { NextRequest } from 'next/server';
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/auth";
+
+const AFFILIATE_BASE_URL = "https://ecomerce-bay-xi.vercel.app";
 export async function GET(req :NextRequest) {
     try {
     const session = cookies().get("skynova")?.value;
@@ -33,6 +35,23 @@ export async function GET(req :NextRequest) {
       ...(whereClause ? { where: whereClause } : {}),
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
+        affiliateLinks: {
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            uniqueCode: true,
+            commissionRate: true,
+            clicks: true,
+            conversions: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+                affiliateCommissionRate: true,
+              },
+            },
+          },
+        },
         activityTargets: {
           orderBy: { createdAt: 'desc' },
         },
@@ -54,6 +73,19 @@ export async function GET(req :NextRequest) {
 
     const normalizedUsers = users.map((userRow: any) => ({
       ...userRow,
+      affiliateLinks: Array.isArray(userRow.affiliateLinks)
+        ? userRow.affiliateLinks.map((link: any) => ({
+            ...link,
+            fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+            effectiveCommissionRate:
+              link?.product?.affiliateCommissionRate != null
+                ? Number(link.product.affiliateCommissionRate || 0)
+                : Number(link.commissionRate || 0),
+          }))
+        : [],
+      totalAffiliateClicks: Array.isArray(userRow.affiliateLinks)
+        ? userRow.affiliateLinks.reduce((sum: number, link: any) => sum + Number(link?.clicks || 0), 0)
+        : 0,
       activityTarget: Array.isArray(userRow.activityTargets) ? userRow.activityTargets[0] || null : null,
     }));
 
