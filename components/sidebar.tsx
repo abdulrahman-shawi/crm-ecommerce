@@ -158,6 +158,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Ticket, label: "العروض", href: "/dashboard/offers" },
         (user && isAdmin(user)) &&
         { icon: BadgePercent, label: "خصومات العروض", href: "/dashboard/offer-discounts" },
+        (user && isAdmin(user)) &&
+        { icon: Ticket, label: "Affiliate", href: "/dashboard/affiliate" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];

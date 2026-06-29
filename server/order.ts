@@ -4,6 +4,8 @@ import { decrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma"
 import { cookies } from "next/headers";
 
+const AFFILIATE_COOKIE_NAME = 'affiliate-code';
+
 const SOLD_ORDER_STATUSES = new Set(["تم تسليم الطلب", "تم التسليم", "مدفوعة"]);
 const STOCK_RETURN_STATUSES = new Set(["فشل التسليم مرتجع", "تم الغاء الطلب"]);
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
@@ -138,6 +140,116 @@ export async function getCurrentSessionUser() {
         });
     } catch {
         return null;
+    }
+}
+
+const roundToTwoDecimals = (value: number) => Number(value.toFixed(2));
+
+async function resolveAffiliateCodeFromServerAction(inputCode?: string | null) {
+    const normalizedInputCode = String(inputCode || '').trim();
+    if (normalizedInputCode) {
+        return normalizedInputCode;
+    }
+
+    try {
+        const cookieValue = cookies().get(AFFILIATE_COOKIE_NAME)?.value;
+        return String(cookieValue || '').trim();
+    } catch {
+        return '';
+    }
+}
+
+async function applyAffiliateAttribution(
+    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+    orderId: number,
+    items: any[],
+    affiliateCode?: string | null,
+) {
+    const resolvedCode = await resolveAffiliateCodeFromServerAction(affiliateCode);
+    if (!resolvedCode) {
+        return;
+    }
+
+    const affiliateLink = await tx.affiliateLink.findUnique({
+        where: { uniqueCode: resolvedCode },
+        include: {
+            product: {
+                select: {
+                    id: true,
+                    affiliatePrice: true,
+                    affiliateCommissionRate: true,
+                },
+            },
+        },
+    });
+
+    if (!affiliateLink) {
+        return;
+    }
+
+    let conversionsToAdd = 0;
+
+    for (const rawItem of items) {
+        const productId = Number(rawItem?.productId || 0);
+        if (productId !== affiliateLink.productId) {
+            continue;
+        }
+
+        const quantity = Number(rawItem?.quantity || 0);
+        if (quantity <= 0) {
+            continue;
+        }
+
+        const orderItem = await tx.orderItem.findFirst({
+            where: {
+                orderId,
+                productId,
+                affiliateLinkId: null,
+            },
+            orderBy: { id: 'asc' },
+        });
+
+        if (!orderItem) {
+            continue;
+        }
+
+        const orderPrice = Number(rawItem?.price || 0);
+        const productAffiliatePrice = Number(affiliateLink.product?.affiliatePrice || 0);
+        const basePrice = productAffiliatePrice > 0 ? productAffiliatePrice : orderPrice;
+        const rateFromProduct = affiliateLink.product?.affiliateCommissionRate;
+        const commissionRate = rateFromProduct != null
+            ? Number(rateFromProduct)
+            : Number(affiliateLink.commissionRate || 0);
+        const commissionAmount = roundToTwoDecimals((basePrice * quantity * commissionRate) / 100);
+
+        await tx.orderItem.update({
+            where: { id: orderItem.id },
+            data: {
+                affiliateLinkId: affiliateLink.id,
+            },
+        });
+
+        await tx.commission.create({
+            data: {
+                affiliateLinkId: affiliateLink.id,
+                orderId,
+                amount: commissionAmount,
+                status: 'PENDING',
+            },
+        });
+
+        conversionsToAdd += 1;
+    }
+
+    if (conversionsToAdd > 0) {
+        await tx.affiliateLink.update({
+            where: { id: affiliateLink.id },
+            data: {
+                conversions: {
+                    increment: conversionsToAdd,
+                },
+            },
+        });
     }
 }
 
@@ -420,6 +532,7 @@ export async function createOrder(data: any, items: any[], user: any) {
     try {
         const orderNumber = `ORD-${Date.now()}`;
         const manualCreatedAt = parseOptionalDate(data?.manualCreatedAt);
+        const affiliateCode = await resolveAffiliateCodeFromServerAction(data?.affiliateCode);
 
         // استخدام Transaction لضمان سلامة البيانات
         const result = await prisma.$transaction(async (tx) => {
@@ -523,6 +636,8 @@ export async function createOrder(data: any, items: any[], user: any) {
                 where: { id: data.customerId },
                 data: { status: "تم البيع" }
             });
+
+            await applyAffiliateAttribution(tx, newOrder.id, items, affiliateCode);
 
             return newOrder;
         });

@@ -27,6 +27,11 @@ const productschama = z.object({
     name: z.string().min(3, "اسم المنتج مطلوب"),
     description: z.string().optional().nullable(),
     categoryId: z.coerce.number().min(1, "يرجى اختيار فئة"),
+    affiliatePrice: z.coerce.number().min(0, "سعر الأفلييت يجب أن يكون صفر أو أكثر").optional().default(0),
+    affiliateCommissionRate: z.preprocess(
+        (value) => value === '' || value == null ? null : Number(value),
+        z.number().min(0, "نسبة عمولة الأفلييت يجب أن تكون صفر أو أكثر").nullable().optional()
+    ),
     warehouseStocks: z.array(
         z.object({
             warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
@@ -292,6 +297,8 @@ const ProductLayout = () => {
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
                 formData.append('isActive', String(data.isActive ?? true));
+                formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
+                formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - إرسال قائمة الملفات النهائية + الملفات الجديدة
@@ -322,6 +329,8 @@ const ProductLayout = () => {
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
                 formData.append('isActive', String(data.isActive ?? true));
+                formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
+                formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
@@ -363,6 +372,8 @@ const ProductLayout = () => {
             name: data.name,
             categoryId: data.categoryId,
             description: data.description,
+            affiliatePrice: Number(data.affiliatePrice ?? 0),
+            affiliateCommissionRate: data.affiliateCommissionRate ?? null,
             warehouseStocks: data.stocks?.length
                 ? data.stocks.map((stock: any) => ({
                     warehouseId: stock.warehouseId,
@@ -987,6 +998,20 @@ const ProductLayout = () => {
                                     </select>
                                     {errors.categoryId && <p className="text-xs text-red-500">{errors.categoryId.message as string}</p>}
                                 </div>
+                                <FormInput
+                                    type="number"
+                                    step="0.01"
+                                    label="سعر الأفلييت"
+                                    {...register("affiliatePrice")}
+                                    error={errors.affiliatePrice?.message as string}
+                                />
+                                <FormInput
+                                    type="number"
+                                    step="0.01"
+                                    label="نسبة عمولة الأفلييت %"
+                                    {...register("affiliateCommissionRate")}
+                                    error={errors.affiliateCommissionRate?.message as string}
+                                />
                                 <WarehouseStocksFields
                                     control={control}
                                     register={register}

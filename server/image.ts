@@ -83,6 +83,11 @@ export async function saveProductWithFiles(formData: FormData) {
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const isActive = formData.get('isActive') === 'true';
+        const affiliatePrice = Number(formData.get('affiliatePrice') || 0);
+        const affiliateCommissionRateRaw = formData.get('affiliateCommissionRate');
+        const affiliateCommissionRate = affiliateCommissionRateRaw == null || String(affiliateCommissionRateRaw).trim() === ''
+            ? null
+            : Number(affiliateCommissionRateRaw);
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
         let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
@@ -120,6 +125,14 @@ export async function saveProductWithFiles(formData: FormData) {
 
         if (hasInvalidWarehouseStock) {
             return { success: false, error: "تحقق من بيانات المستودعات والكمية والسعر" };
+        }
+
+        if (Number.isNaN(affiliatePrice) || affiliatePrice < 0) {
+            return { success: false, error: "سعر الأفلييت غير صالح" };
+        }
+
+        if (affiliateCommissionRate !== null && (Number.isNaN(affiliateCommissionRate) || affiliateCommissionRate < 0)) {
+            return { success: false, error: "نسبة عمولة الأفلييت غير صالحة" };
         }
 
         const uniqueWarehouseIds = new Set(warehouseStocks.map((item) => item.warehouseId));
@@ -168,6 +181,8 @@ export async function saveProductWithFiles(formData: FormData) {
                 description,
                 isActive,
                 seoSlug,
+                affiliatePrice,
+                affiliateCommissionRate,
                 // التأكد من إرسالcategoryId فقط إذا كان رقماً صحيحاً
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
@@ -207,6 +222,11 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const isActive = formData.get('isActive') === 'true';
+        const affiliatePrice = Number(formData.get('affiliatePrice') || 0);
+        const affiliateCommissionRateRaw = formData.get('affiliateCommissionRate');
+        const affiliateCommissionRate = affiliateCommissionRateRaw == null || String(affiliateCommissionRateRaw).trim() === ''
+            ? null
+            : Number(affiliateCommissionRateRaw);
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
         let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
 
@@ -244,6 +264,14 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
 
         if (hasInvalidWarehouseStock) {
             return { success: false, error: "تحقق من بيانات المستودعات والكمية والسعر" };
+        }
+
+        if (Number.isNaN(affiliatePrice) || affiliatePrice < 0) {
+            return { success: false, error: "سعر الأفلييت غير صالح" };
+        }
+
+        if (affiliateCommissionRate !== null && (Number.isNaN(affiliateCommissionRate) || affiliateCommissionRate < 0)) {
+            return { success: false, error: "نسبة عمولة الأفلييت غير صالحة" };
         }
 
         const uniqueWarehouseIds = new Set(warehouseStocks.map((item) => item.warehouseId));
@@ -332,6 +360,8 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                 name,
                 description,
                 isActive,
+                affiliatePrice,
+                affiliateCommissionRate,
                 ...(categoryId ? { categoryId } : {}),
                 stocks: {
                     deleteMany: {},
