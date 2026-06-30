@@ -32,7 +32,30 @@ const formatMoney = (amount: number, location?: string | null) => {
 };
 
 const getRowDateValue = (row: any) => {
-  return row?.manualCreatedAt || row?.createdAt || row?.carrierCollectionReceivedAt || null;
+  return row?.carrierCollectionReceivedAt || row?.manualCreatedAt || row?.createdAt || null;
+};
+
+const getMonthValue = (row: any) => {
+  const value = getRowDateValue(row);
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
+
+const formatMonthLabel = (monthValue: string) => {
+  const [year, month] = monthValue.split("-");
+  if (!year || !month) return monthValue;
+
+  const date = new Date(Number(year), Number(month) - 1, 1);
+  if (Number.isNaN(date.getTime())) return monthValue;
+
+  return date.toLocaleDateString("ar-EG", {
+    year: "numeric",
+    month: "long",
+  });
 };
 
 const getDisplayDate = (row: any) => {
@@ -213,6 +236,18 @@ export default function CollectionsPage() {
     void loadData();
   }, [loadData]);
 
+  const monthOptions = React.useMemo(() => {
+    if (!payload) return [] as string[];
+
+    const values = new Set<string>();
+    [...payload.bankTransfers, ...payload.carrierCollectionsPending, ...payload.carrierCollectionsReceived].forEach((row) => {
+      const monthValue = getMonthValue(row);
+      if (monthValue) values.add(monthValue);
+    });
+
+    return Array.from(values).sort((left, right) => right.localeCompare(left));
+  }, [payload]);
+
   const filteredPayload = React.useMemo(() => {
     if (!payload) return null;
 
@@ -238,14 +273,7 @@ export default function CollectionsPage() {
     const matchesMonth = (row: any) => {
       if (!monthFilter) return true;
 
-      const value = getRowDateValue(row);
-      if (!value) return false;
-
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return false;
-
-      const monthValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      return monthValue === monthFilter;
+      return getMonthValue(row) === monthFilter;
     };
 
     const matchesFilters = (row: any) => matchesPaymentMethod(row) && matchesCountry(row) && matchesMonth(row);
@@ -377,12 +405,18 @@ export default function CollectionsPage() {
           <div>
             <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب الشهر</div>
             <div className="flex items-center gap-3">
-              <input
-                type="month"
+              <select
                 value={monthFilter}
                 onChange={(event) => setMonthFilter(event.target.value)}
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 outline-none transition-colors focus:border-blue-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-              />
+              >
+                <option value="">كل الشهور</option>
+                {monthOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {formatMonthLabel(option)}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 onClick={() => setMonthFilter("")}
