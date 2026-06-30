@@ -31,8 +31,12 @@ const formatMoney = (amount: number, location?: string | null) => {
   return `${Number(amount || 0).toLocaleString()} ${currency}`;
 };
 
+const getRowDateValue = (row: any) => {
+  return row?.manualCreatedAt || row?.createdAt || row?.carrierCollectionReceivedAt || null;
+};
+
 const getDisplayDate = (row: any) => {
-  const value = row?.manualCreatedAt || row?.createdAt || row?.carrierCollectionReceivedAt;
+  const value = getRowDateValue(row);
   if (!value) return "-";
 
   const date = new Date(value);
@@ -173,6 +177,7 @@ export default function CollectionsPage() {
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [paymentMethodFilter, setPaymentMethodFilter] = React.useState<(typeof paymentMethodOptions)[number]>("الكل");
   const [countryFilter, setCountryFilter] = React.useState<(typeof countryFilterOptions)[number]>("الكل");
+  const [monthFilter, setMonthFilter] = React.useState("");
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]));
   const canManage = Boolean(user && (user.accountType === "ADMIN" || user?.permission?.editOrders));
@@ -230,7 +235,20 @@ export default function CollectionsPage() {
       return orderCountry === countryFilter || warehouseCountry === countryFilter;
     };
 
-    const matchesFilters = (row: any) => matchesPaymentMethod(row) && matchesCountry(row);
+    const matchesMonth = (row: any) => {
+      if (!monthFilter) return true;
+
+      const value = getRowDateValue(row);
+      if (!value) return false;
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return false;
+
+      const monthValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      return monthValue === monthFilter;
+    };
+
+    const matchesFilters = (row: any) => matchesPaymentMethod(row) && matchesCountry(row) && matchesMonth(row);
 
     const bankTransfers = payload.bankTransfers.filter(matchesFilters);
     const carrierCollectionsPending = payload.carrierCollectionsPending.filter(matchesFilters);
@@ -250,7 +268,7 @@ export default function CollectionsPage() {
         ),
       },
     };
-  }, [payload, paymentMethodFilter, countryFilter]);
+  }, [payload, paymentMethodFilter, countryFilter, monthFilter]);
 
   const handleMarkReceived = async (row: any) => {
     const loadingToast = toast.loading("جاري تسجيل التحصيل كمستلم...");
@@ -315,7 +333,7 @@ export default function CollectionsPage() {
       </div>
 
       <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-3">
           <div>
             <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب طريقة الدفع</div>
             <div className="flex flex-wrap gap-2">
@@ -355,6 +373,25 @@ export default function CollectionsPage() {
               ))}
             </div>
           </div>
+
+          <div>
+            <div className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-200">فلترة حسب الشهر</div>
+            <div className="flex items-center gap-3">
+              <input
+                type="month"
+                value={monthFilter}
+                onChange={(event) => setMonthFilter(event.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 outline-none transition-colors focus:border-blue-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              />
+              <button
+                type="button"
+                onClick={() => setMonthFilter("")}
+                className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-black text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+              >
+                مسح
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -373,9 +410,9 @@ export default function CollectionsPage() {
           tone="blue"
         />
         <SummaryCard
-          title="التحصيلات الموجودة مع الناقل"
+          title="التحصيلات لدى الناقل"
           value={formatMoney(filteredPayload?.summaries.carrierPendingTotal || 0)}
-          subtitle="قيمة الطلب القابلة للتحصيل + قيمة الشحن"
+          subtitle="مبالغ لم تُسلَّم لك بعد وما زالت لدى شركة الشحن"
           icon={HandCoins}
           tone="amber"
         />
@@ -404,8 +441,8 @@ export default function CollectionsPage() {
           />
 
           <SectionTable
-            title="التحصيلات المستلمة مع الناقل"
-            description="القيمة القابلة للتحصيل لدى شركة الشحن وتُحسب كقيمة الطلب القابلة للتحصيل + قيمة الشحن."
+            title="التحصيلات الموجودة لدى الناقل"
+            description="هذه مبالغ ما زالت عند شركة الشحن ولم تُسجّل كمستلمة بعد. تُحسب كقيمة الطلب القابلة للتحصيل مضافًا إليها أجرة الشحن."
             rows={filteredPayload?.carrierCollectionsPending || []}
             emptyMessage="لا توجد تحصيلات معلقة مع الناقل حاليًا."
             amountLabel="مع الناقل"
