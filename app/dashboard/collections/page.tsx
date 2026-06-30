@@ -31,6 +31,10 @@ const formatMoney = (amount: number, location?: string | null) => {
   return `${Number(amount || 0).toLocaleString()} ${currency}`;
 };
 
+const getCurrencyLabel = (location?: string | null) => {
+  return String(location || "").trim() === "تركيا" ? "₺" : "$";
+};
+
 const getRowDateValue = (row: any) => {
   return row?.carrierCollectionReceivedAt || row?.manualCreatedAt || row?.createdAt || null;
 };
@@ -298,6 +302,47 @@ export default function CollectionsPage() {
     };
   }, [payload, paymentMethodFilter, countryFilter, monthFilter]);
 
+  const shippingCompanyBoxes = React.useMemo(() => {
+    const rows = filteredPayload?.carrierCollectionsPending || [];
+    const grouped = new Map<string, {
+      name: string;
+      orderCount: number;
+      totalsByCurrency: Map<string, number>;
+    }>();
+
+    rows.forEach((row: any) => {
+      const name = String(row?.shipping?.name || "غير محددة").trim() || "غير محددة";
+      const currency = getCurrencyLabel(row?.warehouse?.location);
+      const amount = Number(row?.collectionWithShipping || 0);
+
+      if (!grouped.has(name)) {
+        grouped.set(name, {
+          name,
+          orderCount: 0,
+          totalsByCurrency: new Map<string, number>(),
+        });
+      }
+
+      const entry = grouped.get(name)!;
+      entry.orderCount += 1;
+      entry.totalsByCurrency.set(currency, (entry.totalsByCurrency.get(currency) || 0) + amount);
+    });
+
+    return Array.from(grouped.values())
+      .map((entry) => ({
+        ...entry,
+        totalLabel: Array.from(entry.totalsByCurrency.entries())
+          .sort((left, right) => left[0].localeCompare(right[0]))
+          .map(([currency, amount]) => `${Number(amount).toLocaleString()} ${currency}`)
+          .join(" + "),
+      }))
+      .sort((left, right) => {
+        const leftTotal = Array.from(left.totalsByCurrency.values()).reduce((sum, value) => sum + value, 0);
+        const rightTotal = Array.from(right.totalsByCurrency.values()).reduce((sum, value) => sum + value, 0);
+        return rightTotal - leftTotal;
+      });
+  }, [filteredPayload]);
+
   const handleMarkReceived = async (row: any) => {
     const loadingToast = toast.loading("جاري تسجيل التحصيل كمستلم...");
     try {
@@ -458,6 +503,51 @@ export default function CollectionsPage() {
           tone="emerald"
         />
       </div>
+
+      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-black text-slate-900 dark:text-white">صناديق شركات الشحن</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              يوضح المتبقي لدى كل شركة شحن من التحصيلات المعلّقة، وينخفض تلقائيًا عند تسجيل أي طلب كمستلم.
+            </p>
+          </div>
+          <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            {shippingCompanyBoxes.length} شركة
+          </div>
+        </div>
+
+        {shippingCompanyBoxes.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm font-bold text-slate-500 dark:border-slate-700 dark:text-slate-400">
+            لا توجد تحصيلات معلقة موزعة على شركات الشحن حاليًا.
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {shippingCompanyBoxes.map((box) => (
+              <div
+                key={box.name}
+                className="rounded-[1.5rem] border border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 shadow-sm dark:border-amber-900/40 dark:from-amber-950/20 dark:via-slate-900 dark:to-orange-950/20"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-bold text-slate-500 dark:text-slate-400">شركة الشحن</div>
+                    <div className="mt-1 text-xl font-black text-slate-900 dark:text-white">{box.name}</div>
+                  </div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg">
+                    <HandCoins size={20} />
+                  </div>
+                </div>
+
+                <div className="mt-5 text-sm font-bold text-slate-500 dark:text-slate-400">المتبقي لدى الناقل</div>
+                <div className="mt-2 text-2xl font-black text-amber-600 dark:text-amber-300">{box.totalLabel || formatMoney(0)}</div>
+                <div className="mt-3 text-xs font-bold text-slate-500 dark:text-slate-400">
+                  {box.orderCount} طلب بانتظار الاستلام
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {isLoading && !payload ? (
         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-10 text-center text-sm font-bold text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
