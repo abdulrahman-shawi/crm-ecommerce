@@ -7,11 +7,20 @@ import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
 import { useAuth } from "@/context/AuthContext";
 import { hasPermission } from "@/lib/utils";
+import { getGeneralSettings } from "@/server/general-settings";
 import { createExpense, deleteExpense, getData, updateExpense } from "@/server/expenses";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import z from "zod";
+
+type CashboxSettings = {
+  cashboxSyp: number;
+  cashboxTry: number;
+  cashboxUsd: number;
+  usdToTryRate: number;
+  usdToSypRate: number;
+};
 
 const expenseSchema = z.object({
   type: z.enum(["DAILY", "RENT"]),
@@ -74,6 +83,13 @@ const getMonthLabel = (monthKey: string) => {
 export default function ExpensesPage() {
   const { user } = useAuth();
   const [expenses, setExpenses] = React.useState<any[]>([]);
+  const [cashboxSettings, setCashboxSettings] = React.useState<CashboxSettings>({
+    cashboxSyp: 0,
+    cashboxTry: 0,
+    cashboxUsd: 0,
+    usdToTryRate: 0,
+    usdToSypRate: 0,
+  });
   const [isOpen, setIsOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<number | null>(null);
   const [formData, setFormData] = React.useState<any>(null);
@@ -91,6 +107,10 @@ export default function ExpensesPage() {
   const canAccessSyria = user?.permission?.accessSyria === true;
   const canAccessTurkey = user?.permission?.accessTurkey === true;
 
+  const formatCurrencyAmount = React.useCallback((amount: number, suffix: string) => {
+    return `${Number(amount || 0).toLocaleString()} ${suffix}`;
+  }, []);
+
   const allowedPaidOffices = React.useMemo(() => {
     if (isAdminUser) return ["SYRIA", "TURKEY"] as const;
     const offices: Array<"SYRIA" | "TURKEY"> = [];
@@ -99,7 +119,7 @@ export default function ExpensesPage() {
     return offices;
   }, [isAdminUser, canAccessSyria, canAccessTurkey]);
 
-  const fetchExpenses = async () => {
+  const fetchExpenses = React.useCallback(async () => {
     if (!canView) return;
     const res = await getData();
     if (res.success) {
@@ -107,11 +127,30 @@ export default function ExpensesPage() {
     } else {
       toast.error("فشل في جلب المصاريف");
     }
-  };
+  }, [canView]);
+
+  const loadCashboxSettings = React.useCallback(async () => {
+    if (!canView) return;
+
+    const res = await getGeneralSettings();
+    if (!res.success) {
+      toast.error("فشل في تحميل أرصدة الصناديق");
+      return;
+    }
+
+    setCashboxSettings({
+      cashboxSyp: Number(res.data?.cashboxSyp || 0),
+      cashboxTry: Number(res.data?.cashboxTry || 0),
+      cashboxUsd: Number(res.data?.cashboxUsd || 0),
+      usdToTryRate: Number(res.data?.usdToTryRate || 0),
+      usdToSypRate: Number(res.data?.usdToSypRate || 0),
+    });
+  }, [canView]);
 
   React.useEffect(() => {
-    fetchExpenses();
-  }, [canView]);
+    if (!canView) return;
+    void Promise.all([fetchExpenses(), loadCashboxSettings()]);
+  }, [canView, fetchExpenses, loadCashboxSettings]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -154,7 +193,7 @@ export default function ExpensesPage() {
       }
 
       handleClose();
-      fetchExpenses();
+      await Promise.all([fetchExpenses(), loadCashboxSettings()]);
     } catch (error: any) {
       toast.error(error?.message || "حدث خطأ أثناء حفظ المصروف");
     } finally {
@@ -187,7 +226,7 @@ export default function ExpensesPage() {
       const res = await deleteExpense(Number(item.id));
       if (res.success) {
         toast.success("تم حذف المصروف بنجاح");
-        fetchExpenses();
+        await Promise.all([fetchExpenses(), loadCashboxSettings()]);
       } else {
         toast.error("تعذر حذف المصروف");
       }
@@ -281,6 +320,42 @@ export default function ExpensesPage() {
     );
   }, [filteredDailyExpenses]);
 
+  const cashboxCards = React.useMemo(() => {
+    const tryRate = Number(cashboxSettings.usdToTryRate || 0);
+    const sypRate = Number(cashboxSettings.usdToSypRate || 0);
+
+    return [
+      {
+        key: "syp",
+        title: "رصيد صندوق الليرة السورية",
+        value: formatCurrencyAmount(cashboxSettings.cashboxSyp, "ل.س"),
+        subtitle: sypRate > 0
+          ? `يعادل تقريبًا ${formatCurrencyAmount(cashboxSettings.cashboxSyp / sypRate, "$")}`
+          : "أدخل سعر صرف الدولار مقابل الليرة السورية لعرض المعادل",
+        accent: "emerald",
+      },
+      {
+        key: "try",
+        title: "رصيد صندوق الليرة التركية",
+        value: formatCurrencyAmount(cashboxSettings.cashboxTry, "₺"),
+        subtitle: tryRate > 0
+          ? `يعادل تقريبًا ${formatCurrencyAmount(cashboxSettings.cashboxTry / tryRate, "$")}`
+          : "أدخل سعر صرف الدولار مقابل الليرة التركية لعرض المعادل",
+        accent: "blue",
+      },
+      {
+        key: "usd",
+        title: "رصيد صندوق الدولار",
+        value: formatCurrencyAmount(cashboxSettings.cashboxUsd, "$"),
+        subtitle: [
+          tryRate > 0 ? formatCurrencyAmount(cashboxSettings.cashboxUsd * tryRate, "₺") : null,
+          sypRate > 0 ? formatCurrencyAmount(cashboxSettings.cashboxUsd * sypRate, "ل.س") : null,
+        ].filter(Boolean).join(" | ") || "تظهر المعادلات هنا بعد إدخال أسعار الصرف",
+        accent: "amber",
+      },
+    ];
+  }, [cashboxSettings, formatCurrencyAmount]);
+
   const defaultFormValues = React.useMemo(() => {
     if (formData) return formData;
     return {
@@ -328,6 +403,34 @@ export default function ExpensesPage() {
             إضافة مصروف
           </Button>
         )}
+      </div>
+
+      <div className="mb-6 grid gap-4 md:grid-cols-3">
+        {cashboxCards.map((card) => (
+          <div
+            key={card.key}
+            className={`rounded-2xl border bg-white p-5 shadow-sm dark:bg-slate-900 ${
+              card.accent === "emerald"
+                ? "border-emerald-200 dark:border-emerald-900/40"
+                : card.accent === "blue"
+                  ? "border-blue-200 dark:border-blue-900/40"
+                  : "border-amber-200 dark:border-amber-900/40"
+            }`}
+          >
+            <div className="text-sm font-bold text-slate-500 dark:text-slate-400">{card.title}</div>
+            <div className={`mt-2 text-3xl font-black ${
+              card.accent === "emerald"
+                ? "text-emerald-600"
+                : card.accent === "blue"
+                  ? "text-blue-600"
+                  : "text-amber-600"
+            }`}>
+              {card.value}
+            </div>
+            <div className="mt-2 text-xs font-bold text-slate-500 dark:text-slate-400">{card.subtitle}</div>
+            <div className="mt-3 text-[11px] text-slate-400 dark:text-slate-500">الرصيد الحالي بعد خصم المصاريف اليومية المسجلة بنفس العملة</div>
+          </div>
+        ))}
       </div>
 
       <div className="mb-6 grid gap-3 sm:grid-cols-2">
