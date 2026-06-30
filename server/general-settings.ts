@@ -10,6 +10,10 @@ type GeneralSettingsInput = {
   companyPhone?: string;
   siteCurrency?: string;
   usdToTryRate?: number | string;
+  usdToSypRate?: number | string;
+  cashboxSyp?: number | string;
+  cashboxTry?: number | string;
+  cashboxUsd?: number | string;
   logo?: string;
   facebookUrl?: string;
   instagramUrl?: string;
@@ -57,6 +61,10 @@ export async function upsertGeneralSettings(formData: FormData) {
     const companyPhone = String(formData.get('companyPhone') || '').trim() || null;
     const siteCurrency = String(formData.get('siteCurrency') || 'USD').trim() || 'USD';
     const usdToTryRate = Number(formData.get('usdToTryRate') || 0);
+    const usdToSypRate = Number(formData.get('usdToSypRate') || 0);
+    const cashboxSyp = Number(formData.get('cashboxSyp') || 0);
+    const cashboxTry = Number(formData.get('cashboxTry') || 0);
+    const cashboxUsd = Number(formData.get('cashboxUsd') || 0);
     const facebookUrl = String(formData.get('facebookUrl') || '').trim() || null;
     const instagramUrl = String(formData.get('instagramUrl') || '').trim() || null;
     const topBannerText = String(formData.get('topBannerText') || '').trim() || null;
@@ -84,6 +92,10 @@ export async function upsertGeneralSettings(formData: FormData) {
       companyPhone,
       siteCurrency,
       usdToTryRate,
+      usdToSypRate,
+      cashboxSyp,
+      cashboxTry,
+      cashboxUsd,
       facebookUrl,
       instagramUrl,
       topBannerText,

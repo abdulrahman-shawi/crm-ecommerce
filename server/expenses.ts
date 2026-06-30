@@ -92,6 +92,7 @@ const PAID_OFFICES = ["TURKEY", "SYRIA"] as const;
 type ExpenseType = (typeof EXPENSE_TYPES)[number];
 type ExpenseCurrency = (typeof EXPENSE_CURRENCIES)[number];
 type PaidFromOffice = (typeof PAID_OFFICES)[number];
+type CashboxField = "cashboxSyp" | "cashboxTry" | "cashboxUsd";
 
 const normalizeExpenseType = (value: any): ExpenseType => {
     const normalized = String(value || "").trim().toUpperCase();
@@ -129,6 +130,44 @@ const sanitizeNotes = (value: any) => {
     return normalized || null;
 };
 
+const getCashboxField = (currency: ExpenseCurrency): CashboxField => {
+    if (currency === "SYP") return "cashboxSyp";
+    if (currency === "TRY") return "cashboxTry";
+    return "cashboxUsd";
+};
+
+async function getOrCreateGeneralSetting(tx: any) {
+    const existing = await tx.generalSetting.findFirst({
+        orderBy: { id: "asc" },
+    });
+
+    if (existing) return existing;
+
+    return tx.generalSetting.create({
+        data: {
+            siteCurrency: "USD",
+            usdToTryRate: 0,
+            usdToSypRate: 0,
+            cashboxSyp: 0,
+            cashboxTry: 0,
+            cashboxUsd: 0,
+        },
+    });
+}
+
+async function applyCashboxDelta(tx: any, currency: ExpenseCurrency, delta: number) {
+    const settings = await getOrCreateGeneralSetting(tx);
+    const field = getCashboxField(currency);
+    const nextValue = Number(settings?.[field] || 0) + Number(delta || 0);
+
+    return tx.generalSetting.update({
+        where: { id: settings.id },
+        data: {
+            [field]: nextValue,
+        },
+    });
+}
+
 export async function getExpenseEmployees() {
     return { success: true, data: [] };
 }
@@ -160,22 +199,27 @@ export async function createExpense(data: any) {
                 return { success: false, error: "يرجى تحديد المكتب الذي تم الدفع منه" };
             }
 
-            const res = await prisma.expense.create({
-                data: {
-                    type,
-                    amount: amountInput,
-                    description,
-                    notes,
-                    currency,
-                    paidFromOffice,
-                    employeeId: null,
-                    scheduledDate: null,
-                },
-                include: {
-                    employee: {
-                        select: { id: true, username: true, wage: true },
+            const res = await prisma.$transaction(async (tx) => {
+                const createdExpense = await tx.expense.create({
+                    data: {
+                        type,
+                        amount: amountInput,
+                        description,
+                        notes,
+                        currency,
+                        paidFromOffice,
+                        employeeId: null,
+                        scheduledDate: null,
                     },
-                },
+                    include: {
+                        employee: {
+                            select: { id: true, username: true, wage: true },
+                        },
+                    },
+                });
+
+                await applyCashboxDelta(tx, currency, -amountInput);
+                return createdExpense;
             });
 
             return { success: true, data: res };
@@ -213,10 +257,27 @@ export async function createExpense(data: any) {
 
 export async function deleteExpense(id: number) {
     try {
-        const res = await prisma.expense.delete({
-            where: {
-                id: id,
-            },
+        const res = await prisma.$transaction(async (tx) => {
+            const existingExpense = await tx.expense.findUnique({
+                where: { id },
+            });
+
+            if (!existingExpense) {
+                throw new Error("المصروف غير موجود");
+            }
+
+            if (String(existingExpense.type || "").toUpperCase() === "DAILY") {
+                const existingCurrency = normalizeExpenseCurrency(existingExpense.currency);
+                if (existingCurrency) {
+                    await applyCashboxDelta(tx, existingCurrency, Number(existingExpense.amount || 0));
+                }
+            }
+
+            return tx.expense.delete({
+                where: {
+                    id: id,
+                },
+            });
         });
         return { success: true, data: res };
     }
@@ -286,16 +347,40 @@ export async function updateExpense(id: number, data: any) {
             };
         }
 
-        const res = await prisma.expense.update({
-            where: {
-                id: id,
-            },
-            data: payload,
-            include: {
-                employee: {
-                    select: { id: true, username: true, wage: true },
+        const res = await prisma.$transaction(async (tx) => {
+            const existingExpense = await tx.expense.findUnique({
+                where: { id },
+            });
+
+            if (!existingExpense) {
+                throw new Error("المصروف غير موجود");
+            }
+
+            if (String(existingExpense.type || "").toUpperCase() === "DAILY") {
+                const previousCurrency = normalizeExpenseCurrency(existingExpense.currency);
+                if (previousCurrency) {
+                    await applyCashboxDelta(tx, previousCurrency, Number(existingExpense.amount || 0));
+                }
+            }
+
+            if (type === "DAILY") {
+                const nextCurrency = normalizeExpenseCurrency(payload.currency);
+                if (nextCurrency) {
+                    await applyCashboxDelta(tx, nextCurrency, -amountInput);
+                }
+            }
+
+            return tx.expense.update({
+                where: {
+                    id: id,
                 },
-            },
+                data: payload,
+                include: {
+                    employee: {
+                        select: { id: true, username: true, wage: true },
+                    },
+                },
+            });
         });
         return { success: true, data: res };
     }

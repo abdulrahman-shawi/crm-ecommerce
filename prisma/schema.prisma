@@ -637,6 +637,10 @@ model GeneralSetting {
   companyPhone    String?
   siteCurrency    String?  @default("USD")
   usdToTryRate    Float?   @default(0)
+  usdToSypRate    Float?   @default(0)
+  cashboxSyp      Float?   @default(0)
+  cashboxTry      Float?   @default(0)
+  cashboxUsd      Float?   @default(0)
   logo            String?
   facebookUrl     String?
   instagramUrl    String?

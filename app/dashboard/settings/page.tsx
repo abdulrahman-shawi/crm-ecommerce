@@ -12,6 +12,10 @@ type FormState = {
   companyPhone: string;
   siteCurrency: string;
   usdToTryRate: string;
+  usdToSypRate: string;
+  cashboxSyp: string;
+  cashboxTry: string;
+  cashboxUsd: string;
   logo: string;
   facebookUrl: string;
   instagramUrl: string;
@@ -26,6 +30,10 @@ const initialForm: FormState = {
   companyPhone: "",
   siteCurrency: "USD",
   usdToTryRate: "0",
+  usdToSypRate: "0",
+  cashboxSyp: "0",
+  cashboxTry: "0",
+  cashboxUsd: "0",
   logo: "",
   facebookUrl: "",
   instagramUrl: "",
@@ -65,6 +73,10 @@ export default function GeneralSettingsPage() {
         companyPhone: data.companyPhone || "",
         siteCurrency: data.siteCurrency || "USD",
         usdToTryRate: String(data.usdToTryRate ?? 0),
+        usdToSypRate: String(data.usdToSypRate ?? 0),
+        cashboxSyp: String(data.cashboxSyp ?? 0),
+        cashboxTry: String(data.cashboxTry ?? 0),
+        cashboxUsd: String(data.cashboxUsd ?? 0),
         logo: data.logo || "",
         facebookUrl: data.facebookUrl || "",
         instagramUrl: data.instagramUrl || "",
@@ -96,6 +108,10 @@ export default function GeneralSettingsPage() {
       formData.append("companyPhone", form.companyPhone);
       formData.append("siteCurrency", form.siteCurrency);
       formData.append("usdToTryRate", form.usdToTryRate);
+      formData.append("usdToSypRate", form.usdToSypRate);
+      formData.append("cashboxSyp", form.cashboxSyp);
+      formData.append("cashboxTry", form.cashboxTry);
+      formData.append("cashboxUsd", form.cashboxUsd);
       formData.append("facebookUrl", form.facebookUrl);
       formData.append("instagramUrl", form.instagramUrl);
       formData.append("topBannerText", form.topBannerText);
@@ -268,6 +284,67 @@ export default function GeneralSettingsPage() {
             placeholder="0"
             disabled={loading}
           />
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-200">سعر صرف الدولار مقابل الليرة السورية</label>
+          <input
+            type="number"
+            step="0.0001"
+            min="0"
+            value={form.usdToSypRate}
+            onChange={(e) => handleChange("usdToSypRate", e.target.value)}
+            className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+            placeholder="0"
+            disabled={loading}
+          />
+        </div>
+
+        <div className="md:col-span-2 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/40">
+          <div className="mb-4">
+            <h2 className="text-base font-black text-slate-900 dark:text-white">الصناديق</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">يتم خصم المصاريف اليومية تلقائيًا من الصندوق المطابق لعملة المصروف.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-200">صندوق الليرة السورية</label>
+              <input
+                type="number"
+                step="0.01"
+                value={form.cashboxSyp}
+                onChange={(e) => handleChange("cashboxSyp", e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+                placeholder="0"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-200">صندوق الليرة التركية</label>
+              <input
+                type="number"
+                step="0.01"
+                value={form.cashboxTry}
+                onChange={(e) => handleChange("cashboxTry", e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+                placeholder="0"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-200">صندوق الدولار</label>
+              <input
+                type="number"
+                step="0.01"
+                value={form.cashboxUsd}
+                onChange={(e) => handleChange("cashboxUsd", e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+                placeholder="0"
+                disabled={loading}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="space-y-2 md:col-span-2">

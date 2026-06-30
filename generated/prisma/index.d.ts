@@ -30367,11 +30367,19 @@ export namespace Prisma {
   export type GeneralSettingAvgAggregateOutputType = {
     id: number | null
     usdToTryRate: number | null
+    usdToSypRate: number | null
+    cashboxSyp: number | null
+    cashboxTry: number | null
+    cashboxUsd: number | null
   }
 
   export type GeneralSettingSumAggregateOutputType = {
     id: number | null
     usdToTryRate: number | null
+    usdToSypRate: number | null
+    cashboxSyp: number | null
+    cashboxTry: number | null
+    cashboxUsd: number | null
   }
 
   export type GeneralSettingMinAggregateOutputType = {
@@ -30381,6 +30389,10 @@ export namespace Prisma {
     companyPhone: string | null
     siteCurrency: string | null
     usdToTryRate: number | null
+    usdToSypRate: number | null
+    cashboxSyp: number | null
+    cashboxTry: number | null
+    cashboxUsd: number | null
     logo: string | null
     facebookUrl: string | null
     instagramUrl: string | null
@@ -30398,6 +30410,10 @@ export namespace Prisma {
     companyPhone: string | null
     siteCurrency: string | null
     usdToTryRate: number | null
+    usdToSypRate: number | null
+    cashboxSyp: number | null
+    cashboxTry: number | null
+    cashboxUsd: number | null
     logo: string | null
     facebookUrl: string | null
     instagramUrl: string | null
@@ -30415,6 +30431,10 @@ export namespace Prisma {
     companyPhone: number
     siteCurrency: number
     usdToTryRate: number
+    usdToSypRate: number
+    cashboxSyp: number
+    cashboxTry: number
+    cashboxUsd: number
     logo: number
     facebookUrl: number
     instagramUrl: number
@@ -30430,11 +30450,19 @@ export namespace Prisma {
   export type GeneralSettingAvgAggregateInputType = {
     id?: true
     usdToTryRate?: true
+    usdToSypRate?: true
+    cashboxSyp?: true
+    cashboxTry?: true
+    cashboxUsd?: true
   }
 
   export type GeneralSettingSumAggregateInputType = {
     id?: true
     usdToTryRate?: true
+    usdToSypRate?: true
+    cashboxSyp?: true
+    cashboxTry?: true
+    cashboxUsd?: true
   }
 
   export type GeneralSettingMinAggregateInputType = {
@@ -30444,6 +30472,10 @@ export namespace Prisma {
     companyPhone?: true
     siteCurrency?: true
     usdToTryRate?: true
+    usdToSypRate?: true
+    cashboxSyp?: true
+    cashboxTry?: true
+    cashboxUsd?: true
     logo?: true
     facebookUrl?: true
     instagramUrl?: true
@@ -30461,6 +30493,10 @@ export namespace Prisma {
     companyPhone?: true
     siteCurrency?: true
     usdToTryRate?: true
+    usdToSypRate?: true
+    cashboxSyp?: true
+    cashboxTry?: true
+    cashboxUsd?: true
     logo?: true
     facebookUrl?: true
     instagramUrl?: true
@@ -30478,6 +30514,10 @@ export namespace Prisma {
     companyPhone?: true
     siteCurrency?: true
     usdToTryRate?: true
+    usdToSypRate?: true
+    cashboxSyp?: true
+    cashboxTry?: true
+    cashboxUsd?: true
     logo?: true
     facebookUrl?: true
     instagramUrl?: true
@@ -30582,6 +30622,10 @@ export namespace Prisma {
     companyPhone: string | null
     siteCurrency: string | null
     usdToTryRate: number | null
+    usdToSypRate: number | null
+    cashboxSyp: number | null
+    cashboxTry: number | null
+    cashboxUsd: number | null
     logo: string | null
     facebookUrl: string | null
     instagramUrl: string | null
@@ -30618,6 +30662,10 @@ export namespace Prisma {
     companyPhone?: boolean
     siteCurrency?: boolean
     usdToTryRate?: boolean
+    usdToSypRate?: boolean
+    cashboxSyp?: boolean
+    cashboxTry?: boolean
+    cashboxUsd?: boolean
     logo?: boolean
     facebookUrl?: boolean
     instagramUrl?: boolean
@@ -30635,6 +30683,10 @@ export namespace Prisma {
     companyPhone?: boolean
     siteCurrency?: boolean
     usdToTryRate?: boolean
+    usdToSypRate?: boolean
+    cashboxSyp?: boolean
+    cashboxTry?: boolean
+    cashboxUsd?: boolean
     logo?: boolean
     facebookUrl?: boolean
     instagramUrl?: boolean
@@ -30652,6 +30704,10 @@ export namespace Prisma {
     companyPhone?: boolean
     siteCurrency?: boolean
     usdToTryRate?: boolean
+    usdToSypRate?: boolean
+    cashboxSyp?: boolean
+    cashboxTry?: boolean
+    cashboxUsd?: boolean
     logo?: boolean
     facebookUrl?: boolean
     instagramUrl?: boolean
@@ -30669,6 +30725,10 @@ export namespace Prisma {
     companyPhone?: boolean
     siteCurrency?: boolean
     usdToTryRate?: boolean
+    usdToSypRate?: boolean
+    cashboxSyp?: boolean
+    cashboxTry?: boolean
+    cashboxUsd?: boolean
     logo?: boolean
     facebookUrl?: boolean
     instagramUrl?: boolean
@@ -30679,7 +30739,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type GeneralSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "siteName" | "companyEmail" | "companyPhone" | "siteCurrency" | "usdToTryRate" | "logo" | "facebookUrl" | "instagramUrl" | "topBannerText" | "primaryColor" | "secondaryColor" | "createdAt" | "updatedAt", ExtArgs["result"]["generalSetting"]>
+  export type GeneralSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "siteName" | "companyEmail" | "companyPhone" | "siteCurrency" | "usdToTryRate" | "usdToSypRate" | "cashboxSyp" | "cashboxTry" | "cashboxUsd" | "logo" | "facebookUrl" | "instagramUrl" | "topBannerText" | "primaryColor" | "secondaryColor" | "createdAt" | "updatedAt", ExtArgs["result"]["generalSetting"]>
 
   export type $GeneralSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "GeneralSetting"
@@ -30691,6 +30751,10 @@ export namespace Prisma {
       companyPhone: string | null
       siteCurrency: string | null
       usdToTryRate: number | null
+      usdToSypRate: number | null
+      cashboxSyp: number | null
+      cashboxTry: number | null
+      cashboxUsd: number | null
       logo: string | null
       facebookUrl: string | null
       instagramUrl: string | null
@@ -31128,6 +31192,10 @@ export namespace Prisma {
     readonly companyPhone: FieldRef<"GeneralSetting", 'String'>
     readonly siteCurrency: FieldRef<"GeneralSetting", 'String'>
     readonly usdToTryRate: FieldRef<"GeneralSetting", 'Float'>
+    readonly usdToSypRate: FieldRef<"GeneralSetting", 'Float'>
+    readonly cashboxSyp: FieldRef<"GeneralSetting", 'Float'>
+    readonly cashboxTry: FieldRef<"GeneralSetting", 'Float'>
+    readonly cashboxUsd: FieldRef<"GeneralSetting", 'Float'>
     readonly logo: FieldRef<"GeneralSetting", 'String'>
     readonly facebookUrl: FieldRef<"GeneralSetting", 'String'>
     readonly instagramUrl: FieldRef<"GeneralSetting", 'String'>
@@ -40021,6 +40089,10 @@ export namespace Prisma {
     companyPhone: 'companyPhone',
     siteCurrency: 'siteCurrency',
     usdToTryRate: 'usdToTryRate',
+    usdToSypRate: 'usdToSypRate',
+    cashboxSyp: 'cashboxSyp',
+    cashboxTry: 'cashboxTry',
+    cashboxUsd: 'cashboxUsd',
     logo: 'logo',
     facebookUrl: 'facebookUrl',
     instagramUrl: 'instagramUrl',
@@ -42495,6 +42567,10 @@ export namespace Prisma {
     companyPhone?: StringNullableFilter<"GeneralSetting"> | string | null
     siteCurrency?: StringNullableFilter<"GeneralSetting"> | string | null
     usdToTryRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    usdToSypRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxSyp?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxTry?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxUsd?: FloatNullableFilter<"GeneralSetting"> | number | null
     logo?: StringNullableFilter<"GeneralSetting"> | string | null
     facebookUrl?: StringNullableFilter<"GeneralSetting"> | string | null
     instagramUrl?: StringNullableFilter<"GeneralSetting"> | string | null
@@ -42512,6 +42588,10 @@ export namespace Prisma {
     companyPhone?: SortOrderInput | SortOrder
     siteCurrency?: SortOrderInput | SortOrder
     usdToTryRate?: SortOrderInput | SortOrder
+    usdToSypRate?: SortOrderInput | SortOrder
+    cashboxSyp?: SortOrderInput | SortOrder
+    cashboxTry?: SortOrderInput | SortOrder
+    cashboxUsd?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     facebookUrl?: SortOrderInput | SortOrder
     instagramUrl?: SortOrderInput | SortOrder
@@ -42532,6 +42612,10 @@ export namespace Prisma {
     companyPhone?: StringNullableFilter<"GeneralSetting"> | string | null
     siteCurrency?: StringNullableFilter<"GeneralSetting"> | string | null
     usdToTryRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    usdToSypRate?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxSyp?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxTry?: FloatNullableFilter<"GeneralSetting"> | number | null
+    cashboxUsd?: FloatNullableFilter<"GeneralSetting"> | number | null
     logo?: StringNullableFilter<"GeneralSetting"> | string | null
     facebookUrl?: StringNullableFilter<"GeneralSetting"> | string | null
     instagramUrl?: StringNullableFilter<"GeneralSetting"> | string | null
@@ -42549,6 +42633,10 @@ export namespace Prisma {
     companyPhone?: SortOrderInput | SortOrder
     siteCurrency?: SortOrderInput | SortOrder
     usdToTryRate?: SortOrderInput | SortOrder
+    usdToSypRate?: SortOrderInput | SortOrder
+    cashboxSyp?: SortOrderInput | SortOrder
+    cashboxTry?: SortOrderInput | SortOrder
+    cashboxUsd?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     facebookUrl?: SortOrderInput | SortOrder
     instagramUrl?: SortOrderInput | SortOrder
@@ -42574,6 +42662,10 @@ export namespace Prisma {
     companyPhone?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
     siteCurrency?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
     usdToTryRate?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
+    usdToSypRate?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
+    cashboxSyp?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
+    cashboxTry?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
+    cashboxUsd?: FloatNullableWithAggregatesFilter<"GeneralSetting"> | number | null
     logo?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
     facebookUrl?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
     instagramUrl?: StringNullableWithAggregatesFilter<"GeneralSetting"> | string | null
@@ -45478,6 +45570,10 @@ export namespace Prisma {
     companyPhone?: string | null
     siteCurrency?: string | null
     usdToTryRate?: number | null
+    usdToSypRate?: number | null
+    cashboxSyp?: number | null
+    cashboxTry?: number | null
+    cashboxUsd?: number | null
     logo?: string | null
     facebookUrl?: string | null
     instagramUrl?: string | null
@@ -45495,6 +45591,10 @@ export namespace Prisma {
     companyPhone?: string | null
     siteCurrency?: string | null
     usdToTryRate?: number | null
+    usdToSypRate?: number | null
+    cashboxSyp?: number | null
+    cashboxTry?: number | null
+    cashboxUsd?: number | null
     logo?: string | null
     facebookUrl?: string | null
     instagramUrl?: string | null
@@ -45511,6 +45611,10 @@ export namespace Prisma {
     companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    usdToSypRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxSyp?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxTry?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45528,6 +45632,10 @@ export namespace Prisma {
     companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    usdToSypRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxSyp?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxTry?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45545,6 +45653,10 @@ export namespace Prisma {
     companyPhone?: string | null
     siteCurrency?: string | null
     usdToTryRate?: number | null
+    usdToSypRate?: number | null
+    cashboxSyp?: number | null
+    cashboxTry?: number | null
+    cashboxUsd?: number | null
     logo?: string | null
     facebookUrl?: string | null
     instagramUrl?: string | null
@@ -45561,6 +45673,10 @@ export namespace Prisma {
     companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    usdToSypRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxSyp?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxTry?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45578,6 +45694,10 @@ export namespace Prisma {
     companyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     siteCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     usdToTryRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    usdToSypRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxSyp?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxTry?: NullableFloatFieldUpdateOperationsInput | number | null
+    cashboxUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48119,6 +48239,10 @@ export namespace Prisma {
     companyPhone?: SortOrder
     siteCurrency?: SortOrder
     usdToTryRate?: SortOrder
+    usdToSypRate?: SortOrder
+    cashboxSyp?: SortOrder
+    cashboxTry?: SortOrder
+    cashboxUsd?: SortOrder
     logo?: SortOrder
     facebookUrl?: SortOrder
     instagramUrl?: SortOrder
@@ -48132,6 +48256,10 @@ export namespace Prisma {
   export type GeneralSettingAvgOrderByAggregateInput = {
     id?: SortOrder
     usdToTryRate?: SortOrder
+    usdToSypRate?: SortOrder
+    cashboxSyp?: SortOrder
+    cashboxTry?: SortOrder
+    cashboxUsd?: SortOrder
   }
 
   export type GeneralSettingMaxOrderByAggregateInput = {
@@ -48141,6 +48269,10 @@ export namespace Prisma {
     companyPhone?: SortOrder
     siteCurrency?: SortOrder
     usdToTryRate?: SortOrder
+    usdToSypRate?: SortOrder
+    cashboxSyp?: SortOrder
+    cashboxTry?: SortOrder
+    cashboxUsd?: SortOrder
     logo?: SortOrder
     facebookUrl?: SortOrder
     instagramUrl?: SortOrder
@@ -48158,6 +48290,10 @@ export namespace Prisma {
     companyPhone?: SortOrder
     siteCurrency?: SortOrder
     usdToTryRate?: SortOrder
+    usdToSypRate?: SortOrder
+    cashboxSyp?: SortOrder
+    cashboxTry?: SortOrder
+    cashboxUsd?: SortOrder
     logo?: SortOrder
     facebookUrl?: SortOrder
     instagramUrl?: SortOrder
@@ -48171,6 +48307,10 @@ export namespace Prisma {
   export type GeneralSettingSumOrderByAggregateInput = {
     id?: SortOrder
     usdToTryRate?: SortOrder
+    usdToSypRate?: SortOrder
+    cashboxSyp?: SortOrder
+    cashboxTry?: SortOrder
+    cashboxUsd?: SortOrder
   }
 
   export type EmployeeSalaryAdjustmentUserIdMonthKeyCompoundUniqueInput = {

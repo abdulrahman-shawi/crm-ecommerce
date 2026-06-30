@@ -119,6 +119,12 @@ const customerDetailsSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+  orders: {
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: customerOrderSelect,
+  },
   message: {
     orderBy: {
       createdAt: "asc",
