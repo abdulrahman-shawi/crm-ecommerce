@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Landmark, HandCoins, Wallet, RefreshCw, CheckCircle2, Undo2 } from "lucide-react";
+import * as XLSX from "xlsx";
+import { Landmark, HandCoins, Wallet, RefreshCw, Download } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission } from "@/lib/utils";
@@ -23,16 +24,31 @@ type CollectionsPayload = {
   };
 };
 
+type UnifiedCollectionRow = {
+  rowKey: string;
+  source: "bank" | "carrier";
+  sourceLabel: string;
+  amountUsd: number;
+  amountTry: number;
+  row: any;
+};
+
 const paymentMethodOptions = ["الكل", "تحويل بنكي", "مختلطة", "عند الاستلام"] as const;
 const countryFilterOptions = ["الكل", "سوريا", "تركيا"] as const;
+const rowsPerPageOptions = [10, 25, 50, 100] as const;
+const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
-const formatMoney = (amount: number, location?: string | null) => {
-  const currency = String(location || "").trim() === "تركيا" ? "₺" : "$";
+const formatMoney = (amount: number, currency: "$" | "₺" = "$") => {
   return `${Number(amount || 0).toLocaleString()} ${currency}`;
 };
 
-const getCurrencyLabel = (location?: string | null) => {
-  return String(location || "").trim() === "تركيا" ? "₺" : "$";
+const getExchangeRate = (row: any) => {
+  const rate = Number(row?.usdToTryRateAtOrder || 0);
+  return rate > 0 ? rate : DEFAULT_TURKEY_EXCHANGE_RATE;
+};
+
+const toTryAmount = (amountUsd: number, row: any) => {
+  return Number(amountUsd || 0) * getExchangeRate(row);
 };
 
 const getRowDateValue = (row: any) => {
@@ -117,6 +133,7 @@ function SectionTable({
   emptyMessage,
   amountLabel,
   getAmount,
+  getTryAmount,
   actionLabel,
   onAction,
   actionVariant = "primary",
@@ -127,6 +144,7 @@ function SectionTable({
   emptyMessage: string;
   amountLabel: string;
   getAmount: (row: any) => string;
+  getTryAmount?: (row: any) => string;
   actionLabel?: string;
   onAction?: (row: any) => void;
   actionVariant?: "primary" | "danger";
@@ -158,6 +176,7 @@ function SectionTable({
                 <th className="px-3 py-3 font-bold">الحالة</th>
                 <th className="px-3 py-3 font-bold">شركة الشحن</th>
                 <th className="px-3 py-3 font-bold">{amountLabel}</th>
+                {getTryAmount && <th className="px-3 py-3 font-bold">بالتركي تقريبًا</th>}
                 <th className="px-3 py-3 font-bold">التاريخ</th>
                 {actionLabel && <th className="px-3 py-3 font-bold">الإجراء</th>}
               </tr>
@@ -171,6 +190,7 @@ function SectionTable({
                   <td className="px-3 py-3 text-slate-600 dark:text-slate-300">{row.status || "-"}</td>
                   <td className="px-3 py-3 text-slate-600 dark:text-slate-300">{row.shipping?.name || "-"}</td>
                   <td className="px-3 py-3 font-black text-emerald-600">{getAmount(row)}</td>
+                  {getTryAmount && <td className="px-3 py-3 font-bold text-amber-600 dark:text-amber-300">{getTryAmount(row)}</td>}
                   <td className="px-3 py-3 text-slate-500 dark:text-slate-400">{getDisplayDate(row)}</td>
                   {actionLabel && onAction && (
                     <td className="px-3 py-3">
@@ -197,6 +217,169 @@ function SectionTable({
   );
 }
 
+function UnifiedCollectionsTable({
+  rows,
+  currentPage,
+  pageSize,
+  totalPages,
+  totalRows,
+  canManage,
+  canTrack,
+  onPageChange,
+  onPageSizeChange,
+  onExport,
+  onMarkReceived,
+}: {
+  rows: UnifiedCollectionRow[];
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  totalRows: number;
+  canManage: boolean;
+  canTrack: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
+  onExport: () => void;
+  onMarkReceived: (row: any) => void;
+}) {
+  const startRow = totalRows === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const endRow = totalRows === 0 ? 0 : Math.min(currentPage * pageSize, totalRows);
+
+  return (
+    <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+        <div>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white">الحوالات البنكية والتحصيلات لدى الناقل</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            جدول موحّد يضم الحوالات البنكية المستلمة والتحصيلات التي ما زالت لدى شركة الشحن، مع عرض القيمة بالدولار والليرة التركية التقريبية.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2 dark:bg-slate-800">
+            <span className="text-sm font-bold text-slate-600 dark:text-slate-300">عدد الصفوف</span>
+            <select
+              value={pageSize}
+              onChange={(event) => onPageSizeChange(Number(event.target.value))}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-black text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+            >
+              {rowsPerPageOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onClick={onExport}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-black text-white transition-colors hover:bg-emerald-700"
+          >
+            <Download size={16} />
+            تنزيل Excel
+          </button>
+        </div>
+      </div>
+
+      {rows.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm font-bold text-slate-500 dark:border-slate-700 dark:text-slate-400">
+          لا توجد بيانات مطابقة للفلاتر الحالية.
+        </div>
+      ) : (
+        <>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1100px] text-right text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                  <th className="px-3 py-3 font-bold">النوع</th>
+                  <th className="px-3 py-3 font-bold">رقم الطلب</th>
+                  <th className="px-3 py-3 font-bold">العميل</th>
+                  <th className="px-3 py-3 font-bold">طريقة الدفع</th>
+                  <th className="px-3 py-3 font-bold">الحالة</th>
+                  <th className="px-3 py-3 font-bold">شركة الشحن</th>
+                  <th className="px-3 py-3 font-bold">المبلغ بالدولار</th>
+                  <th className="px-3 py-3 font-bold">المبلغ بالتركي تقريبًا</th>
+                  <th className="px-3 py-3 font-bold">أجرة الشحن</th>
+                  <th className="px-3 py-3 font-bold">التاريخ</th>
+                  <th className="px-3 py-3 font-bold">الإجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((entry) => {
+                  const row = entry.row;
+                  const shippingCharge = Number(row?.shippingCharge || 0);
+                  const canReceive = entry.source === "carrier" && canManage && canTrack;
+
+                  return (
+                    <tr key={entry.rowKey} className="border-b border-slate-100 last:border-0 dark:border-slate-800/70">
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${entry.source === "bank" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"}`}>
+                          {entry.sourceLabel}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 font-black text-blue-600">#{row.orderNumber}</td>
+                      <td className="px-3 py-3 font-bold text-slate-800 dark:text-slate-100">{row.customer?.name || row.receiverName || "-"}</td>
+                      <td className="px-3 py-3 text-slate-600 dark:text-slate-300">{row.paymentMethod || "-"}</td>
+                      <td className="px-3 py-3 text-slate-600 dark:text-slate-300">{row.status || "-"}</td>
+                      <td className="px-3 py-3 text-slate-600 dark:text-slate-300">{row.shipping?.name || "-"}</td>
+                      <td className="px-3 py-3 font-black text-emerald-600">{formatMoney(entry.amountUsd)}</td>
+                      <td className="px-3 py-3 font-bold text-amber-600 dark:text-amber-300">{formatMoney(entry.amountTry, "₺")}</td>
+                      <td className="px-3 py-3 font-bold text-slate-700 dark:text-slate-200">{shippingCharge > 0 ? formatMoney(shippingCharge) : "-"}</td>
+                      <td className="px-3 py-3 text-slate-500 dark:text-slate-400">{getDisplayDate(row)}</td>
+                      <td className="px-3 py-3">
+                        {canReceive ? (
+                          <button
+                            type="button"
+                            onClick={() => onMarkReceived(row)}
+                            className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-black text-white transition-colors hover:bg-blue-700"
+                          >
+                            تسجيل كمستلم
+                          </button>
+                        ) : (
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">-</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm font-bold text-slate-500 dark:text-slate-400">
+              عرض {startRow} - {endRow} من أصل {totalRows} صف
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-black text-slate-700 transition-colors hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-200"
+              >
+                السابق
+              </button>
+              <div className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-black text-white dark:bg-slate-100 dark:text-slate-900">
+                صفحة {currentPage} من {totalPages}
+              </div>
+              <button
+                type="button"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-black text-slate-700 transition-colors hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-200"
+              >
+                التالي
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
 export default function CollectionsPage() {
   const { user } = useAuth();
   const [payload, setPayload] = React.useState<CollectionsPayload | null>(null);
@@ -205,6 +388,8 @@ export default function CollectionsPage() {
   const [paymentMethodFilter, setPaymentMethodFilter] = React.useState<(typeof paymentMethodOptions)[number]>("الكل");
   const [countryFilter, setCountryFilter] = React.useState<(typeof countryFilterOptions)[number]>("الكل");
   const [monthFilter, setMonthFilter] = React.useState("");
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState<number>(25);
 
   const canView = Boolean(user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"]));
   const canManage = Boolean(user && (user.accountType === "ADMIN" || user?.permission?.editOrders));
@@ -307,41 +492,122 @@ export default function CollectionsPage() {
     const grouped = new Map<string, {
       name: string;
       orderCount: number;
-      totalsByCurrency: Map<string, number>;
+      totalUsd: number;
     }>();
 
     rows.forEach((row: any) => {
       const name = String(row?.shipping?.name || "غير محددة").trim() || "غير محددة";
-      const currency = getCurrencyLabel(row?.warehouse?.location);
       const amount = Number(row?.collectionWithShipping || 0);
 
       if (!grouped.has(name)) {
         grouped.set(name, {
           name,
           orderCount: 0,
-          totalsByCurrency: new Map<string, number>(),
+          totalUsd: 0,
         });
       }
 
       const entry = grouped.get(name)!;
       entry.orderCount += 1;
-      entry.totalsByCurrency.set(currency, (entry.totalsByCurrency.get(currency) || 0) + amount);
+      entry.totalUsd += amount;
     });
 
     return Array.from(grouped.values())
       .map((entry) => ({
         ...entry,
-        totalLabel: Array.from(entry.totalsByCurrency.entries())
-          .sort((left, right) => left[0].localeCompare(right[0]))
-          .map(([currency, amount]) => `${Number(amount).toLocaleString()} ${currency}`)
-          .join(" + "),
+        totalLabel: formatMoney(entry.totalUsd),
       }))
-      .sort((left, right) => {
-        const leftTotal = Array.from(left.totalsByCurrency.values()).reduce((sum, value) => sum + value, 0);
-        const rightTotal = Array.from(right.totalsByCurrency.values()).reduce((sum, value) => sum + value, 0);
-        return rightTotal - leftTotal;
-      });
+      .sort((left, right) => right.totalUsd - left.totalUsd);
   }, [filteredPayload]);
+
+  const unifiedRows = React.useMemo<UnifiedCollectionRow[]>(() => {
+    if (!filteredPayload) return [];
+
+    return [
+      ...filteredPayload.bankTransfers.map((row: any) => {
+        const amountUsd = Number(row.collectionAmount || 0);
+        return {
+          rowKey: `bank-${row.id}`,
+          source: "bank" as const,
+          sourceLabel: "حوالة بنكية",
+          amountUsd,
+          amountTry: toTryAmount(amountUsd, row),
+          row,
+        };
+      }),
+      ...filteredPayload.carrierCollectionsPending.map((row: any) => {
+        const amountUsd = Number(row.collectionWithShipping || 0);
+        return {
+          rowKey: `carrier-${row.id}`,
+          source: "carrier" as const,
+          sourceLabel: "لدى الناقل",
+          amountUsd,
+          amountTry: toTryAmount(amountUsd, row),
+          row,
+        };
+      }),
+    ].sort((left, right) => {
+      const leftDate = new Date(getRowDateValue(left.row) || 0).getTime();
+      const rightDate = new Date(getRowDateValue(right.row) || 0).getTime();
+      return rightDate - leftDate;
+    });
+  }, [filteredPayload]);
+
+  const shippingApproxTotalUsd = React.useMemo(() => {
+    return (filteredPayload?.carrierCollectionsPending || []).reduce(
+      (sum: number, row: any) => sum + Number(row.shippingCharge || 0),
+      0
+    );
+  }, [filteredPayload]);
+
+  const shippingApproxTotalTry = React.useMemo(() => {
+    return (filteredPayload?.carrierCollectionsPending || []).reduce(
+      (sum: number, row: any) => sum + toTryAmount(Number(row.shippingCharge || 0), row),
+      0
+    );
+  }, [filteredPayload]);
+
+  const totalPages = Math.max(1, Math.ceil(unifiedRows.length / pageSize));
+
+  const paginatedUnifiedRows = React.useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return unifiedRows.slice(start, start + pageSize);
+  }, [unifiedRows, currentPage, pageSize]);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [paymentMethodFilter, countryFilter, monthFilter, pageSize]);
+
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const exportUnifiedRowsToExcel = React.useCallback(() => {
+    if (unifiedRows.length === 0) {
+      toast.error("لا توجد بيانات لتصديرها");
+      return;
+    }
+
+    const worksheetData = unifiedRows.map((entry) => ({
+      "النوع": entry.sourceLabel,
+      "رقم الطلب": entry.row.orderNumber,
+      "العميل": entry.row.customer?.name || entry.row.receiverName || "-",
+      "طريقة الدفع": entry.row.paymentMethod || "-",
+      "الحالة": entry.row.status || "-",
+      "شركة الشحن": entry.row.shipping?.name || "-",
+      "المبلغ بالدولار": Number(entry.amountUsd || 0),
+      "المبلغ بالتركي تقريبًا": Number(entry.amountTry || 0),
+      "أجرة الشحن بالدولار": Number(entry.row.shippingCharge || 0),
+      "التاريخ": getDisplayDate(entry.row),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Collections");
+    XLSX.writeFile(workbook, `collections_${new Date().toISOString().split("T")[0]}.xlsx`);
+  }, [unifiedRows]);
 
   const handleMarkReceived = async (row: any) => {
     const loadingToast = toast.loading("جاري تسجيل التحصيل كمستلم...");
@@ -504,6 +770,16 @@ export default function CollectionsPage() {
         />
       </div>
 
+      <div className="grid gap-4 md:grid-cols-1">
+        <SummaryCard
+          title="أجور الشحن التقريبية"
+          value={`${formatMoney(shippingApproxTotalUsd)} / ${formatMoney(shippingApproxTotalTry, "₺")}`}
+          subtitle="إجمالي أجور الشحن التقديرية ضمن التحصيلات الموجودة حاليًا لدى الناقل"
+          icon={HandCoins}
+          tone="amber"
+        />
+      </div>
+
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
@@ -555,24 +831,18 @@ export default function CollectionsPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          <SectionTable
-            title="الحوالات البنكية المستلمة"
-            description="تشمل الطلبات المدفوعة بتحويل بنكي كامل، أو الجزء البنكي من الطلبات المختلطة."
-            rows={filteredPayload?.bankTransfers || []}
-            emptyMessage="لا توجد حوالات بنكية مطابقة حاليًا."
-            amountLabel="قيمة الحوالة"
-            getAmount={(row) => formatMoney(Number(row.collectionAmount || 0), row?.warehouse?.location)}
-          />
-
-          <SectionTable
-            title="التحصيلات الموجودة لدى الناقل"
-            description="هذه مبالغ ما زالت عند شركة الشحن ولم تُسجّل كمستلمة بعد. تُحسب كقيمة الطلب القابلة للتحصيل مضافًا إليها أجرة الشحن."
-            rows={filteredPayload?.carrierCollectionsPending || []}
-            emptyMessage="لا توجد تحصيلات معلقة مع الناقل حاليًا."
-            amountLabel="مع الناقل"
-            getAmount={(row) => formatMoney(Number(row.collectionWithShipping || 0), row?.warehouse?.location)}
-            actionLabel={canManage && filteredPayload?.supportsCarrierCollectionTracking ? "تسجيل كمستلم" : undefined}
-            onAction={canManage && filteredPayload?.supportsCarrierCollectionTracking ? handleMarkReceived : undefined}
+          <UnifiedCollectionsTable
+            rows={paginatedUnifiedRows}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            totalRows={unifiedRows.length}
+            canManage={canManage}
+            canTrack={Boolean(filteredPayload?.supportsCarrierCollectionTracking)}
+            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), totalPages))}
+            onPageSizeChange={setPageSize}
+            onExport={exportUnifiedRowsToExcel}
+            onMarkReceived={handleMarkReceived}
           />
 
           <SectionTable
@@ -581,7 +851,8 @@ export default function CollectionsPage() {
             rows={filteredPayload?.carrierCollectionsReceived || []}
             emptyMessage="لا توجد تحصيلات مستلمة مسجلة بعد."
             amountLabel="الصافي المستلم"
-            getAmount={(row) => formatMoney(Number(row.carrierCollectionReceivedAmount ?? row.collectionNetReceived ?? 0), row?.warehouse?.location)}
+            getAmount={(row) => formatMoney(Number(row.carrierCollectionReceivedAmount ?? row.collectionNetReceived ?? 0))}
+            getTryAmount={(row) => formatMoney(toTryAmount(Number(row.carrierCollectionReceivedAmount ?? row.collectionNetReceived ?? 0), row), "₺")}
             actionLabel={canManage && filteredPayload?.supportsCarrierCollectionTracking ? "إلغاء الاستلام" : undefined}
             onAction={canManage && filteredPayload?.supportsCarrierCollectionTracking ? handleClearReceived : undefined}
             actionVariant="danger"
