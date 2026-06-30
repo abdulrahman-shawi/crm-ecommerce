@@ -320,41 +320,64 @@ export default function ExpensesPage() {
     );
   }, [filteredDailyExpenses]);
 
+  const dailyExpenseTotalsByCurrency = React.useMemo(() => {
+    return filteredDailyExpenses.reduce(
+      (acc, expense) => {
+        const amount = Number(expense?.amount || 0);
+        const currency = String(expense?.currency || "").toUpperCase();
+
+        if (currency === "SYP") acc.syp += amount;
+        if (currency === "TRY") acc.try += amount;
+        if (currency === "USD") acc.usd += amount;
+
+        return acc;
+      },
+      { syp: 0, try: 0, usd: 0 }
+    );
+  }, [filteredDailyExpenses]);
+
   const cashboxCards = React.useMemo(() => {
     const tryRate = Number(cashboxSettings.usdToTryRate || 0);
     const sypRate = Number(cashboxSettings.usdToSypRate || 0);
+    const sypRemaining = Number(cashboxSettings.cashboxSyp || 0) - Number(dailyExpenseTotalsByCurrency.syp || 0);
+    const tryRemaining = Number(cashboxSettings.cashboxTry || 0) - Number(dailyExpenseTotalsByCurrency.try || 0);
+    const usdRemaining = Number(cashboxSettings.cashboxUsd || 0) - Number(dailyExpenseTotalsByCurrency.usd || 0);
 
     return [
       {
         key: "syp",
         title: "رصيد صندوق الليرة السورية",
-        value: formatCurrencyAmount(cashboxSettings.cashboxSyp, "ل.س"),
+        value: formatCurrencyAmount(sypRemaining, "ل.س"),
         subtitle: sypRate > 0
-          ? `يعادل تقريبًا ${formatCurrencyAmount(cashboxSettings.cashboxSyp / sypRate, "$")}`
+          ? `يعادل تقريبًا ${formatCurrencyAmount(sypRemaining / sypRate, "$")} | قيمة الصندوق ${formatCurrencyAmount(cashboxSettings.cashboxSyp, "ل.س")}`
           : "أدخل سعر صرف الدولار مقابل الليرة السورية لعرض المعادل",
+        footer: `مطروح منها مصاريف يومية ${formatCurrencyAmount(dailyExpenseTotalsByCurrency.syp, "ل.س")}`,
         accent: "emerald",
       },
       {
         key: "try",
         title: "رصيد صندوق الليرة التركية",
-        value: formatCurrencyAmount(cashboxSettings.cashboxTry, "₺"),
+        value: formatCurrencyAmount(tryRemaining, "₺"),
         subtitle: tryRate > 0
-          ? `يعادل تقريبًا ${formatCurrencyAmount(cashboxSettings.cashboxTry / tryRate, "$")}`
+          ? `يعادل تقريبًا ${formatCurrencyAmount(tryRemaining / tryRate, "$")} | قيمة الصندوق ${formatCurrencyAmount(cashboxSettings.cashboxTry, "₺")}`
           : "أدخل سعر صرف الدولار مقابل الليرة التركية لعرض المعادل",
+        footer: `مطروح منها مصاريف يومية ${formatCurrencyAmount(dailyExpenseTotalsByCurrency.try, "₺")}`,
         accent: "blue",
       },
       {
         key: "usd",
         title: "رصيد صندوق الدولار",
-        value: formatCurrencyAmount(cashboxSettings.cashboxUsd, "$"),
+        value: formatCurrencyAmount(usdRemaining, "$"),
         subtitle: [
-          tryRate > 0 ? formatCurrencyAmount(cashboxSettings.cashboxUsd * tryRate, "₺") : null,
-          sypRate > 0 ? formatCurrencyAmount(cashboxSettings.cashboxUsd * sypRate, "ل.س") : null,
+          `قيمة الصندوق ${formatCurrencyAmount(cashboxSettings.cashboxUsd, "$")}`,
+          tryRate > 0 ? formatCurrencyAmount(usdRemaining * tryRate, "₺") : null,
+          sypRate > 0 ? formatCurrencyAmount(usdRemaining * sypRate, "ل.س") : null,
         ].filter(Boolean).join(" | ") || "تظهر المعادلات هنا بعد إدخال أسعار الصرف",
+        footer: `مطروح منها مصاريف يومية ${formatCurrencyAmount(dailyExpenseTotalsByCurrency.usd, "$")}`,
         accent: "amber",
       },
     ];
-  }, [cashboxSettings, formatCurrencyAmount]);
+  }, [cashboxSettings, dailyExpenseTotalsByCurrency, formatCurrencyAmount]);
 
   const defaultFormValues = React.useMemo(() => {
     if (formData) return formData;
@@ -428,7 +451,7 @@ export default function ExpensesPage() {
               {card.value}
             </div>
             <div className="mt-2 text-xs font-bold text-slate-500 dark:text-slate-400">{card.subtitle}</div>
-            <div className="mt-3 text-[11px] text-slate-400 dark:text-slate-500">الرصيد الحالي بعد خصم المصاريف اليومية المسجلة بنفس العملة</div>
+            <div className="mt-3 text-[11px] text-slate-400 dark:text-slate-500">{card.footer}</div>
           </div>
         ))}
       </div>
