@@ -220,6 +220,9 @@ model Product {
 
   // ─── NEW: E-commerce Affiliate columns ───
   seoSlug                 String? @unique
+  metaTitle               String?
+  metaDescription         String?
+  metaKeywords            String?
   isActive                Boolean @default(true)
   showInAds               Boolean @default(false)
   affiliatePrice          Float   @default(0)

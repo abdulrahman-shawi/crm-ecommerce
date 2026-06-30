@@ -26,6 +26,9 @@ import * as XLSX from 'xlsx';
 const productschama = z.object({
     name: z.string().min(3, "اسم المنتج مطلوب"),
     description: z.string().optional().nullable(),
+    metaTitle: z.string().optional().nullable(),
+    metaDescription: z.string().optional().nullable(),
+    metaKeywords: z.string().optional().nullable(),
     categoryId: z.coerce.number().min(1, "يرجى اختيار فئة"),
     affiliatePrice: z.coerce.number().min(0, "سعر الأفلييت يجب أن يكون صفر أو أكثر").optional().default(0),
     affiliateCommissionRate: z.preprocess(
@@ -296,6 +299,9 @@ const ProductLayout = () => {
                 formData.append('name', data.name);
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
+                formData.append('metaTitle', data.metaTitle || '');
+                formData.append('metaDescription', data.metaDescription || '');
+                formData.append('metaKeywords', data.metaKeywords || '');
                 formData.append('isActive', String(data.isActive ?? true));
                 formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
                 formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
@@ -328,6 +334,9 @@ const ProductLayout = () => {
                 formData.append('name', data.name);
                 formData.append('categoryId', data.categoryId.toString());
                 formData.append('description', data.description || '');
+                formData.append('metaTitle', data.metaTitle || '');
+                formData.append('metaDescription', data.metaDescription || '');
+                formData.append('metaKeywords', data.metaKeywords || '');
                 formData.append('isActive', String(data.isActive ?? true));
                 formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
                 formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
@@ -372,6 +381,9 @@ const ProductLayout = () => {
             name: data.name,
             categoryId: data.categoryId,
             description: data.description,
+            metaTitle: data.metaTitle || '',
+            metaDescription: data.metaDescription || '',
+            metaKeywords: data.metaKeywords || '',
             affiliatePrice: Number(data.affiliatePrice ?? 0),
             affiliateCommissionRate: data.affiliateCommissionRate ?? null,
             warehouseStocks: data.stocks?.length
@@ -986,6 +998,9 @@ const ProductLayout = () => {
                         {({ register, control, formState: { errors } }) => (
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormInput className='col-span-2' label="اسم المنتج" {...register("name")} error={errors.name?.message as string} />
+                                <FormInput className='col-span-2' label="Meta Title" {...register("metaTitle")} error={errors.metaTitle?.message as string} />
+                                <FormInput className='col-span-2' label="Meta Description" {...register("metaDescription")} error={errors.metaDescription?.message as string} />
+                                <FormInput className='col-span-2' label="Meta Keywords" {...register("metaKeywords")} error={errors.metaKeywords?.message as string} />
 
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm text-right font-medium text-slate-800 dark:text-slate-200">التصنيف</label>

@@ -82,6 +82,9 @@ export async function saveProductWithFiles(formData: FormData) {
         const normalizedName = name.trim();
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+        const metaTitle = String(formData.get('metaTitle') || '').trim() || null;
+        const metaDescription = String(formData.get('metaDescription') || '').trim() || null;
+        const metaKeywords = String(formData.get('metaKeywords') || '').trim() || null;
         const isActive = formData.get('isActive') === 'true';
         const affiliatePrice = Number(formData.get('affiliatePrice') || 0);
         const affiliateCommissionRateRaw = formData.get('affiliateCommissionRate');
@@ -179,6 +182,9 @@ export async function saveProductWithFiles(formData: FormData) {
             data: {
                 name: normalizedName,
                 description,
+                metaTitle,
+                metaDescription,
+                metaKeywords,
                 isActive,
                 seoSlug,
                 affiliatePrice,
@@ -221,6 +227,9 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const name = formData.get('name') as string;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
+        const metaTitle = String(formData.get('metaTitle') || '').trim() || null;
+        const metaDescription = String(formData.get('metaDescription') || '').trim() || null;
+        const metaKeywords = String(formData.get('metaKeywords') || '').trim() || null;
         const isActive = formData.get('isActive') === 'true';
         const affiliatePrice = Number(formData.get('affiliatePrice') || 0);
         const affiliateCommissionRateRaw = formData.get('affiliateCommissionRate');
@@ -359,6 +368,9 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             data: {
                 name,
                 description,
+                metaTitle,
+                metaDescription,
+                metaKeywords,
                 isActive,
                 affiliatePrice,
                 affiliateCommissionRate,

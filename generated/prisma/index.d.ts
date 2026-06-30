@@ -8530,6 +8530,9 @@ export namespace Prisma {
     categoryId: number | null
     createdAt: Date | null
     seoSlug: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
     isActive: boolean | null
     showInAds: boolean | null
     affiliatePrice: number | null
@@ -8544,6 +8547,9 @@ export namespace Prisma {
     categoryId: number | null
     createdAt: Date | null
     seoSlug: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
     isActive: boolean | null
     showInAds: boolean | null
     affiliatePrice: number | null
@@ -8558,6 +8564,9 @@ export namespace Prisma {
     categoryId: number
     createdAt: number
     seoSlug: number
+    metaTitle: number
+    metaDescription: number
+    metaKeywords: number
     isActive: number
     showInAds: number
     affiliatePrice: number
@@ -8588,6 +8597,9 @@ export namespace Prisma {
     categoryId?: true
     createdAt?: true
     seoSlug?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
     isActive?: true
     showInAds?: true
     affiliatePrice?: true
@@ -8602,6 +8614,9 @@ export namespace Prisma {
     categoryId?: true
     createdAt?: true
     seoSlug?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
     isActive?: true
     showInAds?: true
     affiliatePrice?: true
@@ -8616,6 +8631,9 @@ export namespace Prisma {
     categoryId?: true
     createdAt?: true
     seoSlug?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
     isActive?: true
     showInAds?: true
     affiliatePrice?: true
@@ -8717,6 +8735,9 @@ export namespace Prisma {
     categoryId: number | null
     createdAt: Date
     seoSlug: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
     isActive: boolean
     showInAds: boolean
     affiliatePrice: number
@@ -8750,6 +8771,9 @@ export namespace Prisma {
     categoryId?: boolean
     createdAt?: boolean
     seoSlug?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: boolean
@@ -8776,6 +8800,9 @@ export namespace Prisma {
     categoryId?: boolean
     createdAt?: boolean
     seoSlug?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: boolean
@@ -8791,6 +8818,9 @@ export namespace Prisma {
     categoryId?: boolean
     createdAt?: boolean
     seoSlug?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: boolean
@@ -8806,13 +8836,16 @@ export namespace Prisma {
     categoryId?: boolean
     createdAt?: boolean
     seoSlug?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "isActive" | "showInAds" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "metaTitle" | "metaDescription" | "metaKeywords" | "isActive" | "showInAds" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -8857,6 +8890,9 @@ export namespace Prisma {
       categoryId: number | null
       createdAt: Date
       seoSlug: string | null
+      metaTitle: string | null
+      metaDescription: string | null
+      metaKeywords: string | null
       isActive: boolean
       showInAds: boolean
       affiliatePrice: number
@@ -9302,6 +9338,9 @@ export namespace Prisma {
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly seoSlug: FieldRef<"Product", 'String'>
+    readonly metaTitle: FieldRef<"Product", 'String'>
+    readonly metaDescription: FieldRef<"Product", 'String'>
+    readonly metaKeywords: FieldRef<"Product", 'String'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly showInAds: FieldRef<"Product", 'Boolean'>
     readonly affiliatePrice: FieldRef<"Product", 'Float'>
@@ -39797,6 +39836,9 @@ export namespace Prisma {
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     seoSlug: 'seoSlug',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    metaKeywords: 'metaKeywords',
     isActive: 'isActive',
     showInAds: 'showInAds',
     affiliatePrice: 'affiliatePrice',
@@ -40968,6 +41010,9 @@ export namespace Prisma {
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     seoSlug?: StringNullableFilter<"Product"> | string | null
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    metaKeywords?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
@@ -40993,6 +41038,9 @@ export namespace Prisma {
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     seoSlug?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
     isActive?: SortOrder
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
@@ -41021,6 +41069,9 @@ export namespace Prisma {
     googleLink?: StringNullableFilter<"Product"> | string | null
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    metaKeywords?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
@@ -41046,6 +41097,9 @@ export namespace Prisma {
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     seoSlug?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
     isActive?: SortOrder
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
@@ -41068,6 +41122,9 @@ export namespace Prisma {
     categoryId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     seoSlug?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    metaTitle?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    metaKeywords?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     showInAds?: BoolWithAggregatesFilter<"Product"> | boolean
     affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
@@ -43857,6 +43914,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -43882,6 +43942,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -43904,6 +43967,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -43929,6 +43995,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -43953,6 +44022,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -43965,6 +44037,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -43979,6 +44054,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -47008,6 +47086,9 @@ export namespace Prisma {
     categoryId?: SortOrder
     createdAt?: SortOrder
     seoSlug?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
     isActive?: SortOrder
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
@@ -47029,6 +47110,9 @@ export namespace Prisma {
     categoryId?: SortOrder
     createdAt?: SortOrder
     seoSlug?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
     isActive?: SortOrder
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
@@ -47043,6 +47127,9 @@ export namespace Prisma {
     categoryId?: SortOrder
     createdAt?: SortOrder
     seoSlug?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
     isActive?: SortOrder
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
@@ -52773,6 +52860,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -52796,6 +52886,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -52893,6 +52986,9 @@ export namespace Prisma {
     categoryId?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     seoSlug?: StringNullableFilter<"Product"> | string | null
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    metaKeywords?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
@@ -53567,6 +53663,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -53591,6 +53690,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -53628,6 +53730,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -53652,6 +53757,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -53673,6 +53781,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -53697,6 +53808,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -53799,6 +53913,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -53823,6 +53940,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -54161,6 +54281,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -54185,6 +54308,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -54248,6 +54374,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -54272,6 +54401,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -54325,6 +54457,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -54349,6 +54484,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -54477,6 +54615,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -54501,6 +54642,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -54964,6 +55108,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -54988,6 +55135,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -55058,6 +55208,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -55082,6 +55235,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -55103,6 +55259,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -55127,6 +55286,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -55164,6 +55326,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -55188,6 +55353,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -55491,6 +55659,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -55515,6 +55686,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -55707,6 +55881,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -55731,6 +55908,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -56972,6 +57152,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -56996,6 +57179,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -57152,6 +57338,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -57176,6 +57365,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -57433,6 +57625,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -57457,6 +57652,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -57620,6 +57818,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -57644,6 +57845,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -57798,6 +58002,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -57822,6 +58029,9 @@ export namespace Prisma {
     categoryId?: number | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -57930,6 +58140,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -57954,6 +58167,9 @@ export namespace Prisma {
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -59007,6 +59223,9 @@ export namespace Prisma {
     googleLink?: string | null
     createdAt?: Date | string
     seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
     isActive?: boolean
     showInAds?: boolean
     affiliatePrice?: number
@@ -59036,6 +59255,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -59059,6 +59281,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
@@ -59082,6 +59307,9 @@ export namespace Prisma {
     googleLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
