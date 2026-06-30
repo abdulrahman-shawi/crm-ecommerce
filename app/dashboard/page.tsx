@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { GetEmployeeActivitySummary, GetUserTargetProgress } from '@/server/analytics';
+import { getAffiliateUserDashboard } from '@/server/affiliate';
 import { createUserTarget, deleteProductTargetRow, deleteSalesTargetRow, getUserActivityTargetProgress, updateUserTarget } from '@/server/user';
 import { getProduct } from '@/server/product';
 import toast from 'react-hot-toast';
@@ -77,6 +78,33 @@ const DashboardPage: React.FunctionComponent = () => {
   ]);
   const [creatingTarget, setCreatingTarget] = React.useState(false);
   const [activityTargetToday, setActivityTargetToday] = React.useState<any | null>(null);
+  const [affiliateDashboard, setAffiliateDashboard] = React.useState<{
+    user: {
+      id: string;
+      username: string;
+      email: string;
+    };
+    totalClicks: number;
+    totalConversions: number;
+    totalCommissions: number;
+    pendingCommissions: number;
+    paidCommissions: number;
+    links: Array<{
+      id: string;
+      uniqueCode: string;
+      fullUrl: string;
+      clicks: number;
+      conversions: number;
+      effectiveCommissionRate: number;
+      totalCommissions: number;
+      pendingCommissions: number;
+      paidCommissions: number;
+      product?: {
+        id: number;
+        name: string;
+      } | null;
+    }>;
+  } | null>(null);
 
   const isInvalidActivityCustomRange =
     activityFilterPreset === "custom" &&
@@ -489,6 +517,25 @@ const DashboardPage: React.FunctionComponent = () => {
       .catch(() => setUsersList([]));
   }, [user?.id, user?.accountType]);
 
+  React.useEffect(() => {
+    const loadAffiliateDashboard = async () => {
+      if (!user?.id || user.accountType === "ADMIN") {
+        setAffiliateDashboard(null);
+        return;
+      }
+
+      const result = await getAffiliateUserDashboard(String(user.id));
+      if (result?.success) {
+        setAffiliateDashboard(result.data as any);
+        return;
+      }
+
+      setAffiliateDashboard(null);
+    };
+
+    loadAffiliateDashboard();
+  }, [user?.id, user?.accountType]);
+
   return (
     <div className="p-2 md:p-6">
       <div className="mb-6">
@@ -689,6 +736,85 @@ const DashboardPage: React.FunctionComponent = () => {
           })() : null}
         </div>
       </div>
+
+      {user?.accountType !== "ADMIN" && (
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white">الأفلييت الخاص بك</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">روابطك، النفرات، التحويلات، والعمولات الخاصة بك داخل لوحة الموظف.</p>
+            </div>
+            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              {affiliateDashboard?.links?.length || 0} رابط
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="text-xs font-semibold text-slate-500">إجمالي النفرات</div>
+              <div className="mt-1 text-2xl font-black text-amber-600">{Number(affiliateDashboard?.totalClicks || 0).toLocaleString()}</div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="text-xs font-semibold text-slate-500">إجمالي التحويلات</div>
+              <div className="mt-1 text-2xl font-black text-blue-600">{Number(affiliateDashboard?.totalConversions || 0).toLocaleString()}</div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="text-xs font-semibold text-slate-500">العمولات المعلقة</div>
+              <div className="mt-1 text-2xl font-black text-orange-600">{Number(affiliateDashboard?.pendingCommissions || 0).toFixed(2)}</div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="text-xs font-semibold text-slate-500">إجمالي العمولات</div>
+              <div className="mt-1 text-2xl font-black text-emerald-600">{Number(affiliateDashboard?.totalCommissions || 0).toFixed(2)}</div>
+            </div>
+          </div>
+
+          {!affiliateDashboard || affiliateDashboard.links.length === 0 ? (
+            <div className="mt-4 rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm font-semibold text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              لا توجد روابط أفلييت مرتبطة بهذا الموظف حاليًا.
+            </div>
+          ) : (
+            <div className="mt-4 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+              <table className="w-full min-w-[860px] text-right text-sm">
+                <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+                  <tr>
+                    <th className="px-3 py-3">المنتج</th>
+                    <th className="px-3 py-3">الرابط</th>
+                    <th className="px-3 py-3">النسبة</th>
+                    <th className="px-3 py-3">النفرات</th>
+                    <th className="px-3 py-3">التحويلات</th>
+                    <th className="px-3 py-3">معلقة</th>
+                    <th className="px-3 py-3">مدفوعة</th>
+                    <th className="px-3 py-3">الإجمالي</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {affiliateDashboard.links.map((link) => (
+                    <tr key={link.id} className="odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30">
+                      <td className="px-3 py-3 font-semibold text-slate-700 dark:text-slate-200">{link.product?.name || "منتج غير محدد"}</td>
+                      <td className="px-3 py-3">
+                        <a
+                          href={link.fullUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block max-w-[320px] break-all text-blue-600 hover:underline"
+                        >
+                          {link.fullUrl}
+                        </a>
+                      </td>
+                      <td className="px-3 py-3 font-bold text-emerald-600">{Number(link.effectiveCommissionRate || 0).toFixed(2)}%</td>
+                      <td className="px-3 py-3">{Number(link.clicks || 0).toLocaleString()}</td>
+                      <td className="px-3 py-3">{Number(link.conversions || 0).toLocaleString()}</td>
+                      <td className="px-3 py-3 font-bold text-orange-600">{Number(link.pendingCommissions || 0).toFixed(2)}</td>
+                      <td className="px-3 py-3 font-bold text-sky-600">{Number(link.paidCommissions || 0).toFixed(2)}</td>
+                      <td className="px-3 py-3 font-bold text-emerald-600">{Number(link.totalCommissions || 0).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
         <div className="flex items-center justify-between mb-4">

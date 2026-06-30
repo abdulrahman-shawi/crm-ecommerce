@@ -144,6 +144,127 @@ export async function getAffiliateAdminDashboard() {
   };
 }
 
+export async function getAffiliateUserDashboard(targetUserId: string) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser) {
+    return { success: false, error: 'غير مصرح لك بعرض بيانات الأفلييت' };
+  }
+
+  const normalizedUserId = String(targetUserId || '').trim();
+  if (!normalizedUserId) {
+    return { success: false, error: 'معرف المستخدم غير صالح' };
+  }
+
+  const canView = currentUser.accountType === 'ADMIN' || currentUser.id === normalizedUserId;
+  if (!canView) {
+    return { success: false, error: 'غير مصرح لك بعرض بيانات الأفلييت لهذا الموظف' };
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: normalizedUserId },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      affiliateLinks: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              seoSlug: true,
+              affiliatePrice: true,
+              affiliateCommissionRate: true,
+            },
+          },
+          commissions: {
+            orderBy: { createdAt: 'desc' },
+            select: {
+              id: true,
+              amount: true,
+              status: true,
+              createdAt: true,
+              paidAt: true,
+              order: {
+                select: {
+                  id: true,
+                  orderNumber: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!targetUser) {
+    return { success: false, error: 'المستخدم غير موجود' };
+  }
+
+  const links = Array.isArray(targetUser.affiliateLinks)
+    ? targetUser.affiliateLinks.map((link) => {
+        const totalCommissions = Number(
+          link.commissions.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(2)
+        );
+        const pendingCommissions = Number(
+          link.commissions
+            .filter((item) => item.status === 'PENDING')
+            .reduce((sum, item) => sum + Number(item.amount || 0), 0)
+            .toFixed(2)
+        );
+        const paidCommissions = Number(
+          link.commissions
+            .filter((item) => item.status === 'PAID')
+            .reduce((sum, item) => sum + Number(item.amount || 0), 0)
+            .toFixed(2)
+        );
+
+        return {
+          ...link,
+          fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+          effectiveCommissionRate:
+            link?.product?.affiliateCommissionRate != null
+              ? Number(link.product.affiliateCommissionRate || 0)
+              : Number(link.commissionRate || 0),
+          totalCommissions,
+          pendingCommissions,
+          paidCommissions,
+        };
+      })
+    : [];
+
+  const totalClicks = links.reduce((sum, item) => sum + Number(item.clicks || 0), 0);
+  const totalConversions = links.reduce((sum, item) => sum + Number(item.conversions || 0), 0);
+  const totalCommissions = Number(
+    links.reduce((sum, item) => sum + Number(item.totalCommissions || 0), 0).toFixed(2)
+  );
+  const pendingCommissions = Number(
+    links.reduce((sum, item) => sum + Number(item.pendingCommissions || 0), 0).toFixed(2)
+  );
+  const paidCommissions = Number(
+    links.reduce((sum, item) => sum + Number(item.paidCommissions || 0), 0).toFixed(2)
+  );
+
+  return {
+    success: true,
+    data: {
+      user: {
+        id: targetUser.id,
+        username: targetUser.username,
+        email: targetUser.email,
+      },
+      totalClicks,
+      totalConversions,
+      totalCommissions,
+      pendingCommissions,
+      paidCommissions,
+      links,
+    },
+  };
+}
+
 function generateCode() {
   return Math.random().toString(36).slice(2, 10).toUpperCase();
 }

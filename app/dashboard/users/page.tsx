@@ -66,8 +66,6 @@ const getCurrentMonthKey = () => {
 
 const formatMoney = (value: number | undefined | null) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
 
-const formatAffiliateRate = (value: number | undefined | null) => `${Number(value || 0).toFixed(2)}%`;
-
 const getLatestTarget = (targets: any[] | undefined | null) => {
   if (!Array.isArray(targets) || targets.length === 0) return null;
 
@@ -1040,77 +1038,6 @@ const UserManagement: React.FunctionComponent = () => {
           },
           { header: "البريد الإلكتروني", accessor: "email" },
           { header: "رقم الهاتف", accessor: "phone" },
-          {
-            header: "روابط الأفلييت",
-            accessor: (row: any) => {
-              const links = Array.isArray(row?.affiliateLinks) ? row.affiliateLinks : [];
-              if (links.length === 0) {
-                return <span className="text-xs text-slate-400">لا توجد روابط</span>;
-              }
-
-              return (
-                <div className="flex max-w-[360px] flex-col gap-2 whitespace-normal">
-                  {links.map((link: any) => (
-                    <div key={link.id} className="rounded-lg border border-slate-200 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-900">
-                      <div className="text-[11px] font-bold text-slate-700 dark:text-slate-200">{link?.product?.name || 'منتج غير محدد'}</div>
-                      <a
-                        href={link.fullUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block break-all text-[11px] text-blue-600 hover:underline"
-                      >
-                        {link.fullUrl}
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              );
-            },
-            className: "align-top"
-          },
-          {
-            header: "عمولة الأفلييت",
-            accessor: (row: any) => {
-              const links = Array.isArray(row?.affiliateLinks) ? row.affiliateLinks : [];
-              if (links.length === 0) {
-                return <span className="text-xs text-slate-400">-</span>;
-              }
-
-              return (
-                <div className="flex flex-col gap-2 whitespace-normal">
-                  {links.map((link: any) => (
-                    <div key={link.id} className="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
-                      {link?.product?.name || 'منتج'}: {formatAffiliateRate(link.effectiveCommissionRate)}
-                    </div>
-                  ))}
-                </div>
-              );
-            },
-            className: "align-top"
-          },
-          {
-            header: "عدد النفرات",
-            accessor: (row: any) => {
-              const links = Array.isArray(row?.affiliateLinks) ? row.affiliateLinks : [];
-              if (links.length === 0) {
-                return <span className="text-xs text-slate-400">0</span>;
-              }
-
-              return (
-                <div className="flex flex-col gap-2 whitespace-normal">
-                  <div className="rounded-lg bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
-                    الإجمالي: {Number(row?.totalAffiliateClicks || 0)}
-                  </div>
-                  {links.map((link: any) => (
-                    <div key={link.id} className="text-[11px] text-slate-600 dark:text-slate-300">
-                      {link?.product?.name || 'منتج'}: {Number(link?.clicks || 0)}
-                    </div>
-                  ))}
-                </div>
-              );
-            },
-            className: "align-top"
-          },
           {
             header: "تاركت العملاء",
             accessor: (row: any) => {
