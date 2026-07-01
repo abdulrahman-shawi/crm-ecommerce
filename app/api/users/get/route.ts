@@ -14,12 +14,37 @@ export async function GET() {
         }
         
             const decoded = await decrypt(session);
-        const users = await prisma.user.findUnique({
-             where: { id: decoded.userId },
-      include:{
-                permission:true
-      }
-        });
+           const users = await prisma.user.findUnique({
+               where: { id: decoded.userId },
+               select: {
+                 id: true,
+                 username: true,
+                 email: true,
+                 phone: true,
+                 notes: true,
+                 jobTitle: true,
+                 avatar: true,
+                 accountType: true,
+                 password: true,
+                 createdAt: true,
+                 updatedAt: true,
+                 permissionId: true,
+                 parentId: true,
+                 isAffiliate: true,
+                 affiliateApproved: true,
+                 affiliateRequestedAt: true,
+                 affiliateApprovedAt: true,
+                 permission: true,
+               }
+           });
+
+        if (users?.isAffiliate && !users?.affiliateApproved) {
+            cookies().set("skynova", "", { expires: new Date(0), httpOnly: true });
+            return NextResponse.json({ 
+                success: false, 
+                error: "حساب الأفلييت بانتظار موافقة الأدمن" 
+            }, { status: 403 });
+        }
 
         return NextResponse.json({ 
             success: true, 

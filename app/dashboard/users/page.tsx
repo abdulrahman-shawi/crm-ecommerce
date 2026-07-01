@@ -28,6 +28,7 @@ const userSchema = z.object({
   password: z.string().min(6, "كلمة المرور ضعيفة").optional().or(z.literal('')), // اختيارية عند التعديل
   jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
   accountType: z.enum(["ADMIN", "MANAGER", "STAFF"]),
+  isAffiliate: z.boolean().optional().default(false),
   permissions: z.string().min(1, "يرجى اختيار صلاحية"),
   salesCommissionPercent: z.preprocess(
     (value) => (typeof value === "string" ? value.replace(/[٫,]/g, ".") : value),
@@ -953,6 +954,7 @@ const UserManagement: React.FunctionComponent = () => {
           notes: data.notes || "",
           jobTitle: data.jobTitle,
           accountType: data.accountType,
+          isAffiliate: Boolean(data.isAffiliate),
           salesCommissionPercent: data.salesCommissionPercent ?? 0,
           wage: data.wage ?? 0,
           permissions: data.permission.id || "", // الربط مع ID الصلاحية
@@ -1038,6 +1040,17 @@ const UserManagement: React.FunctionComponent = () => {
           },
           { header: "البريد الإلكتروني", accessor: "email" },
           { header: "رقم الهاتف", accessor: "phone" },
+          {
+            header: "نوع المستخدم",
+            accessor: (row: any) => row.isAffiliate ? "أفلييت" : "داخلي"
+          },
+          {
+            header: "حالة الأفلييت",
+            accessor: (row: any) => {
+              if (!row.isAffiliate) return "-";
+              return row.affiliateApproved ? "تمت الموافقة" : "بانتظار الموافقة";
+            }
+          },
           {
             header: "تاركت العملاء",
             accessor: (row: any) => {
@@ -1447,6 +1460,11 @@ const UserManagement: React.FunctionComponent = () => {
                     <option value="STAFF">موظف</option>
                   </select>
                 </div>
+
+                <label className="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-300">
+                  <input type="checkbox" className="h-4 w-4" {...register("isAffiliate")} />
+                  <span>هذا الحساب أفلييت ويحتاج موافقة الأدمن قبل الاستخدام</span>
+                </label>
 
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold dark:text-slate-300">مجموعة الصلاحيات</label>

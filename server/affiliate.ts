@@ -5,6 +5,44 @@ import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
 const AFFILIATE_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
+const DELIVERED_ORDER_STATUSES = new Set(['تم تسليم الطلب', 'تم التسليم', 'مدفوعة', 'تم البيع']);
+
+function getEffectiveCommissionStatus(commission: {
+  status?: 'PENDING' | 'PAID' | 'CANCELLED' | string | null;
+  order?: { status?: string | null } | null;
+}) {
+  if (commission.status === 'CANCELLED') {
+    return 'CANCELLED' as const;
+  }
+
+  if (commission.status === 'PAID') {
+    return 'PAID' as const;
+  }
+
+  const orderStatus = String(commission.order?.status || '').trim();
+  if (DELIVERED_ORDER_STATUSES.has(orderStatus)) {
+    return 'PAID' as const;
+  }
+
+  return 'PENDING' as const;
+}
+
+function withEffectiveCommissionStatus<T extends {
+  status?: 'PENDING' | 'PAID' | 'CANCELLED' | string | null;
+  paidAt?: Date | null;
+  order?: { status?: string | null; updatedAt?: Date | null; createdAt?: Date | null } | null;
+}>(commission: T) {
+  const effectiveStatus = getEffectiveCommissionStatus(commission);
+
+  return {
+    ...commission,
+    status: effectiveStatus,
+    paidAt:
+      effectiveStatus === 'PAID'
+        ? commission.paidAt || commission.order?.updatedAt || commission.order?.createdAt || new Date()
+        : null,
+  };
+}
 
 async function getCurrentSessionUser() {
   try {
@@ -23,6 +61,12 @@ async function getCurrentSessionUser() {
   }
 }
 
+function isAffiliateApprovedUser(user: { isAffiliate?: boolean | null; affiliateApproved?: boolean | null } | null) {
+  if (!user) return false;
+  if (!user.isAffiliate) return true;
+  return Boolean(user.affiliateApproved);
+}
+
 export async function getAffiliateAdminDashboard() {
   const currentUser = await getCurrentSessionUser();
   if (!currentUser || currentUser.accountType !== 'ADMIN') {
@@ -30,12 +74,20 @@ export async function getAffiliateAdminDashboard() {
   }
 
   const users = await prisma.user.findMany({
+    where: {
+      isAffiliate: true,
+      affiliateApproved: true,
+    },
     orderBy: { username: 'asc' },
     select: {
       id: true,
       username: true,
       email: true,
       accountType: true,
+      isAffiliate: true,
+      affiliateApproved: true,
+      affiliateRequestedAt: true,
+      affiliateApprovedAt: true,
     },
   });
 
@@ -79,7 +131,9 @@ export async function getAffiliateAdminDashboard() {
               id: true,
               orderNumber: true,
               finalAmount: true,
+              status: true,
               createdAt: true,
+              updatedAt: true,
               customer: {
                 select: {
                   id: true,
@@ -96,17 +150,21 @@ export async function getAffiliateAdminDashboard() {
   const totalClicks = links.reduce((sum, item) => sum + Number(item.clicks || 0), 0);
   const totalConversions = links.reduce((sum, item) => sum + Number(item.conversions || 0), 0);
   const commissions = links.flatMap((link) =>
-    link.commissions.map((commission) => ({
-      ...commission,
-      affiliateLink: {
-        id: link.id,
-        uniqueCode: link.uniqueCode,
-        commissionRate: link.commissionRate,
-        user: link.user,
-        product: link.product,
-        fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
-      },
-    }))
+    link.commissions.map((commission) => {
+      const normalizedCommission = withEffectiveCommissionStatus(commission);
+
+      return {
+        ...normalizedCommission,
+        affiliateLink: {
+          id: link.id,
+          uniqueCode: link.uniqueCode,
+          commissionRate: link.commissionRate,
+          user: link.user,
+          product: link.product,
+          fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+        },
+      };
+    })
   );
 
   const totalCommissions = Number(
@@ -137,6 +195,7 @@ export async function getAffiliateAdminDashboard() {
       paidCommissions,
       links: links.map((link) => ({
         ...link,
+        commissions: link.commissions.map((commission) => withEffectiveCommissionStatus(commission)),
         fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
       })),
       commissions,
@@ -148,6 +207,10 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
   const currentUser = await getCurrentSessionUser();
   if (!currentUser) {
     return { success: false, error: 'غير مصرح لك بعرض بيانات الأفلييت' };
+  }
+
+  if (currentUser.accountType !== 'ADMIN' && !isAffiliateApprovedUser(currentUser)) {
+    return { success: false, error: 'حساب الأفلييت بانتظار موافقة الأدمن' };
   }
 
   const normalizedUserId = String(targetUserId || '').trim();
@@ -166,6 +229,8 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
       id: true,
       username: true,
       email: true,
+      isAffiliate: true,
+      affiliateApproved: true,
       affiliateLinks: {
         orderBy: { createdAt: 'desc' },
         include: {
@@ -190,6 +255,10 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
                 select: {
                   id: true,
                   orderNumber: true,
+                  status: true,
+                  finalAmount: true,
+                  createdAt: true,
+                  updatedAt: true,
                 },
               },
             },
@@ -203,19 +272,26 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
     return { success: false, error: 'المستخدم غير موجود' };
   }
 
+  if (targetUser.isAffiliate && !targetUser.affiliateApproved) {
+    return { success: false, error: 'هذا الحساب لم تتم الموافقة عليه بعد' };
+  }
+
   const links = Array.isArray(targetUser.affiliateLinks)
     ? targetUser.affiliateLinks.map((link) => {
+        const normalizedCommissions = link.commissions.map((commission) =>
+          withEffectiveCommissionStatus(commission)
+        );
         const totalCommissions = Number(
-          link.commissions.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(2)
+          normalizedCommissions.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(2)
         );
         const pendingCommissions = Number(
-          link.commissions
+          normalizedCommissions
             .filter((item) => item.status === 'PENDING')
             .reduce((sum, item) => sum + Number(item.amount || 0), 0)
             .toFixed(2)
         );
         const paidCommissions = Number(
-          link.commissions
+          normalizedCommissions
             .filter((item) => item.status === 'PAID')
             .reduce((sum, item) => sum + Number(item.amount || 0), 0)
             .toFixed(2)
@@ -228,6 +304,7 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
             link?.product?.affiliateCommissionRate != null
               ? Number(link.product.affiliateCommissionRate || 0)
               : Number(link.commissionRate || 0),
+          commissions: normalizedCommissions,
           totalCommissions,
           pendingCommissions,
           paidCommissions,
@@ -304,6 +381,27 @@ export async function createAffiliateLinkByAdmin(payload: {
 
   if (Number.isNaN(commissionRate) || commissionRate < 0) {
     return { success: false, error: 'نسبة العمولة غير صالحة' };
+  }
+
+  const affiliateUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      isAffiliate: true,
+      affiliateApproved: true,
+    },
+  });
+
+  if (!affiliateUser) {
+    return { success: false, error: 'المستخدم غير موجود' };
+  }
+
+  if (!affiliateUser.isAffiliate) {
+    return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
+  }
+
+  if (!affiliateUser.affiliateApproved) {
+    return { success: false, error: 'لا يمكن إنشاء رابط قبل موافقة الأدمن على حساب الأفلييت' };
   }
 
   const existing = await prisma.affiliateLink.findFirst({
@@ -401,4 +499,126 @@ export async function createPublicCustomerForAffiliateOrder(data: {
   });
 
   return { success: true, data: customer };
+}
+
+export async function getAffiliateUsersAdminList() {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بإدارة مستخدمي الأفلييت' };
+  }
+
+  const users = await prisma.user.findMany({
+    where: { isAffiliate: true },
+    orderBy: [
+      { affiliateApproved: 'asc' },
+      { createdAt: 'desc' },
+    ],
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      phone: true,
+      notes: true,
+      jobTitle: true,
+      isAffiliate: true,
+      affiliateApproved: true,
+      affiliateRequestedAt: true,
+      affiliateApprovedAt: true,
+      createdAt: true,
+      affiliateLinks: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  return {
+    success: true,
+    data: {
+      summary: {
+        total: users.length,
+        pending: users.filter((item) => !item.affiliateApproved).length,
+        approved: users.filter((item) => item.affiliateApproved).length,
+      },
+      users,
+    },
+  };
+}
+
+export async function setAffiliateUserApproval(userId: string, approved: boolean) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بتعديل حالة أفلييت' };
+  }
+
+  const normalizedUserId = String(userId || '').trim();
+  if (!normalizedUserId) {
+    return { success: false, error: 'معرف المستخدم غير صالح' };
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: normalizedUserId },
+    select: { id: true, isAffiliate: true },
+  });
+
+  if (!existingUser?.isAffiliate) {
+    return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: normalizedUserId },
+    data: {
+      affiliateApproved: approved,
+      affiliateApprovedAt: approved ? new Date() : null,
+      affiliateRequestedAt: approved ? undefined : new Date(),
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      isAffiliate: true,
+      affiliateApproved: true,
+      affiliateRequestedAt: true,
+      affiliateApprovedAt: true,
+    },
+  });
+
+  return { success: true, data: updatedUser };
+}
+
+export async function updateAffiliateCommissionStatus(
+  commissionId: string,
+  status: 'PENDING' | 'PAID' | 'CANCELLED'
+) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بتعديل حالة العمولة' };
+  }
+
+  const normalizedCommissionId = String(commissionId || '').trim();
+  const normalizedStatus = String(status || '').trim().toUpperCase();
+
+  if (!normalizedCommissionId) {
+    return { success: false, error: 'معرف العمولة غير صالح' };
+  }
+
+  if (!['PENDING', 'PAID', 'CANCELLED'].includes(normalizedStatus)) {
+    return { success: false, error: 'حالة العمولة غير صالحة' };
+  }
+
+  const updatedCommission = await prisma.commission.update({
+    where: { id: normalizedCommissionId },
+    data: {
+      status: normalizedStatus as 'PENDING' | 'PAID' | 'CANCELLED',
+      paidAt: normalizedStatus === 'PAID' ? new Date() : null,
+    },
+    select: {
+      id: true,
+      status: true,
+      paidAt: true,
+    },
+  });
+
+  return { success: true, data: updatedCommission };
 }

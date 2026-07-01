@@ -82,6 +82,8 @@ export async function login(data: { name: string; password: string; }) {
 
 export async function createuser(data: any) {
   try {
+    const isAffiliate = Boolean(data.isAffiliate);
+    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
     // 1. تشفير كلمة المرور (Salt rounds = 10)
     const hashedPassword = await bcrypt.hash(data.password, 10); //
 
@@ -94,7 +96,11 @@ export async function createuser(data: any) {
         phone: data.phone || null,
         notes: String(data.notes || "").trim() || null,
         jobTitle: data.jobTitle,
-        accountType: data.accountType,
+        accountType,
+        isAffiliate,
+        affiliateApproved: false,
+        affiliateRequestedAt: isAffiliate ? new Date() : null,
+        affiliateApprovedAt: null,
         salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
         wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)
@@ -119,6 +125,8 @@ export async function createuser(data: any) {
 
 export async function updateuser(id: string, data: any) {
   try {
+    const isAffiliate = Boolean(data.isAffiliate);
+    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
     const updateData: any = {
       username: data.username,
       email: data.email,
@@ -126,13 +134,21 @@ export async function updateuser(id: string, data: any) {
       notes: String(data.notes || "").trim() || null,
       jobTitle: data.jobTitle,
       ...(typeof data.avatar === "string" ? { avatar: data.avatar } : {}),
-      accountType: data.accountType,
+      accountType,
+      isAffiliate,
       salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
       wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,
       permission: {
         connect: { id: data.permissions }
       }
     };
+    if (isAffiliate) {
+      updateData.affiliateRequestedAt = data.affiliateRequestedAt ? new Date(data.affiliateRequestedAt) : new Date();
+    } else {
+      updateData.affiliateApproved = false;
+      updateData.affiliateRequestedAt = null;
+      updateData.affiliateApprovedAt = null;
+    }
     // تحديث كلمة المرور فقط إذا تم توفير واحدة جديدة
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10); //

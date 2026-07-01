@@ -23,16 +23,21 @@ export async function GET(req :NextRequest) {
     }
 
     const whereClause = currentUser.accountType === "ADMIN"
-      ? undefined
+      ? { isAffiliate: false }
       : {
-          OR: [
-            { id: currentUser.id },
-            { parentId: currentUser.id },
+          AND: [
+            { isAffiliate: false },
+            {
+              OR: [
+                { id: currentUser.id },
+                { parentId: currentUser.id },
+              ],
+            },
           ],
         };
 
     const users = await prisma.user.findMany({
-      ...(whereClause ? { where: whereClause } : {}),
+      where: whereClause,
       include: {
         permission: true, // جلب بيانات الصلاحيات المرتبطة بالمستخدم
         affiliateLinks: {
@@ -98,6 +103,8 @@ export async function GET(req :NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+    const isAffiliate = Boolean(data.isAffiliate);
+    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
     const createuser = await prisma.user.create({
       data: {
         username: data.username,
@@ -106,7 +113,11 @@ export async function POST(req: NextRequest) {
         phone: data.phone || null,
         notes: String(data.notes || "").trim() || null,
         jobTitle: data.jobTitle,
-        accountType: data.accountType,
+        accountType,
+        isAffiliate,
+        affiliateApproved: false,
+        affiliateRequestedAt: isAffiliate ? new Date() : null,
+        affiliateApprovedAt: null,
         salesCommissionPercent: Number(data.salesCommissionPercent) || 0,
         wage: Number.isFinite(Number(data.wage)) ? Math.trunc(Number(data.wage)) : 0,
         // الربط مع جدول الصلاحيات باستخدام المعرف (ID)

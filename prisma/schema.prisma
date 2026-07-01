@@ -58,6 +58,7 @@ enum AccountType {
   ADMIN
   MANAGER
   STAFF
+  AFFILIATE
 }
 
 // ============================================
@@ -104,7 +105,10 @@ model User {
 
   // ─── NEW: E-commerce Affiliate columns (nullable / with defaults) ───
   isAffiliate            Boolean         @default(false)
+  affiliateApproved      Boolean         @default(false)
   affiliateCode          String?         @unique
+  affiliateRequestedAt   DateTime?
+  affiliateApprovedAt    DateTime?
 
   // ─── Existing Relations ───
   parent          User?    @relation("UserToSubordinates", fields: [parentId], references: [id])

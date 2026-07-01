@@ -8,6 +8,14 @@ export async function POST(req:NextRequest){
         const { email, password } = await req.json();
         const login = await prisma.user.findUnique({
             where: { email: email },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                password: true,
+                isAffiliate: true,
+                affiliateApproved: true,
+            },
         });
         if (!login) {
             return new Response(JSON.stringify({ success: false, error: "خطأ في اسم المستخدم أو كلمة المرور" }), { status: 401 });
@@ -16,6 +24,9 @@ export async function POST(req:NextRequest){
         // تحقق من كلمة المرور هنا إذا كانت مشفرة
         if (!has) {
             return new Response(JSON.stringify({ success: false, error: "خطأ في اسم المستخدم أو كلمة المرور" }), { status: 401 });
+        }
+        if (login.isAffiliate && !login.affiliateApproved) {
+            return new Response(JSON.stringify({ success: false, error: "حساب الأفلييت بانتظار موافقة الأدمن" }), { status: 403 });
         }
         const expires = new Date(Date.now() + 30 * 60 * 60 * 1000);
           const session = await encrypt({ userId: login.id, username: login.username, email: login.email, expires });

@@ -69,7 +69,11 @@ export interface User {
   phone?: string | null;
   jobTitle?: string | null;
   avatar?: string | null;
-  accountType: "ADMIN" | "MANAGER" | "STAFF";
+  accountType: "ADMIN" | "MANAGER" | "STAFF" | "AFFILIATE";
+  isAffiliate?: boolean;
+  affiliateApproved?: boolean;
+  affiliateRequestedAt?: Date | null;
+  affiliateApprovedAt?: Date | null;
   password: string;
   createdAt: Date;
   updatedAt: Date;

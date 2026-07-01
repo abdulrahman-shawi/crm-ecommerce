@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import toast from 'react-hot-toast';
-import { createAffiliateLinkByAdmin, getAffiliateAdminDashboard } from '@/server/affiliate';
+import Link from 'next/link';
+import { createAffiliateLinkByAdmin, getAffiliateAdminDashboard, updateAffiliateCommissionStatus } from '@/server/affiliate';
 
 type DashboardData = {
   users: Array<{ id: string; username: string; email: string }>;
@@ -81,6 +82,39 @@ export default function AffiliateDashboardPage() {
     await loadData();
   };
 
+  const handleCommissionStatusChange = async (commissionId: string, status: 'PENDING' | 'PAID' | 'CANCELLED') => {
+    const result = await updateAffiliateCommissionStatus(commissionId, status);
+    if (!result.success) {
+      toast.error(result.error || 'تعذر تحديث حالة العمولة');
+      return;
+    }
+
+    toast.success('تم تحديث حالة العمولة');
+    await loadData();
+  };
+
+  const getCommissionStatusLabel = (status: string) => {
+    if (status === 'PAID') return 'مدفوعة';
+    if (status === 'CANCELLED') return 'ملغاة';
+    return 'معلقة';
+  };
+
+  const affiliateOrders = React.useMemo(() => {
+    return data.commissions.map((commission) => ({
+      id: String(commission.id),
+      orderNumber: commission.order?.orderNumber || '-',
+      orderStatus: commission.order?.status || '-',
+      customerName: commission.order?.customer?.name || '-',
+      productName: commission.affiliateLink?.product?.name || '-',
+      affiliateUser: commission.affiliateLink?.user?.username || '-',
+      linkCode: commission.affiliateLink?.uniqueCode || '-',
+      finalAmount: Number(commission.order?.finalAmount || 0),
+      commissionAmount: Number(commission.amount || 0),
+      commissionStatus: String(commission.status || 'PENDING'),
+      createdAt: commission.order?.createdAt || commission.createdAt,
+    }));
+  }, [data.commissions]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -88,6 +122,12 @@ export default function AffiliateDashboardPage() {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white">Affiliate Dashboard</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">إدارة روابط الإحالة والعمولات من نفس الـ Workflow الحالي.</p>
         </div>
+        <Link
+          href="/dashboard/affiliate/users"
+          className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-black text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        >
+          إدارة مستخدمي الأفلييت
+        </Link>
       </div>
 
       <div className="grid gap-4 md:grid-cols-5">
@@ -193,8 +233,34 @@ export default function AffiliateDashboardPage() {
                   <div className="rounded-xl bg-white px-3 py-2 text-sm font-black text-emerald-700 dark:bg-slate-900">{Number(commission.amount || 0).toFixed(2)}</div>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
-                  <span>{commission.status}</span>
-                  <span>{new Date(commission.createdAt).toLocaleDateString('ar')}</span>
+                  <span>{getCommissionStatusLabel(String(commission.status || 'PENDING'))}</span>
+                  <span>{commission.order?.status || '-'}</span>
+                </div>
+                <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                  العميل: {commission.order?.customer?.name || '-'}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleCommissionStatusChange(String(commission.id), 'PENDING')}
+                    className="rounded-xl border border-amber-200 px-3 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50"
+                  >
+                    جعلها معلقة
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCommissionStatusChange(String(commission.id), 'PAID')}
+                    className="rounded-xl border border-emerald-200 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50"
+                  >
+                    اعتماد كمدفوعة
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCommissionStatusChange(String(commission.id), 'CANCELLED')}
+                    className="rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50"
+                  >
+                    إلغاء العمولة
+                  </button>
                 </div>
               </div>
             ))}
@@ -202,6 +268,58 @@ export default function AffiliateDashboardPage() {
           </div>
         </section>
       </div>
+
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">الطلبات المرتبطة بروابط الأفلييت</h2>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">الطلب الذي تصبح حالته تم التسليم أو تم البيع يتحول تلقائياً إلى عمولة مدفوعة.</p>
+          </div>
+          <div className="text-sm font-bold text-slate-500 dark:text-slate-400">{affiliateOrders.length} طلب</div>
+        </div>
+
+        {affiliateOrders.length === 0 ? (
+          <p className="text-sm text-slate-500 dark:text-slate-400">لا توجد طلبات مرتبطة بروابط الأفلييت حتى الآن.</p>
+        ) : (
+          <div className="overflow-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table className="w-full min-w-[1100px] text-right text-sm">
+              <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+                <tr>
+                  <th className="px-3 py-3">رقم الطلب</th>
+                  <th className="px-3 py-3">الحالة</th>
+                  <th className="px-3 py-3">العمولة</th>
+                  <th className="px-3 py-3">المنتج</th>
+                  <th className="px-3 py-3">الأفلييت</th>
+                  <th className="px-3 py-3">العميل</th>
+                  <th className="px-3 py-3">الإجمالي</th>
+                  <th className="px-3 py-3">الكود</th>
+                  <th className="px-3 py-3">التاريخ</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {affiliateOrders.map((order) => (
+                  <tr key={order.id} className="odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-950 dark:even:bg-slate-900/30">
+                    <td className="px-3 py-3 font-bold text-slate-900 dark:text-white">{order.orderNumber}</td>
+                    <td className="px-3 py-3">
+                      <div className="font-semibold text-slate-700 dark:text-slate-200">{order.orderStatus}</div>
+                      <div className={`text-xs font-bold ${order.commissionStatus === 'PAID' ? 'text-emerald-600' : order.commissionStatus === 'CANCELLED' ? 'text-rose-600' : 'text-amber-600'}`}>
+                        {getCommissionStatusLabel(order.commissionStatus)}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 font-bold text-emerald-600">{order.commissionAmount.toFixed(2)}</td>
+                    <td className="px-3 py-3">{order.productName}</td>
+                    <td className="px-3 py-3">{order.affiliateUser}</td>
+                    <td className="px-3 py-3">{order.customerName}</td>
+                    <td className="px-3 py-3">{order.finalAmount.toFixed(2)}</td>
+                    <td className="px-3 py-3 text-xs font-mono text-slate-600 dark:text-slate-300">{order.linkCode}</td>
+                    <td className="px-3 py-3">{new Date(order.createdAt).toLocaleDateString('ar')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
