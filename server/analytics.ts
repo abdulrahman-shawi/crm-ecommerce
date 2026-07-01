@@ -48,6 +48,7 @@ const getOrderAmountFromItemsInUSD = (order: {
   finalAmount?: number | null;
   discount?: number | null;
   usdToTryRateAtOrder?: number | null;
+  manualCreatedAt?: Date | null;
   warehouse?: { location?: string | null } | null;
   items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
 }, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
@@ -70,6 +71,12 @@ const getOrderAmountFromItemsInUSD = (order: {
   const globalDiscount = Math.max(0, Number(order.discount || 0));
   const finalOrderAmount = Math.max(0, itemsTotal - globalDiscount);
   return normalizeOrderAmountToUSD(finalOrderAmount, order.warehouse?.location, effectiveRate);
+};
+
+const getOrderEffectiveDate = (orderLike: { manualCreatedAt?: Date | null; createdAt?: Date | null }) => {
+  const value = orderLike?.manualCreatedAt || orderLike?.createdAt;
+  const parsed = value ? new Date(value) : null;
+  return parsed && !Number.isNaN(parsed.getTime()) ? parsed : null;
 };
 
 type OrderDateFilter = {
@@ -1408,6 +1415,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         orderNumber: true,
         status: true,
         createdAt: true,
+        manualCreatedAt: true,
         userId: true,
         finalAmount: true,
         discount: true,
@@ -1437,6 +1445,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         id: true,
         status: true,
         createdAt: true,
+        manualCreatedAt: true,
         finalAmount: true,
         discount: true,
         usdToTryRateAtOrder: true,
@@ -1481,6 +1490,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
             discount: true,
             usdToTryRateAtOrder: true,
             createdAt: true,
+            manualCreatedAt: true,
             warehouse: {
               select: {
                 location: true,
@@ -1541,7 +1551,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const lineAmount = normalizeOrderAmountToUSD(adjustedLineAmount, item.order?.warehouse?.location, effectiveRate);
       const quantity = Math.max(0, Number(item.quantity || 0));
       const list = soldMap.get(key) || [];
-      list.push({ createdAt: item.order.createdAt, quantity: item.quantity, amount: lineAmount });
+      list.push({ createdAt: getOrderEffectiveDate(item.order) || item.order.createdAt, quantity: item.quantity, amount: lineAmount });
       soldMap.set(key, list);
 
       const productKey = String(item.productId);
@@ -1557,7 +1567,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       currentProduct.orderIds.add(item.orderId);
       productBreakdownMap.set(productKey, currentProduct);
 
-      const dayKey = new Date(item.order.createdAt).toISOString().slice(0, 10);
+      const orderEffectiveDate = getOrderEffectiveDate(item.order) || new Date(item.order.createdAt);
+      const dayKey = orderEffectiveDate.toISOString().slice(0, 10);
       const currentDay = dailySalesMap.get(dayKey) || {
         date: dayKey,
         revenue: 0,
@@ -1583,7 +1594,8 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       const monthSalesForUser = revenueOrders
         .filter((order) => {
           if (String(order?.userId || "") !== String(targetUserId)) return false;
-          const orderDate = new Date(order.createdAt);
+          const orderDate = getOrderEffectiveDate(order);
+          if (!orderDate) return false;
           return orderDate >= targetStart && orderDate <= targetEndOfDay;
         })
         .reduce((sum, order) => sum + getOrderAmountFromItemsInUSD(order, turkeyExchangeRate), 0);
