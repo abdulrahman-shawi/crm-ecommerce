@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { assignManagerToEmployees, createUserTarget, deleteuser, getUserActivityTargetProgress, setUserActivityTarget, unassignManagerFromEmployees, updateUserTarget, updateUserCommission, updateUserWage, updateuser } from '@/server/user'; // تأكد من وجود updateuser
+import { setAffiliateUserApproval } from '@/server/affiliate';
 import { GetUserTargetProgress } from '@/server/analytics';
 import { getEmployeeSalaryAdjustments } from '@/server/employee-salaries';
 import { Button } from '@/components/ui/button';
@@ -89,6 +90,7 @@ const UserManagement: React.FunctionComponent = () => {
   const [commissionSaving, setCommissionSaving] = React.useState<Record<string, boolean>>({});
   const [wageValues, setWageValues] = React.useState<Record<string, string>>({});
   const [wageSaving, setWageSaving] = React.useState<Record<string, boolean>>({});
+  const [affiliateApprovalSaving, setAffiliateApprovalSaving] = React.useState<Record<string, boolean>>({});
   const [products, setProducts] = React.useState<any[]>([]);
   const [isSalesTargetOpen, setIsSalesTargetOpen] = React.useState(false);
   const [isActivityTargetOpen, setIsActivityTargetOpen] = React.useState(false);
@@ -244,6 +246,32 @@ const UserManagement: React.FunctionComponent = () => {
   const openEmployeeView = (employeeId: string) => {
     if (!employeeId) return;
     window.open(`/dashboard?asUser=${employeeId}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const isAffiliateRow = React.useCallback((row: any) => {
+    return Boolean(row?.isAffiliate) || String(row?.accountType || '').trim().toUpperCase() === 'AFFILIATE';
+  }, []);
+
+  const handleAffiliateApproval = async (row: any, approved: boolean) => {
+    const userId = String(row?.id || '').trim();
+    if (!userId) {
+      toast.error('معرف المستخدم غير صالح');
+      return;
+    }
+
+    setAffiliateApprovalSaving((prev) => ({ ...prev, [userId]: true }));
+    try {
+      const result = await setAffiliateUserApproval(userId, approved);
+      if (!result.success) {
+        toast.error(result.error || 'تعذر تحديث حالة الأفلييت');
+        return;
+      }
+
+      toast.success(approved ? 'تمت الموافقة على حساب الأفلييت' : 'تم إلغاء الموافقة على حساب الأفلييت');
+      await getAlluser();
+    } finally {
+      setAffiliateApprovalSaving((prev) => ({ ...prev, [userId]: false }));
+    }
   };
 
   /**
@@ -1042,13 +1070,41 @@ const UserManagement: React.FunctionComponent = () => {
           { header: "رقم الهاتف", accessor: "phone" },
           {
             header: "نوع المستخدم",
-            accessor: (row: any) => row.isAffiliate ? "أفلييت" : "داخلي"
+            accessor: (row: any) => isAffiliateRow(row) ? "أفلييت" : "داخلي"
           },
           {
             header: "حالة الأفلييت",
             accessor: (row: any) => {
-              if (!row.isAffiliate) return "-";
+              if (!isAffiliateRow(row)) return "-";
               return row.affiliateApproved ? "تمت الموافقة" : "بانتظار الموافقة";
+            }
+          },
+          {
+            header: "موافقة الأفلييت",
+            accessor: (row: any) => {
+              if (!isAffiliateRow(row)) return "-";
+
+              const isSaving = Boolean(affiliateApprovalSaving[row.id]);
+              return (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleAffiliateApproval(row, true)}
+                    disabled={isSaving || Boolean(row.affiliateApproved)}
+                    className="rounded-md border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    موافقة
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAffiliateApproval(row, false)}
+                    disabled={isSaving || !Boolean(row.affiliateApproved)}
+                    className="rounded-md border border-rose-200 px-3 py-1 text-xs font-bold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    إلغاء
+                  </button>
+                </div>
+              );
             }
           },
           {
