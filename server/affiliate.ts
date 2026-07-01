@@ -61,9 +61,14 @@ async function getCurrentSessionUser() {
   }
 }
 
-function isAffiliateApprovedUser(user: { isAffiliate?: boolean | null; affiliateApproved?: boolean | null } | null) {
+function isAffiliateUser(user: { isAffiliate?: boolean | null; accountType?: string | null } | null) {
   if (!user) return false;
-  if (!user.isAffiliate) return true;
+  return Boolean(user.isAffiliate) || String(user.accountType || '').trim().toUpperCase() === 'AFFILIATE';
+}
+
+function isAffiliateApprovedUser(user: { isAffiliate?: boolean | null; affiliateApproved?: boolean | null; accountType?: string | null } | null) {
+  if (!user) return false;
+  if (!isAffiliateUser(user)) return true;
   return Boolean(user.affiliateApproved);
 }
 
@@ -75,7 +80,10 @@ export async function getAffiliateAdminDashboard() {
 
   const users = await prisma.user.findMany({
     where: {
-      isAffiliate: true,
+      OR: [
+        { isAffiliate: true },
+        { accountType: 'AFFILIATE' },
+      ],
       affiliateApproved: true,
     },
     orderBy: { username: 'asc' },
@@ -229,6 +237,7 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
       id: true,
       username: true,
       email: true,
+      accountType: true,
       isAffiliate: true,
       affiliateApproved: true,
       affiliateLinks: {
@@ -272,7 +281,7 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
     return { success: false, error: 'المستخدم غير موجود' };
   }
 
-  if (targetUser.isAffiliate && !targetUser.affiliateApproved) {
+  if (isAffiliateUser(targetUser) && !targetUser.affiliateApproved) {
     return { success: false, error: 'هذا الحساب لم تتم الموافقة عليه بعد' };
   }
 
@@ -387,6 +396,7 @@ export async function createAffiliateLinkByAdmin(payload: {
     where: { id: userId },
     select: {
       id: true,
+      accountType: true,
       isAffiliate: true,
       affiliateApproved: true,
     },
@@ -396,7 +406,7 @@ export async function createAffiliateLinkByAdmin(payload: {
     return { success: false, error: 'المستخدم غير موجود' };
   }
 
-  if (!affiliateUser.isAffiliate) {
+  if (!isAffiliateUser(affiliateUser)) {
     return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
   }
 
@@ -508,7 +518,12 @@ export async function getAffiliateUsersAdminList() {
   }
 
   const users = await prisma.user.findMany({
-    where: { isAffiliate: true },
+    where: {
+      OR: [
+        { isAffiliate: true },
+        { accountType: 'AFFILIATE' },
+      ],
+    },
     orderBy: [
       { affiliateApproved: 'asc' },
       { createdAt: 'desc' },
@@ -520,6 +535,7 @@ export async function getAffiliateUsersAdminList() {
       phone: true,
       notes: true,
       jobTitle: true,
+      accountType: true,
       isAffiliate: true,
       affiliateApproved: true,
       affiliateRequestedAt: true,
@@ -559,16 +575,18 @@ export async function setAffiliateUserApproval(userId: string, approved: boolean
 
   const existingUser = await prisma.user.findUnique({
     where: { id: normalizedUserId },
-    select: { id: true, isAffiliate: true },
+    select: { id: true, isAffiliate: true, accountType: true },
   });
 
-  if (!existingUser?.isAffiliate) {
+  if (!isAffiliateUser(existingUser)) {
     return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
   }
 
   const updatedUser = await prisma.user.update({
     where: { id: normalizedUserId },
     data: {
+      accountType: 'AFFILIATE',
+      isAffiliate: true,
       affiliateApproved: approved,
       affiliateApprovedAt: approved ? new Date() : null,
       affiliateRequestedAt: approved ? undefined : new Date(),
