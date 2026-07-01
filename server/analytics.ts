@@ -1401,12 +1401,23 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
         }
       ]
     } : {};
-    const orderScope = { userId: effectiveUserId };
+    const targetUserIds = Array.from(
+      new Set(
+        targets
+          .map((target: any) => String(target?.userId || target?.user?.id || "").trim())
+          .filter(Boolean)
+      )
+    );
+
+    const scopedUserIds = canViewAllTargets ? targetUserIds : [effectiveUserId].filter(Boolean);
+    const userOrderScope = scopedUserIds.length > 0
+      ? { userId: { in: scopedUserIds } }
+      : { userId: effectiveUserId };
 
     
     const revenueOrders = await prisma.order.findMany({
       where: {
-        ...orderScope,
+        ...userOrderScope,
         status: { notIn: statusBlacklist },
         ...dateWhereClause,
       },
@@ -1438,7 +1449,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
 
     const scopedOrders = await prisma.order.findMany({
       where: {
-        ...orderScope,
+        ...userOrderScope,
         ...dateWhereClause,
       },
       select: {
@@ -1467,7 +1478,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
     const orderItems = await prisma.orderItem.findMany({
       where: {
         order: {
-          ...(canViewAllTargets ? {} : { userId: effectiveUserId }),
+          ...userOrderScope,
           status: { notIn: statusBlacklist },
           ...dateWhereClause,
         }
@@ -1501,7 +1512,7 @@ export async function GetUserTargetProgress(userId: string, monthKey?: string) {
       }
     });
 
-    const countScope = canViewAllTargets ? {} : { userId: effectiveUserId };
+    const countScope = userOrderScope;
 
     const deliveredOrdersCount = await prisma.order.count({
       where: {
