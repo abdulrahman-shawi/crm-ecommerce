@@ -20,7 +20,7 @@ type ProductLike = {
 
 const countries = ['سوريا', 'لبنان', 'العراق', 'تركيا', 'ليبيا'];
 
-export default function AffiliateProductOrderForm({ product }: { product: ProductLike }) {
+export default function AffiliateProductOrderForm({ product, affiliateCode = '' }: { product: ProductLike; affiliateCode?: string }) {
   const [loading, setLoading] = React.useState(false);
   const [form, setForm] = React.useState({
     customerName: '',
@@ -39,6 +39,34 @@ export default function AffiliateProductOrderForm({ product }: { product: Produc
   const fallbackPrice = Number(product.stocks?.[0]?.price || 0);
   const unitPrice = Number(product.affiliatePrice || 0) > 0 ? Number(product.affiliatePrice) : fallbackPrice;
   const finalAmount = Number((unitPrice * Number(form.quantity || 1)).toFixed(2));
+
+  React.useEffect(() => {
+    const normalizedCode = String(affiliateCode || '').trim();
+    if (!normalizedCode || typeof window === 'undefined') {
+      return;
+    }
+
+    const trackingKey = `affiliate-track:${product.id}:${normalizedCode}`;
+    if (window.sessionStorage.getItem(trackingKey) === '1') {
+      return;
+    }
+
+    window.sessionStorage.setItem(trackingKey, '1');
+
+    void fetch('/api/affiliate/track', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: normalizedCode,
+        productId: product.id,
+      }),
+      credentials: 'same-origin',
+    }).catch(() => {
+      window.sessionStorage.removeItem(trackingKey);
+    });
+  }, [affiliateCode, product.id]);
 
   const updateField = (key: string, value: string | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));

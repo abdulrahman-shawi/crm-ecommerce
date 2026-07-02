@@ -1,10 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { buildAffiliateFullUrl } from "@/lib/affiliate";
 import bcrypt from "bcryptjs"; //
 import { NextRequest } from 'next/server';
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/auth";
-
-const AFFILIATE_BASE_URL = "https://ecomerce-bay-xi.vercel.app";
 export async function GET(req :NextRequest) {
     try {
     const session = cookies().get("skynova")?.value;
@@ -52,6 +51,7 @@ export async function GET(req :NextRequest) {
               select: {
                 id: true,
                 name: true,
+                seoSlug: true,
                 affiliateCommissionRate: true,
               },
             },
@@ -81,7 +81,7 @@ export async function GET(req :NextRequest) {
       affiliateLinks: Array.isArray(userRow.affiliateLinks)
         ? userRow.affiliateLinks.map((link: any) => ({
             ...link,
-            fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
             effectiveCommissionRate:
               Number(link?.product?.affiliateCommissionRate || 0) > 0
                 ? Number(link.product.affiliateCommissionRate || 0)

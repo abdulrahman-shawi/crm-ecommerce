@@ -1,8 +1,7 @@
 'use server';
 
+import { buildAffiliateFullUrl } from '@/lib/affiliate';
 import { prisma } from "@/lib/prisma";
-
-const AFFILIATE_BASE_URL = "https://ecomerce-bay-xi.vercel.app";
 
 export async function getProduct() {
     const products = await prisma.product.findMany({
@@ -123,7 +122,7 @@ export async function getAffiliateDashboardData() {
             commissionRate: link.commissionRate,
             user: link.user,
             product: link.product,
-            fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
         },
     })));
 
@@ -145,7 +144,7 @@ export async function getAffiliateDashboardData() {
             paidCommissions: Number(paidCommissions.toFixed(2)),
             links: links.map((link) => ({
                 ...link,
-                fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+                fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
             })),
             commissions: allCommissions,
         },
@@ -207,7 +206,7 @@ export async function createAffiliateLink(input: {
             success: true,
             data: {
                 ...existing,
-                fullUrl: `${AFFILIATE_BASE_URL}/ref/${existing.uniqueCode}`,
+                fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode),
             },
         };
     }
@@ -234,7 +233,7 @@ export async function createAffiliateLink(input: {
         success: true,
         data: {
             ...link,
-            fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
         },
     };
 }

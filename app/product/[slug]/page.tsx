@@ -3,7 +3,12 @@ import Image from 'next/image';
 import AffiliateProductOrderForm from '@/components/pages/affiliate/AffiliateProductOrderForm';
 import { getPublicProductBySlug } from '@/server/product';
 
-export default async function PublicProductPage({ params }: { params: { slug: string } }) {
+type ProductPageProps = {
+  params: { slug: string };
+  searchParams?: { ref?: string | string[] };
+};
+
+export default async function PublicProductPage({ params, searchParams }: ProductPageProps) {
   const result = await getPublicProductBySlug(params.slug);
 
   if (!result.success || !result.data) {
@@ -11,6 +16,9 @@ export default async function PublicProductPage({ params }: { params: { slug: st
   }
 
   const product = result.data;
+  const affiliateCode = Array.isArray(searchParams?.ref)
+    ? String(searchParams.ref[0] || '').trim()
+    : String(searchParams?.ref || '').trim();
   const mainImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0]?.url : null;
   const features = Array.isArray(product.landingPage?.features) ? product.landingPage.features : [];
   const reviews = Array.isArray(product.reviews) ? product.reviews : [];
@@ -100,7 +108,7 @@ export default async function PublicProductPage({ params }: { params: { slug: st
             </div>
           </div>
 
-          <AffiliateProductOrderForm product={product} />
+          <AffiliateProductOrderForm product={product} affiliateCode={affiliateCode} />
         </div>
       </section>
     </main>

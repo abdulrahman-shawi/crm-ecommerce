@@ -1,10 +1,9 @@
 'use server';
 
 import { decrypt } from '@/lib/auth';
+import { buildAffiliateFullUrl } from '@/lib/affiliate';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
-
-const AFFILIATE_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
 const DELIVERED_ORDER_STATUSES = new Set(['تم تسليم الطلب', 'تم التسليم', 'مدفوعة', 'تم البيع']);
 
 function resolveAffiliateCommissionRate(productRate?: number | null, linkRate?: number | null) {
@@ -178,7 +177,7 @@ export async function getAffiliateAdminDashboard() {
           commissionRate: link.commissionRate,
           user: link.user,
           product: link.product,
-          fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
         },
       };
     })
@@ -213,7 +212,7 @@ export async function getAffiliateAdminDashboard() {
       links: links.map((link) => ({
         ...link,
         commissions: link.commissions.map((commission) => withEffectiveCommissionStatus(commission)),
-        fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+        fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
       })),
       commissions,
     },
@@ -317,7 +316,7 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
 
         return {
           ...link,
-          fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
           effectiveCommissionRate: resolveAffiliateCommissionRate(
             link?.product?.affiliateCommissionRate,
             link?.commissionRate
@@ -440,7 +439,7 @@ export async function createAffiliateLinkByAdmin(payload: {
       success: true,
       data: {
         ...existing,
-        fullUrl: `${AFFILIATE_BASE_URL}/ref/${existing.uniqueCode}`,
+        fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode),
       },
     };
   }
@@ -467,7 +466,7 @@ export async function createAffiliateLinkByAdmin(payload: {
     success: true,
     data: {
       ...link,
-      fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
+      fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
     },
   };
 }
