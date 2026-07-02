@@ -147,6 +147,15 @@ export async function getCurrentSessionUser() {
 
 const roundToTwoDecimals = (value: number) => Number(value.toFixed(2));
 
+const resolveAffiliateCommissionRate = (productRate?: number | null, linkRate?: number | null) => {
+    const normalizedProductRate = Number(productRate || 0);
+    if (normalizedProductRate > 0) {
+        return normalizedProductRate;
+    }
+
+    return Number(linkRate || 0);
+};
+
 async function resolveAffiliateCodeFromServerAction(inputCode?: string | null) {
     const normalizedInputCode = String(inputCode || '').trim();
     if (normalizedInputCode) {
@@ -218,10 +227,10 @@ async function applyAffiliateAttribution(
         const orderPrice = Number(rawItem?.price || 0);
         const productAffiliatePrice = Number(affiliateLink.product?.affiliatePrice || 0);
         const basePrice = productAffiliatePrice > 0 ? productAffiliatePrice : orderPrice;
-        const rateFromProduct = affiliateLink.product?.affiliateCommissionRate;
-        const commissionRate = rateFromProduct != null
-            ? Number(rateFromProduct)
-            : Number(affiliateLink.commissionRate || 0);
+        const commissionRate = resolveAffiliateCommissionRate(
+            affiliateLink.product?.affiliateCommissionRate,
+            affiliateLink.commissionRate,
+        );
         const commissionAmount = roundToTwoDecimals((basePrice * quantity * commissionRate) / 100);
 
         await tx.orderItem.update({

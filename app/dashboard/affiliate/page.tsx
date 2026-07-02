@@ -158,7 +158,15 @@ export default function AffiliateDashboardPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-bold text-slate-700 dark:text-slate-200">المنتج</label>
-          <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950" value={form.productId} onChange={(e) => setForm((prev) => ({ ...prev, productId: e.target.value, commissionRate: String(data.products.find((item) => String(item.id) === e.target.value)?.affiliateCommissionRate ?? prev.commissionRate) }))}>
+          <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950" value={form.productId} onChange={(e) => setForm((prev) => {
+            const selectedRate = Number(data.products.find((item) => String(item.id) === e.target.value)?.affiliateCommissionRate || 0);
+
+            return {
+              ...prev,
+              productId: e.target.value,
+              commissionRate: selectedRate > 0 ? String(selectedRate) : prev.commissionRate,
+            };
+          })}>
             <option value="">اختر المنتج</option>
             {data.products.map((product) => (
               <option key={product.id} value={product.id}>{product.name}</option>
@@ -169,8 +177,12 @@ export default function AffiliateDashboardPage() {
         <div className="space-y-2">
           <label className="text-sm font-bold text-slate-700 dark:text-slate-200">نسبة العمولة</label>
           <input className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950" value={form.commissionRate} onChange={(e) => setForm((prev) => ({ ...prev, commissionRate: e.target.value }))} />
-          {selectedProduct?.affiliateCommissionRate != null ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">سيتم استخدام نسبة المنتج عند إنشاء العمولة إن كانت موجودة.</p>
+          {selectedProduct ? (
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {Number(selectedProduct.affiliateCommissionRate || 0) > 0
+                ? 'سيتم استخدام نسبة المنتج عند إنشاء العمولة.'
+                : 'إذا كانت نسبة المنتج فارغة أو 0 فسيتم استخدام نسبة الرابط.'}
+            </p>
           ) : null}
         </div>
 

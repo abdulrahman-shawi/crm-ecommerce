@@ -7,6 +7,15 @@ import { cookies } from 'next/headers';
 const AFFILIATE_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
 const DELIVERED_ORDER_STATUSES = new Set(['تم تسليم الطلب', 'تم التسليم', 'مدفوعة', 'تم البيع']);
 
+function resolveAffiliateCommissionRate(productRate?: number | null, linkRate?: number | null) {
+  const normalizedProductRate = Number(productRate || 0);
+  if (normalizedProductRate > 0) {
+    return normalizedProductRate;
+  }
+
+  return Number(linkRate || 0);
+}
+
 function getEffectiveCommissionStatus(commission: {
   status?: 'PENDING' | 'PAID' | 'CANCELLED' | string | null;
   order?: { status?: string | null } | null;
@@ -309,10 +318,10 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
         return {
           ...link,
           fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
-          effectiveCommissionRate:
-            link?.product?.affiliateCommissionRate != null
-              ? Number(link.product.affiliateCommissionRate || 0)
-              : Number(link.commissionRate || 0),
+          effectiveCommissionRate: resolveAffiliateCommissionRate(
+            link?.product?.affiliateCommissionRate,
+            link?.commissionRate
+          ),
           commissions: normalizedCommissions,
           totalCommissions,
           pendingCommissions,

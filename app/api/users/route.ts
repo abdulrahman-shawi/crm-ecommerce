@@ -83,7 +83,7 @@ export async function GET(req :NextRequest) {
             ...link,
             fullUrl: `${AFFILIATE_BASE_URL}/ref/${link.uniqueCode}`,
             effectiveCommissionRate:
-              link?.product?.affiliateCommissionRate != null
+              Number(link?.product?.affiliateCommissionRate || 0) > 0
                 ? Number(link.product.affiliateCommissionRate || 0)
                 : Number(link.commissionRate || 0),
           }))
