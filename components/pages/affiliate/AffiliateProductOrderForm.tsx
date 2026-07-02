@@ -6,12 +6,12 @@ import toast from 'react-hot-toast';
 type ProductLike = {
   id: number;
   name: string;
-  affiliatePrice?: number;
+  affiliatePrice?: number | null;
   stocks?: Array<{
-    price?: number;
-    discount?: number;
-    quantity?: number;
-    warehouse?: { location?: string };
+    price?: number | null;
+    discount?: number | null;
+    quantity?: number | null;
+    warehouse?: { location?: string | null };
   }>;
   landingPage?: {
     ctaText?: string | null;
