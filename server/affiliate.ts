@@ -177,7 +177,7 @@ export async function getAffiliateAdminDashboard() {
           commissionRate: link.commissionRate,
           user: link.user,
           product: link.product,
-          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
         },
       };
     })
@@ -212,7 +212,7 @@ export async function getAffiliateAdminDashboard() {
       links: links.map((link) => ({
         ...link,
         commissions: link.commissions.map((commission) => withEffectiveCommissionStatus(commission)),
-        fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+        fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
       })),
       commissions,
     },
@@ -316,7 +316,7 @@ export async function getAffiliateUserDashboard(targetUserId: string) {
 
         return {
           ...link,
-          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+          fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
           effectiveCommissionRate: resolveAffiliateCommissionRate(
             link?.product?.affiliateCommissionRate,
             link?.commissionRate
@@ -439,7 +439,7 @@ export async function createAffiliateLinkByAdmin(payload: {
       success: true,
       data: {
         ...existing,
-        fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode),
+        fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode, existing.product?.id),
       },
     };
   }
@@ -466,7 +466,7 @@ export async function createAffiliateLinkByAdmin(payload: {
     success: true,
     data: {
       ...link,
-      fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+      fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
     },
   };
 }

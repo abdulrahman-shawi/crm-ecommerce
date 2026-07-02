@@ -38,9 +38,14 @@ export async function getPublicProductBySlug(slug: string) {
         return { success: false, error: 'رابط المنتج غير صالح' };
     }
 
+    const numericProductId = Number(normalizedSlug);
+
     const product = await prisma.product.findFirst({
         where: {
-            seoSlug: normalizedSlug,
+            OR: [
+                { seoSlug: normalizedSlug },
+                ...(Number.isInteger(numericProductId) && numericProductId > 0 ? [{ id: numericProductId }] : []),
+            ],
             isActive: true,
         },
         include: {
@@ -68,6 +73,51 @@ export async function getPublicProductBySlug(slug: string) {
     }
 
     return { success: true, data: JSON.parse(JSON.stringify(product)) };
+}
+
+export async function getPublicAffiliateProductByCode(code: string) {
+    const normalizedCode = String(code || '').trim();
+    if (!normalizedCode) {
+        return { success: false, error: 'رابط الأفلييت غير صالح' };
+    }
+
+    const link = await prisma.affiliateLink.findUnique({
+        where: { uniqueCode: normalizedCode },
+        include: {
+            product: {
+                include: {
+                    category: true,
+                    images: true,
+                    landingPage: true,
+                    reviews: {
+                        where: { isApproved: true },
+                        orderBy: { createdAt: 'desc' },
+                        take: 12,
+                    },
+                    stocks: {
+                        include: {
+                            warehouse: true,
+                        },
+                        orderBy: {
+                            quantity: 'desc',
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!link || !link.product || !link.product.isActive) {
+        return { success: false, error: 'المنتج المرتبط برابط الأفلييت غير موجود' };
+    }
+
+    return {
+        success: true,
+        data: {
+            affiliateCode: normalizedCode,
+            product: JSON.parse(JSON.stringify(link.product)),
+        },
+    };
 }
 
 export async function getAffiliateDashboardData() {
@@ -122,7 +172,7 @@ export async function getAffiliateDashboardData() {
             commissionRate: link.commissionRate,
             user: link.user,
             product: link.product,
-            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
         },
     })));
 
@@ -144,7 +194,7 @@ export async function getAffiliateDashboardData() {
             paidCommissions: Number(paidCommissions.toFixed(2)),
             links: links.map((link) => ({
                 ...link,
-                fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+                fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
             })),
             commissions: allCommissions,
         },
@@ -206,7 +256,7 @@ export async function createAffiliateLink(input: {
             success: true,
             data: {
                 ...existing,
-                fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode),
+                fullUrl: buildAffiliateFullUrl(existing.product?.seoSlug, existing.uniqueCode, existing.product?.id),
             },
         };
     }
@@ -233,7 +283,7 @@ export async function createAffiliateLink(input: {
         success: true,
         data: {
             ...link,
-            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
         },
     };
 }

@@ -81,7 +81,7 @@ export async function GET(req :NextRequest) {
       affiliateLinks: Array.isArray(userRow.affiliateLinks)
         ? userRow.affiliateLinks.map((link: any) => ({
             ...link,
-            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode),
+            fullUrl: buildAffiliateFullUrl(link.product?.seoSlug, link.uniqueCode, link.product?.id),
             effectiveCommissionRate:
               Number(link?.product?.affiliateCommissionRate || 0) > 0
                 ? Number(link.product.affiliateCommissionRate || 0)
