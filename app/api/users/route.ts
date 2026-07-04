@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { buildAffiliateFullUrl } from "@/lib/affiliate";
+import { AccountType, Prisma } from "@/generated/prisma";
 import bcrypt from "bcryptjs"; //
 import { NextRequest } from 'next/server';
 import { cookies } from "next/headers";
@@ -21,13 +22,13 @@ export async function GET(req :NextRequest) {
       return new Response(JSON.stringify({ success: false, error: "غير مصرح" }), { status: 401 });
     }
 
-    const employeeFilter = {
+    const employeeFilter: Prisma.UserWhereInput = {
       accountType: {
-        not: "AFFILIATE",
+        not: AccountType.AFFILIATE,
       },
     };
 
-    const whereClause = currentUser.accountType === "ADMIN"
+    const whereClause: Prisma.UserWhereInput = currentUser.accountType === "ADMIN"
       ? employeeFilter
       : {
           AND: [
