@@ -21,11 +21,17 @@ export async function GET(req :NextRequest) {
       return new Response(JSON.stringify({ success: false, error: "غير مصرح" }), { status: 401 });
     }
 
+    const employeeFilter = {
+      accountType: {
+        not: "AFFILIATE",
+      },
+    };
+
     const whereClause = currentUser.accountType === "ADMIN"
-      ? { isAffiliate: false }
+      ? employeeFilter
       : {
           AND: [
-            { isAffiliate: false },
+            employeeFilter,
             {
               OR: [
                 { id: currentUser.id },
