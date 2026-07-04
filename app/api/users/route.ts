@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const isAffiliate = Boolean(data.isAffiliate);
-    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
+    const accountType = data.accountType;
     const createuser = await prisma.user.create({
       data: {
         username: data.username,

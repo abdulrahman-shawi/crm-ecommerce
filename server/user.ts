@@ -83,7 +83,7 @@ export async function login(data: { name: string; password: string; }) {
 export async function createuser(data: any) {
   try {
     const isAffiliate = Boolean(data.isAffiliate);
-    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
+    const accountType = data.accountType;
     // 1. تشفير كلمة المرور (Salt rounds = 10)
     const hashedPassword = await bcrypt.hash(data.password, 10); //
 
@@ -126,7 +126,7 @@ export async function createuser(data: any) {
 export async function updateuser(id: string, data: any) {
   try {
     const isAffiliate = Boolean(data.isAffiliate);
-    const accountType = isAffiliate ? "AFFILIATE" : data.accountType;
+    const accountType = data.accountType;
     const updateData: any = {
       username: data.username,
       email: data.email,

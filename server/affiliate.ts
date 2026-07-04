@@ -593,7 +593,6 @@ export async function setAffiliateUserApproval(userId: string, approved: boolean
   const updatedUser = await prisma.user.update({
     where: { id: normalizedUserId },
     data: {
-      accountType: 'AFFILIATE',
       isAffiliate: true,
       affiliateApproved: approved,
       affiliateApprovedAt: approved ? new Date() : null,
@@ -603,6 +602,7 @@ export async function setAffiliateUserApproval(userId: string, approved: boolean
       id: true,
       username: true,
       email: true,
+      accountType: true,
       isAffiliate: true,
       affiliateApproved: true,
       affiliateRequestedAt: true,
