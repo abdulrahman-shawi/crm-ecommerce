@@ -276,7 +276,7 @@ const UserManagement: React.FunctionComponent = () => {
 
     setAffiliateApprovalSaving((prev) => ({ ...prev, [userId]: true }));
     try {
-      const result = await setAffiliateUserApproval(userId, approved);
+      const result = await setAffiliateUserApproval(userId, approved, row?.accountType);
       if (!result.success) {
         toast.error(result.error || 'تعذر تحديث حالة الأفلييت');
         return;

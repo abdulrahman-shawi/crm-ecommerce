@@ -570,7 +570,11 @@ export async function getAffiliateUsersAdminList() {
   };
 }
 
-export async function setAffiliateUserApproval(userId: string, approved: boolean) {
+export async function setAffiliateUserApproval(
+  userId: string,
+  approved: boolean,
+  preservedAccountType?: 'ADMIN' | 'MANAGER' | 'STAFF' | 'AFFILIATE' | string | null
+) {
   const currentUser = await getCurrentSessionUser();
   if (!currentUser || currentUser.accountType !== 'ADMIN') {
     return { success: false, error: 'غير مصرح لك بتعديل حالة أفلييت' };
@@ -590,9 +594,28 @@ export async function setAffiliateUserApproval(userId: string, approved: boolean
     return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
   }
 
+  const normalizedPreservedAccountType = String(preservedAccountType || '').trim().toUpperCase();
+  const nextAccountType: 'ADMIN' | 'MANAGER' | 'STAFF' | 'AFFILIATE' | undefined =
+    normalizedPreservedAccountType === 'ADMIN'
+      ? 'ADMIN'
+      : normalizedPreservedAccountType === 'MANAGER'
+        ? 'MANAGER'
+        : normalizedPreservedAccountType === 'STAFF'
+          ? 'STAFF'
+          : existingUser?.accountType === 'ADMIN'
+            ? 'ADMIN'
+            : existingUser?.accountType === 'MANAGER'
+              ? 'MANAGER'
+              : existingUser?.accountType === 'STAFF'
+                ? 'STAFF'
+                : existingUser?.accountType === 'AFFILIATE'
+                  ? 'AFFILIATE'
+                  : undefined;
+
   const updatedUser = await prisma.user.update({
     where: { id: normalizedUserId },
     data: {
+      accountType: nextAccountType,
       isAffiliate: true,
       affiliateApproved: approved,
       affiliateApprovedAt: approved ? new Date() : null,
