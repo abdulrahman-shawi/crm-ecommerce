@@ -252,6 +252,21 @@ const UserManagement: React.FunctionComponent = () => {
     return Boolean(row?.isAffiliate) || String(row?.accountType || '').trim().toUpperCase() === 'AFFILIATE';
   }, []);
 
+  const getAccountTypeLabel = React.useCallback((accountType?: string | null) => {
+    switch (String(accountType || '').trim().toUpperCase()) {
+      case 'ADMIN':
+        return 'مشرف نظام';
+      case 'MANAGER':
+        return 'مدير';
+      case 'STAFF':
+        return 'موظف';
+      case 'AFFILIATE':
+        return 'أفلييت';
+      default:
+        return '-';
+    }
+  }, []);
+
   const handleAffiliateApproval = async (row: any, approved: boolean) => {
     const userId = String(row?.id || '').trim();
     if (!userId) {
@@ -1070,7 +1085,7 @@ const UserManagement: React.FunctionComponent = () => {
           { header: "رقم الهاتف", accessor: "phone" },
           {
             header: "نوع المستخدم",
-            accessor: (row: any) => isAffiliateRow(row) ? "أفلييت" : "داخلي"
+            accessor: (row: any) => getAccountTypeLabel(row?.accountType)
           },
           {
             header: "حالة الأفلييت",
