@@ -317,7 +317,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         const newFiles = allEntries.filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
         // 2. جلب قائمة الملفات النهائية المرسلة من الواجهة (بعد الحذف/الإضافة)
-        let existingFiles: Array<{ url?: string; type?: string; rawFile?: any }> = [];
+        let existingFiles: Array<{ clientId?: string; url?: string | null; type?: string; isNew?: boolean }> = [];
         const existingFilesRaw = formData.get('existingFiles') as string | null;
         if (existingFilesRaw) {
             try {
@@ -326,6 +326,8 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                 existingFiles = [];
             }
         }
+
+        const newFileClientIds = formData.getAll('newFileClientIds').map((entry) => String(entry || '').trim());
 
         // 3. جلب الملفات الحالية في قاعدة البيانات
         const currentProduct = await prisma.product.findUnique({
@@ -349,18 +351,40 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         }
 
         // 6. رفع الملفات الجديدة
-        let newFileDataArray: any[] = [];
+        let newFileDataArray: Array<{ clientId: string; url: string; type: string }> = [];
         if (newFiles.length > 0) {
-            newFileDataArray = await Promise.all(newFiles.map(uploadSingleFile));
+            const uploadedFiles = await Promise.all(newFiles.map(uploadSingleFile));
+            newFileDataArray = uploadedFiles.map((file, index) => ({
+                clientId: newFileClientIds[index] || `new-${index}`,
+                url: file.url,
+                type: file.type,
+            }));
         }
 
+        const uploadedFilesByClientId = new Map(newFileDataArray.map((file) => [file.clientId, file]));
+
         // 7. بناء قائمة الملفات النهائية للحفظ
-        const finalImages = [
-            ...existingFiles
-                .filter(f => f.url && !f.rawFile)
-                .map(f => ({ url: f.url!, type: f.type || 'application/octet-stream' })),
-            ...newFileDataArray
-        ];
+        const finalImages = existingFiles
+            .map((file) => {
+                if (file.isNew) {
+                    const uploadedFile = uploadedFilesByClientId.get(String(file.clientId || ''));
+                    if (!uploadedFile) {
+                        return null;
+                    }
+
+                    return { url: uploadedFile.url, type: uploadedFile.type };
+                }
+
+                if (!file.url) {
+                    return null;
+                }
+
+                return {
+                    url: file.url,
+                    type: file.type || 'application/octet-stream',
+                };
+            })
+            .filter((file): file is { url: string; type: string } => Boolean(file?.url));
 
         // 8. تحديث البيانات في Prisma
         const product = await prisma.product.update({

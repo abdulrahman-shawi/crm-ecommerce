@@ -23,6 +23,16 @@ import z from 'zod';
 import { ta } from 'zod/v4/locales';
 import * as XLSX from 'xlsx';
 
+const createProductFileClientId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+const getFileNameFromUrl = (url?: string) => {
+    const normalizedUrl = String(url || '').trim();
+    if (!normalizedUrl) return 'file';
+
+    const lastSegment = normalizedUrl.split('/').pop() || normalizedUrl;
+    return decodeURIComponent(lastSegment.split('?')[0] || 'file');
+};
+
 const productschama = z.object({
     name: z.string().min(3, "اسم المنتج مطلوب"),
     description: z.string().optional().nullable(),
@@ -307,12 +317,21 @@ const ProductLayout = () => {
                 formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
 
-                // معالجة الملفات - إرسال قائمة الملفات النهائية + الملفات الجديدة
-                formData.append('existingFiles', JSON.stringify(data.files || []));
+                const fileManifest = Array.isArray(data.files)
+                    ? data.files.map((fileItem: any) => ({
+                        clientId: String(fileItem?.clientId || ''),
+                        url: fileItem?.rawFile instanceof File ? null : String(fileItem?.url || ''),
+                        type: String(fileItem?.type || ''),
+                        isNew: fileItem?.rawFile instanceof File,
+                    }))
+                    : [];
+
+                formData.append('existingFiles', JSON.stringify(fileManifest));
                 if (data.files && data.files.length > 0) {
                     data.files.forEach((fileItem: any) => {
                         if (fileItem.rawFile instanceof File) {
                             formData.append('files', fileItem.rawFile);
+                            formData.append('newFileClientIds', String(fileItem.clientId || ''));
                         }
                     });
                 }
@@ -395,7 +414,14 @@ const ProductLayout = () => {
                 }))
                 : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
             isActive: data.isActive ?? true,
-            files: data.images || []
+            files: Array.isArray(data.images)
+                ? data.images.map((image: any, index: number) => ({
+                    clientId: image?.clientId || `existing-${image?.id || index}-${createProductFileClientId()}`,
+                    url: image.url,
+                    type: image.type,
+                    name: getFileNameFromUrl(image.url),
+                }))
+                : []
         });
         setIsOpen(true);
     };

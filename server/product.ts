@@ -8,7 +8,9 @@ export async function getProduct() {
         orderBy: { createdAt: 'desc' },
         include: {
             category: true,
-            images: true,
+            images: {
+                orderBy: { id: 'asc' },
+            },
             stocks: {
                 include: {
                     warehouse: true,
@@ -50,7 +52,9 @@ export async function getPublicProductBySlug(slug: string) {
         },
         include: {
             category: true,
-            images: true,
+            images: {
+                orderBy: { id: 'asc' },
+            },
             landingPage: true,
             reviews: {
                 where: { isApproved: true },
@@ -87,7 +91,9 @@ export async function getPublicAffiliateProductByCode(code: string) {
             product: {
                 include: {
                     category: true,
-                    images: true,
+                    images: {
+                        orderBy: { id: 'asc' },
+                    },
                     landingPage: true,
                     reviews: {
                         where: { isApproved: true },

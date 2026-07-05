@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { X, UploadCloud, FileText, Film } from 'lucide-react';
+import { X, UploadCloud, FileText, Film, ArrowLeft, ArrowRight } from 'lucide-react';
 
 export interface FileItem {
+  clientId?: string;
   url: string;
   type: string;
   name: string;
@@ -16,12 +17,28 @@ interface MultiFileUploadProps {
   label: string;
 }
 
+const createClientId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+const getFileNameFromUrl = (url?: string) => {
+  const normalizedUrl = String(url || '').trim();
+  if (!normalizedUrl) return 'file';
+
+  const lastSegment = normalizedUrl.split('/').pop() || normalizedUrl;
+  return decodeURIComponent(lastSegment.split('?')[0] || 'file');
+};
+
+const normalizeFileItem = (file: FileItem): FileItem => ({
+  ...file,
+  clientId: file.clientId || createClientId(),
+  name: String(file.name || '').trim() || getFileNameFromUrl(file.url),
+});
+
 export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUploadProps) => {
-  const [files, setFiles] = useState<FileItem[]>(value);
+  const [files, setFiles] = useState<FileItem[]>(() => value.map(normalizeFileItem));
 
   useEffect(() => {
     if (JSON.stringify(value) !== JSON.stringify(files)) {
-      setFiles(value);
+      setFiles(value.map(normalizeFileItem));
     }
   }, [value]);
 
@@ -29,6 +46,7 @@ export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUpload
     const selectedFiles = e.target.files;
     if (selectedFiles) {
       const newFiles: FileItem[] = Array.from(selectedFiles).map(file => ({
+        clientId: createClientId(),
         url: URL.createObjectURL(file),
         type: file.type,
         name: file.name,
@@ -43,6 +61,20 @@ export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUpload
 
   const removeFile = (index: number) => {
     const updatedFiles = files.filter((_, i) => i !== index);
+    setFiles(updatedFiles);
+    onChange(updatedFiles);
+  };
+
+  const moveFile = (index: number, direction: 'left' | 'right') => {
+    const targetIndex = direction === 'left' ? index - 1 : index + 1;
+
+    if (targetIndex < 0 || targetIndex >= files.length) {
+      return;
+    }
+
+    const updatedFiles = [...files];
+    const [selectedFile] = updatedFiles.splice(index, 1);
+    updatedFiles.splice(targetIndex, 0, selectedFile);
     setFiles(updatedFiles);
     onChange(updatedFiles);
   };
@@ -62,7 +94,7 @@ export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUpload
       {files.length > 0 && (
         <div className="flex flex-wrap gap-3 p-2 border rounded-lg bg-white dark:bg-slate-950 dark:border-slate-800 justify-end">
           {files.map((file, index) => (
-            <div key={index} className="relative group w-24 h-24 border dark:border-slate-700 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+            <div key={file.clientId || `${file.url}-${index}`} className="relative group w-24 h-24 border dark:border-slate-700 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
               {file.type.startsWith('image/') ? (
                 <img src={file.url} alt="preview" className="object-cover w-full h-full" />
               ) : (
@@ -71,6 +103,26 @@ export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUpload
                   <span className="text-[10px] dark:text-slate-300 truncate w-full text-center px-1">{file.name}</span>
                 </div>
               )}
+              <div className="absolute inset-x-1 bottom-1 flex items-center justify-between gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                <button
+                  type="button"
+                  onClick={() => moveFile(index, 'left')}
+                  disabled={index === 0}
+                  className="rounded-full bg-white/90 p-1 text-slate-700 shadow disabled:cursor-not-allowed disabled:opacity-40"
+                  title="نقل لليسار"
+                >
+                  <ArrowLeft size={12} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveFile(index, 'right')}
+                  disabled={index === files.length - 1}
+                  className="rounded-full bg-white/90 p-1 text-slate-700 shadow disabled:cursor-not-allowed disabled:opacity-40"
+                  title="نقل لليمين"
+                >
+                  <ArrowRight size={12} />
+                </button>
+              </div>
               <button type="button" onClick={() => removeFile(index)} className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-0.5 transition-colors">
                 <X size={12} />
               </button>
@@ -78,6 +130,10 @@ export const MultiFileUpload = ({ value = [], onChange, label }: MultiFileUpload
           ))}
         </div>
       )}
+
+      {files.length > 1 ? (
+        <p className="text-xs text-slate-500 dark:text-slate-400">يمكنك تغيير ترتيب الصور من أزرار اليمين واليسار على كل صورة.</p>
+      ) : null}
     </div>
   );
 };
