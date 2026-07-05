@@ -225,6 +225,7 @@ exports.Prisma.ProductLandingPageScalarFieldEnum = {
   heroDescription: 'heroDescription',
   badgeText: 'badgeText',
   discountPercent: 'discountPercent',
+  quantityDiscountTiers: 'quantityDiscountTiers',
   features: 'features',
   showReviews: 'showReviews',
   showGuarantee: 'showGuarantee',

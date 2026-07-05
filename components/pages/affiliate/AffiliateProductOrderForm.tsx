@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { calculateQuantityDiscountPricing, normalizeQuantityDiscountTiers } from '@/lib/ad-pricing';
 import toast from 'react-hot-toast';
 
 type ProductLike = {
@@ -15,6 +16,7 @@ type ProductLike = {
   }>;
   landingPage?: {
     ctaText?: string | null;
+    quantityDiscountTiers?: Array<{ minQuantity?: number | null; discountPercent?: number | null }> | null;
   } | null;
 };
 
@@ -38,7 +40,14 @@ export default function AffiliateProductOrderForm({ product, affiliateCode = '' 
 
   const fallbackPrice = Number(product.stocks?.[0]?.price || 0);
   const unitPrice = Number(product.affiliatePrice || 0) > 0 ? Number(product.affiliatePrice) : fallbackPrice;
-  const finalAmount = Number((unitPrice * Number(form.quantity || 1)).toFixed(2));
+  const pricing = React.useMemo(
+    () => calculateQuantityDiscountPricing(unitPrice, Number(form.quantity || 1), product.landingPage?.quantityDiscountTiers),
+    [unitPrice, form.quantity, product.landingPage?.quantityDiscountTiers]
+  );
+  const quantityDiscountTiers = React.useMemo(
+    () => normalizeQuantityDiscountTiers(product.landingPage?.quantityDiscountTiers),
+    [product.landingPage?.quantityDiscountTiers]
+  );
 
   React.useEffect(() => {
     const normalizedCode = String(affiliateCode || '').trim();
@@ -94,7 +103,7 @@ export default function AffiliateProductOrderForm({ product, affiliateCode = '' 
         },
         body: JSON.stringify({
           productId: product.id,
-          quantity: Number(form.quantity || 1),
+          quantity: pricing.quantity,
           customerName: form.customerName,
           phone: form.phone,
           receiverName: form.receiverName,
@@ -144,9 +153,46 @@ export default function AffiliateProductOrderForm({ product, affiliateCode = '' 
         </div>
         <div className="rounded-2xl bg-amber-50 px-4 py-2 text-right">
           <div className="text-xs font-bold text-amber-700">الإجمالي</div>
-          <div className="text-2xl font-black text-amber-900">{finalAmount.toFixed(2)}</div>
+          <div className="text-2xl font-black text-amber-900">{pricing.finalAmount.toFixed(2)}</div>
         </div>
       </div>
+
+      {quantityDiscountTiers.length > 0 ? (
+        <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50/70 p-4">
+          <div className="mb-2 text-sm font-black text-slate-900">خصومات الكمية</div>
+          <div className="flex flex-wrap gap-2 text-sm">
+            {quantityDiscountTiers.map((tier) => (
+              <div key={`${tier.minQuantity}-${tier.discountPercent}`} className="rounded-full border border-amber-200 bg-white px-3 py-1 font-bold text-slate-700">
+                من {tier.minQuantity} قطع: خصم {tier.discountPercent}%
+              </div>
+            ))}
+          </div>
+          {pricing.appliedTier ? (
+            <div className="mt-3 text-sm font-bold text-emerald-700">
+              تم تطبيق خصم {pricing.appliedDiscountPercent}% على هذه الكمية. وفرت {pricing.totalDiscountAmount.toFixed(2)}
+            </div>
+          ) : (
+            <div className="mt-3 text-sm text-slate-600">اختر كمية أعلى لتطبيق خصم تلقائي إذا كان متاحًا.</div>
+          )}
+        </div>
+      ) : null}
+
+      {pricing.totalDiscountAmount > 0 ? (
+        <div className="mb-5 grid gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-sm md:grid-cols-3">
+          <div>
+            <div className="text-slate-500">السعر قبل الخصم</div>
+            <div className="font-black text-slate-900">{pricing.subtotal.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="text-slate-500">الخصم</div>
+            <div className="font-black text-emerald-700">-{pricing.totalDiscountAmount.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="text-slate-500">السعر بعد الخصم</div>
+            <div className="font-black text-slate-900">{pricing.finalAmount.toFixed(2)}</div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2 text-sm font-bold text-slate-700">

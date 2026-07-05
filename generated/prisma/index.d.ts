@@ -10119,6 +10119,7 @@ export namespace Prisma {
     heroDescription: number
     badgeText: number
     discountPercent: number
+    quantityDiscountTiers: number
     features: number
     showReviews: number
     showGuarantee: number
@@ -10186,6 +10187,7 @@ export namespace Prisma {
     heroDescription?: true
     badgeText?: true
     discountPercent?: true
+    quantityDiscountTiers?: true
     features?: true
     showReviews?: true
     showGuarantee?: true
@@ -10292,6 +10294,7 @@ export namespace Prisma {
     heroDescription: string | null
     badgeText: string | null
     discountPercent: number | null
+    quantityDiscountTiers: JsonValue | null
     features: JsonValue | null
     showReviews: boolean
     showGuarantee: boolean
@@ -10330,6 +10333,7 @@ export namespace Prisma {
     heroDescription?: boolean
     badgeText?: boolean
     discountPercent?: boolean
+    quantityDiscountTiers?: boolean
     features?: boolean
     showReviews?: boolean
     showGuarantee?: boolean
@@ -10350,6 +10354,7 @@ export namespace Prisma {
     heroDescription?: boolean
     badgeText?: boolean
     discountPercent?: boolean
+    quantityDiscountTiers?: boolean
     features?: boolean
     showReviews?: boolean
     showGuarantee?: boolean
@@ -10370,6 +10375,7 @@ export namespace Prisma {
     heroDescription?: boolean
     badgeText?: boolean
     discountPercent?: boolean
+    quantityDiscountTiers?: boolean
     features?: boolean
     showReviews?: boolean
     showGuarantee?: boolean
@@ -10390,6 +10396,7 @@ export namespace Prisma {
     heroDescription?: boolean
     badgeText?: boolean
     discountPercent?: boolean
+    quantityDiscountTiers?: boolean
     features?: boolean
     showReviews?: boolean
     showGuarantee?: boolean
@@ -10401,7 +10408,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductLandingPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "heroTitle" | "heroSubtitle" | "heroDescription" | "badgeText" | "discountPercent" | "features" | "showReviews" | "showGuarantee" | "guaranteeTitle" | "guaranteeText" | "ctaText" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["productLandingPage"]>
+  export type ProductLandingPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "heroTitle" | "heroSubtitle" | "heroDescription" | "badgeText" | "discountPercent" | "quantityDiscountTiers" | "features" | "showReviews" | "showGuarantee" | "guaranteeTitle" | "guaranteeText" | "ctaText" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["productLandingPage"]>
   export type ProductLandingPageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }
@@ -10425,6 +10432,7 @@ export namespace Prisma {
       heroDescription: string | null
       badgeText: string | null
       discountPercent: number | null
+      quantityDiscountTiers: Prisma.JsonValue | null
       features: Prisma.JsonValue | null
       showReviews: boolean
       showGuarantee: boolean
@@ -10865,6 +10873,7 @@ export namespace Prisma {
     readonly heroDescription: FieldRef<"ProductLandingPage", 'String'>
     readonly badgeText: FieldRef<"ProductLandingPage", 'String'>
     readonly discountPercent: FieldRef<"ProductLandingPage", 'Int'>
+    readonly quantityDiscountTiers: FieldRef<"ProductLandingPage", 'Json'>
     readonly features: FieldRef<"ProductLandingPage", 'Json'>
     readonly showReviews: FieldRef<"ProductLandingPage", 'Boolean'>
     readonly showGuarantee: FieldRef<"ProductLandingPage", 'Boolean'>
@@ -39899,6 +39908,7 @@ export namespace Prisma {
     heroDescription: 'heroDescription',
     badgeText: 'badgeText',
     discountPercent: 'discountPercent',
+    quantityDiscountTiers: 'quantityDiscountTiers',
     features: 'features',
     showReviews: 'showReviews',
     showGuarantee: 'showGuarantee',
@@ -41200,6 +41210,7 @@ export namespace Prisma {
     heroDescription?: StringNullableFilter<"ProductLandingPage"> | string | null
     badgeText?: StringNullableFilter<"ProductLandingPage"> | string | null
     discountPercent?: IntNullableFilter<"ProductLandingPage"> | number | null
+    quantityDiscountTiers?: JsonNullableFilter<"ProductLandingPage">
     features?: JsonNullableFilter<"ProductLandingPage">
     showReviews?: BoolFilter<"ProductLandingPage"> | boolean
     showGuarantee?: BoolFilter<"ProductLandingPage"> | boolean
@@ -41220,6 +41231,7 @@ export namespace Prisma {
     heroDescription?: SortOrderInput | SortOrder
     badgeText?: SortOrderInput | SortOrder
     discountPercent?: SortOrderInput | SortOrder
+    quantityDiscountTiers?: SortOrderInput | SortOrder
     features?: SortOrderInput | SortOrder
     showReviews?: SortOrder
     showGuarantee?: SortOrder
@@ -41243,6 +41255,7 @@ export namespace Prisma {
     heroDescription?: StringNullableFilter<"ProductLandingPage"> | string | null
     badgeText?: StringNullableFilter<"ProductLandingPage"> | string | null
     discountPercent?: IntNullableFilter<"ProductLandingPage"> | number | null
+    quantityDiscountTiers?: JsonNullableFilter<"ProductLandingPage">
     features?: JsonNullableFilter<"ProductLandingPage">
     showReviews?: BoolFilter<"ProductLandingPage"> | boolean
     showGuarantee?: BoolFilter<"ProductLandingPage"> | boolean
@@ -41263,6 +41276,7 @@ export namespace Prisma {
     heroDescription?: SortOrderInput | SortOrder
     badgeText?: SortOrderInput | SortOrder
     discountPercent?: SortOrderInput | SortOrder
+    quantityDiscountTiers?: SortOrderInput | SortOrder
     features?: SortOrderInput | SortOrder
     showReviews?: SortOrder
     showGuarantee?: SortOrder
@@ -41290,6 +41304,7 @@ export namespace Prisma {
     heroDescription?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
     badgeText?: StringNullableWithAggregatesFilter<"ProductLandingPage"> | string | null
     discountPercent?: IntNullableWithAggregatesFilter<"ProductLandingPage"> | number | null
+    quantityDiscountTiers?: JsonNullableWithAggregatesFilter<"ProductLandingPage">
     features?: JsonNullableWithAggregatesFilter<"ProductLandingPage">
     showReviews?: BoolWithAggregatesFilter<"ProductLandingPage"> | boolean
     showGuarantee?: BoolWithAggregatesFilter<"ProductLandingPage"> | boolean
@@ -44149,6 +44164,7 @@ export namespace Prisma {
     heroDescription?: string | null
     badgeText?: string | null
     discountPercent?: number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: boolean
     showGuarantee?: boolean
@@ -44169,6 +44185,7 @@ export namespace Prisma {
     heroDescription?: string | null
     badgeText?: string | null
     discountPercent?: number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: boolean
     showGuarantee?: boolean
@@ -44187,6 +44204,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean
@@ -44207,6 +44225,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean
@@ -44226,6 +44245,7 @@ export namespace Prisma {
     heroDescription?: string | null
     badgeText?: string | null
     discountPercent?: number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: boolean
     showGuarantee?: boolean
@@ -44244,6 +44264,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean
@@ -44263,6 +44284,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean
@@ -47324,6 +47346,7 @@ export namespace Prisma {
     heroDescription?: SortOrder
     badgeText?: SortOrder
     discountPercent?: SortOrder
+    quantityDiscountTiers?: SortOrder
     features?: SortOrder
     showReviews?: SortOrder
     showGuarantee?: SortOrder
@@ -53409,6 +53432,7 @@ export namespace Prisma {
     heroDescription?: string | null
     badgeText?: string | null
     discountPercent?: number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: boolean
     showGuarantee?: boolean
@@ -53427,6 +53451,7 @@ export namespace Prisma {
     heroDescription?: string | null
     badgeText?: string | null
     discountPercent?: number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: boolean
     showGuarantee?: boolean
@@ -53727,6 +53752,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean
@@ -53745,6 +53771,7 @@ export namespace Prisma {
     heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
     badgeText?: NullableStringFieldUpdateOperationsInput | string | null
     discountPercent?: NullableIntFieldUpdateOperationsInput | number | null
+    quantityDiscountTiers?: NullableJsonNullValueInput | InputJsonValue
     features?: NullableJsonNullValueInput | InputJsonValue
     showReviews?: BoolFieldUpdateOperationsInput | boolean
     showGuarantee?: BoolFieldUpdateOperationsInput | boolean

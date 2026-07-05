@@ -15,6 +15,7 @@ type ProductView = {
     heroTitle?: string | null;
     heroSubtitle?: string | null;
     heroDescription?: string | null;
+    quantityDiscountTiers?: Array<{ minQuantity?: number | null; discountPercent?: number | null }> | null;
     showGuarantee?: boolean | null;
     guaranteeTitle?: string | null;
     guaranteeText?: string | null;

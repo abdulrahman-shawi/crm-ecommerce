@@ -258,11 +258,12 @@ model ProductLandingPage {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   // Hero content overrides
-  heroTitle       String?
-  heroSubtitle    String?
-  heroDescription String?
-  badgeText       String?
-  discountPercent Int?
+  heroTitle             String?
+  heroSubtitle          String?
+  heroDescription       String?
+  badgeText             String?
+  discountPercent       Int?
+  quantityDiscountTiers Json?   @default("[]")
 
   // Features section (JSON array of { title, description })
   features Json? @default("[]")

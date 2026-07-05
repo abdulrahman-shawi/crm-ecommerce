@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPublicCustomerForAffiliateOrder } from '@/server/affiliate';
 import { createOrder } from '@/server/order';
+import { calculateQuantityDiscountPricing } from '@/lib/ad-pricing';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
@@ -16,6 +17,7 @@ export async function POST(request: NextRequest) {
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: {
+        landingPage: true,
         stocks: {
           include: {
             warehouse: true,
@@ -43,17 +45,18 @@ export async function POST(request: NextRequest) {
     const orderPrice = Number(product.affiliatePrice || 0) > 0
       ? Number(product.affiliatePrice)
       : Number(product.stocks?.[0]?.price || 0);
+    const pricing = calculateQuantityDiscountPricing(orderPrice, quantity, product.landingPage?.quantityDiscountTiers);
 
     const items = [
       {
         productId: String(product.id),
-        quantity,
+        quantity: pricing.quantity,
         price: orderPrice,
-        discount: 0,
+        discount: pricing.unitDiscountAmount,
       },
     ];
 
-    const grandTotal = Number((orderPrice * quantity).toFixed(2));
+    const grandTotal = pricing.finalAmount;
     const orderResult = await createOrder(
       {
         customerId: customerResult.data.id,
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
         additionalNotes: 'affiliate-order',
         grandTotal,
         overallDiscount: 0,
-        subTotal: grandTotal,
+        subTotal: pricing.subtotal,
       },
       items,
       null

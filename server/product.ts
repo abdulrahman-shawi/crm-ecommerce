@@ -371,6 +371,7 @@ export interface LandingPageInput {
     heroDescription?: string | null;
     badgeText?: string | null;
     discountPercent?: number | null;
+    quantityDiscountTiers?: Array<{ minQuantity: number; discountPercent: number }>;
     features?: Array<{ title: string; description: string }>;
     showReviews?: boolean;
     showGuarantee?: boolean;
@@ -383,6 +384,7 @@ export interface LandingPageInput {
 export async function upsertProductLandingPage(productId: number, data: LandingPageInput) {
     try {
         const features = Array.isArray(data.features) ? data.features : [];
+        const quantityDiscountTiers = Array.isArray(data.quantityDiscountTiers) ? data.quantityDiscountTiers : [];
 
         await prisma.$transaction([
             prisma.product.update({
@@ -398,6 +400,7 @@ export async function upsertProductLandingPage(productId: number, data: LandingP
                     heroDescription: data.heroDescription || null,
                     badgeText: data.badgeText || null,
                     discountPercent: data.discountPercent ? Number(data.discountPercent) : null,
+                    quantityDiscountTiers: quantityDiscountTiers as any,
                     features: features as any,
                     showReviews: data.showReviews ?? true,
                     showGuarantee: data.showGuarantee ?? true,
@@ -412,6 +415,7 @@ export async function upsertProductLandingPage(productId: number, data: LandingP
                     heroDescription: data.heroDescription || null,
                     badgeText: data.badgeText || null,
                     discountPercent: data.discountPercent ? Number(data.discountPercent) : null,
+                    quantityDiscountTiers: quantityDiscountTiers as any,
                     features: features as any,
                     showReviews: data.showReviews ?? true,
                     showGuarantee: data.showGuarantee ?? true,

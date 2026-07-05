@@ -64,6 +64,12 @@ const landingPageSchema = z.object({
     heroDescription: z.string().optional().nullable(),
     badgeText: z.string().optional().nullable(),
     discountPercent: z.coerce.number().min(0).max(100).optional().nullable(),
+    quantityDiscountTiers: z.array(
+        z.object({
+            minQuantity: z.coerce.number().int().min(1, 'الحد الأدنى للكمية يجب أن يكون 1 أو أكثر'),
+            discountPercent: z.coerce.number().min(0.01, 'الخصم يجب أن يكون أكبر من صفر').max(100, 'الخصم يجب أن يكون 100 أو أقل'),
+        })
+    ).optional().default([]),
     features: z.array(
         z.object({
             title: z.string().min(1, "عنوان الميزة مطلوب"),
@@ -121,6 +127,61 @@ const FeaturesFields = ({ control, register, errors }: any) => {
                 ))}
                 {fields.length === 0 && (
                     <p className="text-sm text-slate-500 dark:text-slate-400">لا توجد مميزات مضافة.</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const QuantityDiscountFields = ({ control, register, errors }: any) => {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'quantityDiscountTiers'
+    });
+
+    return (
+        <div className="md:col-span-2 border rounded-lg p-3 border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-3">
+                <div>
+                    <h3 className="font-medium text-slate-800 dark:text-slate-200">خصومات الكمية</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">كل شريحة تُطبق تلقائيًا عندما تصل الكمية إلى الحد الأدنى المحدد.</p>
+                </div>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => append({ minQuantity: 2, discountPercent: 5 })}
+                >
+                    إضافة شريحة خصم
+                </Button>
+            </div>
+
+            <div className="grid gap-3">
+                {fields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
+                        <FormInput
+                            type="number"
+                            label="من كمية"
+                            {...register(`quantityDiscountTiers.${index}.minQuantity`)}
+                            error={errors?.quantityDiscountTiers?.[index]?.minQuantity?.message as string}
+                        />
+                        <FormInput
+                            type="number"
+                            step="0.01"
+                            label="نسبة الخصم %"
+                            {...register(`quantityDiscountTiers.${index}.discountPercent`)}
+                            error={errors?.quantityDiscountTiers?.[index]?.discountPercent?.message as string}
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => remove(index)}
+                        >
+                            حذف
+                        </Button>
+                    </div>
+                ))}
+                {fields.length === 0 && (
+                    <p className="text-sm text-slate-500 dark:text-slate-400">لا توجد شرائح خصم مضافة.</p>
                 )}
             </div>
         </div>
@@ -1154,6 +1215,10 @@ const ProductLayout = () => {
                             try {
                                 const payload: LandingPageInput = {
                                     ...data,
+                                    quantityDiscountTiers: (data.quantityDiscountTiers || []).map(tier => ({
+                                        minQuantity: Number(tier.minQuantity || 1),
+                                        discountPercent: Number(tier.discountPercent || 0),
+                                    })),
                                     features: (data.features || []).map(f => ({
                                         title: f.title,
                                         description: f.description || '',
@@ -1179,6 +1244,12 @@ const ProductLayout = () => {
                             heroDescription: landingProduct.landingPage.heroDescription || '',
                             badgeText: landingProduct.landingPage.badgeText || '',
                             discountPercent: landingProduct.landingPage.discountPercent ?? null,
+                            quantityDiscountTiers: Array.isArray(landingProduct.landingPage.quantityDiscountTiers)
+                                ? landingProduct.landingPage.quantityDiscountTiers.map((tier: any) => ({
+                                    minQuantity: Number(tier?.minQuantity || 1),
+                                    discountPercent: Number(tier?.discountPercent || 0),
+                                }))
+                                : [],
                             features: Array.isArray(landingProduct.landingPage.features)
                                 ? landingProduct.landingPage.features.map((f: any) => ({
                                     title: f.title || '',
@@ -1192,6 +1263,7 @@ const ProductLayout = () => {
                             ctaText: landingProduct.landingPage.ctaText || '',
                             isActive: landingProduct.landingPage.isActive ?? true,
                         } : {
+                            quantityDiscountTiers: [],
                             features: [],
                             showReviews: true,
                             showGuarantee: true,
@@ -1220,6 +1292,7 @@ const ProductLayout = () => {
                                 </div>
                                 <FormInput label="نص الشارة" {...register("badgeText")} error={errors.badgeText?.message as string} />
                                 <FormInput type="number" label="نسبة الخصم (%)" {...register("discountPercent")} error={errors.discountPercent?.message as string} />
+                                <QuantityDiscountFields control={control} register={register} errors={errors} />
                                 <FeaturesFields control={control} register={register} errors={errors} />
                                 <FormInput label="عنوان الضمان" {...register("guaranteeTitle")} error={errors.guaranteeTitle?.message as string} />
                                 <FormInput label="نص الضمان" {...register("guaranteeText")} error={errors.guaranteeText?.message as string} />
