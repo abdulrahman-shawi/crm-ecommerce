@@ -9,6 +9,7 @@ import { FormSelect } from '@/components/ui/select-form';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
+import { buildAdFullUrl } from '@/lib/affiliate';
 import { getallcategory } from '@/server/category';
 import { deleteProductFromWarehouse, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct, toggleProductActive, toggleProductShowInAds, upsertProductLandingPage, LandingPageInput } from '@/server/product';
@@ -294,6 +295,11 @@ const ProductLayout = () => {
         setIsLandingOpen(false);
         setLandingProduct(null);
     };
+
+    const landingProductAdUrl = React.useMemo(() => {
+        if (!landingProduct?.id) return '';
+        return buildAdFullUrl(landingProduct.id);
+    }, [landingProduct]);
 
     const refreshProducts = React.useCallback(() => {
         getProduct().then((products) => {
@@ -1117,6 +1123,30 @@ const ProductLayout = () => {
                 onClose={closeLandingModal}
             >
                 <div className="p-4">
+                    {landingProductAdUrl ? (
+                        <div className="mb-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/20">
+                            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                                <div className="space-y-1">
+                                    <div className="text-sm font-bold text-slate-900 dark:text-slate-100">رابط الإعلان</div>
+                                    <div className="break-all text-sm text-blue-700 dark:text-blue-300" dir="ltr">{landingProductAdUrl}</div>
+                                </div>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(landingProductAdUrl);
+                                            toast.success('تم نسخ رابط الإعلان');
+                                        } catch {
+                                            toast.error('تعذر نسخ رابط الإعلان');
+                                        }
+                                    }}
+                                >
+                                    نسخ الرابط
+                                </Button>
+                            </div>
+                        </div>
+                    ) : null}
                     <DynamicForm
                         schema={landingPageSchema}
                         onSubmit={async (data: z.infer<typeof landingPageSchema>) => {

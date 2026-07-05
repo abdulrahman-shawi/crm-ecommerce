@@ -1,4 +1,4 @@
-const AFFILIATE_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
+export const STOREFRONT_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
 
 export const AFFILIATE_COOKIE_NAME = 'affiliate-code';
 
@@ -23,10 +23,19 @@ export function buildAffiliateFullUrl(
 ) {
   const normalizedCode = String(uniqueCode || '').trim();
   if (!normalizedCode) {
-    return AFFILIATE_BASE_URL;
+    return STOREFRONT_BASE_URL;
   }
 
   void seoSlug;
   void productId;
-  return `${AFFILIATE_BASE_URL}/ref/${normalizedCode}`;
+  return `${STOREFRONT_BASE_URL}/ref/${normalizedCode}`;
+}
+
+export function buildAdFullUrl(productId?: number | string | null) {
+  const normalizedProductId = Number(productId || 0);
+  if (!Number.isInteger(normalizedProductId) || normalizedProductId <= 0) {
+    return STOREFRONT_BASE_URL;
+  }
+
+  return `${STOREFRONT_BASE_URL}/ad/${normalizedProductId}`;
 }

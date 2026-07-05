@@ -79,6 +79,53 @@ export async function getPublicProductBySlug(slug: string) {
     return { success: true, data: JSON.parse(JSON.stringify(product)) };
 }
 
+export async function getPublicAdProductById(productIdInput: number | string) {
+    const productId = Number(productIdInput || 0);
+
+    if (!Number.isInteger(productId) || productId <= 0) {
+        return { success: false, error: 'رابط الإعلان غير صالح' };
+    }
+
+    const product = await prisma.product.findFirst({
+        where: {
+            id: productId,
+            isActive: true,
+            showInAds: true,
+            landingPage: {
+                is: {
+                    isActive: true,
+                },
+            },
+        },
+        include: {
+            category: true,
+            images: {
+                orderBy: { id: 'asc' },
+            },
+            landingPage: true,
+            reviews: {
+                where: { isApproved: true },
+                orderBy: { createdAt: 'desc' },
+                take: 12,
+            },
+            stocks: {
+                include: {
+                    warehouse: true,
+                },
+                orderBy: {
+                    quantity: 'desc',
+                },
+            },
+        },
+    });
+
+    if (!product) {
+        return { success: false, error: 'الإعلان غير موجود أو غير مفعل' };
+    }
+
+    return { success: true, data: JSON.parse(JSON.stringify(product)) };
+}
+
 export async function getPublicAffiliateProductByCode(code: string) {
     const normalizedCode = String(code || '').trim();
     if (!normalizedCode) {
