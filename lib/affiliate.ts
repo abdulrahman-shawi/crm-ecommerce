@@ -2,6 +2,20 @@ const AFFILIATE_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
 
 export const AFFILIATE_COOKIE_NAME = 'affiliate-code';
 
+export function normalizeAccountType(accountType?: string | null) {
+  return String(accountType || '').trim().toUpperCase();
+}
+
+export function isAffiliateAccount(accountType?: string | null, isAffiliate?: boolean | null) {
+  const normalizedAccountType = normalizeAccountType(accountType);
+
+  if (normalizedAccountType === 'STAFF') {
+    return false;
+  }
+
+  return normalizedAccountType === 'AFFILIATE' || Boolean(isAffiliate);
+}
+
 export function buildAffiliateFullUrl(
   seoSlug?: string | null,
   uniqueCode?: string | null,

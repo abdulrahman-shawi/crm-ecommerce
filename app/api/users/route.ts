@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { buildAffiliateFullUrl } from "@/lib/affiliate";
+import { buildAffiliateFullUrl, isAffiliateAccount } from "@/lib/affiliate";
 import { AccountType, Prisma } from "@/generated/prisma";
 import bcrypt from "bcryptjs"; //
 import { NextRequest } from 'next/server';
@@ -110,8 +110,8 @@ export async function GET(req :NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const isAffiliate = Boolean(data.isAffiliate);
     const accountType = data.accountType;
+    const isAffiliate = isAffiliateAccount(accountType, data.isAffiliate);
     const createuser = await prisma.user.create({
       data: {
         username: data.username,

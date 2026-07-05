@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { AppModal } from '@/components/ui/app-modal';
 import { Coins, Download, Mail, Plus } from 'lucide-react';
 import { DataTable } from '@/components/shared/DataTable';
+import { isAffiliateAccount } from '@/lib/affiliate';
 import { hasPermission } from '@/lib/utils';
 import { getProduct } from '@/server/product';
 import PhoneInput from 'react-phone-number-input';
@@ -249,7 +250,7 @@ const UserManagement: React.FunctionComponent = () => {
   };
 
   const isAffiliateRow = React.useCallback((row: any) => {
-    return Boolean(row?.isAffiliate) || String(row?.accountType || '').trim().toUpperCase() === 'AFFILIATE';
+    return isAffiliateAccount(row?.accountType, row?.isAffiliate);
   }, []);
 
   const getAccountTypeLabel = React.useCallback((accountType?: string | null) => {

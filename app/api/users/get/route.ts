@@ -1,4 +1,5 @@
 import { decrypt } from "@/lib/auth";
+import { isAffiliateAccount } from "@/lib/affiliate";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -38,7 +39,7 @@ export async function GET() {
                }
            });
 
-        if (users?.isAffiliate && !users?.affiliateApproved) {
+        if (isAffiliateAccount(users?.accountType, users?.isAffiliate) && !users?.affiliateApproved) {
             cookies().set("skynova", "", { expires: new Date(0), httpOnly: true });
             return NextResponse.json({ 
                 success: false, 

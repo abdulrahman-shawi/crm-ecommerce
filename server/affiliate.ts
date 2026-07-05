@@ -1,7 +1,7 @@
 'use server';
 
 import { decrypt } from '@/lib/auth';
-import { buildAffiliateFullUrl } from '@/lib/affiliate';
+import { buildAffiliateFullUrl, isAffiliateAccount, normalizeAccountType } from '@/lib/affiliate';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 const DELIVERED_ORDER_STATUSES = new Set(['تم تسليم الطلب', 'تم التسليم', 'مدفوعة', 'تم البيع']);
@@ -71,7 +71,7 @@ async function getCurrentSessionUser() {
 
 function isAffiliateUser(user: { isAffiliate?: boolean | null; accountType?: string | null } | null) {
   if (!user) return false;
-  return Boolean(user.isAffiliate) || String(user.accountType || '').trim().toUpperCase() === 'AFFILIATE';
+  return isAffiliateAccount(user.accountType, user.isAffiliate);
 }
 
 function isAffiliateApprovedUser(user: { isAffiliate?: boolean | null; affiliateApproved?: boolean | null; accountType?: string | null } | null) {
@@ -88,9 +88,16 @@ export async function getAffiliateAdminDashboard() {
 
   const users = await prisma.user.findMany({
     where: {
-      OR: [
-        { isAffiliate: true },
-        { accountType: 'AFFILIATE' },
+      AND: [
+        {
+          OR: [
+            { isAffiliate: true },
+            { accountType: 'AFFILIATE' },
+          ],
+        },
+        {
+          accountType: { not: 'STAFF' },
+        },
       ],
       affiliateApproved: true,
     },
@@ -527,9 +534,16 @@ export async function getAffiliateUsersAdminList() {
 
   const users = await prisma.user.findMany({
     where: {
-      OR: [
-        { isAffiliate: true },
-        { accountType: 'AFFILIATE' },
+      AND: [
+        {
+          OR: [
+            { isAffiliate: true },
+            { accountType: 'AFFILIATE' },
+          ],
+        },
+        {
+          accountType: { not: 'STAFF' },
+        },
       ],
     },
     orderBy: [
@@ -611,6 +625,10 @@ export async function setAffiliateUserApproval(
                 : existingUser?.accountType === 'AFFILIATE'
                   ? 'AFFILIATE'
                   : undefined;
+
+  if (normalizeAccountType(nextAccountType) === 'STAFF') {
+    return { success: false, error: 'لا يمكن اعتماد موظف كحساب أفلييت' };
+  }
 
   const updatedUser = await prisma.user.update({
     where: { id: normalizedUserId },

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { isAffiliateAccount } from "@/lib/affiliate";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs"; //
 import { cookies } from "next/headers";
@@ -13,6 +14,7 @@ export async function POST(req:NextRequest){
                 username: true,
                 email: true,
                 password: true,
+                accountType: true,
                 isAffiliate: true,
                 affiliateApproved: true,
             },
@@ -25,7 +27,7 @@ export async function POST(req:NextRequest){
         if (!has) {
             return new Response(JSON.stringify({ success: false, error: "خطأ في اسم المستخدم أو كلمة المرور" }), { status: 401 });
         }
-        if (login.isAffiliate && !login.affiliateApproved) {
+        if (isAffiliateAccount(login.accountType, login.isAffiliate) && !login.affiliateApproved) {
             return new Response(JSON.stringify({ success: false, error: "حساب الأفلييت بانتظار موافقة الأدمن" }), { status: 403 });
         }
         const expires = new Date(Date.now() + 30 * 60 * 60 * 1000);
