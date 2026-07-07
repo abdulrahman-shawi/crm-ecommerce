@@ -1,4 +1,4 @@
-export const STOREFRONT_BASE_URL = 'https://ecomerce-bay-xi.vercel.app';
+export const STOREFRONT_BASE_URL = 'https://www.skynova-tr.com';
 
 export const AFFILIATE_COOKIE_NAME = 'affiliate-code';
 
