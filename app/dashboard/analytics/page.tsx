@@ -12,6 +12,7 @@ import {
   GetEmployeeCustomerReport,
   GetLowStockProducts,
   GetOrdersByCity,
+  GetProductInsightsAction,
   GetShippingTotalsByCompany,
   GetSalesByCity,
   GetSalesByStatusAction,
@@ -79,6 +80,8 @@ const formatUSD = (value: number | undefined | null) =>
     maximumFractionDigits: 3,
   });
 
+const formatPercent = (value: number | undefined | null) => `${Number(value || 0).toFixed(2)}%`;
+
 const normalizeToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
   const numericAmount = Number(amount || 0);
   const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : DEFAULT_TURKEY_EXCHANGE_RATE;
@@ -112,6 +115,7 @@ const AnalyticPage: React.FC = () => {
     summary: { USD: 0, TRY: 0, SYP: 0 },
   });
   const [topSale, setTopSale] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [productInsights, setProductInsights] = React.useState<{ success: boolean; data: any[]; meta?: any | null }>({ success: true, data: [], meta: null });
   const [lowStock, setLowStock] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [warrantyStatusProducts, setWarrantyStatusProducts] = React.useState<{
     success: boolean;
@@ -328,6 +332,7 @@ const AnalyticPage: React.FC = () => {
           resShippingByCompany,
           resDailyExpenses,
           resTopSale,
+          resProductInsights,
           resLowStock,
           resWarrantyStatusProducts,
           resTopUsers,
@@ -340,6 +345,7 @@ const AnalyticPage: React.FC = () => {
           GetShippingTotalsByCompany(user.id, orderDateFilter),
           GetDailyExpensesAnalytics(user.id, orderDateFilter),
           GetBestSellingProducts(user.id, orderDateFilter),
+          GetProductInsightsAction(user.id, orderDateFilter),
           GetLowStockProducts(user.id),
           GetWarrantyStatusProducts(user.id, orderDateFilter),
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
@@ -353,6 +359,7 @@ const AnalyticPage: React.FC = () => {
         setShippingByCompany(resShippingByCompany as any);
         setDailyExpenses(resDailyExpenses as any);
         setTopSale(resTopSale as any);
+        setProductInsights(resProductInsights as any);
         setLowStock(resLowStock as any);
         setWarrantyStatusProducts(resWarrantyStatusProducts as any);
         setTopSellingUsers(resTopUsers as any);
@@ -401,6 +408,7 @@ const AnalyticPage: React.FC = () => {
   const showDailyExpenses = loading || (dailyExpenses.data?.length || 0) > 0;
   const showSalesGeo = loading || cityData.length > 0;
   const showTopProducts = loading || (topSale.data?.length || 0) > 0;
+  const showProductInsights = loading || (productInsights.data?.length || 0) > 0;
   const showLowStock = loading || (lowStock.data?.length || 0) > 0;
   const showWarrantyStatusProducts =
     loading ||
@@ -1012,6 +1020,98 @@ const AnalyticPage: React.FC = () => {
             </DynamicCard>
           )}
         </div>
+      )}
+
+      {showProductInsights && (
+        <DynamicCard isLoading={loading} isError={!productInsights.success} isEmpty={!loading && productInsights.data?.length === 0} variant="glass" className="mt-6">
+          <DynamicCard.Header
+            title="ربحية المنتج التقديرية وتحويله"
+            description="يعرض صافي المبيعات بعد خصومات الطلب والمصاريف الموزعة، مع Funnel الزيارات إلى الطلبات ومعدل الإلغاء والضمان لكل منتج."
+            icon={<Package className="text-indigo-500" />}
+          />
+          <DynamicCard.Content>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4">
+                <div className="text-xs font-bold text-slate-500">المنتجات المتتبعة</div>
+                <div className="mt-1 text-2xl font-black text-slate-800 dark:text-slate-100">{Number(productInsights.meta?.productsTracked || 0).toLocaleString()}</div>
+              </div>
+              <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50/70 dark:bg-emerald-950/20 p-4">
+                <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400">صافي المبيعات</div>
+                <div className="mt-1 text-2xl font-black text-emerald-600">{formatUSD(productInsights.meta?.totalRevenueUSD)} $</div>
+              </div>
+              <div className="rounded-xl border border-indigo-200 dark:border-indigo-900/30 bg-indigo-50/70 dark:bg-indigo-950/20 p-4">
+                <div className="text-xs font-bold text-indigo-700 dark:text-indigo-400">المساهمة التقديرية</div>
+                <div className="mt-1 text-2xl font-black text-indigo-600">{formatUSD(productInsights.meta?.estimatedContributionUSD)} $</div>
+              </div>
+              <div className="rounded-xl border border-amber-200 dark:border-amber-900/30 bg-amber-50/70 dark:bg-amber-950/20 p-4">
+                <div className="text-xs font-bold text-amber-700 dark:text-amber-400">إجمالي وحدات الضمان</div>
+                <div className="mt-1 text-2xl font-black text-amber-600">{Number(productInsights.meta?.totalWarrantyQuantity || 0).toLocaleString()}</div>
+              </div>
+            </div>
+
+            <div className="mb-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400">
+              الربحية هنا تقديرية وليست محاسبية نهائية، لأنها لا تشمل تكلفة شراء تاريخية لكل وحدة وقت البيع. المعروض حالياً يعتمد على صافي البيع بعد الخصومات ومصاريف الطلب والعمولات الموزعة على المنتجات.
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+              <table className="w-full min-w-[1320px] text-right border-collapse">
+                <thead>
+                  <tr className="bg-slate-100/60 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <th className="p-3">المنتج</th>
+                    <th className="p-3">الوحدات</th>
+                    <th className="p-3">صافي المبيعات</th>
+                    <th className="p-3">المساهمة التقديرية</th>
+                    <th className="p-3">هامش المساهمة</th>
+                    <th className="p-3">متوسط الوحدة</th>
+                    <th className="p-3">المشاهدات</th>
+                    <th className="p-3">الزوار</th>
+                    <th className="p-3">طلبات الإعلان</th>
+                    <th className="p-3">نسبة التحويل</th>
+                    <th className="p-3">الإلغاء</th>
+                    <th className="p-3">الضمان</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {productInsights.data?.map((product: any) => (
+                    <tr key={product.productId} className="bg-white/40 dark:bg-slate-900/20 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="p-3">
+                        <div className="font-bold text-slate-800 dark:text-slate-100">{product.name}</div>
+                        <div className="text-[11px] text-slate-500">{Number(product.ordersCount || 0).toLocaleString()} طلب</div>
+                      </td>
+                      <td className="p-3">
+                        <div className="font-bold text-slate-800 dark:text-slate-100">{Number(product.revenueUnits || 0).toLocaleString()} مباعة</div>
+                        <div className="text-[11px] text-slate-500">{Number(product.deliveredUnits || 0).toLocaleString()} مسلّمة</div>
+                      </td>
+                      <td className="p-3 font-bold text-emerald-600">{formatUSD(product.totalRevenueUSD)} $</td>
+                      <td className="p-3 font-bold text-indigo-600">{formatUSD(product.estimatedContributionUSD)} $</td>
+                      <td className="p-3 text-sm font-bold text-slate-700 dark:text-slate-200">{formatPercent(product.contributionMargin)}</td>
+                      <td className="p-3 text-sm font-bold text-slate-700 dark:text-slate-200">{formatUSD(product.averageRevenuePerUnitUSD)} $</td>
+                      <td className="p-3 text-sm font-bold text-blue-600">{Number(product.views || 0).toLocaleString()}</td>
+                      <td className="p-3 text-sm font-bold text-cyan-600">{Number(product.uniqueVisitors || 0).toLocaleString()}</td>
+                      <td className="p-3 text-sm font-bold text-violet-600">{Number(product.adOrdersCount || 0).toLocaleString()}</td>
+                      <td className="p-3">
+                        <div className="font-bold text-violet-600">{formatPercent(product.viewsToOrdersRate)}</div>
+                        <div className="text-[11px] text-slate-500">زيارة ← طلب</div>
+                      </td>
+                      <td className="p-3">
+                        <div className="font-bold text-red-600">{formatPercent(product.cancellationRate)}</div>
+                        <div className="text-[11px] text-slate-500">{Number(product.cancelledUnits || 0).toLocaleString()} قطعة</div>
+                      </td>
+                      <td className="p-3">
+                        <div className="font-bold text-amber-600">{formatPercent(product.warrantyRate)}</div>
+                        <div className="text-[11px] text-slate-500">
+                          {Number(product.warrantyQuantity || 0).toLocaleString()} قطعة
+                          {" · "}
+                          {Number(product.warrantyRecords || 0).toLocaleString()} سجل
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </DynamicCard.Content>
+        </DynamicCard>
       )}
 
       {showWarrantyStatusProducts && (

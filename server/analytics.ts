@@ -12,6 +12,7 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
   return String(warehouseLocation || "").trim() === "تركيا" ? value / safeRate : value;
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
+const DELIVERED_ORDER_STATUSES = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
 
 const resolveOrderExchangeRate = (
   orderLike: { usdToTryRateAtOrder?: number | null },
@@ -967,6 +968,353 @@ export async function GetBestSellingProducts(userId: string, dateFilter?: OrderD
   } catch (error) {
     console.error("Error in GetBestSellingProducts:", error);
     return { success: false, data: [] };
+  }
+}
+
+export async function GetProductInsightsAction(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) {
+      return { success: false, error: "User not found", data: [], meta: null };
+    }
+
+    const canViewAnalytics =
+      isAdmin(user) ||
+      Boolean(user.permission?.viewAnalytics) ||
+      Boolean(user.permission?.viewOrders) ||
+      Boolean(user.permission?.viewProducts);
+
+    if (!canViewAnalytics) {
+      return { success: true, data: [], meta: null };
+    }
+
+    const canViewAllOrders = isAdmin(user) || Boolean(user.permission?.viewOrders);
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+
+    const orderWhere = {
+      ...(canViewAllOrders ? {} : { userId }),
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+      ...(warehouseScope ? warehouseScope : {}),
+    };
+
+    const warrantyWhere = {
+      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+      ...(warehouseScope ? { warehouse: warehouseScope.warehouse } : {}),
+    };
+
+    const [orders, warranties] = await Promise.all([
+      prisma.order.findMany({
+        where: orderWhere,
+        select: {
+          id: true,
+          status: true,
+          discount: true,
+          shippingPrice: true,
+          moneyTransferCommission: true,
+          otherCommissions: true,
+          usdToTryRateAtOrder: true,
+          warehouse: {
+            select: {
+              location: true,
+            }
+          },
+          commissions: {
+            select: {
+              amount: true,
+              affiliateLink: {
+                select: {
+                  productId: true,
+                }
+              }
+            }
+          },
+          items: {
+            select: {
+              productId: true,
+              quantity: true,
+              price: true,
+              discount: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                }
+              }
+            }
+          }
+        }
+      }),
+      prisma.warranty.findMany({
+        where: warrantyWhere,
+        select: {
+          productId: true,
+          type: true,
+          quantity: true,
+          product: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        }
+      })
+    ]);
+
+    let visits: Array<{ productId: number; visitorId: string; createdAt: Date }> = [];
+    try {
+      visits = await prisma.adPageVisit.findMany({
+        where: createdAtFilter ? { createdAt: createdAtFilter } : undefined,
+        select: {
+          productId: true,
+          visitorId: true,
+          createdAt: true,
+        }
+      });
+    } catch (error: any) {
+      if (!String(error?.message || "").includes("ad_page_visits")) {
+        console.error("Error in GetProductInsightsAction visits:", error);
+      }
+    }
+
+    let adAttributedOrderItems: Array<{ productId: number; orderId: number }> = [];
+    try {
+      adAttributedOrderItems = await prisma.orderItem.findMany({
+        where: {
+          order: {
+            ...orderWhere,
+            additionalNotes: {
+              contains: "source:ad",
+            },
+          },
+        },
+        select: {
+          productId: true,
+          orderId: true,
+        }
+      });
+    } catch (error) {
+      console.error("Error in GetProductInsightsAction ad orders:", error);
+    }
+
+    type InsightRow = {
+      productId: number;
+      name: string;
+      totalUnits: number;
+      revenueUnits: number;
+      deliveredUnits: number;
+      cancelledUnits: number;
+      totalRevenueUSD: number;
+      allocatedDiscountUSD: number;
+      allocatedExpensesUSD: number;
+      estimatedContributionUSD: number;
+      orders: Set<number>;
+      deliveredOrders: Set<number>;
+      cancelledOrders: Set<number>;
+      visitors: Set<string>;
+      views: number;
+      adOrders: Set<number>;
+      warrantyRecords: number;
+      warrantyQuantity: number;
+      replacementQuantity: number;
+      maintenanceQuantity: number;
+      damagedQuantity: number;
+    };
+
+    const insightMap = new Map<number, InsightRow>();
+
+    const getInsightRow = (productId: number, fallbackName?: string | null) => {
+      const existing = insightMap.get(productId);
+      if (existing) {
+        if (!existing.name && fallbackName) {
+          existing.name = fallbackName;
+        }
+        return existing;
+      }
+
+      const created: InsightRow = {
+        productId,
+        name: fallbackName || "منتج غير معروف",
+        totalUnits: 0,
+        revenueUnits: 0,
+        deliveredUnits: 0,
+        cancelledUnits: 0,
+        totalRevenueUSD: 0,
+        allocatedDiscountUSD: 0,
+        allocatedExpensesUSD: 0,
+        estimatedContributionUSD: 0,
+        orders: new Set<number>(),
+        deliveredOrders: new Set<number>(),
+        cancelledOrders: new Set<number>(),
+        visitors: new Set<string>(),
+        views: 0,
+        adOrders: new Set<number>(),
+        warrantyRecords: 0,
+        warrantyQuantity: 0,
+        replacementQuantity: 0,
+        maintenanceQuantity: 0,
+        damagedQuantity: 0,
+      };
+
+      insightMap.set(productId, created);
+      return created;
+    };
+
+    for (const order of orders) {
+      const warehouseLocation = order.warehouse?.location || null;
+      const effectiveRate = resolveOrderExchangeRate(order, turkeyExchangeRate);
+      const rawLineTotals = (order.items || []).map((item) => {
+        const quantity = Math.max(0, Number(item.quantity || 0));
+        const unitPrice = Number(item.price || 0);
+        const unitDiscount = Number(item.discount || 0);
+        const netUnitPrice = Math.max(0, unitPrice - unitDiscount);
+        return {
+          productId: item.productId,
+          name: item.product?.name || "منتج غير معروف",
+          quantity,
+          lineSubtotal: Math.max(0, netUnitPrice * quantity),
+        };
+      });
+
+      const orderSubtotal = rawLineTotals.reduce((sum, row) => sum + row.lineSubtotal, 0);
+      const orderDiscount = Math.max(0, Number(order.discount || 0));
+      const totalExtraCosts =
+        Math.max(0, Number(order.shippingPrice || 0)) +
+        Math.max(0, Number(order.moneyTransferCommission || 0)) +
+        Math.max(0, Number(order.otherCommissions || 0));
+
+      const affiliateCommissionByProduct = new Map<number, number>();
+      for (const commission of order.commissions || []) {
+        const productId = Number(commission.affiliateLink?.productId || 0);
+        if (!productId) continue;
+        const previous = affiliateCommissionByProduct.get(productId) || 0;
+        affiliateCommissionByProduct.set(productId, previous + Math.max(0, Number(commission.amount || 0)));
+      }
+
+      for (const row of rawLineTotals) {
+        const entry = getInsightRow(row.productId, row.name);
+        const share = orderSubtotal > 0 ? row.lineSubtotal / orderSubtotal : 0;
+        const allocatedDiscount = orderDiscount * share;
+        const allocatedExtraCosts = totalExtraCosts * share;
+        const rawRevenueAfterDiscount = Math.max(0, row.lineSubtotal - allocatedDiscount);
+        const affiliateCommission = affiliateCommissionByProduct.get(row.productId) || 0;
+
+        const revenueUSD = normalizeOrderAmountToUSD(rawRevenueAfterDiscount, warehouseLocation, effectiveRate);
+        const discountUSD = normalizeOrderAmountToUSD(allocatedDiscount, warehouseLocation, effectiveRate);
+        const extraCostsUSD = normalizeOrderAmountToUSD(allocatedExtraCosts + affiliateCommission, warehouseLocation, effectiveRate);
+        const contributionUSD = Math.max(0, revenueUSD - extraCostsUSD);
+
+        entry.totalUnits += row.quantity;
+        entry.orders.add(order.id);
+
+        if (NON_REVENUE_STATUSES.includes(order.status)) {
+          entry.cancelledUnits += row.quantity;
+          entry.cancelledOrders.add(order.id);
+        } else {
+          entry.revenueUnits += row.quantity;
+          entry.totalRevenueUSD += revenueUSD;
+          entry.allocatedDiscountUSD += discountUSD;
+          entry.allocatedExpensesUSD += extraCostsUSD;
+          entry.estimatedContributionUSD += contributionUSD;
+        }
+
+        if (DELIVERED_ORDER_STATUSES.includes(order.status)) {
+          entry.deliveredUnits += row.quantity;
+          entry.deliveredOrders.add(order.id);
+        }
+      }
+    }
+
+    for (const visit of visits) {
+      const entry = getInsightRow(visit.productId);
+      entry.views += 1;
+      entry.visitors.add(String(visit.visitorId || ""));
+    }
+
+    for (const adOrderItem of adAttributedOrderItems) {
+      const entry = getInsightRow(adOrderItem.productId);
+      entry.adOrders.add(adOrderItem.orderId);
+    }
+
+    for (const warranty of warranties) {
+      const entry = getInsightRow(warranty.productId, warranty.product?.name);
+      const quantity = Math.max(0, Number(warranty.quantity || 0));
+      entry.warrantyRecords += 1;
+      entry.warrantyQuantity += quantity;
+
+      if (warranty.type === "REPLACEMENT") {
+        entry.replacementQuantity += quantity;
+      } else if (warranty.type === "MAINTENANCE") {
+        entry.maintenanceQuantity += quantity;
+      } else if (warranty.type === "DAMAGED") {
+        entry.damagedQuantity += quantity;
+      }
+    }
+
+    const data = Array.from(insightMap.values())
+      .map((row) => {
+        const averageRevenuePerUnit = row.revenueUnits > 0 ? row.totalRevenueUSD / row.revenueUnits : 0;
+        const cancellationRate = row.totalUnits > 0 ? (row.cancelledUnits / row.totalUnits) * 100 : 0;
+        const warrantyRate = row.deliveredUnits > 0 ? (row.warrantyQuantity / row.deliveredUnits) * 100 : 0;
+        const viewsToOrdersRate = row.views > 0 ? (row.adOrders.size / row.views) * 100 : 0;
+        const contributionMargin = row.totalRevenueUSD > 0 ? (row.estimatedContributionUSD / row.totalRevenueUSD) * 100 : 0;
+
+        return {
+          productId: row.productId,
+          name: row.name,
+          totalUnits: row.totalUnits,
+          revenueUnits: row.revenueUnits,
+          deliveredUnits: row.deliveredUnits,
+          cancelledUnits: row.cancelledUnits,
+          totalRevenueUSD: Number(row.totalRevenueUSD.toFixed(2)),
+          allocatedDiscountUSD: Number(row.allocatedDiscountUSD.toFixed(2)),
+          allocatedExpensesUSD: Number(row.allocatedExpensesUSD.toFixed(2)),
+          estimatedContributionUSD: Number(row.estimatedContributionUSD.toFixed(2)),
+          averageRevenuePerUnitUSD: Number(averageRevenuePerUnit.toFixed(2)),
+          contributionMargin: Number(contributionMargin.toFixed(2)),
+          ordersCount: row.orders.size,
+          deliveredOrdersCount: row.deliveredOrders.size,
+          cancelledOrdersCount: row.cancelledOrders.size,
+          views: row.views,
+          uniqueVisitors: row.visitors.size,
+          adOrdersCount: row.adOrders.size,
+          viewsToOrdersRate: Number(viewsToOrdersRate.toFixed(2)),
+          warrantyRecords: row.warrantyRecords,
+          warrantyQuantity: row.warrantyQuantity,
+          replacementQuantity: row.replacementQuantity,
+          maintenanceQuantity: row.maintenanceQuantity,
+          damagedQuantity: row.damagedQuantity,
+          cancellationRate: Number(cancellationRate.toFixed(2)),
+          warrantyRate: Number(warrantyRate.toFixed(2)),
+        };
+      })
+      .sort((first, second) => {
+        if (second.totalRevenueUSD !== first.totalRevenueUSD) {
+          return second.totalRevenueUSD - first.totalRevenueUSD;
+        }
+        return second.revenueUnits - first.revenueUnits;
+      })
+      .slice(0, 20);
+
+    return {
+      success: true,
+      data,
+      meta: {
+        productsTracked: data.length,
+        totalRevenueUSD: Number(data.reduce((sum, row) => sum + Number(row.totalRevenueUSD || 0), 0).toFixed(2)),
+        estimatedContributionUSD: Number(data.reduce((sum, row) => sum + Number(row.estimatedContributionUSD || 0), 0).toFixed(2)),
+        totalViews: data.reduce((sum, row) => sum + Number(row.views || 0), 0),
+        totalWarrantyQuantity: data.reduce((sum, row) => sum + Number(row.warrantyQuantity || 0), 0),
+      }
+    };
+  } catch (error) {
+    console.error("Error in GetProductInsightsAction:", error);
+    return { success: false, data: [], meta: null };
   }
 }
 
