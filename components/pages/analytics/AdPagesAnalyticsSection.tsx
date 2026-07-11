@@ -81,14 +81,14 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
       <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
         <div>
           <h2 className="text-lg font-bold text-slate-800 dark:text-white">تحليلات صفحات الإعلان</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">مشاهدات صفحات `ad`، الزوار الفريدون، وأنماط الدخول حسب المنتج.</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">مشاهدات صفحات ad، الزوار الفريدون، الطلبات المرتبطة، وحالات التبديل والصيانة والتالف لكل منتج.</p>
         </div>
         {adAnalyticsLoading ? (
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">جاري التحميل...</div>
         ) : null}
       </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
           <div className="text-xs font-semibold text-slate-500">إجمالي المشاهدات</div>
           <div className="mt-1 text-2xl font-black text-blue-600">{Number(adAnalytics?.summary.totalViews || 0).toLocaleString()}</div>
@@ -111,6 +111,21 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
             {Number(adAnalytics?.summary.trackedAdsCount || 0).toLocaleString()} / {Number(adAnalytics?.summary.configuredAdsCount || 0).toLocaleString()}
           </div>
         </div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+          <div className="text-xs font-semibold text-slate-500">التبديل</div>
+          <div className="mt-1 text-2xl font-black text-amber-600">{Number(adAnalytics?.warrantySummary.replacementCount || 0).toLocaleString()}</div>
+          <div className="mt-1 text-xs text-slate-500">الكمية: {Number(adAnalytics?.warrantySummary.replacementQuantity || 0).toLocaleString()}</div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+          <div className="text-xs font-semibold text-slate-500">الصيانة</div>
+          <div className="mt-1 text-2xl font-black text-sky-600">{Number(adAnalytics?.warrantySummary.maintenanceCount || 0).toLocaleString()}</div>
+          <div className="mt-1 text-xs text-slate-500">الكمية: {Number(adAnalytics?.warrantySummary.maintenanceQuantity || 0).toLocaleString()}</div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+          <div className="text-xs font-semibold text-slate-500">التالف</div>
+          <div className="mt-1 text-2xl font-black text-rose-600">{Number(adAnalytics?.warrantySummary.damagedCount || 0).toLocaleString()}</div>
+          <div className="mt-1 text-xs text-slate-500">الكمية: {Number(adAnalytics?.warrantySummary.damagedQuantity || 0).toLocaleString()}</div>
+        </div>
       </div>
 
       {!adAnalytics || adAnalytics.products.length === 0 ? (
@@ -119,27 +134,6 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
         </div>
       ) : (
         <>
-          <div className="mt-4 grid gap-4 xl:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">التبديل</div>
-              <div className="text-2xl font-black text-amber-600">{Number(adAnalytics.warrantySummary.replacementCount || 0).toLocaleString()}</div>
-              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.replacementQuantity || 0).toLocaleString()}</div>
-              <div className="mt-2 text-xs text-slate-400">عدد المنتجات التي دخلت حالة التبديل ضمن منتجات الإعلانات.</div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">الصيانة</div>
-              <div className="text-2xl font-black text-sky-600">{Number(adAnalytics.warrantySummary.maintenanceCount || 0).toLocaleString()}</div>
-              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.maintenanceQuantity || 0).toLocaleString()}</div>
-              <div className="mt-2 text-xs text-slate-400">المنتجات التي تم التعامل معها كصيانة بعد البيع.</div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">التالف</div>
-              <div className="text-2xl font-black text-rose-600">{Number(adAnalytics.warrantySummary.damagedCount || 0).toLocaleString()}</div>
-              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.damagedQuantity || 0).toLocaleString()}</div>
-              <div className="mt-2 text-xs text-slate-400">المنتجات التي سُجلت كحالة تالف ضمن نفس المنتجات.</div>
-            </div>
-          </div>
-
           <div className="mt-4 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <table className="w-full min-w-[1320px] text-right text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
