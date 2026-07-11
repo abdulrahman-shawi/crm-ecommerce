@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import AdPagesAnalyticsSection from '@/components/pages/analytics/AdPagesAnalyticsSection';
 import DynamicCard from "@/components/ui/dynamicCard";
 import { useAuth } from "@/context/AuthContext";
 import { getGeneralSettings } from "@/server/general-settings";
@@ -450,6 +451,8 @@ const AnalyticPage: React.FC = () => {
           <p className="mt-2 text-xs text-red-500 font-bold">فلتر تقرير الموظفين: تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية.</p>
         )}
       </div>
+
+      <AdPagesAnalyticsSection isVisible={user?.accountType === 'ADMIN'} />
 
       {selectedStatus && (
         <div
