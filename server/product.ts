@@ -221,6 +221,11 @@ export async function getAdPagesDashboardAnalytics() {
         product: { id: number; name: string };
     }> = [];
     let adOrderItems: Array<{ productId: number; orderId: number }> = [];
+    let warrantyRows: Array<{
+        productId: number;
+        type: 'REPLACEMENT' | 'MAINTENANCE' | 'DAMAGED';
+        quantity: number | null;
+    }> = [];
 
     try {
         visits = await prisma.adPageVisit.findMany({
@@ -272,6 +277,23 @@ export async function getAdPagesDashboardAnalytics() {
         adOrderItems = [];
     }
 
+    try {
+        warrantyRows = await prisma.warranty.findMany({
+            where: {
+                productId: {
+                    in: adProducts.map((product) => product.id),
+                },
+            },
+            select: {
+                productId: true,
+                type: true,
+                quantity: true,
+            },
+        });
+    } catch {
+        warrantyRows = [];
+    }
+
     const now = new Date();
     const todayStart = new Date(now);
     todayStart.setHours(0, 0, 0, 0);
@@ -289,9 +311,12 @@ export async function getAdPagesDashboardAnalytics() {
         viewsToday: number;
         viewsLast7Days: number;
         lastVisitedAt: Date | null;
-        referrers: string[];
-        browsers: string[];
-        devices: string[];
+        replacementCount: number;
+        replacementQuantity: number;
+        maintenanceCount: number;
+        maintenanceQuantity: number;
+        damagedCount: number;
+        damagedQuantity: number;
     }>();
 
     adProducts.forEach((product) => {
@@ -305,16 +330,14 @@ export async function getAdPagesDashboardAnalytics() {
             viewsToday: 0,
             viewsLast7Days: 0,
             lastVisitedAt: null,
-            referrers: [],
-            browsers: [],
-            devices: [],
+            replacementCount: 0,
+            replacementQuantity: 0,
+            maintenanceCount: 0,
+            maintenanceQuantity: 0,
+            damagedCount: 0,
+            damagedQuantity: 0,
         });
     });
-
-    const allReferrers: string[] = [];
-    const allBrowsers: string[] = [];
-    const allDevices: string[] = [];
-    const allOperatingSystems: string[] = [];
 
     visits.forEach((visit) => {
         const productEntry = productsMap.get(visit.product.id);
@@ -322,16 +345,8 @@ export async function getAdPagesDashboardAnalytics() {
             return;
         }
 
-        const referrerLabel = normalizeReferrerLabel(visit.referrer);
-        const browserLabel = normalizeAnalyticsLabel(visit.browser, 'غير محدد');
-        const deviceLabel = normalizeAnalyticsLabel(visit.deviceType, 'غير محدد');
-        const osLabel = normalizeAnalyticsLabel(visit.os, 'غير محدد');
-
         productEntry.totalViews += 1;
         productEntry.uniqueVisitors.add(String(visit.visitorId || ''));
-        productEntry.referrers.push(referrerLabel);
-        productEntry.browsers.push(browserLabel);
-        productEntry.devices.push(deviceLabel);
 
         if (visit.createdAt >= todayStart) {
             productEntry.viewsToday += 1;
@@ -344,11 +359,6 @@ export async function getAdPagesDashboardAnalytics() {
         if (!productEntry.lastVisitedAt || visit.createdAt > productEntry.lastVisitedAt) {
             productEntry.lastVisitedAt = visit.createdAt;
         }
-
-        allReferrers.push(referrerLabel);
-        allBrowsers.push(browserLabel);
-        allDevices.push(deviceLabel);
-        allOperatingSystems.push(osLabel);
     });
 
     adOrderItems.forEach((item) => {
@@ -360,11 +370,34 @@ export async function getAdPagesDashboardAnalytics() {
         productEntry.adOrders.add(Number(item.orderId || 0));
     });
 
+    warrantyRows.forEach((row) => {
+        const productEntry = productsMap.get(row.productId);
+        if (!productEntry) {
+            return;
+        }
+
+        const quantity = Math.max(0, Number(row.quantity || 0));
+
+        if (row.type === 'REPLACEMENT') {
+            productEntry.replacementCount += 1;
+            productEntry.replacementQuantity += quantity;
+            return;
+        }
+
+        if (row.type === 'MAINTENANCE') {
+            productEntry.maintenanceCount += 1;
+            productEntry.maintenanceQuantity += quantity;
+            return;
+        }
+
+        if (row.type === 'DAMAGED') {
+            productEntry.damagedCount += 1;
+            productEntry.damagedQuantity += quantity;
+        }
+    });
+
     const products = Array.from(productsMap.values())
         .map((entry) => {
-            const referrers = buildBreakdown(entry.referrers, 'مباشر / بدون مرجع');
-            const browsers = buildBreakdown(entry.browsers, 'غير محدد');
-            const devices = buildBreakdown(entry.devices, 'غير محدد');
             const ordersCount = entry.adOrders.size;
             const conversionRate = entry.totalViews > 0 ? Number(((ordersCount / entry.totalViews) * 100).toFixed(2)) : 0;
 
@@ -379,9 +412,12 @@ export async function getAdPagesDashboardAnalytics() {
                 viewsToday: entry.viewsToday,
                 viewsLast7Days: entry.viewsLast7Days,
                 lastVisitedAt: entry.lastVisitedAt,
-                topReferrer: referrers[0]?.label || 'مباشر / بدون مرجع',
-                topBrowser: browsers[0]?.label || 'غير محدد',
-                topDevice: devices[0]?.label || 'غير محدد',
+                replacementCount: entry.replacementCount,
+                replacementQuantity: entry.replacementQuantity,
+                maintenanceCount: entry.maintenanceCount,
+                maintenanceQuantity: entry.maintenanceQuantity,
+                damagedCount: entry.damagedCount,
+                damagedQuantity: entry.damagedQuantity,
             };
         })
         .sort((first, second) => second.totalViews - first.totalViews || second.viewsLast7Days - first.viewsLast7Days);
@@ -398,11 +434,13 @@ export async function getAdPagesDashboardAnalytics() {
                 viewsToday: visits.filter((visit) => visit.createdAt >= todayStart).length,
                 viewsLast7Days: visits.filter((visit) => visit.createdAt >= last7DaysStart).length,
             },
-            breakdowns: {
-                referrers: buildBreakdown(allReferrers, 'مباشر / بدون مرجع').slice(0, 5),
-                browsers: buildBreakdown(allBrowsers, 'غير محدد').slice(0, 5),
-                devices: buildBreakdown(allDevices, 'غير محدد').slice(0, 5),
-                operatingSystems: buildBreakdown(allOperatingSystems, 'غير محدد').slice(0, 5),
+            warrantySummary: {
+                replacementCount: products.reduce((sum, product) => sum + Number(product.replacementCount || 0), 0),
+                replacementQuantity: products.reduce((sum, product) => sum + Number(product.replacementQuantity || 0), 0),
+                maintenanceCount: products.reduce((sum, product) => sum + Number(product.maintenanceCount || 0), 0),
+                maintenanceQuantity: products.reduce((sum, product) => sum + Number(product.maintenanceQuantity || 0), 0),
+                damagedCount: products.reduce((sum, product) => sum + Number(product.damagedCount || 0), 0),
+                damagedQuantity: products.reduce((sum, product) => sum + Number(product.damagedQuantity || 0), 0),
             },
             products,
         },

@@ -13,11 +13,13 @@ type AdAnalyticsDashboardData = {
     viewsToday: number;
     viewsLast7Days: number;
   };
-  breakdowns: {
-    referrers: Array<{ label: string; count: number }>;
-    browsers: Array<{ label: string; count: number }>;
-    devices: Array<{ label: string; count: number }>;
-    operatingSystems: Array<{ label: string; count: number }>;
+  warrantySummary: {
+    replacementCount: number;
+    replacementQuantity: number;
+    maintenanceCount: number;
+    maintenanceQuantity: number;
+    damagedCount: number;
+    damagedQuantity: number;
   };
   products: Array<{
     productId: number;
@@ -30,9 +32,12 @@ type AdAnalyticsDashboardData = {
     viewsToday: number;
     viewsLast7Days: number;
     lastVisitedAt?: string | Date | null;
-    topReferrer: string;
-    topBrowser: string;
-    topDevice: string;
+    replacementCount: number;
+    replacementQuantity: number;
+    maintenanceCount: number;
+    maintenanceQuantity: number;
+    damagedCount: number;
+    damagedQuantity: number;
   }>;
 };
 
@@ -114,51 +119,29 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
         </div>
       ) : (
         <>
-          <div className="mt-4 grid gap-4 xl:grid-cols-4">
+          <div className="mt-4 grid gap-4 xl:grid-cols-3">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">أعلى مصادر الزيارة</div>
-              <div className="flex flex-wrap gap-2">
-                {adAnalytics.breakdowns.referrers.length > 0 ? adAnalytics.breakdowns.referrers.map((entry) => (
-                  <span key={`ref-${entry.label}`} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                    {entry.label} ({entry.count})
-                  </span>
-                )) : <span className="text-xs text-slate-400">لا توجد بيانات</span>}
-              </div>
+              <div className="mb-2 text-xs font-bold text-slate-500">التبديل</div>
+              <div className="text-2xl font-black text-amber-600">{Number(adAnalytics.warrantySummary.replacementCount || 0).toLocaleString()}</div>
+              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.replacementQuantity || 0).toLocaleString()}</div>
+              <div className="mt-2 text-xs text-slate-400">عدد المنتجات التي دخلت حالة التبديل ضمن منتجات الإعلانات.</div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">المتصفحات الأكثر استخدامًا</div>
-              <div className="flex flex-wrap gap-2">
-                {adAnalytics.breakdowns.browsers.length > 0 ? adAnalytics.breakdowns.browsers.map((entry) => (
-                  <span key={`browser-${entry.label}`} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                    {entry.label} ({entry.count})
-                  </span>
-                )) : <span className="text-xs text-slate-400">لا توجد بيانات</span>}
-              </div>
+              <div className="mb-2 text-xs font-bold text-slate-500">الصيانة</div>
+              <div className="text-2xl font-black text-sky-600">{Number(adAnalytics.warrantySummary.maintenanceCount || 0).toLocaleString()}</div>
+              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.maintenanceQuantity || 0).toLocaleString()}</div>
+              <div className="mt-2 text-xs text-slate-400">المنتجات التي تم التعامل معها كصيانة بعد البيع.</div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">أنواع الأجهزة</div>
-              <div className="flex flex-wrap gap-2">
-                {adAnalytics.breakdowns.devices.length > 0 ? adAnalytics.breakdowns.devices.map((entry) => (
-                  <span key={`device-${entry.label}`} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                    {entry.label} ({entry.count})
-                  </span>
-                )) : <span className="text-xs text-slate-400">لا توجد بيانات</span>}
-              </div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="mb-2 text-xs font-bold text-slate-500">أنظمة التشغيل</div>
-              <div className="flex flex-wrap gap-2">
-                {adAnalytics.breakdowns.operatingSystems.length > 0 ? adAnalytics.breakdowns.operatingSystems.map((entry) => (
-                  <span key={`os-${entry.label}`} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                    {entry.label} ({entry.count})
-                  </span>
-                )) : <span className="text-xs text-slate-400">لا توجد بيانات</span>}
-              </div>
+              <div className="mb-2 text-xs font-bold text-slate-500">التالف</div>
+              <div className="text-2xl font-black text-rose-600">{Number(adAnalytics.warrantySummary.damagedCount || 0).toLocaleString()}</div>
+              <div className="mt-1 text-xs text-slate-500">إجمالي الكمية: {Number(adAnalytics.warrantySummary.damagedQuantity || 0).toLocaleString()}</div>
+              <div className="mt-2 text-xs text-slate-400">المنتجات التي سُجلت كحالة تالف ضمن نفس المنتجات.</div>
             </div>
           </div>
 
           <div className="mt-4 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <table className="w-full min-w-[1200px] text-right text-sm">
+            <table className="w-full min-w-[1320px] text-right text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                 <tr>
                   <th className="px-3 py-3">المنتج</th>
@@ -169,10 +152,10 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
                   <th className="px-3 py-3">الزوار</th>
                   <th className="px-3 py-3">اليوم</th>
                   <th className="px-3 py-3">آخر 7 أيام</th>
+                  <th className="px-3 py-3">تبديل</th>
+                  <th className="px-3 py-3">صيانة</th>
+                  <th className="px-3 py-3">تالف</th>
                   <th className="px-3 py-3">آخر زيارة</th>
-                  <th className="px-3 py-3">أعلى مرجع</th>
-                  <th className="px-3 py-3">الجهاز الأبرز</th>
-                  <th className="px-3 py-3">المتصفح الأبرز</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -195,10 +178,10 @@ export default function AdPagesAnalyticsSection({ isVisible }: { isVisible: bool
                     <td className="px-3 py-3 font-bold text-emerald-600">{Number(product.uniqueVisitors || 0).toLocaleString()}</td>
                     <td className="px-3 py-3">{Number(product.viewsToday || 0).toLocaleString()}</td>
                     <td className="px-3 py-3">{Number(product.viewsLast7Days || 0).toLocaleString()}</td>
+                    <td className="px-3 py-3 text-amber-600 font-bold">{Number(product.replacementCount || 0).toLocaleString()} / {Number(product.replacementQuantity || 0).toLocaleString()}</td>
+                    <td className="px-3 py-3 text-sky-600 font-bold">{Number(product.maintenanceCount || 0).toLocaleString()} / {Number(product.maintenanceQuantity || 0).toLocaleString()}</td>
+                    <td className="px-3 py-3 text-rose-600 font-bold">{Number(product.damagedCount || 0).toLocaleString()} / {Number(product.damagedQuantity || 0).toLocaleString()}</td>
                     <td className="px-3 py-3 text-xs text-slate-500">{formatDateTime(product.lastVisitedAt)}</td>
-                    <td className="px-3 py-3">{product.topReferrer}</td>
-                    <td className="px-3 py-3">{product.topDevice}</td>
-                    <td className="px-3 py-3">{product.topBrowser}</td>
                   </tr>
                 ))}
               </tbody>
