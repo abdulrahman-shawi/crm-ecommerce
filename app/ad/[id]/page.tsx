@@ -17,7 +17,7 @@ export default async function AdProductPage({ params }: AdProductPageProps) {
   return (
     <>
       <AdPageTracker productId={result.data.id} />
-      <AffiliateProductLanding product={result.data} />
+      <AffiliateProductLanding product={result.data} trafficSource="ad" />
     </>
   );
 }

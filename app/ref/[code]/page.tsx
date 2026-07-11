@@ -22,6 +22,7 @@ export default async function AffiliateRefPage({ params }: AffiliateRefPageProps
       product={product}
       affiliateCode={affiliateCode}
       productLinkHref={productLinkHref}
+      trafficSource="affiliate"
     />
   );
 }

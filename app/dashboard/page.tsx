@@ -13,6 +13,7 @@ type AdAnalyticsDashboardData = {
     configuredAdsCount: number;
     trackedAdsCount: number;
     totalViews: number;
+    totalOrders: number;
     uniqueVisitors: number;
     viewsToday: number;
     viewsLast7Days: number;
@@ -28,6 +29,8 @@ type AdAnalyticsDashboardData = {
     productName: string;
     adUrl: string;
     totalViews: number;
+    ordersCount: number;
+    conversionRate: number;
     uniqueVisitors: number;
     viewsToday: number;
     viewsLast7Days: number;
@@ -893,6 +896,10 @@ const DashboardPage: React.FunctionComponent = () => {
               <div className="mt-1 text-2xl font-black text-blue-600">{Number(adAnalytics?.summary.totalViews || 0).toLocaleString()}</div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="text-xs font-semibold text-slate-500">طلبات صفحات الإعلان</div>
+              <div className="mt-1 text-2xl font-black text-rose-600">{Number(adAnalytics?.summary.totalOrders || 0).toLocaleString()}</div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
               <div className="text-xs font-semibold text-slate-500">الزوار الفريدون</div>
               <div className="mt-1 text-2xl font-black text-emerald-600">{Number(adAnalytics?.summary.uniqueVisitors || 0).toLocaleString()}</div>
             </div>
@@ -964,6 +971,8 @@ const DashboardPage: React.FunctionComponent = () => {
                       <th className="px-3 py-3">المنتج</th>
                       <th className="px-3 py-3">الرابط</th>
                       <th className="px-3 py-3">المشاهدات</th>
+                      <th className="px-3 py-3">الطلبات المرتبطة</th>
+                      <th className="px-3 py-3">نسبة التحويل</th>
                       <th className="px-3 py-3">الزوار</th>
                       <th className="px-3 py-3">اليوم</th>
                       <th className="px-3 py-3">آخر 7 أيام</th>
@@ -988,6 +997,8 @@ const DashboardPage: React.FunctionComponent = () => {
                           </a>
                         </td>
                         <td className="px-3 py-3 font-bold text-blue-600">{Number(product.totalViews || 0).toLocaleString()}</td>
+                        <td className="px-3 py-3 font-bold text-rose-600">{Number(product.ordersCount || 0).toLocaleString()}</td>
+                        <td className="px-3 py-3 font-bold text-violet-600">{Number(product.conversionRate || 0).toFixed(2)}%</td>
                         <td className="px-3 py-3 font-bold text-emerald-600">{Number(product.uniqueVisitors || 0).toLocaleString()}</td>
                         <td className="px-3 py-3">{Number(product.viewsToday || 0).toLocaleString()}</td>
                         <td className="px-3 py-3">{Number(product.viewsLast7Days || 0).toLocaleString()}</td>

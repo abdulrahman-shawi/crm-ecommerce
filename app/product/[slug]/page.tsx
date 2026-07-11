@@ -18,5 +18,5 @@ export default async function PublicProductPage({ params, searchParams }: Produc
   const affiliateCode = Array.isArray(searchParams?.ref)
     ? String(searchParams.ref[0] || '').trim()
     : String(searchParams?.ref || '').trim();
-  return <AffiliateProductLanding product={product} affiliateCode={affiliateCode} />;
+  return <AffiliateProductLanding product={product} affiliateCode={affiliateCode} trafficSource={affiliateCode ? 'affiliate' : 'product'} />;
 }

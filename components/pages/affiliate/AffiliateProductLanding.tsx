@@ -30,9 +30,10 @@ type AffiliateProductLandingProps = {
   product: ProductView;
   affiliateCode?: string;
   productLinkHref?: string;
+  trafficSource?: 'ad' | 'affiliate' | 'product';
 };
 
-export default function AffiliateProductLanding({ product, affiliateCode = '', productLinkHref }: AffiliateProductLandingProps) {
+export default function AffiliateProductLanding({ product, affiliateCode = '', productLinkHref, trafficSource = 'product' }: AffiliateProductLandingProps) {
   const mainImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0]?.url : null;
   const features = Array.isArray(product.landingPage?.features) ? product.landingPage.features : [];
   const reviews = Array.isArray(product.reviews) ? product.reviews : [];
@@ -130,7 +131,7 @@ export default function AffiliateProductLanding({ product, affiliateCode = '', p
             </div>
           </div>
 
-          <AffiliateProductOrderForm product={product} affiliateCode={affiliateCode} />
+          <AffiliateProductOrderForm product={product} affiliateCode={affiliateCode} trafficSource={trafficSource} />
         </div>
       </section>
     </main>

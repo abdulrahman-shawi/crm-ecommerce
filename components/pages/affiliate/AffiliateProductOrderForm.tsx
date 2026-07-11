@@ -22,7 +22,15 @@ type ProductLike = {
 
 const countries = ['سوريا', 'لبنان', 'العراق', 'تركيا', 'ليبيا'];
 
-export default function AffiliateProductOrderForm({ product, affiliateCode = '' }: { product: ProductLike; affiliateCode?: string }) {
+export default function AffiliateProductOrderForm({
+  product,
+  affiliateCode = '',
+  trafficSource = 'product',
+}: {
+  product: ProductLike;
+  affiliateCode?: string;
+  trafficSource?: 'ad' | 'affiliate' | 'product';
+}) {
   const [loading, setLoading] = React.useState(false);
   const [form, setForm] = React.useState({
     customerName: '',
@@ -104,6 +112,7 @@ export default function AffiliateProductOrderForm({ product, affiliateCode = '' 
         body: JSON.stringify({
           productId: product.id,
           quantity: pricing.quantity,
+          trafficSource,
           customerName: form.customerName,
           phone: form.phone,
           receiverName: form.receiverName,

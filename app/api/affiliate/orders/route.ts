@@ -4,11 +4,21 @@ import { createOrder } from '@/server/order';
 import { calculateQuantityDiscountPricing } from '@/lib/ad-pricing';
 import { prisma } from '@/lib/prisma';
 
+function normalizeTrafficSource(value: unknown) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'ad' || normalized === 'affiliate' || normalized === 'product') {
+    return normalized;
+  }
+
+  return 'product';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const productId = Number(body?.productId || 0);
     const quantity = Number(body?.quantity || 0);
+    const trafficSource = normalizeTrafficSource(body?.trafficSource);
 
     if (Number.isNaN(productId) || productId <= 0 || Number.isNaN(quantity) || quantity <= 0) {
       return NextResponse.json({ success: false, error: 'بيانات الطلب غير صالحة' }, { status: 400 });
@@ -75,7 +85,7 @@ export async function POST(request: NextRequest) {
         amountBank: grandTotal,
         deliveryNotes: String(body?.deliveryNotes || '').trim(),
         paymentMethod: String(body?.paymentMethod || 'عند الاستلام').trim() || 'عند الاستلام',
-        additionalNotes: 'affiliate-order',
+        additionalNotes: `public-order|source:${trafficSource}`,
         grandTotal,
         overallDiscount: 0,
         subTotal: pricing.subtotal,

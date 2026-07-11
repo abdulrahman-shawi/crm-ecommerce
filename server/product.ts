@@ -220,6 +220,7 @@ export async function getAdPagesDashboardAnalytics() {
         createdAt: Date;
         product: { id: number; name: string };
     }> = [];
+    let adOrderItems: Array<{ productId: number; orderId: number }> = [];
 
     try {
         visits = await prisma.adPageVisit.findMany({
@@ -250,6 +251,27 @@ export async function getAdPagesDashboardAnalytics() {
         }
     }
 
+    try {
+        adOrderItems = await prisma.orderItem.findMany({
+            where: {
+                productId: {
+                    in: adProducts.map((product) => product.id),
+                },
+                order: {
+                    additionalNotes: {
+                        contains: 'source:ad',
+                    },
+                },
+            },
+            select: {
+                productId: true,
+                orderId: true,
+            },
+        });
+    } catch {
+        adOrderItems = [];
+    }
+
     const now = new Date();
     const todayStart = new Date(now);
     todayStart.setHours(0, 0, 0, 0);
@@ -262,6 +284,7 @@ export async function getAdPagesDashboardAnalytics() {
         productName: string;
         adUrl: string;
         totalViews: number;
+        adOrders: Set<number>;
         uniqueVisitors: Set<string>;
         viewsToday: number;
         viewsLast7Days: number;
@@ -277,6 +300,7 @@ export async function getAdPagesDashboardAnalytics() {
             productName: product.name,
             adUrl: buildAdFullUrl(product.id),
             totalViews: 0,
+            adOrders: new Set<number>(),
             uniqueVisitors: new Set<string>(),
             viewsToday: 0,
             viewsLast7Days: 0,
@@ -327,17 +351,30 @@ export async function getAdPagesDashboardAnalytics() {
         allOperatingSystems.push(osLabel);
     });
 
+    adOrderItems.forEach((item) => {
+        const productEntry = productsMap.get(item.productId);
+        if (!productEntry) {
+            return;
+        }
+
+        productEntry.adOrders.add(Number(item.orderId || 0));
+    });
+
     const products = Array.from(productsMap.values())
         .map((entry) => {
             const referrers = buildBreakdown(entry.referrers, 'مباشر / بدون مرجع');
             const browsers = buildBreakdown(entry.browsers, 'غير محدد');
             const devices = buildBreakdown(entry.devices, 'غير محدد');
+            const ordersCount = entry.adOrders.size;
+            const conversionRate = entry.totalViews > 0 ? Number(((ordersCount / entry.totalViews) * 100).toFixed(2)) : 0;
 
             return {
                 productId: entry.productId,
                 productName: entry.productName,
                 adUrl: entry.adUrl,
                 totalViews: entry.totalViews,
+                ordersCount,
+                conversionRate,
                 uniqueVisitors: entry.uniqueVisitors.size,
                 viewsToday: entry.viewsToday,
                 viewsLast7Days: entry.viewsLast7Days,
@@ -356,6 +393,7 @@ export async function getAdPagesDashboardAnalytics() {
                 configuredAdsCount: adProducts.length,
                 trackedAdsCount: products.filter((product) => product.totalViews > 0).length,
                 totalViews: visits.length,
+                totalOrders: products.reduce((sum, product) => sum + Number(product.ordersCount || 0), 0),
                 uniqueVisitors: new Set(visits.map((visit) => String(visit.visitorId || ''))).size,
                 viewsToday: visits.filter((visit) => visit.createdAt >= todayStart).length,
                 viewsLast7Days: visits.filter((visit) => visit.createdAt >= last7DaysStart).length,
