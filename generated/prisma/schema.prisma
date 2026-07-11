@@ -240,12 +240,35 @@ model Product {
   stocks              ProductStock[]
   stockMovements      StockMovement[]
   warrantiesAsProduct Warranty[]      @relation("WarrantyOriginalProduct")
+  adPageVisits        AdPageVisit[]
 
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks AffiliateLink[]
   reviews        Review[]
   landingPage    ProductLandingPage?
   offerDiscounts OfferDiscount[]
+}
+
+model AdPageVisit {
+  id         String   @id @default(uuid())
+  productId  Int      @map("product_id")
+  visitorId  String   @map("visitor_id")
+  path       String?
+  referrer   String?
+  userAgent  String?  @map("user_agent")
+  browser    String?
+  os         String?
+  deviceType String?  @map("device_type")
+  locale     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([visitorId])
+  @@index([createdAt])
+  @@index([productId, createdAt])
+  @@map("ad_page_visits")
 }
 
 // ============================================

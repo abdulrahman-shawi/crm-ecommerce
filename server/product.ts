@@ -1,7 +1,69 @@
 'use server';
 
-import { buildAffiliateFullUrl } from '@/lib/affiliate';
+import { decrypt } from '@/lib/auth';
+import { buildAdFullUrl, buildAffiliateFullUrl } from '@/lib/affiliate';
 import { prisma } from "@/lib/prisma";
+import { cookies } from 'next/headers';
+
+async function getCurrentSessionUser() {
+    try {
+        const session = cookies().get('skynova')?.value;
+        if (!session) return null;
+
+        const decoded = await decrypt(session);
+        if (!decoded?.userId) return null;
+
+        return await prisma.user.findUnique({
+            where: { id: String(decoded.userId) },
+            include: { permission: true },
+        });
+    } catch {
+        return null;
+    }
+}
+
+function normalizeAnalyticsLabel(value?: string | null, fallback: string = 'غير محدد') {
+    const normalized = String(value || '').trim();
+    return normalized || fallback;
+}
+
+function normalizeReferrerLabel(value?: string | null) {
+    const normalized = String(value || '').trim();
+    if (!normalized) {
+        return 'مباشر / بدون مرجع';
+    }
+
+    try {
+        const url = new URL(normalized);
+        return url.hostname.replace(/^www\./i, '') || normalized;
+    } catch {
+        return normalized;
+    }
+}
+
+function buildBreakdown(values: Array<string>, fallback: string) {
+    const counts = new Map<string, number>();
+
+    values.forEach((value) => {
+        const label = normalizeAnalyticsLabel(value, fallback);
+        counts.set(label, (counts.get(label) || 0) + 1);
+    });
+
+    return Array.from(counts.entries())
+        .sort((first, second) => second[1] - first[1])
+        .map(([label, count]) => ({ label, count }));
+}
+
+function isAdAnalyticsTableMissing(error: any) {
+    const code = String(error?.code || '').trim();
+    const message = String(error?.message || '').trim();
+
+    if (code === 'P2021' || code === 'P2022') {
+        return true;
+    }
+
+    return /ad_page_visits|AdPageVisit/i.test(message) && /does not exist|not exist|missing/i.test(message);
+}
 
 export async function getProduct() {
     const products = await prisma.product.findMany({
@@ -124,6 +186,189 @@ export async function getPublicAdProductById(productIdInput: number | string) {
     }
 
     return { success: true, data: JSON.parse(JSON.stringify(product)) };
+}
+
+export async function getAdPagesDashboardAnalytics() {
+    const currentUser = await getCurrentSessionUser();
+    if (!currentUser || currentUser.accountType !== 'ADMIN') {
+        return { success: false, error: 'غير مصرح لك بعرض تحليلات صفحات الإعلان' };
+    }
+
+    const adProducts = await prisma.product.findMany({
+        where: {
+            showInAds: true,
+            isActive: true,
+            landingPage: {
+                is: {
+                    isActive: true,
+                },
+            },
+        },
+        select: {
+            id: true,
+            name: true,
+        },
+        orderBy: { createdAt: 'desc' },
+    });
+
+    let visits: Array<{
+        visitorId: string;
+        referrer: string | null;
+        browser: string | null;
+        os: string | null;
+        deviceType: string | null;
+        createdAt: Date;
+        product: { id: number; name: string };
+    }> = [];
+
+    try {
+        visits = await prisma.adPageVisit.findMany({
+            where: {
+                product: {
+                    showInAds: true,
+                },
+            },
+            select: {
+                visitorId: true,
+                referrer: true,
+                browser: true,
+                os: true,
+                deviceType: true,
+                createdAt: true,
+                product: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+    } catch (error: any) {
+        if (!isAdAnalyticsTableMissing(error)) {
+            return { success: false, error: 'تعذر تحميل تحليلات صفحات الإعلان' };
+        }
+    }
+
+    const now = new Date();
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    const last7DaysStart = new Date(now);
+    last7DaysStart.setDate(last7DaysStart.getDate() - 6);
+    last7DaysStart.setHours(0, 0, 0, 0);
+
+    const productsMap = new Map<number, {
+        productId: number;
+        productName: string;
+        adUrl: string;
+        totalViews: number;
+        uniqueVisitors: Set<string>;
+        viewsToday: number;
+        viewsLast7Days: number;
+        lastVisitedAt: Date | null;
+        referrers: string[];
+        browsers: string[];
+        devices: string[];
+    }>();
+
+    adProducts.forEach((product) => {
+        productsMap.set(product.id, {
+            productId: product.id,
+            productName: product.name,
+            adUrl: buildAdFullUrl(product.id),
+            totalViews: 0,
+            uniqueVisitors: new Set<string>(),
+            viewsToday: 0,
+            viewsLast7Days: 0,
+            lastVisitedAt: null,
+            referrers: [],
+            browsers: [],
+            devices: [],
+        });
+    });
+
+    const allReferrers: string[] = [];
+    const allBrowsers: string[] = [];
+    const allDevices: string[] = [];
+    const allOperatingSystems: string[] = [];
+
+    visits.forEach((visit) => {
+        const productEntry = productsMap.get(visit.product.id);
+        if (!productEntry) {
+            return;
+        }
+
+        const referrerLabel = normalizeReferrerLabel(visit.referrer);
+        const browserLabel = normalizeAnalyticsLabel(visit.browser, 'غير محدد');
+        const deviceLabel = normalizeAnalyticsLabel(visit.deviceType, 'غير محدد');
+        const osLabel = normalizeAnalyticsLabel(visit.os, 'غير محدد');
+
+        productEntry.totalViews += 1;
+        productEntry.uniqueVisitors.add(String(visit.visitorId || ''));
+        productEntry.referrers.push(referrerLabel);
+        productEntry.browsers.push(browserLabel);
+        productEntry.devices.push(deviceLabel);
+
+        if (visit.createdAt >= todayStart) {
+            productEntry.viewsToday += 1;
+        }
+
+        if (visit.createdAt >= last7DaysStart) {
+            productEntry.viewsLast7Days += 1;
+        }
+
+        if (!productEntry.lastVisitedAt || visit.createdAt > productEntry.lastVisitedAt) {
+            productEntry.lastVisitedAt = visit.createdAt;
+        }
+
+        allReferrers.push(referrerLabel);
+        allBrowsers.push(browserLabel);
+        allDevices.push(deviceLabel);
+        allOperatingSystems.push(osLabel);
+    });
+
+    const products = Array.from(productsMap.values())
+        .map((entry) => {
+            const referrers = buildBreakdown(entry.referrers, 'مباشر / بدون مرجع');
+            const browsers = buildBreakdown(entry.browsers, 'غير محدد');
+            const devices = buildBreakdown(entry.devices, 'غير محدد');
+
+            return {
+                productId: entry.productId,
+                productName: entry.productName,
+                adUrl: entry.adUrl,
+                totalViews: entry.totalViews,
+                uniqueVisitors: entry.uniqueVisitors.size,
+                viewsToday: entry.viewsToday,
+                viewsLast7Days: entry.viewsLast7Days,
+                lastVisitedAt: entry.lastVisitedAt,
+                topReferrer: referrers[0]?.label || 'مباشر / بدون مرجع',
+                topBrowser: browsers[0]?.label || 'غير محدد',
+                topDevice: devices[0]?.label || 'غير محدد',
+            };
+        })
+        .sort((first, second) => second.totalViews - first.totalViews || second.viewsLast7Days - first.viewsLast7Days);
+
+    return {
+        success: true,
+        data: {
+            summary: {
+                configuredAdsCount: adProducts.length,
+                trackedAdsCount: products.filter((product) => product.totalViews > 0).length,
+                totalViews: visits.length,
+                uniqueVisitors: new Set(visits.map((visit) => String(visit.visitorId || ''))).size,
+                viewsToday: visits.filter((visit) => visit.createdAt >= todayStart).length,
+                viewsLast7Days: visits.filter((visit) => visit.createdAt >= last7DaysStart).length,
+            },
+            breakdowns: {
+                referrers: buildBreakdown(allReferrers, 'مباشر / بدون مرجع').slice(0, 5),
+                browsers: buildBreakdown(allBrowsers, 'غير محدد').slice(0, 5),
+                devices: buildBreakdown(allDevices, 'غير محدد').slice(0, 5),
+                operatingSystems: buildBreakdown(allOperatingSystems, 'غير محدد').slice(0, 5),
+            },
+            products,
+        },
+    };
 }
 
 export async function getPublicAffiliateProductByCode(code: string) {

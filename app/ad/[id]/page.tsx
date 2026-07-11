@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import AffiliateProductLanding from '@/components/pages/affiliate/AffiliateProductLanding';
+import AdPageTracker from '@/components/pages/affiliate/AdPageTracker';
 import { getPublicAdProductById } from '@/server/product';
 
 type AdProductPageProps = {
@@ -13,5 +14,10 @@ export default async function AdProductPage({ params }: AdProductPageProps) {
     notFound();
   }
 
-  return <AffiliateProductLanding product={result.data} />;
+  return (
+    <>
+      <AdPageTracker productId={result.data.id} />
+      <AffiliateProductLanding product={result.data} />
+    </>
+  );
 }

@@ -217,6 +217,20 @@ exports.Prisma.ProductScalarFieldEnum = {
   affiliateCommissionRate: 'affiliateCommissionRate'
 };
 
+exports.Prisma.AdPageVisitScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  visitorId: 'visitorId',
+  path: 'path',
+  referrer: 'referrer',
+  userAgent: 'userAgent',
+  browser: 'browser',
+  os: 'os',
+  deviceType: 'deviceType',
+  locale: 'locale',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ProductLandingPageScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -649,6 +663,7 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   Category: 'Category',
   Product: 'Product',
+  AdPageVisit: 'AdPageVisit',
   ProductLandingPage: 'ProductLandingPage',
   Review: 'Review',
   Warehouse: 'Warehouse',

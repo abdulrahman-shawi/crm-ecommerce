@@ -34,6 +34,11 @@ export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
  */
 export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
 /**
+ * Model AdPageVisit
+ * 
+ */
+export type AdPageVisit = $Result.DefaultSelection<Prisma.$AdPageVisitPayload>
+/**
  * Model ProductLandingPage
  * 
  */
@@ -467,6 +472,16 @@ export class PrismaClient<
     * ```
     */
   get product(): Prisma.ProductDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adPageVisit`: Exposes CRUD operations for the **AdPageVisit** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdPageVisits
+    * const adPageVisits = await prisma.adPageVisit.findMany()
+    * ```
+    */
+  get adPageVisit(): Prisma.AdPageVisitDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.productLandingPage`: Exposes CRUD operations for the **ProductLandingPage** model.
@@ -1155,6 +1170,7 @@ export namespace Prisma {
     Permission: 'Permission',
     Category: 'Category',
     Product: 'Product',
+    AdPageVisit: 'AdPageVisit',
     ProductLandingPage: 'ProductLandingPage',
     Review: 'Review',
     Warehouse: 'Warehouse',
@@ -1195,7 +1211,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission"
+      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1492,6 +1508,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ProductCountArgs<ExtArgs>
             result: $Utils.Optional<ProductCountAggregateOutputType> | number
+          }
+        }
+      }
+      AdPageVisit: {
+        payload: Prisma.$AdPageVisitPayload<ExtArgs>
+        fields: Prisma.AdPageVisitFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdPageVisitFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdPageVisitFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          findFirst: {
+            args: Prisma.AdPageVisitFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdPageVisitFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          findMany: {
+            args: Prisma.AdPageVisitFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>[]
+          }
+          create: {
+            args: Prisma.AdPageVisitCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          createMany: {
+            args: Prisma.AdPageVisitCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdPageVisitCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>[]
+          }
+          delete: {
+            args: Prisma.AdPageVisitDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          update: {
+            args: Prisma.AdPageVisitUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdPageVisitDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdPageVisitUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdPageVisitUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdPageVisitUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdPageVisitPayload>
+          }
+          aggregate: {
+            args: Prisma.AdPageVisitAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdPageVisit>
+          }
+          groupBy: {
+            args: Prisma.AdPageVisitGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdPageVisitGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdPageVisitCountArgs<ExtArgs>
+            result: $Utils.Optional<AdPageVisitCountAggregateOutputType> | number
           }
         }
       }
@@ -3457,6 +3547,7 @@ export namespace Prisma {
     permission?: PermissionOmit
     category?: CategoryOmit
     product?: ProductOmit
+    adPageVisit?: AdPageVisitOmit
     productLandingPage?: ProductLandingPageOmit
     review?: ReviewOmit
     warehouse?: WarehouseOmit
@@ -3760,6 +3851,7 @@ export namespace Prisma {
     stocks: number
     stockMovements: number
     warrantiesAsProduct: number
+    adPageVisits: number
     affiliateLinks: number
     reviews: number
     offerDiscounts: number
@@ -3772,6 +3864,7 @@ export namespace Prisma {
     stocks?: boolean | ProductCountOutputTypeCountStocksArgs
     stockMovements?: boolean | ProductCountOutputTypeCountStockMovementsArgs
     warrantiesAsProduct?: boolean | ProductCountOutputTypeCountWarrantiesAsProductArgs
+    adPageVisits?: boolean | ProductCountOutputTypeCountAdPageVisitsArgs
     affiliateLinks?: boolean | ProductCountOutputTypeCountAffiliateLinksArgs
     reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
     offerDiscounts?: boolean | ProductCountOutputTypeCountOfferDiscountsArgs
@@ -3828,6 +3921,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountWarrantiesAsProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WarrantyWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountAdPageVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdPageVisitWhereInput
   }
 
   /**
@@ -8825,6 +8925,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    adPageVisits?: boolean | Product$adPageVisitsArgs<ExtArgs>
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
@@ -8894,6 +8995,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     stockMovements?: boolean | Product$stockMovementsArgs<ExtArgs>
     warrantiesAsProduct?: boolean | Product$warrantiesAsProductArgs<ExtArgs>
+    adPageVisits?: boolean | Product$adPageVisitsArgs<ExtArgs>
     affiliateLinks?: boolean | Product$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
@@ -8917,6 +9019,7 @@ export namespace Prisma {
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
       warrantiesAsProduct: Prisma.$WarrantyPayload<ExtArgs>[]
+      adPageVisits: Prisma.$AdPageVisitPayload<ExtArgs>[]
       affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       landingPage: Prisma.$ProductLandingPagePayload<ExtArgs> | null
@@ -9338,6 +9441,7 @@ export namespace Prisma {
     stocks<T extends Product$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Product$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends Product$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warrantiesAsProduct<T extends Product$warrantiesAsProductArgs<ExtArgs> = {}>(args?: Subset<T, Product$warrantiesAsProductArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adPageVisits<T extends Product$adPageVisitsArgs<ExtArgs> = {}>(args?: Subset<T, Product$adPageVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     affiliateLinks<T extends Product$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, Product$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     landingPage<T extends Product$landingPageArgs<ExtArgs> = {}>(args?: Subset<T, Product$landingPageArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -9944,6 +10048,30 @@ export namespace Prisma {
   }
 
   /**
+   * Product.adPageVisits
+   */
+  export type Product$adPageVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    where?: AdPageVisitWhereInput
+    orderBy?: AdPageVisitOrderByWithRelationInput | AdPageVisitOrderByWithRelationInput[]
+    cursor?: AdPageVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdPageVisitScalarFieldEnum | AdPageVisitScalarFieldEnum[]
+  }
+
+  /**
    * Product.affiliateLinks
    */
   export type Product$affiliateLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10050,6 +10178,1176 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AdPageVisit
+   */
+
+  export type AggregateAdPageVisit = {
+    _count: AdPageVisitCountAggregateOutputType | null
+    _avg: AdPageVisitAvgAggregateOutputType | null
+    _sum: AdPageVisitSumAggregateOutputType | null
+    _min: AdPageVisitMinAggregateOutputType | null
+    _max: AdPageVisitMaxAggregateOutputType | null
+  }
+
+  export type AdPageVisitAvgAggregateOutputType = {
+    productId: number | null
+  }
+
+  export type AdPageVisitSumAggregateOutputType = {
+    productId: number | null
+  }
+
+  export type AdPageVisitMinAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    visitorId: string | null
+    path: string | null
+    referrer: string | null
+    userAgent: string | null
+    browser: string | null
+    os: string | null
+    deviceType: string | null
+    locale: string | null
+    createdAt: Date | null
+  }
+
+  export type AdPageVisitMaxAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    visitorId: string | null
+    path: string | null
+    referrer: string | null
+    userAgent: string | null
+    browser: string | null
+    os: string | null
+    deviceType: string | null
+    locale: string | null
+    createdAt: Date | null
+  }
+
+  export type AdPageVisitCountAggregateOutputType = {
+    id: number
+    productId: number
+    visitorId: number
+    path: number
+    referrer: number
+    userAgent: number
+    browser: number
+    os: number
+    deviceType: number
+    locale: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AdPageVisitAvgAggregateInputType = {
+    productId?: true
+  }
+
+  export type AdPageVisitSumAggregateInputType = {
+    productId?: true
+  }
+
+  export type AdPageVisitMinAggregateInputType = {
+    id?: true
+    productId?: true
+    visitorId?: true
+    path?: true
+    referrer?: true
+    userAgent?: true
+    browser?: true
+    os?: true
+    deviceType?: true
+    locale?: true
+    createdAt?: true
+  }
+
+  export type AdPageVisitMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    visitorId?: true
+    path?: true
+    referrer?: true
+    userAgent?: true
+    browser?: true
+    os?: true
+    deviceType?: true
+    locale?: true
+    createdAt?: true
+  }
+
+  export type AdPageVisitCountAggregateInputType = {
+    id?: true
+    productId?: true
+    visitorId?: true
+    path?: true
+    referrer?: true
+    userAgent?: true
+    browser?: true
+    os?: true
+    deviceType?: true
+    locale?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AdPageVisitAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdPageVisit to aggregate.
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdPageVisits to fetch.
+     */
+    orderBy?: AdPageVisitOrderByWithRelationInput | AdPageVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdPageVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdPageVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdPageVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdPageVisits
+    **/
+    _count?: true | AdPageVisitCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AdPageVisitAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AdPageVisitSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdPageVisitMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdPageVisitMaxAggregateInputType
+  }
+
+  export type GetAdPageVisitAggregateType<T extends AdPageVisitAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdPageVisit]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdPageVisit[P]>
+      : GetScalarType<T[P], AggregateAdPageVisit[P]>
+  }
+
+
+
+
+  export type AdPageVisitGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdPageVisitWhereInput
+    orderBy?: AdPageVisitOrderByWithAggregationInput | AdPageVisitOrderByWithAggregationInput[]
+    by: AdPageVisitScalarFieldEnum[] | AdPageVisitScalarFieldEnum
+    having?: AdPageVisitScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdPageVisitCountAggregateInputType | true
+    _avg?: AdPageVisitAvgAggregateInputType
+    _sum?: AdPageVisitSumAggregateInputType
+    _min?: AdPageVisitMinAggregateInputType
+    _max?: AdPageVisitMaxAggregateInputType
+  }
+
+  export type AdPageVisitGroupByOutputType = {
+    id: string
+    productId: number
+    visitorId: string
+    path: string | null
+    referrer: string | null
+    userAgent: string | null
+    browser: string | null
+    os: string | null
+    deviceType: string | null
+    locale: string | null
+    createdAt: Date
+    _count: AdPageVisitCountAggregateOutputType | null
+    _avg: AdPageVisitAvgAggregateOutputType | null
+    _sum: AdPageVisitSumAggregateOutputType | null
+    _min: AdPageVisitMinAggregateOutputType | null
+    _max: AdPageVisitMaxAggregateOutputType | null
+  }
+
+  type GetAdPageVisitGroupByPayload<T extends AdPageVisitGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdPageVisitGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdPageVisitGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdPageVisitGroupByOutputType[P]>
+            : GetScalarType<T[P], AdPageVisitGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdPageVisitSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    visitorId?: boolean
+    path?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    browser?: boolean
+    os?: boolean
+    deviceType?: boolean
+    locale?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adPageVisit"]>
+
+  export type AdPageVisitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    visitorId?: boolean
+    path?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    browser?: boolean
+    os?: boolean
+    deviceType?: boolean
+    locale?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adPageVisit"]>
+
+  export type AdPageVisitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    visitorId?: boolean
+    path?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    browser?: boolean
+    os?: boolean
+    deviceType?: boolean
+    locale?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adPageVisit"]>
+
+  export type AdPageVisitSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    visitorId?: boolean
+    path?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    browser?: boolean
+    os?: boolean
+    deviceType?: boolean
+    locale?: boolean
+    createdAt?: boolean
+  }
+
+  export type AdPageVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "visitorId" | "path" | "referrer" | "userAgent" | "browser" | "os" | "deviceType" | "locale" | "createdAt", ExtArgs["result"]["adPageVisit"]>
+  export type AdPageVisitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type AdPageVisitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type AdPageVisitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $AdPageVisitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdPageVisit"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: number
+      visitorId: string
+      path: string | null
+      referrer: string | null
+      userAgent: string | null
+      browser: string | null
+      os: string | null
+      deviceType: string | null
+      locale: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["adPageVisit"]>
+    composites: {}
+  }
+
+  type AdPageVisitGetPayload<S extends boolean | null | undefined | AdPageVisitDefaultArgs> = $Result.GetResult<Prisma.$AdPageVisitPayload, S>
+
+  type AdPageVisitCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdPageVisitFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdPageVisitCountAggregateInputType | true
+    }
+
+  export interface AdPageVisitDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdPageVisit'], meta: { name: 'AdPageVisit' } }
+    /**
+     * Find zero or one AdPageVisit that matches the filter.
+     * @param {AdPageVisitFindUniqueArgs} args - Arguments to find a AdPageVisit
+     * @example
+     * // Get one AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdPageVisitFindUniqueArgs>(args: SelectSubset<T, AdPageVisitFindUniqueArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdPageVisit that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdPageVisitFindUniqueOrThrowArgs} args - Arguments to find a AdPageVisit
+     * @example
+     * // Get one AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdPageVisitFindUniqueOrThrowArgs>(args: SelectSubset<T, AdPageVisitFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdPageVisit that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitFindFirstArgs} args - Arguments to find a AdPageVisit
+     * @example
+     * // Get one AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdPageVisitFindFirstArgs>(args?: SelectSubset<T, AdPageVisitFindFirstArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdPageVisit that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitFindFirstOrThrowArgs} args - Arguments to find a AdPageVisit
+     * @example
+     * // Get one AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdPageVisitFindFirstOrThrowArgs>(args?: SelectSubset<T, AdPageVisitFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdPageVisits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdPageVisits
+     * const adPageVisits = await prisma.adPageVisit.findMany()
+     * 
+     * // Get first 10 AdPageVisits
+     * const adPageVisits = await prisma.adPageVisit.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adPageVisitWithIdOnly = await prisma.adPageVisit.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdPageVisitFindManyArgs>(args?: SelectSubset<T, AdPageVisitFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdPageVisit.
+     * @param {AdPageVisitCreateArgs} args - Arguments to create a AdPageVisit.
+     * @example
+     * // Create one AdPageVisit
+     * const AdPageVisit = await prisma.adPageVisit.create({
+     *   data: {
+     *     // ... data to create a AdPageVisit
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdPageVisitCreateArgs>(args: SelectSubset<T, AdPageVisitCreateArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdPageVisits.
+     * @param {AdPageVisitCreateManyArgs} args - Arguments to create many AdPageVisits.
+     * @example
+     * // Create many AdPageVisits
+     * const adPageVisit = await prisma.adPageVisit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdPageVisitCreateManyArgs>(args?: SelectSubset<T, AdPageVisitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdPageVisits and returns the data saved in the database.
+     * @param {AdPageVisitCreateManyAndReturnArgs} args - Arguments to create many AdPageVisits.
+     * @example
+     * // Create many AdPageVisits
+     * const adPageVisit = await prisma.adPageVisit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdPageVisits and only return the `id`
+     * const adPageVisitWithIdOnly = await prisma.adPageVisit.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdPageVisitCreateManyAndReturnArgs>(args?: SelectSubset<T, AdPageVisitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdPageVisit.
+     * @param {AdPageVisitDeleteArgs} args - Arguments to delete one AdPageVisit.
+     * @example
+     * // Delete one AdPageVisit
+     * const AdPageVisit = await prisma.adPageVisit.delete({
+     *   where: {
+     *     // ... filter to delete one AdPageVisit
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdPageVisitDeleteArgs>(args: SelectSubset<T, AdPageVisitDeleteArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdPageVisit.
+     * @param {AdPageVisitUpdateArgs} args - Arguments to update one AdPageVisit.
+     * @example
+     * // Update one AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdPageVisitUpdateArgs>(args: SelectSubset<T, AdPageVisitUpdateArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdPageVisits.
+     * @param {AdPageVisitDeleteManyArgs} args - Arguments to filter AdPageVisits to delete.
+     * @example
+     * // Delete a few AdPageVisits
+     * const { count } = await prisma.adPageVisit.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdPageVisitDeleteManyArgs>(args?: SelectSubset<T, AdPageVisitDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdPageVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdPageVisits
+     * const adPageVisit = await prisma.adPageVisit.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdPageVisitUpdateManyArgs>(args: SelectSubset<T, AdPageVisitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdPageVisits and returns the data updated in the database.
+     * @param {AdPageVisitUpdateManyAndReturnArgs} args - Arguments to update many AdPageVisits.
+     * @example
+     * // Update many AdPageVisits
+     * const adPageVisit = await prisma.adPageVisit.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdPageVisits and only return the `id`
+     * const adPageVisitWithIdOnly = await prisma.adPageVisit.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdPageVisitUpdateManyAndReturnArgs>(args: SelectSubset<T, AdPageVisitUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdPageVisit.
+     * @param {AdPageVisitUpsertArgs} args - Arguments to update or create a AdPageVisit.
+     * @example
+     * // Update or create a AdPageVisit
+     * const adPageVisit = await prisma.adPageVisit.upsert({
+     *   create: {
+     *     // ... data to create a AdPageVisit
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdPageVisit we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdPageVisitUpsertArgs>(args: SelectSubset<T, AdPageVisitUpsertArgs<ExtArgs>>): Prisma__AdPageVisitClient<$Result.GetResult<Prisma.$AdPageVisitPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdPageVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitCountArgs} args - Arguments to filter AdPageVisits to count.
+     * @example
+     * // Count the number of AdPageVisits
+     * const count = await prisma.adPageVisit.count({
+     *   where: {
+     *     // ... the filter for the AdPageVisits we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdPageVisitCountArgs>(
+      args?: Subset<T, AdPageVisitCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdPageVisitCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdPageVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdPageVisitAggregateArgs>(args: Subset<T, AdPageVisitAggregateArgs>): Prisma.PrismaPromise<GetAdPageVisitAggregateType<T>>
+
+    /**
+     * Group by AdPageVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdPageVisitGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdPageVisitGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdPageVisitGroupByArgs['orderBy'] }
+        : { orderBy?: AdPageVisitGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdPageVisitGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdPageVisitGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdPageVisit model
+   */
+  readonly fields: AdPageVisitFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdPageVisit.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdPageVisitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdPageVisit model
+   */
+  interface AdPageVisitFieldRefs {
+    readonly id: FieldRef<"AdPageVisit", 'String'>
+    readonly productId: FieldRef<"AdPageVisit", 'Int'>
+    readonly visitorId: FieldRef<"AdPageVisit", 'String'>
+    readonly path: FieldRef<"AdPageVisit", 'String'>
+    readonly referrer: FieldRef<"AdPageVisit", 'String'>
+    readonly userAgent: FieldRef<"AdPageVisit", 'String'>
+    readonly browser: FieldRef<"AdPageVisit", 'String'>
+    readonly os: FieldRef<"AdPageVisit", 'String'>
+    readonly deviceType: FieldRef<"AdPageVisit", 'String'>
+    readonly locale: FieldRef<"AdPageVisit", 'String'>
+    readonly createdAt: FieldRef<"AdPageVisit", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdPageVisit findUnique
+   */
+  export type AdPageVisitFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which AdPageVisit to fetch.
+     */
+    where: AdPageVisitWhereUniqueInput
+  }
+
+  /**
+   * AdPageVisit findUniqueOrThrow
+   */
+  export type AdPageVisitFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which AdPageVisit to fetch.
+     */
+    where: AdPageVisitWhereUniqueInput
+  }
+
+  /**
+   * AdPageVisit findFirst
+   */
+  export type AdPageVisitFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which AdPageVisit to fetch.
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdPageVisits to fetch.
+     */
+    orderBy?: AdPageVisitOrderByWithRelationInput | AdPageVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdPageVisits.
+     */
+    cursor?: AdPageVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdPageVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdPageVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdPageVisits.
+     */
+    distinct?: AdPageVisitScalarFieldEnum | AdPageVisitScalarFieldEnum[]
+  }
+
+  /**
+   * AdPageVisit findFirstOrThrow
+   */
+  export type AdPageVisitFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which AdPageVisit to fetch.
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdPageVisits to fetch.
+     */
+    orderBy?: AdPageVisitOrderByWithRelationInput | AdPageVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdPageVisits.
+     */
+    cursor?: AdPageVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdPageVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdPageVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdPageVisits.
+     */
+    distinct?: AdPageVisitScalarFieldEnum | AdPageVisitScalarFieldEnum[]
+  }
+
+  /**
+   * AdPageVisit findMany
+   */
+  export type AdPageVisitFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which AdPageVisits to fetch.
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdPageVisits to fetch.
+     */
+    orderBy?: AdPageVisitOrderByWithRelationInput | AdPageVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdPageVisits.
+     */
+    cursor?: AdPageVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdPageVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdPageVisits.
+     */
+    skip?: number
+    distinct?: AdPageVisitScalarFieldEnum | AdPageVisitScalarFieldEnum[]
+  }
+
+  /**
+   * AdPageVisit create
+   */
+  export type AdPageVisitCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdPageVisit.
+     */
+    data: XOR<AdPageVisitCreateInput, AdPageVisitUncheckedCreateInput>
+  }
+
+  /**
+   * AdPageVisit createMany
+   */
+  export type AdPageVisitCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdPageVisits.
+     */
+    data: AdPageVisitCreateManyInput | AdPageVisitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdPageVisit createManyAndReturn
+   */
+  export type AdPageVisitCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdPageVisits.
+     */
+    data: AdPageVisitCreateManyInput | AdPageVisitCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdPageVisit update
+   */
+  export type AdPageVisitUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdPageVisit.
+     */
+    data: XOR<AdPageVisitUpdateInput, AdPageVisitUncheckedUpdateInput>
+    /**
+     * Choose, which AdPageVisit to update.
+     */
+    where: AdPageVisitWhereUniqueInput
+  }
+
+  /**
+   * AdPageVisit updateMany
+   */
+  export type AdPageVisitUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdPageVisits.
+     */
+    data: XOR<AdPageVisitUpdateManyMutationInput, AdPageVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which AdPageVisits to update
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * Limit how many AdPageVisits to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdPageVisit updateManyAndReturn
+   */
+  export type AdPageVisitUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * The data used to update AdPageVisits.
+     */
+    data: XOR<AdPageVisitUpdateManyMutationInput, AdPageVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which AdPageVisits to update
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * Limit how many AdPageVisits to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdPageVisit upsert
+   */
+  export type AdPageVisitUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdPageVisit to update in case it exists.
+     */
+    where: AdPageVisitWhereUniqueInput
+    /**
+     * In case the AdPageVisit found by the `where` argument doesn't exist, create a new AdPageVisit with this data.
+     */
+    create: XOR<AdPageVisitCreateInput, AdPageVisitUncheckedCreateInput>
+    /**
+     * In case the AdPageVisit was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdPageVisitUpdateInput, AdPageVisitUncheckedUpdateInput>
+  }
+
+  /**
+   * AdPageVisit delete
+   */
+  export type AdPageVisitDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
+    /**
+     * Filter which AdPageVisit to delete.
+     */
+    where: AdPageVisitWhereUniqueInput
+  }
+
+  /**
+   * AdPageVisit deleteMany
+   */
+  export type AdPageVisitDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdPageVisits to delete
+     */
+    where?: AdPageVisitWhereInput
+    /**
+     * Limit how many AdPageVisits to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdPageVisit without action
+   */
+  export type AdPageVisitDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdPageVisit
+     */
+    select?: AdPageVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdPageVisit
+     */
+    omit?: AdPageVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdPageVisitInclude<ExtArgs> | null
   }
 
 
@@ -39900,6 +41198,23 @@ export namespace Prisma {
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
+  export const AdPageVisitScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    visitorId: 'visitorId',
+    path: 'path',
+    referrer: 'referrer',
+    userAgent: 'userAgent',
+    browser: 'browser',
+    os: 'os',
+    deviceType: 'deviceType',
+    locale: 'locale',
+    createdAt: 'createdAt'
+  };
+
+  export type AdPageVisitScalarFieldEnum = (typeof AdPageVisitScalarFieldEnum)[keyof typeof AdPageVisitScalarFieldEnum]
+
+
   export const ProductLandingPageScalarFieldEnum: {
     id: 'id',
     productId: 'productId',
@@ -41092,6 +42407,7 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     warrantiesAsProduct?: WarrantyListRelationFilter
+    adPageVisits?: AdPageVisitListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
@@ -41120,6 +42436,7 @@ export namespace Prisma {
     stocks?: ProductStockOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
     warrantiesAsProduct?: WarrantyOrderByRelationAggregateInput
+    adPageVisits?: AdPageVisitOrderByRelationAggregateInput
     affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     landingPage?: ProductLandingPageOrderByWithRelationInput
@@ -41151,6 +42468,7 @@ export namespace Prisma {
     stocks?: ProductStockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     warrantiesAsProduct?: WarrantyListRelationFilter
+    adPageVisits?: AdPageVisitListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
@@ -41197,6 +42515,93 @@ export namespace Prisma {
     showInAds?: BoolWithAggregatesFilter<"Product"> | boolean
     affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+  }
+
+  export type AdPageVisitWhereInput = {
+    AND?: AdPageVisitWhereInput | AdPageVisitWhereInput[]
+    OR?: AdPageVisitWhereInput[]
+    NOT?: AdPageVisitWhereInput | AdPageVisitWhereInput[]
+    id?: StringFilter<"AdPageVisit"> | string
+    productId?: IntFilter<"AdPageVisit"> | number
+    visitorId?: StringFilter<"AdPageVisit"> | string
+    path?: StringNullableFilter<"AdPageVisit"> | string | null
+    referrer?: StringNullableFilter<"AdPageVisit"> | string | null
+    userAgent?: StringNullableFilter<"AdPageVisit"> | string | null
+    browser?: StringNullableFilter<"AdPageVisit"> | string | null
+    os?: StringNullableFilter<"AdPageVisit"> | string | null
+    deviceType?: StringNullableFilter<"AdPageVisit"> | string | null
+    locale?: StringNullableFilter<"AdPageVisit"> | string | null
+    createdAt?: DateTimeFilter<"AdPageVisit"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type AdPageVisitOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    visitorId?: SortOrder
+    path?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    browser?: SortOrderInput | SortOrder
+    os?: SortOrderInput | SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    locale?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type AdPageVisitWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AdPageVisitWhereInput | AdPageVisitWhereInput[]
+    OR?: AdPageVisitWhereInput[]
+    NOT?: AdPageVisitWhereInput | AdPageVisitWhereInput[]
+    productId?: IntFilter<"AdPageVisit"> | number
+    visitorId?: StringFilter<"AdPageVisit"> | string
+    path?: StringNullableFilter<"AdPageVisit"> | string | null
+    referrer?: StringNullableFilter<"AdPageVisit"> | string | null
+    userAgent?: StringNullableFilter<"AdPageVisit"> | string | null
+    browser?: StringNullableFilter<"AdPageVisit"> | string | null
+    os?: StringNullableFilter<"AdPageVisit"> | string | null
+    deviceType?: StringNullableFilter<"AdPageVisit"> | string | null
+    locale?: StringNullableFilter<"AdPageVisit"> | string | null
+    createdAt?: DateTimeFilter<"AdPageVisit"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id">
+
+  export type AdPageVisitOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    visitorId?: SortOrder
+    path?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    browser?: SortOrderInput | SortOrder
+    os?: SortOrderInput | SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    locale?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AdPageVisitCountOrderByAggregateInput
+    _avg?: AdPageVisitAvgOrderByAggregateInput
+    _max?: AdPageVisitMaxOrderByAggregateInput
+    _min?: AdPageVisitMinOrderByAggregateInput
+    _sum?: AdPageVisitSumOrderByAggregateInput
+  }
+
+  export type AdPageVisitScalarWhereWithAggregatesInput = {
+    AND?: AdPageVisitScalarWhereWithAggregatesInput | AdPageVisitScalarWhereWithAggregatesInput[]
+    OR?: AdPageVisitScalarWhereWithAggregatesInput[]
+    NOT?: AdPageVisitScalarWhereWithAggregatesInput | AdPageVisitScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdPageVisit"> | string
+    productId?: IntWithAggregatesFilter<"AdPageVisit"> | number
+    visitorId?: StringWithAggregatesFilter<"AdPageVisit"> | string
+    path?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    referrer?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    browser?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    os?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    deviceType?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    locale?: StringNullableWithAggregatesFilter<"AdPageVisit"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AdPageVisit"> | Date | string
   }
 
   export type ProductLandingPageWhereInput = {
@@ -44022,6 +45427,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -44049,6 +45455,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -44075,6 +45482,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -44102,6 +45510,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -44155,6 +45564,103 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type AdPageVisitCreateInput = {
+    id?: string
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutAdPageVisitsInput
+  }
+
+  export type AdPageVisitUncheckedCreateInput = {
+    id?: string
+    productId: number
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdPageVisitUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutAdPageVisitsNestedInput
+  }
+
+  export type AdPageVisitUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdPageVisitCreateManyInput = {
+    id?: string
+    productId: number
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdPageVisitUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdPageVisitUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductLandingPageCreateInput = {
@@ -47188,6 +48694,12 @@ export namespace Prisma {
     none?: WarrantyWhereInput
   }
 
+  export type AdPageVisitListRelationFilter = {
+    every?: AdPageVisitWhereInput
+    some?: AdPageVisitWhereInput
+    none?: AdPageVisitWhereInput
+  }
+
   export type ProductLandingPageNullableScalarRelationFilter = {
     is?: ProductLandingPageWhereInput | null
     isNot?: ProductLandingPageWhereInput | null
@@ -47210,6 +48722,10 @@ export namespace Prisma {
   }
 
   export type WarrantyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdPageVisitOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47309,6 +48825,61 @@ export namespace Prisma {
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
+
+  export type ProductScalarRelationFilter = {
+    is?: ProductWhereInput
+    isNot?: ProductWhereInput
+  }
+
+  export type AdPageVisitCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    visitorId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    browser?: SortOrder
+    os?: SortOrder
+    deviceType?: SortOrder
+    locale?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdPageVisitAvgOrderByAggregateInput = {
+    productId?: SortOrder
+  }
+
+  export type AdPageVisitMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    visitorId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    browser?: SortOrder
+    os?: SortOrder
+    deviceType?: SortOrder
+    locale?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdPageVisitMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    visitorId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    browser?: SortOrder
+    os?: SortOrder
+    deviceType?: SortOrder
+    locale?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdPageVisitSumOrderByAggregateInput = {
+    productId?: SortOrder
+  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -47331,11 +48902,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type ProductScalarRelationFilter = {
-    is?: ProductWhereInput
-    isNot?: ProductWhereInput
   }
 
   export type ProductLandingPageCountOrderByAggregateInput = {
@@ -49610,6 +51176,13 @@ export namespace Prisma {
     connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
   }
 
+  export type AdPageVisitCreateNestedManyWithoutProductInput = {
+    create?: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput> | AdPageVisitCreateWithoutProductInput[] | AdPageVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AdPageVisitCreateOrConnectWithoutProductInput | AdPageVisitCreateOrConnectWithoutProductInput[]
+    createMany?: AdPageVisitCreateManyProductInputEnvelope
+    connect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+  }
+
   export type AffiliateLinkCreateNestedManyWithoutProductInput = {
     create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
     connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
@@ -49677,6 +51250,13 @@ export namespace Prisma {
     connectOrCreate?: WarrantyCreateOrConnectWithoutProductInput | WarrantyCreateOrConnectWithoutProductInput[]
     createMany?: WarrantyCreateManyProductInputEnvelope
     connect?: WarrantyWhereUniqueInput | WarrantyWhereUniqueInput[]
+  }
+
+  export type AdPageVisitUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput> | AdPageVisitCreateWithoutProductInput[] | AdPageVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AdPageVisitCreateOrConnectWithoutProductInput | AdPageVisitCreateOrConnectWithoutProductInput[]
+    createMany?: AdPageVisitCreateManyProductInputEnvelope
+    connect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
   }
 
   export type AffiliateLinkUncheckedCreateNestedManyWithoutProductInput = {
@@ -49806,6 +51386,20 @@ export namespace Prisma {
     update?: WarrantyUpdateWithWhereUniqueWithoutProductInput | WarrantyUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: WarrantyUpdateManyWithWhereWithoutProductInput | WarrantyUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
+  }
+
+  export type AdPageVisitUpdateManyWithoutProductNestedInput = {
+    create?: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput> | AdPageVisitCreateWithoutProductInput[] | AdPageVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AdPageVisitCreateOrConnectWithoutProductInput | AdPageVisitCreateOrConnectWithoutProductInput[]
+    upsert?: AdPageVisitUpsertWithWhereUniqueWithoutProductInput | AdPageVisitUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: AdPageVisitCreateManyProductInputEnvelope
+    set?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    disconnect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    delete?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    connect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    update?: AdPageVisitUpdateWithWhereUniqueWithoutProductInput | AdPageVisitUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: AdPageVisitUpdateManyWithWhereWithoutProductInput | AdPageVisitUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: AdPageVisitScalarWhereInput | AdPageVisitScalarWhereInput[]
   }
 
   export type AffiliateLinkUpdateManyWithoutProductNestedInput = {
@@ -49952,6 +51546,20 @@ export namespace Prisma {
     deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
   }
 
+  export type AdPageVisitUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput> | AdPageVisitCreateWithoutProductInput[] | AdPageVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: AdPageVisitCreateOrConnectWithoutProductInput | AdPageVisitCreateOrConnectWithoutProductInput[]
+    upsert?: AdPageVisitUpsertWithWhereUniqueWithoutProductInput | AdPageVisitUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: AdPageVisitCreateManyProductInputEnvelope
+    set?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    disconnect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    delete?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    connect?: AdPageVisitWhereUniqueInput | AdPageVisitWhereUniqueInput[]
+    update?: AdPageVisitUpdateWithWhereUniqueWithoutProductInput | AdPageVisitUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: AdPageVisitUpdateManyWithWhereWithoutProductInput | AdPageVisitUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: AdPageVisitScalarWhereInput | AdPageVisitScalarWhereInput[]
+  }
+
   export type AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<AffiliateLinkCreateWithoutProductInput, AffiliateLinkUncheckedCreateWithoutProductInput> | AffiliateLinkCreateWithoutProductInput[] | AffiliateLinkUncheckedCreateWithoutProductInput[]
     connectOrCreate?: AffiliateLinkCreateOrConnectWithoutProductInput | AffiliateLinkCreateOrConnectWithoutProductInput[]
@@ -50002,6 +51610,20 @@ export namespace Prisma {
     update?: OfferDiscountUpdateWithWhereUniqueWithoutProductInput | OfferDiscountUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OfferDiscountUpdateManyWithWhereWithoutProductInput | OfferDiscountUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedOneWithoutAdPageVisitsInput = {
+    create?: XOR<ProductCreateWithoutAdPageVisitsInput, ProductUncheckedCreateWithoutAdPageVisitsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutAdPageVisitsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutAdPageVisitsNestedInput = {
+    create?: XOR<ProductCreateWithoutAdPageVisitsInput, ProductUncheckedCreateWithoutAdPageVisitsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutAdPageVisitsInput
+    upsert?: ProductUpsertWithoutAdPageVisitsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutAdPageVisitsInput, ProductUpdateWithoutAdPageVisitsInput>, ProductUncheckedUpdateWithoutAdPageVisitsInput>
   }
 
   export type ProductCreateNestedOneWithoutLandingPageInput = {
@@ -53011,6 +54633,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -53037,6 +54660,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -53356,6 +54980,42 @@ export namespace Prisma {
 
   export type WarrantyCreateManyProductInputEnvelope = {
     data: WarrantyCreateManyProductInput | WarrantyCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdPageVisitCreateWithoutProductInput = {
+    id?: string
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdPageVisitUncheckedCreateWithoutProductInput = {
+    id?: string
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdPageVisitCreateOrConnectWithoutProductInput = {
+    where: AdPageVisitWhereUniqueInput
+    create: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput>
+  }
+
+  export type AdPageVisitCreateManyProductInputEnvelope = {
+    data: AdPageVisitCreateManyProductInput | AdPageVisitCreateManyProductInput[]
     skipDuplicates?: boolean
   }
 
@@ -53702,6 +55362,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Warranty"> | Date | string
   }
 
+  export type AdPageVisitUpsertWithWhereUniqueWithoutProductInput = {
+    where: AdPageVisitWhereUniqueInput
+    update: XOR<AdPageVisitUpdateWithoutProductInput, AdPageVisitUncheckedUpdateWithoutProductInput>
+    create: XOR<AdPageVisitCreateWithoutProductInput, AdPageVisitUncheckedCreateWithoutProductInput>
+  }
+
+  export type AdPageVisitUpdateWithWhereUniqueWithoutProductInput = {
+    where: AdPageVisitWhereUniqueInput
+    data: XOR<AdPageVisitUpdateWithoutProductInput, AdPageVisitUncheckedUpdateWithoutProductInput>
+  }
+
+  export type AdPageVisitUpdateManyWithWhereWithoutProductInput = {
+    where: AdPageVisitScalarWhereInput
+    data: XOR<AdPageVisitUpdateManyMutationInput, AdPageVisitUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type AdPageVisitScalarWhereInput = {
+    AND?: AdPageVisitScalarWhereInput | AdPageVisitScalarWhereInput[]
+    OR?: AdPageVisitScalarWhereInput[]
+    NOT?: AdPageVisitScalarWhereInput | AdPageVisitScalarWhereInput[]
+    id?: StringFilter<"AdPageVisit"> | string
+    productId?: IntFilter<"AdPageVisit"> | number
+    visitorId?: StringFilter<"AdPageVisit"> | string
+    path?: StringNullableFilter<"AdPageVisit"> | string | null
+    referrer?: StringNullableFilter<"AdPageVisit"> | string | null
+    userAgent?: StringNullableFilter<"AdPageVisit"> | string | null
+    browser?: StringNullableFilter<"AdPageVisit"> | string | null
+    os?: StringNullableFilter<"AdPageVisit"> | string | null
+    deviceType?: StringNullableFilter<"AdPageVisit"> | string | null
+    locale?: StringNullableFilter<"AdPageVisit"> | string | null
+    createdAt?: DateTimeFilter<"AdPageVisit"> | Date | string
+  }
+
   export type AffiliateLinkUpsertWithWhereUniqueWithoutProductInput = {
     where: AffiliateLinkWhereUniqueInput
     update: XOR<AffiliateLinkUpdateWithoutProductInput, AffiliateLinkUncheckedUpdateWithoutProductInput>
@@ -53799,6 +55492,128 @@ export namespace Prisma {
     data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type ProductCreateWithoutAdPageVisitsInput = {
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutAdPageVisitsInput = {
+    id?: number
+    name: string
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutAdPageVisitsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutAdPageVisitsInput, ProductUncheckedCreateWithoutAdPageVisitsInput>
+  }
+
+  export type ProductUpsertWithoutAdPageVisitsInput = {
+    update: XOR<ProductUpdateWithoutAdPageVisitsInput, ProductUncheckedUpdateWithoutAdPageVisitsInput>
+    create: XOR<ProductCreateWithoutAdPageVisitsInput, ProductUncheckedCreateWithoutAdPageVisitsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutAdPageVisitsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutAdPageVisitsInput, ProductUncheckedUpdateWithoutAdPageVisitsInput>
+  }
+
+  export type ProductUpdateWithoutAdPageVisitsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutAdPageVisitsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+  }
+
   export type ProductCreateWithoutLandingPageInput = {
     name: string
     description?: string | null
@@ -53819,6 +55634,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
@@ -53845,6 +55661,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
@@ -53886,6 +55703,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
@@ -53912,6 +55730,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
@@ -53937,6 +55756,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
@@ -53963,6 +55783,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
@@ -54075,6 +55896,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
@@ -54101,6 +55923,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
@@ -54448,6 +56271,7 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -54474,6 +56298,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -54541,6 +56366,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -54567,6 +56393,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -54624,6 +56451,7 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -54650,6 +56478,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -54788,6 +56617,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -54814,6 +56644,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -55311,6 +57142,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -55337,6 +57169,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -55411,6 +57244,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -55437,6 +57271,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -55462,6 +57297,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -55488,6 +57324,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -55529,6 +57366,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -55555,6 +57393,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -55868,6 +57707,7 @@ export namespace Prisma {
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -55894,6 +57734,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -56090,6 +57931,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -56116,6 +57958,7 @@ export namespace Prisma {
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -57397,6 +59240,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -57423,6 +59267,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -57583,6 +59428,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -57609,6 +59455,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -57889,6 +59736,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
@@ -57915,6 +59763,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
@@ -58088,6 +59937,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
@@ -58114,6 +59964,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
@@ -58272,6 +60123,7 @@ export namespace Prisma {
     stocks?: ProductStockCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
@@ -58298,6 +60150,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
@@ -58410,6 +60263,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -58436,6 +60290,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -59548,6 +61403,7 @@ export namespace Prisma {
     stocks?: ProductStockUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
@@ -59574,6 +61430,7 @@ export namespace Prisma {
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
@@ -59699,6 +61556,19 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AdPageVisitCreateManyProductInput = {
+    id?: string
+    visitorId: string
+    path?: string | null
+    referrer?: string | null
+    userAgent?: string | null
+    browser?: string | null
+    os?: string | null
+    deviceType?: string | null
+    locale?: string | null
+    createdAt?: Date | string
   }
 
   export type AffiliateLinkCreateManyProductInput = {
@@ -59896,6 +61766,45 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdPageVisitUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdPageVisitUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdPageVisitUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AffiliateLinkUpdateWithoutProductInput = {

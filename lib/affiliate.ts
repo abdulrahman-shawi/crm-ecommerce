@@ -1,6 +1,7 @@
 export const STOREFRONT_BASE_URL = 'https://www.skynova-tr.com';
 
 export const AFFILIATE_COOKIE_NAME = 'affiliate-code';
+export const AD_VISITOR_COOKIE_NAME = 'ad-visitor-id';
 
 export function normalizeAccountType(accountType?: string | null) {
   return String(accountType || '').trim().toUpperCase();
