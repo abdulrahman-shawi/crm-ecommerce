@@ -48,6 +48,8 @@ type StatusSummary = {
   failedReturnCount: number;
 };
 
+type WarrantyCardKey = "replacement" | "damaged" | "maintenance";
+
 const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
 
 const toInputDate = (date: Date) => {
@@ -91,6 +93,10 @@ const AnalyticPage: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [selectedStatus, setSelectedStatus] = React.useState<any>(null);
   const [selectedTopUser, setSelectedTopUser] = React.useState<any>(null);
+  const [selectedWarrantyCard, setSelectedWarrantyCard] = React.useState<{
+    key: WarrantyCardKey;
+    title: string;
+  } | null>(null);
   const [expandedOrderId, setExpandedOrderId] = React.useState<number | null>(null);
 
   const [result, setResult] = React.useState<{ success: boolean; data: any[]; summary?: StatusSummary }>({
@@ -109,8 +115,9 @@ const AnalyticPage: React.FC = () => {
   const [lowStock, setLowStock] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [warrantyStatusProducts, setWarrantyStatusProducts] = React.useState<{
     success: boolean;
-    data: { damaged: any[]; replacement: any[] };
-  }>({ success: true, data: { damaged: [], replacement: [] } });
+    data: { damaged: any[]; replacement: any[]; maintenance: any[] };
+    details: { damaged: any[]; replacement: any[]; maintenance: any[] };
+  }>({ success: true, data: { damaged: [], replacement: [], maintenance: [] }, details: { damaged: [], replacement: [], maintenance: [] } });
   const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [timelineData, setTimelineData] = React.useState<any[]>([]);
   const [msgTimeline, setMsgTimeline] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
@@ -398,9 +405,11 @@ const AnalyticPage: React.FC = () => {
   const showWarrantyStatusProducts =
     loading ||
     (warrantyStatusProducts.data?.damaged?.length || 0) > 0 ||
-    (warrantyStatusProducts.data?.replacement?.length || 0) > 0;
+    (warrantyStatusProducts.data?.replacement?.length || 0) > 0 ||
+    (warrantyStatusProducts.data?.maintenance?.length || 0) > 0;
   const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
   const showEmployeeCustomerReport = employeeReportLoading || (employeeCustomerReport.data?.length || 0) > 0;
+  const selectedWarrantyDetails = selectedWarrantyCard ? warrantyStatusProducts.details?.[selectedWarrantyCard.key] || [] : [];
 
   return (
     <div className="p-8 relative">
@@ -597,6 +606,68 @@ const AnalyticPage: React.FC = () => {
 
               {(!selectedTopUser.orders || selectedTopUser.orders.length === 0) && (
                 <div className="text-sm text-center text-slate-400 italic">لا توجد طلبات لهذا الموظف</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedWarrantyCard && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[115] p-4"
+          onClick={() => setSelectedWarrantyCard(null)}
+        >
+          <div
+            className="bg-white dark:bg-slate-900 rounded-xl max-w-6xl w-full max-h-[85vh] flex flex-col shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 rounded-t-xl">
+              <div>
+                <h3 className="font-bold text-lg text-slate-800 dark:text-white">{selectedWarrantyCard.title}</h3>
+                <p className="text-sm text-slate-500">إجمالي السجلات: {Number(selectedWarrantyDetails.length || 0).toLocaleString()}</p>
+              </div>
+              <button
+                onClick={() => setSelectedWarrantyCard(null)}
+                className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="overflow-auto p-4">
+              <table className="w-full min-w-[1100px] text-right border-collapse">
+                <thead>
+                  <tr className="text-xs font-bold text-slate-400 border-b uppercase tracking-wider">
+                    <th className="pb-3 px-2">المنتج</th>
+                    <th className="pb-3 px-2">العميل</th>
+                    <th className="pb-3 px-2">المستودع</th>
+                    <th className="pb-3 px-2">الكمية</th>
+                    <th className="pb-3 px-2">رقم الطلب</th>
+                    <th className="pb-3 px-2">أجور الصيانة</th>
+                    <th className="pb-3 px-2">أجور الشحن</th>
+                    <th className="pb-3 px-2">التاريخ</th>
+                    <th className="pb-3 px-2">ملاحظات</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {selectedWarrantyDetails.map((row: any) => (
+                    <tr key={row.id}>
+                      <td className="py-3 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200">{row.productName}</td>
+                      <td className="py-3 px-2 text-sm text-slate-600 dark:text-slate-300">{row.customerName}</td>
+                      <td className="py-3 px-2 text-sm text-slate-600 dark:text-slate-300">{row.warehouseName} / {row.warehouseLocation}</td>
+                      <td className="py-3 px-2 text-sm font-bold text-blue-600">{Number(row.quantity || 0).toLocaleString()}</td>
+                      <td className="py-3 px-2 text-sm font-mono text-slate-700 dark:text-slate-200">{row.orderNumber}</td>
+                      <td className="py-3 px-2 text-sm text-slate-700 dark:text-slate-200">{row.maintenanceLaborCost != null ? Number(row.maintenanceLaborCost).toLocaleString() : "-"}</td>
+                      <td className="py-3 px-2 text-sm text-slate-700 dark:text-slate-200">{row.shippingCost != null ? Number(row.shippingCost).toLocaleString() : "-"}</td>
+                      <td className="py-3 px-2 text-sm text-slate-600 dark:text-slate-300">{new Date(row.createdAt).toLocaleDateString("ar-EG")}</td>
+                      <td className="py-3 px-2 text-sm text-slate-600 dark:text-slate-300 max-w-[280px]">{row.notes}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {selectedWarrantyDetails.length === 0 && (
+                <div className="py-8 text-center text-sm text-slate-400">لا توجد بيانات ضمن الفلاتر الحالية</div>
               )}
             </div>
           </div>
@@ -944,9 +1015,10 @@ const AnalyticPage: React.FC = () => {
       )}
 
       {showWarrantyStatusProducts && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+          <div onClick={() => setSelectedWarrantyCard({ key: "replacement", title: "المنتجات التي تم تبديلها" })} className="cursor-pointer">
           <DynamicCard isLoading={loading} isError={!warrantyStatusProducts.success} variant="glass">
-            <DynamicCard.Header title="المنتجات التي تم تبديلها" icon={<Package className="text-amber-500" />} />
+            <DynamicCard.Header title="المنتجات التي تم تبديلها" description="اضغط لعرض جميع السجلات" icon={<Package className="text-amber-500" />} />
             <DynamicCard.Content className="space-y-4">
               {warrantyStatusProducts.data?.replacement?.length ? (
                 warrantyStatusProducts.data.replacement.map((product: any, idx: number) => (
@@ -966,9 +1038,35 @@ const AnalyticPage: React.FC = () => {
               )}
             </DynamicCard.Content>
           </DynamicCard>
+          </div>
 
+          <div onClick={() => setSelectedWarrantyCard({ key: "maintenance", title: "منتجات الصيانة" })} className="cursor-pointer">
           <DynamicCard isLoading={loading} isError={!warrantyStatusProducts.success} variant="glass">
-            <DynamicCard.Header title="المنتجات التالفة" icon={<TrendingDown className="text-red-500" />} />
+            <DynamicCard.Header title="منتجات الصيانة" description="اضغط لعرض جميع السجلات" icon={<Truck className="text-sky-500" />} />
+            <DynamicCard.Content className="space-y-4">
+              {warrantyStatusProducts.data?.maintenance?.length ? (
+                warrantyStatusProducts.data.maintenance.map((product: any, idx: number) => (
+                  <div key={product.id || idx} className="flex justify-between items-center p-3 bg-sky-50/60 dark:bg-sky-900/10 rounded-lg border border-sky-100 dark:border-sky-900/20">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-100">{product.name}</span>
+                    </div>
+                    <div className="text-left">
+                      <div className="text-sm font-bold text-sky-600">{Number(product.quantity || 0).toLocaleString()} قطعة</div>
+                      <div className="text-[11px] text-slate-500">{Number(product.records || 0).toLocaleString()} سجل</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-slate-400 text-center py-6">لا توجد بيانات صيانة ضمن الفلاتر الحالية</div>
+              )}
+            </DynamicCard.Content>
+          </DynamicCard>
+          </div>
+
+          <div onClick={() => setSelectedWarrantyCard({ key: "damaged", title: "المنتجات التالفة" })} className="cursor-pointer">
+          <DynamicCard isLoading={loading} isError={!warrantyStatusProducts.success} variant="glass">
+            <DynamicCard.Header title="المنتجات التالفة" description="اضغط لعرض جميع السجلات" icon={<TrendingDown className="text-red-500" />} />
             <DynamicCard.Content className="space-y-4">
               {warrantyStatusProducts.data?.damaged?.length ? (
                 warrantyStatusProducts.data.damaged.map((product: any, idx: number) => (
@@ -988,6 +1086,7 @@ const AnalyticPage: React.FC = () => {
               )}
             </DynamicCard.Content>
           </DynamicCard>
+          </div>
         </div>
       )}
 

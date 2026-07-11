@@ -1026,11 +1026,11 @@ export async function GetWarrantyStatusProducts(userId: string, dateFilter?: Ord
       include: { permission: true }
     });
 
-    if (!user) return { success: false, error: "User not found", data: { damaged: [], replacement: [] } };
+    if (!user) return { success: false, error: "User not found", data: { damaged: [], replacement: [], maintenance: [] }, details: { damaged: [], replacement: [], maintenance: [] } };
 
     const canViewWarranty = isAdmin(user) || Boolean(user.permission?.viewWarranty);
     if (!canViewWarranty) {
-      return { success: true, data: { damaged: [], replacement: [] } };
+      return { success: true, data: { damaged: [], replacement: [], maintenance: [] }, details: { damaged: [], replacement: [], maintenance: [] } };
     }
 
     const createdAtFilter = buildOrderDateWhere(dateFilter);
@@ -1040,15 +1040,36 @@ export async function GetWarrantyStatusProducts(userId: string, dateFilter?: Ord
       where: {
         ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
         ...(warehouseScope ? warehouseScope : {}),
-        type: { in: ["DAMAGED", "REPLACEMENT"] },
+        type: { in: ["DAMAGED", "REPLACEMENT", "MAINTENANCE"] },
       },
       select: {
+        id: true,
         productId: true,
         type: true,
         quantity: true,
+        notes: true,
+        createdAt: true,
+        maintenanceLaborCost: true,
+        shippingCost: true,
         product: {
           select: {
             name: true,
+          }
+        },
+        customer: {
+          select: {
+            name: true,
+          }
+        },
+        warehouse: {
+          select: {
+            name: true,
+            location: true,
+          }
+        },
+        order: {
+          select: {
+            orderNumber: true,
           }
         }
       }
@@ -1056,9 +1077,19 @@ export async function GetWarrantyStatusProducts(userId: string, dateFilter?: Ord
 
     const damagedMap = new Map<number, { id: number; name: string; records: number; quantity: number }>();
     const replacementMap = new Map<number, { id: number; name: string; records: number; quantity: number }>();
+    const maintenanceMap = new Map<number, { id: number; name: string; records: number; quantity: number }>();
+    const details = {
+      damaged: [] as Array<any>,
+      replacement: [] as Array<any>,
+      maintenance: [] as Array<any>,
+    };
 
     warrantyRows.forEach((row) => {
-      const targetMap = row.type === "DAMAGED" ? damagedMap : replacementMap;
+      const targetMap = row.type === "DAMAGED"
+        ? damagedMap
+        : row.type === "REPLACEMENT"
+        ? replacementMap
+        : maintenanceMap;
       const current = targetMap.get(row.productId) || {
         id: row.productId,
         name: row.product?.name || "منتج غير معروف",
@@ -1070,6 +1101,28 @@ export async function GetWarrantyStatusProducts(userId: string, dateFilter?: Ord
       current.quantity += Math.max(0, Number(row.quantity || 0));
 
       targetMap.set(row.productId, current);
+
+      const detailRow = {
+        id: row.id,
+        productName: row.product?.name || "منتج غير معروف",
+        customerName: row.customer?.name || "-",
+        warehouseName: row.warehouse?.name || "-",
+        warehouseLocation: row.warehouse?.location || "-",
+        orderNumber: row.order?.orderNumber || "-",
+        quantity: Math.max(0, Number(row.quantity || 0)),
+        notes: row.notes || "-",
+        createdAt: row.createdAt,
+        maintenanceLaborCost: row.maintenanceLaborCost,
+        shippingCost: row.shippingCost,
+      };
+
+      if (row.type === "DAMAGED") {
+        details.damaged.push(detailRow);
+      } else if (row.type === "REPLACEMENT") {
+        details.replacement.push(detailRow);
+      } else {
+        details.maintenance.push(detailRow);
+      }
     });
 
     const sortRows = (rows: Array<{ id: number; name: string; records: number; quantity: number }>) =>
@@ -1082,11 +1135,13 @@ export async function GetWarrantyStatusProducts(userId: string, dateFilter?: Ord
       data: {
         damaged: sortRows(Array.from(damagedMap.values())),
         replacement: sortRows(Array.from(replacementMap.values())),
+        maintenance: sortRows(Array.from(maintenanceMap.values())),
       },
+      details,
     };
   } catch (error) {
     console.error("Error in GetWarrantyStatusProducts:", error);
-    return { success: false, data: { damaged: [], replacement: [] } };
+    return { success: false, data: { damaged: [], replacement: [], maintenance: [] }, details: { damaged: [], replacement: [], maintenance: [] } };
   }
 }
 
