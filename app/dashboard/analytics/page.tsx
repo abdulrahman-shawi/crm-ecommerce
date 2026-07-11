@@ -17,6 +17,7 @@ import {
   GetSalesByStatusAction,
   GetSalesTimelineAction,
   GetTopSellingUsersByPermission,
+  GetWarrantyStatusProducts,
 } from "@/server/analytics";
 import {
   Bar,
@@ -106,6 +107,10 @@ const AnalyticPage: React.FC = () => {
   });
   const [topSale, setTopSale] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [lowStock, setLowStock] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [warrantyStatusProducts, setWarrantyStatusProducts] = React.useState<{
+    success: boolean;
+    data: { damaged: any[]; replacement: any[] };
+  }>({ success: true, data: { damaged: [], replacement: [] } });
   const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [timelineData, setTimelineData] = React.useState<any[]>([]);
   const [msgTimeline, setMsgTimeline] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
@@ -317,6 +322,7 @@ const AnalyticPage: React.FC = () => {
           resDailyExpenses,
           resTopSale,
           resLowStock,
+          resWarrantyStatusProducts,
           resTopUsers,
           resTimeline,
           resMsgTimeline,
@@ -328,6 +334,7 @@ const AnalyticPage: React.FC = () => {
           GetDailyExpensesAnalytics(user.id, orderDateFilter),
           GetBestSellingProducts(user.id, orderDateFilter),
           GetLowStockProducts(user.id),
+          GetWarrantyStatusProducts(user.id, orderDateFilter),
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
           GetSalesTimelineAction(user.id, orderDateFilter),
           GetCustomerAcquisitionMonth(user.id, orderDateFilter),
@@ -340,6 +347,7 @@ const AnalyticPage: React.FC = () => {
         setDailyExpenses(resDailyExpenses as any);
         setTopSale(resTopSale as any);
         setLowStock(resLowStock as any);
+        setWarrantyStatusProducts(resWarrantyStatusProducts as any);
         setTopSellingUsers(resTopUsers as any);
         setTimelineData((resTimeline as any)?.data || []);
         setMsgTimeline(resMsgTimeline as any);
@@ -387,6 +395,10 @@ const AnalyticPage: React.FC = () => {
   const showSalesGeo = loading || cityData.length > 0;
   const showTopProducts = loading || (topSale.data?.length || 0) > 0;
   const showLowStock = loading || (lowStock.data?.length || 0) > 0;
+  const showWarrantyStatusProducts =
+    loading ||
+    (warrantyStatusProducts.data?.damaged?.length || 0) > 0 ||
+    (warrantyStatusProducts.data?.replacement?.length || 0) > 0;
   const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
   const showEmployeeCustomerReport = employeeReportLoading || (employeeCustomerReport.data?.length || 0) > 0;
 
@@ -928,6 +940,54 @@ const AnalyticPage: React.FC = () => {
               </DynamicCard.Content>
             </DynamicCard>
           )}
+        </div>
+      )}
+
+      {showWarrantyStatusProducts && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <DynamicCard isLoading={loading} isError={!warrantyStatusProducts.success} variant="glass">
+            <DynamicCard.Header title="المنتجات التي تم تبديلها" icon={<Package className="text-amber-500" />} />
+            <DynamicCard.Content className="space-y-4">
+              {warrantyStatusProducts.data?.replacement?.length ? (
+                warrantyStatusProducts.data.replacement.map((product: any, idx: number) => (
+                  <div key={product.id || idx} className="flex justify-between items-center p-3 bg-amber-50/60 dark:bg-amber-900/10 rounded-lg border border-amber-100 dark:border-amber-900/20">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-100">{product.name}</span>
+                    </div>
+                    <div className="text-left">
+                      <div className="text-sm font-bold text-amber-600">{Number(product.quantity || 0).toLocaleString()} قطعة</div>
+                      <div className="text-[11px] text-slate-500">{Number(product.records || 0).toLocaleString()} سجل</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-slate-400 text-center py-6">لا توجد بيانات تبديل ضمن الفلاتر الحالية</div>
+              )}
+            </DynamicCard.Content>
+          </DynamicCard>
+
+          <DynamicCard isLoading={loading} isError={!warrantyStatusProducts.success} variant="glass">
+            <DynamicCard.Header title="المنتجات التالفة" icon={<TrendingDown className="text-red-500" />} />
+            <DynamicCard.Content className="space-y-4">
+              {warrantyStatusProducts.data?.damaged?.length ? (
+                warrantyStatusProducts.data.damaged.map((product: any, idx: number) => (
+                  <div key={product.id || idx} className="flex justify-between items-center p-3 bg-red-50/60 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-slate-400">#{idx + 1}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-100">{product.name}</span>
+                    </div>
+                    <div className="text-left">
+                      <div className="text-sm font-bold text-red-600">{Number(product.quantity || 0).toLocaleString()} قطعة</div>
+                      <div className="text-[11px] text-slate-500">{Number(product.records || 0).toLocaleString()} سجل</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-slate-400 text-center py-6">لا توجد بيانات تالف ضمن الفلاتر الحالية</div>
+              )}
+            </DynamicCard.Content>
+          </DynamicCard>
         </div>
       )}
 

@@ -1019,6 +1019,77 @@ export async function GetLowStockProducts(userId: string, threshold = 5) {
   }
 }
 
+export async function GetWarrantyStatusProducts(userId: string, dateFilter?: OrderDateFilter) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true }
+    });
+
+    if (!user) return { success: false, error: "User not found", data: { damaged: [], replacement: [] } };
+
+    const canViewWarranty = isAdmin(user) || Boolean(user.permission?.viewWarranty);
+    if (!canViewWarranty) {
+      return { success: true, data: { damaged: [], replacement: [] } };
+    }
+
+    const createdAtFilter = buildOrderDateWhere(dateFilter);
+    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
+
+    const warrantyRows = await prisma.warranty.findMany({
+      where: {
+        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+        ...(warehouseScope ? warehouseScope : {}),
+        type: { in: ["DAMAGED", "REPLACEMENT"] },
+      },
+      select: {
+        productId: true,
+        type: true,
+        quantity: true,
+        product: {
+          select: {
+            name: true,
+          }
+        }
+      }
+    });
+
+    const damagedMap = new Map<number, { id: number; name: string; records: number; quantity: number }>();
+    const replacementMap = new Map<number, { id: number; name: string; records: number; quantity: number }>();
+
+    warrantyRows.forEach((row) => {
+      const targetMap = row.type === "DAMAGED" ? damagedMap : replacementMap;
+      const current = targetMap.get(row.productId) || {
+        id: row.productId,
+        name: row.product?.name || "منتج غير معروف",
+        records: 0,
+        quantity: 0,
+      };
+
+      current.records += 1;
+      current.quantity += Math.max(0, Number(row.quantity || 0));
+
+      targetMap.set(row.productId, current);
+    });
+
+    const sortRows = (rows: Array<{ id: number; name: string; records: number; quantity: number }>) =>
+      rows
+        .sort((first, second) => second.quantity - first.quantity || second.records - first.records)
+        .slice(0, 10);
+
+    return {
+      success: true,
+      data: {
+        damaged: sortRows(Array.from(damagedMap.values())),
+        replacement: sortRows(Array.from(replacementMap.values())),
+      },
+    };
+  } catch (error) {
+    console.error("Error in GetWarrantyStatusProducts:", error);
+    return { success: false, data: { damaged: [], replacement: [] } };
+  }
+}
+
 // المستخدمين الأكثر مبيعا
 
 export async function GetTopSellingUsers() {
