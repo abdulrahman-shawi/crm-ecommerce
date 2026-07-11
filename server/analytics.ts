@@ -12,7 +12,7 @@ const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | 
   return String(warehouseLocation || "").trim() === "تركيا" ? value / safeRate : value;
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
-const DELIVERED_ORDER_STATUSES = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+const DELIVERED_ORDER_STATUSES = ["تم تسليم الطلب", "تم التسليم", "تم استلام الطلب"];
 
 const resolveOrderExchangeRate = (
   orderLike: { usdToTryRateAtOrder?: number | null },
@@ -1517,7 +1517,7 @@ export async function GetEmployeeCustomerReport(userId: string, periodOrFilter: 
         : (periodOrFilter || { period: "month" });
 
     const periodRange = buildEmployeeRange(normalizedFilter);
-    const deliveredStatuses = ["تم تسليم الطلب", "مدفوعة", "تم التسليم", "تم البيع"];
+    const deliveredStatuses = DELIVERED_ORDER_STATUSES;
 
     const employees = await prisma.user.findMany({
       select: {
