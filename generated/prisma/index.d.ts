@@ -89,6 +89,16 @@ export type ProductImage = $Result.DefaultSelection<Prisma.$ProductImagePayload>
  */
 export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
 /**
+ * Model WholesaleCustomer
+ * 
+ */
+export type WholesaleCustomer = $Result.DefaultSelection<Prisma.$WholesaleCustomerPayload>
+/**
+ * Model WholesaleVisit
+ * 
+ */
+export type WholesaleVisit = $Result.DefaultSelection<Prisma.$WholesaleVisitPayload>
+/**
  * Model Warranty
  * 
  */
@@ -283,6 +293,38 @@ export const DiscountType: {
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
 
+
+export const WholesaleCustomerCategory: {
+  PHARMACY: 'PHARMACY',
+  MARKET: 'MARKET',
+  CLINIC: 'CLINIC',
+  DISTRIBUTOR: 'DISTRIBUTOR',
+  OTHER: 'OTHER'
+};
+
+export type WholesaleCustomerCategory = (typeof WholesaleCustomerCategory)[keyof typeof WholesaleCustomerCategory]
+
+
+export const WholesaleVisitResult: {
+  VERY_INTERESTED: 'VERY_INTERESTED',
+  INTERESTED: 'INTERESTED',
+  THINKING: 'THINKING',
+  NOT_INTERESTED: 'NOT_INTERESTED',
+  PURCHASED: 'PURCHASED'
+};
+
+export type WholesaleVisitResult = (typeof WholesaleVisitResult)[keyof typeof WholesaleVisitResult]
+
+
+export const WholesaleVisitStatus: {
+  PLANNED: 'PLANNED',
+  VISITED: 'VISITED',
+  FOLLOW_UP_REQUIRED: 'FOLLOW_UP_REQUIRED',
+  CLOSED: 'CLOSED'
+};
+
+export type WholesaleVisitStatus = (typeof WholesaleVisitStatus)[keyof typeof WholesaleVisitStatus]
+
 }
 
 export type ActivityTargetCycle = $Enums.ActivityTargetCycle
@@ -332,6 +374,18 @@ export const CommissionStatus: typeof $Enums.CommissionStatus
 export type DiscountType = $Enums.DiscountType
 
 export const DiscountType: typeof $Enums.DiscountType
+
+export type WholesaleCustomerCategory = $Enums.WholesaleCustomerCategory
+
+export const WholesaleCustomerCategory: typeof $Enums.WholesaleCustomerCategory
+
+export type WholesaleVisitResult = $Enums.WholesaleVisitResult
+
+export const WholesaleVisitResult: typeof $Enums.WholesaleVisitResult
+
+export type WholesaleVisitStatus = $Enums.WholesaleVisitStatus
+
+export const WholesaleVisitStatus: typeof $Enums.WholesaleVisitStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -599,6 +653,26 @@ export class PrismaClient<
     * ```
     */
   get customer(): Prisma.CustomerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wholesaleCustomer`: Exposes CRUD operations for the **WholesaleCustomer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WholesaleCustomers
+    * const wholesaleCustomers = await prisma.wholesaleCustomer.findMany()
+    * ```
+    */
+  get wholesaleCustomer(): Prisma.WholesaleCustomerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wholesaleVisit`: Exposes CRUD operations for the **WholesaleVisit** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WholesaleVisits
+    * const wholesaleVisits = await prisma.wholesaleVisit.findMany()
+    * ```
+    */
+  get wholesaleVisit(): Prisma.WholesaleVisitDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.warranty`: Exposes CRUD operations for the **Warranty** model.
@@ -1208,6 +1282,8 @@ export namespace Prisma {
     TargetProduct: 'TargetProduct',
     ProductImage: 'ProductImage',
     Customer: 'Customer',
+    WholesaleCustomer: 'WholesaleCustomer',
+    WholesaleVisit: 'WholesaleVisit',
     Warranty: 'Warranty',
     Message: 'Message',
     Order: 'Order',
@@ -1239,7 +1315,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
+      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "wholesaleCustomer" | "wholesaleVisit" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2350,6 +2426,154 @@ export namespace Prisma {
           count: {
             args: Prisma.CustomerCountArgs<ExtArgs>
             result: $Utils.Optional<CustomerCountAggregateOutputType> | number
+          }
+        }
+      }
+      WholesaleCustomer: {
+        payload: Prisma.$WholesaleCustomerPayload<ExtArgs>
+        fields: Prisma.WholesaleCustomerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WholesaleCustomerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WholesaleCustomerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          findFirst: {
+            args: Prisma.WholesaleCustomerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WholesaleCustomerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          findMany: {
+            args: Prisma.WholesaleCustomerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>[]
+          }
+          create: {
+            args: Prisma.WholesaleCustomerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          createMany: {
+            args: Prisma.WholesaleCustomerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WholesaleCustomerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>[]
+          }
+          delete: {
+            args: Prisma.WholesaleCustomerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          update: {
+            args: Prisma.WholesaleCustomerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          deleteMany: {
+            args: Prisma.WholesaleCustomerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WholesaleCustomerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WholesaleCustomerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>[]
+          }
+          upsert: {
+            args: Prisma.WholesaleCustomerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleCustomerPayload>
+          }
+          aggregate: {
+            args: Prisma.WholesaleCustomerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWholesaleCustomer>
+          }
+          groupBy: {
+            args: Prisma.WholesaleCustomerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleCustomerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WholesaleCustomerCountArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleCustomerCountAggregateOutputType> | number
+          }
+        }
+      }
+      WholesaleVisit: {
+        payload: Prisma.$WholesaleVisitPayload<ExtArgs>
+        fields: Prisma.WholesaleVisitFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WholesaleVisitFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WholesaleVisitFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          findFirst: {
+            args: Prisma.WholesaleVisitFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WholesaleVisitFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          findMany: {
+            args: Prisma.WholesaleVisitFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>[]
+          }
+          create: {
+            args: Prisma.WholesaleVisitCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          createMany: {
+            args: Prisma.WholesaleVisitCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WholesaleVisitCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>[]
+          }
+          delete: {
+            args: Prisma.WholesaleVisitDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          update: {
+            args: Prisma.WholesaleVisitUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          deleteMany: {
+            args: Prisma.WholesaleVisitDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WholesaleVisitUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WholesaleVisitUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>[]
+          }
+          upsert: {
+            args: Prisma.WholesaleVisitUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleVisitPayload>
+          }
+          aggregate: {
+            args: Prisma.WholesaleVisitAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWholesaleVisit>
+          }
+          groupBy: {
+            args: Prisma.WholesaleVisitGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleVisitGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WholesaleVisitCountArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleVisitCountAggregateOutputType> | number
           }
         }
       }
@@ -3660,6 +3884,8 @@ export namespace Prisma {
     targetProduct?: TargetProductOmit
     productImage?: ProductImageOmit
     customer?: CustomerOmit
+    wholesaleCustomer?: WholesaleCustomerOmit
+    wholesaleVisit?: WholesaleVisitOmit
     warranty?: WarrantyOmit
     message?: MessageOmit
     order?: OrderOmit
@@ -3768,6 +3994,8 @@ export namespace Prisma {
     stockMovements: number
     affiliateLinks: number
     reviews: number
+    assignedWholesaleCustomers: number
+    wholesaleVisits: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3783,6 +4011,8 @@ export namespace Prisma {
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
     affiliateLinks?: boolean | UserCountOutputTypeCountAffiliateLinksArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
+    assignedWholesaleCustomers?: boolean | UserCountOutputTypeCountAssignedWholesaleCustomersArgs
+    wholesaleVisits?: boolean | UserCountOutputTypeCountWholesaleVisitsArgs
   }
 
   // Custom InputTypes
@@ -3878,6 +4108,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignedWholesaleCustomersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleCustomerWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWholesaleVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleVisitWhereInput
   }
 
 
@@ -4208,6 +4452,37 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountWarrantiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WarrantyWhereInput
+  }
+
+
+  /**
+   * Count Type WholesaleCustomerCountOutputType
+   */
+
+  export type WholesaleCustomerCountOutputType = {
+    visits: number
+  }
+
+  export type WholesaleCustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visits?: boolean | WholesaleCustomerCountOutputTypeCountVisitsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WholesaleCustomerCountOutputType without action
+   */
+  export type WholesaleCustomerCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomerCountOutputType
+     */
+    select?: WholesaleCustomerCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleCustomerCountOutputType without action
+   */
+  export type WholesaleCustomerCountOutputTypeCountVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleVisitWhereInput
   }
 
 
@@ -4702,6 +4977,8 @@ export namespace Prisma {
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     affiliateLinks?: boolean | User$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
+    wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4794,6 +5071,8 @@ export namespace Prisma {
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
     affiliateLinks?: boolean | User$affiliateLinksArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
+    wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4822,6 +5101,8 @@ export namespace Prisma {
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
       affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      assignedWholesaleCustomers: Prisma.$WholesaleCustomerPayload<ExtArgs>[]
+      wholesaleVisits: Prisma.$WholesaleVisitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5252,6 +5533,8 @@ export namespace Prisma {
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     affiliateLinks<T extends User$affiliateLinksArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedWholesaleCustomers<T extends User$assignedWholesaleCustomersArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedWholesaleCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wholesaleVisits<T extends User$wholesaleVisitsArgs<ExtArgs> = {}>(args?: Subset<T, User$wholesaleVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6020,6 +6303,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * User.assignedWholesaleCustomers
+   */
+  export type User$assignedWholesaleCustomersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    where?: WholesaleCustomerWhereInput
+    orderBy?: WholesaleCustomerOrderByWithRelationInput | WholesaleCustomerOrderByWithRelationInput[]
+    cursor?: WholesaleCustomerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleCustomerScalarFieldEnum | WholesaleCustomerScalarFieldEnum[]
+  }
+
+  /**
+   * User.wholesaleVisits
+   */
+  export type User$wholesaleVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    where?: WholesaleVisitWhereInput
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    cursor?: WholesaleVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
   }
 
   /**
@@ -23281,6 +23612,2656 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WholesaleCustomer
+   */
+
+  export type AggregateWholesaleCustomer = {
+    _count: WholesaleCustomerCountAggregateOutputType | null
+    _avg: WholesaleCustomerAvgAggregateOutputType | null
+    _sum: WholesaleCustomerSumAggregateOutputType | null
+    _min: WholesaleCustomerMinAggregateOutputType | null
+    _max: WholesaleCustomerMaxAggregateOutputType | null
+  }
+
+  export type WholesaleCustomerAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type WholesaleCustomerSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type WholesaleCustomerMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: $Enums.WholesaleCustomerCategory | null
+    contactName: string | null
+    whatsappPhone: string | null
+    country: string | null
+    city: string | null
+    area: string | null
+    address: string | null
+    latitude: number | null
+    longitude: number | null
+    googleMapsLink: string | null
+    assignedUserId: string | null
+    notes: string | null
+    preferredVisitAt: Date | null
+    lastVisitAt: Date | null
+    nextFollowUpAt: Date | null
+    lastVisitResult: $Enums.WholesaleVisitResult | null
+    visitStatus: $Enums.WholesaleVisitStatus | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleCustomerMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: $Enums.WholesaleCustomerCategory | null
+    contactName: string | null
+    whatsappPhone: string | null
+    country: string | null
+    city: string | null
+    area: string | null
+    address: string | null
+    latitude: number | null
+    longitude: number | null
+    googleMapsLink: string | null
+    assignedUserId: string | null
+    notes: string | null
+    preferredVisitAt: Date | null
+    lastVisitAt: Date | null
+    nextFollowUpAt: Date | null
+    lastVisitResult: $Enums.WholesaleVisitResult | null
+    visitStatus: $Enums.WholesaleVisitStatus | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleCustomerCountAggregateOutputType = {
+    id: number
+    name: number
+    category: number
+    contactName: number
+    phone: number
+    whatsappPhone: number
+    country: number
+    city: number
+    area: number
+    address: number
+    latitude: number
+    longitude: number
+    googleMapsLink: number
+    assignedUserId: number
+    notes: number
+    preferredVisitAt: number
+    lastVisitAt: number
+    nextFollowUpAt: number
+    lastVisitResult: number
+    visitStatus: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WholesaleCustomerAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type WholesaleCustomerSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type WholesaleCustomerMinAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    contactName?: true
+    whatsappPhone?: true
+    country?: true
+    city?: true
+    area?: true
+    address?: true
+    latitude?: true
+    longitude?: true
+    googleMapsLink?: true
+    assignedUserId?: true
+    notes?: true
+    preferredVisitAt?: true
+    lastVisitAt?: true
+    nextFollowUpAt?: true
+    lastVisitResult?: true
+    visitStatus?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleCustomerMaxAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    contactName?: true
+    whatsappPhone?: true
+    country?: true
+    city?: true
+    area?: true
+    address?: true
+    latitude?: true
+    longitude?: true
+    googleMapsLink?: true
+    assignedUserId?: true
+    notes?: true
+    preferredVisitAt?: true
+    lastVisitAt?: true
+    nextFollowUpAt?: true
+    lastVisitResult?: true
+    visitStatus?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleCustomerCountAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    contactName?: true
+    phone?: true
+    whatsappPhone?: true
+    country?: true
+    city?: true
+    area?: true
+    address?: true
+    latitude?: true
+    longitude?: true
+    googleMapsLink?: true
+    assignedUserId?: true
+    notes?: true
+    preferredVisitAt?: true
+    lastVisitAt?: true
+    nextFollowUpAt?: true
+    lastVisitResult?: true
+    visitStatus?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WholesaleCustomerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleCustomer to aggregate.
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleCustomers to fetch.
+     */
+    orderBy?: WholesaleCustomerOrderByWithRelationInput | WholesaleCustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WholesaleCustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleCustomers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleCustomers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WholesaleCustomers
+    **/
+    _count?: true | WholesaleCustomerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WholesaleCustomerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WholesaleCustomerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WholesaleCustomerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WholesaleCustomerMaxAggregateInputType
+  }
+
+  export type GetWholesaleCustomerAggregateType<T extends WholesaleCustomerAggregateArgs> = {
+        [P in keyof T & keyof AggregateWholesaleCustomer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWholesaleCustomer[P]>
+      : GetScalarType<T[P], AggregateWholesaleCustomer[P]>
+  }
+
+
+
+
+  export type WholesaleCustomerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleCustomerWhereInput
+    orderBy?: WholesaleCustomerOrderByWithAggregationInput | WholesaleCustomerOrderByWithAggregationInput[]
+    by: WholesaleCustomerScalarFieldEnum[] | WholesaleCustomerScalarFieldEnum
+    having?: WholesaleCustomerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WholesaleCustomerCountAggregateInputType | true
+    _avg?: WholesaleCustomerAvgAggregateInputType
+    _sum?: WholesaleCustomerSumAggregateInputType
+    _min?: WholesaleCustomerMinAggregateInputType
+    _max?: WholesaleCustomerMaxAggregateInputType
+  }
+
+  export type WholesaleCustomerGroupByOutputType = {
+    id: string
+    name: string
+    category: $Enums.WholesaleCustomerCategory
+    contactName: string | null
+    phone: string[]
+    whatsappPhone: string | null
+    country: string | null
+    city: string | null
+    area: string | null
+    address: string | null
+    latitude: number | null
+    longitude: number | null
+    googleMapsLink: string | null
+    assignedUserId: string | null
+    notes: string | null
+    preferredVisitAt: Date | null
+    lastVisitAt: Date | null
+    nextFollowUpAt: Date | null
+    lastVisitResult: $Enums.WholesaleVisitResult | null
+    visitStatus: $Enums.WholesaleVisitStatus
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: WholesaleCustomerCountAggregateOutputType | null
+    _avg: WholesaleCustomerAvgAggregateOutputType | null
+    _sum: WholesaleCustomerSumAggregateOutputType | null
+    _min: WholesaleCustomerMinAggregateOutputType | null
+    _max: WholesaleCustomerMaxAggregateOutputType | null
+  }
+
+  type GetWholesaleCustomerGroupByPayload<T extends WholesaleCustomerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WholesaleCustomerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WholesaleCustomerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WholesaleCustomerGroupByOutputType[P]>
+            : GetScalarType<T[P], WholesaleCustomerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WholesaleCustomerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    contactName?: boolean
+    phone?: boolean
+    whatsappPhone?: boolean
+    country?: boolean
+    city?: boolean
+    area?: boolean
+    address?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    googleMapsLink?: boolean
+    assignedUserId?: boolean
+    notes?: boolean
+    preferredVisitAt?: boolean
+    lastVisitAt?: boolean
+    nextFollowUpAt?: boolean
+    lastVisitResult?: boolean
+    visitStatus?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+    visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
+    _count?: boolean | WholesaleCustomerCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleCustomer"]>
+
+  export type WholesaleCustomerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    contactName?: boolean
+    phone?: boolean
+    whatsappPhone?: boolean
+    country?: boolean
+    city?: boolean
+    area?: boolean
+    address?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    googleMapsLink?: boolean
+    assignedUserId?: boolean
+    notes?: boolean
+    preferredVisitAt?: boolean
+    lastVisitAt?: boolean
+    nextFollowUpAt?: boolean
+    lastVisitResult?: boolean
+    visitStatus?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleCustomer"]>
+
+  export type WholesaleCustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    contactName?: boolean
+    phone?: boolean
+    whatsappPhone?: boolean
+    country?: boolean
+    city?: boolean
+    area?: boolean
+    address?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    googleMapsLink?: boolean
+    assignedUserId?: boolean
+    notes?: boolean
+    preferredVisitAt?: boolean
+    lastVisitAt?: boolean
+    nextFollowUpAt?: boolean
+    lastVisitResult?: boolean
+    visitStatus?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleCustomer"]>
+
+  export type WholesaleCustomerSelectScalar = {
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    contactName?: boolean
+    phone?: boolean
+    whatsappPhone?: boolean
+    country?: boolean
+    city?: boolean
+    area?: boolean
+    address?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    googleMapsLink?: boolean
+    assignedUserId?: boolean
+    notes?: boolean
+    preferredVisitAt?: boolean
+    lastVisitAt?: boolean
+    nextFollowUpAt?: boolean
+    lastVisitResult?: boolean
+    visitStatus?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WholesaleCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "contactName" | "phone" | "whatsappPhone" | "country" | "city" | "area" | "address" | "latitude" | "longitude" | "googleMapsLink" | "assignedUserId" | "notes" | "preferredVisitAt" | "lastVisitAt" | "nextFollowUpAt" | "lastVisitResult" | "visitStatus" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleCustomer"]>
+  export type WholesaleCustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+    visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
+    _count?: boolean | WholesaleCustomerCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WholesaleCustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+  }
+  export type WholesaleCustomerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
+  }
+
+  export type $WholesaleCustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WholesaleCustomer"
+    objects: {
+      assignedUser: Prisma.$UserPayload<ExtArgs> | null
+      visits: Prisma.$WholesaleVisitPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      category: $Enums.WholesaleCustomerCategory
+      contactName: string | null
+      phone: string[]
+      whatsappPhone: string | null
+      country: string | null
+      city: string | null
+      area: string | null
+      address: string | null
+      latitude: number | null
+      longitude: number | null
+      googleMapsLink: string | null
+      assignedUserId: string | null
+      notes: string | null
+      preferredVisitAt: Date | null
+      lastVisitAt: Date | null
+      nextFollowUpAt: Date | null
+      lastVisitResult: $Enums.WholesaleVisitResult | null
+      visitStatus: $Enums.WholesaleVisitStatus
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["wholesaleCustomer"]>
+    composites: {}
+  }
+
+  type WholesaleCustomerGetPayload<S extends boolean | null | undefined | WholesaleCustomerDefaultArgs> = $Result.GetResult<Prisma.$WholesaleCustomerPayload, S>
+
+  type WholesaleCustomerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WholesaleCustomerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WholesaleCustomerCountAggregateInputType | true
+    }
+
+  export interface WholesaleCustomerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WholesaleCustomer'], meta: { name: 'WholesaleCustomer' } }
+    /**
+     * Find zero or one WholesaleCustomer that matches the filter.
+     * @param {WholesaleCustomerFindUniqueArgs} args - Arguments to find a WholesaleCustomer
+     * @example
+     * // Get one WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WholesaleCustomerFindUniqueArgs>(args: SelectSubset<T, WholesaleCustomerFindUniqueArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WholesaleCustomer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WholesaleCustomerFindUniqueOrThrowArgs} args - Arguments to find a WholesaleCustomer
+     * @example
+     * // Get one WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WholesaleCustomerFindUniqueOrThrowArgs>(args: SelectSubset<T, WholesaleCustomerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleCustomer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerFindFirstArgs} args - Arguments to find a WholesaleCustomer
+     * @example
+     * // Get one WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WholesaleCustomerFindFirstArgs>(args?: SelectSubset<T, WholesaleCustomerFindFirstArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleCustomer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerFindFirstOrThrowArgs} args - Arguments to find a WholesaleCustomer
+     * @example
+     * // Get one WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WholesaleCustomerFindFirstOrThrowArgs>(args?: SelectSubset<T, WholesaleCustomerFindFirstOrThrowArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WholesaleCustomers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WholesaleCustomers
+     * const wholesaleCustomers = await prisma.wholesaleCustomer.findMany()
+     * 
+     * // Get first 10 WholesaleCustomers
+     * const wholesaleCustomers = await prisma.wholesaleCustomer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wholesaleCustomerWithIdOnly = await prisma.wholesaleCustomer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WholesaleCustomerFindManyArgs>(args?: SelectSubset<T, WholesaleCustomerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WholesaleCustomer.
+     * @param {WholesaleCustomerCreateArgs} args - Arguments to create a WholesaleCustomer.
+     * @example
+     * // Create one WholesaleCustomer
+     * const WholesaleCustomer = await prisma.wholesaleCustomer.create({
+     *   data: {
+     *     // ... data to create a WholesaleCustomer
+     *   }
+     * })
+     * 
+     */
+    create<T extends WholesaleCustomerCreateArgs>(args: SelectSubset<T, WholesaleCustomerCreateArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WholesaleCustomers.
+     * @param {WholesaleCustomerCreateManyArgs} args - Arguments to create many WholesaleCustomers.
+     * @example
+     * // Create many WholesaleCustomers
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WholesaleCustomerCreateManyArgs>(args?: SelectSubset<T, WholesaleCustomerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WholesaleCustomers and returns the data saved in the database.
+     * @param {WholesaleCustomerCreateManyAndReturnArgs} args - Arguments to create many WholesaleCustomers.
+     * @example
+     * // Create many WholesaleCustomers
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WholesaleCustomers and only return the `id`
+     * const wholesaleCustomerWithIdOnly = await prisma.wholesaleCustomer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WholesaleCustomerCreateManyAndReturnArgs>(args?: SelectSubset<T, WholesaleCustomerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WholesaleCustomer.
+     * @param {WholesaleCustomerDeleteArgs} args - Arguments to delete one WholesaleCustomer.
+     * @example
+     * // Delete one WholesaleCustomer
+     * const WholesaleCustomer = await prisma.wholesaleCustomer.delete({
+     *   where: {
+     *     // ... filter to delete one WholesaleCustomer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WholesaleCustomerDeleteArgs>(args: SelectSubset<T, WholesaleCustomerDeleteArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WholesaleCustomer.
+     * @param {WholesaleCustomerUpdateArgs} args - Arguments to update one WholesaleCustomer.
+     * @example
+     * // Update one WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WholesaleCustomerUpdateArgs>(args: SelectSubset<T, WholesaleCustomerUpdateArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WholesaleCustomers.
+     * @param {WholesaleCustomerDeleteManyArgs} args - Arguments to filter WholesaleCustomers to delete.
+     * @example
+     * // Delete a few WholesaleCustomers
+     * const { count } = await prisma.wholesaleCustomer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WholesaleCustomerDeleteManyArgs>(args?: SelectSubset<T, WholesaleCustomerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleCustomers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WholesaleCustomers
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WholesaleCustomerUpdateManyArgs>(args: SelectSubset<T, WholesaleCustomerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleCustomers and returns the data updated in the database.
+     * @param {WholesaleCustomerUpdateManyAndReturnArgs} args - Arguments to update many WholesaleCustomers.
+     * @example
+     * // Update many WholesaleCustomers
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WholesaleCustomers and only return the `id`
+     * const wholesaleCustomerWithIdOnly = await prisma.wholesaleCustomer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WholesaleCustomerUpdateManyAndReturnArgs>(args: SelectSubset<T, WholesaleCustomerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WholesaleCustomer.
+     * @param {WholesaleCustomerUpsertArgs} args - Arguments to update or create a WholesaleCustomer.
+     * @example
+     * // Update or create a WholesaleCustomer
+     * const wholesaleCustomer = await prisma.wholesaleCustomer.upsert({
+     *   create: {
+     *     // ... data to create a WholesaleCustomer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WholesaleCustomer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WholesaleCustomerUpsertArgs>(args: SelectSubset<T, WholesaleCustomerUpsertArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WholesaleCustomers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerCountArgs} args - Arguments to filter WholesaleCustomers to count.
+     * @example
+     * // Count the number of WholesaleCustomers
+     * const count = await prisma.wholesaleCustomer.count({
+     *   where: {
+     *     // ... the filter for the WholesaleCustomers we want to count
+     *   }
+     * })
+    **/
+    count<T extends WholesaleCustomerCountArgs>(
+      args?: Subset<T, WholesaleCustomerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WholesaleCustomerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WholesaleCustomer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WholesaleCustomerAggregateArgs>(args: Subset<T, WholesaleCustomerAggregateArgs>): Prisma.PrismaPromise<GetWholesaleCustomerAggregateType<T>>
+
+    /**
+     * Group by WholesaleCustomer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleCustomerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WholesaleCustomerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WholesaleCustomerGroupByArgs['orderBy'] }
+        : { orderBy?: WholesaleCustomerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WholesaleCustomerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWholesaleCustomerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WholesaleCustomer model
+   */
+  readonly fields: WholesaleCustomerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WholesaleCustomer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WholesaleCustomerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    assignedUser<T extends WholesaleCustomer$assignedUserArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomer$assignedUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    visits<T extends WholesaleCustomer$visitsArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomer$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WholesaleCustomer model
+   */
+  interface WholesaleCustomerFieldRefs {
+    readonly id: FieldRef<"WholesaleCustomer", 'String'>
+    readonly name: FieldRef<"WholesaleCustomer", 'String'>
+    readonly category: FieldRef<"WholesaleCustomer", 'WholesaleCustomerCategory'>
+    readonly contactName: FieldRef<"WholesaleCustomer", 'String'>
+    readonly phone: FieldRef<"WholesaleCustomer", 'String[]'>
+    readonly whatsappPhone: FieldRef<"WholesaleCustomer", 'String'>
+    readonly country: FieldRef<"WholesaleCustomer", 'String'>
+    readonly city: FieldRef<"WholesaleCustomer", 'String'>
+    readonly area: FieldRef<"WholesaleCustomer", 'String'>
+    readonly address: FieldRef<"WholesaleCustomer", 'String'>
+    readonly latitude: FieldRef<"WholesaleCustomer", 'Float'>
+    readonly longitude: FieldRef<"WholesaleCustomer", 'Float'>
+    readonly googleMapsLink: FieldRef<"WholesaleCustomer", 'String'>
+    readonly assignedUserId: FieldRef<"WholesaleCustomer", 'String'>
+    readonly notes: FieldRef<"WholesaleCustomer", 'String'>
+    readonly preferredVisitAt: FieldRef<"WholesaleCustomer", 'DateTime'>
+    readonly lastVisitAt: FieldRef<"WholesaleCustomer", 'DateTime'>
+    readonly nextFollowUpAt: FieldRef<"WholesaleCustomer", 'DateTime'>
+    readonly lastVisitResult: FieldRef<"WholesaleCustomer", 'WholesaleVisitResult'>
+    readonly visitStatus: FieldRef<"WholesaleCustomer", 'WholesaleVisitStatus'>
+    readonly isActive: FieldRef<"WholesaleCustomer", 'Boolean'>
+    readonly createdAt: FieldRef<"WholesaleCustomer", 'DateTime'>
+    readonly updatedAt: FieldRef<"WholesaleCustomer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WholesaleCustomer findUnique
+   */
+  export type WholesaleCustomerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleCustomer to fetch.
+     */
+    where: WholesaleCustomerWhereUniqueInput
+  }
+
+  /**
+   * WholesaleCustomer findUniqueOrThrow
+   */
+  export type WholesaleCustomerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleCustomer to fetch.
+     */
+    where: WholesaleCustomerWhereUniqueInput
+  }
+
+  /**
+   * WholesaleCustomer findFirst
+   */
+  export type WholesaleCustomerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleCustomer to fetch.
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleCustomers to fetch.
+     */
+    orderBy?: WholesaleCustomerOrderByWithRelationInput | WholesaleCustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleCustomers.
+     */
+    cursor?: WholesaleCustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleCustomers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleCustomers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleCustomers.
+     */
+    distinct?: WholesaleCustomerScalarFieldEnum | WholesaleCustomerScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleCustomer findFirstOrThrow
+   */
+  export type WholesaleCustomerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleCustomer to fetch.
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleCustomers to fetch.
+     */
+    orderBy?: WholesaleCustomerOrderByWithRelationInput | WholesaleCustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleCustomers.
+     */
+    cursor?: WholesaleCustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleCustomers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleCustomers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleCustomers.
+     */
+    distinct?: WholesaleCustomerScalarFieldEnum | WholesaleCustomerScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleCustomer findMany
+   */
+  export type WholesaleCustomerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleCustomers to fetch.
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleCustomers to fetch.
+     */
+    orderBy?: WholesaleCustomerOrderByWithRelationInput | WholesaleCustomerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WholesaleCustomers.
+     */
+    cursor?: WholesaleCustomerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleCustomers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleCustomers.
+     */
+    skip?: number
+    distinct?: WholesaleCustomerScalarFieldEnum | WholesaleCustomerScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleCustomer create
+   */
+  export type WholesaleCustomerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WholesaleCustomer.
+     */
+    data: XOR<WholesaleCustomerCreateInput, WholesaleCustomerUncheckedCreateInput>
+  }
+
+  /**
+   * WholesaleCustomer createMany
+   */
+  export type WholesaleCustomerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WholesaleCustomers.
+     */
+    data: WholesaleCustomerCreateManyInput | WholesaleCustomerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WholesaleCustomer createManyAndReturn
+   */
+  export type WholesaleCustomerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * The data used to create many WholesaleCustomers.
+     */
+    data: WholesaleCustomerCreateManyInput | WholesaleCustomerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleCustomer update
+   */
+  export type WholesaleCustomerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WholesaleCustomer.
+     */
+    data: XOR<WholesaleCustomerUpdateInput, WholesaleCustomerUncheckedUpdateInput>
+    /**
+     * Choose, which WholesaleCustomer to update.
+     */
+    where: WholesaleCustomerWhereUniqueInput
+  }
+
+  /**
+   * WholesaleCustomer updateMany
+   */
+  export type WholesaleCustomerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WholesaleCustomers.
+     */
+    data: XOR<WholesaleCustomerUpdateManyMutationInput, WholesaleCustomerUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleCustomers to update
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * Limit how many WholesaleCustomers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleCustomer updateManyAndReturn
+   */
+  export type WholesaleCustomerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * The data used to update WholesaleCustomers.
+     */
+    data: XOR<WholesaleCustomerUpdateManyMutationInput, WholesaleCustomerUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleCustomers to update
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * Limit how many WholesaleCustomers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleCustomer upsert
+   */
+  export type WholesaleCustomerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WholesaleCustomer to update in case it exists.
+     */
+    where: WholesaleCustomerWhereUniqueInput
+    /**
+     * In case the WholesaleCustomer found by the `where` argument doesn't exist, create a new WholesaleCustomer with this data.
+     */
+    create: XOR<WholesaleCustomerCreateInput, WholesaleCustomerUncheckedCreateInput>
+    /**
+     * In case the WholesaleCustomer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WholesaleCustomerUpdateInput, WholesaleCustomerUncheckedUpdateInput>
+  }
+
+  /**
+   * WholesaleCustomer delete
+   */
+  export type WholesaleCustomerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+    /**
+     * Filter which WholesaleCustomer to delete.
+     */
+    where: WholesaleCustomerWhereUniqueInput
+  }
+
+  /**
+   * WholesaleCustomer deleteMany
+   */
+  export type WholesaleCustomerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleCustomers to delete
+     */
+    where?: WholesaleCustomerWhereInput
+    /**
+     * Limit how many WholesaleCustomers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleCustomer.assignedUser
+   */
+  export type WholesaleCustomer$assignedUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * WholesaleCustomer.visits
+   */
+  export type WholesaleCustomer$visitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    where?: WholesaleVisitWhereInput
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    cursor?: WholesaleVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleCustomer without action
+   */
+  export type WholesaleCustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleCustomer
+     */
+    select?: WholesaleCustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleCustomer
+     */
+    omit?: WholesaleCustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleCustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WholesaleVisit
+   */
+
+  export type AggregateWholesaleVisit = {
+    _count: WholesaleVisitCountAggregateOutputType | null
+    _avg: WholesaleVisitAvgAggregateOutputType | null
+    _sum: WholesaleVisitSumAggregateOutputType | null
+    _min: WholesaleVisitMinAggregateOutputType | null
+    _max: WholesaleVisitMaxAggregateOutputType | null
+  }
+
+  export type WholesaleVisitAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type WholesaleVisitSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type WholesaleVisitMinAggregateOutputType = {
+    id: string | null
+    wholesaleCustomerId: string | null
+    userId: string | null
+    visitedAt: Date | null
+    result: $Enums.WholesaleVisitResult | null
+    status: $Enums.WholesaleVisitStatus | null
+    voiceNote: string | null
+    notes: string | null
+    latitude: number | null
+    longitude: number | null
+    nextFollowUpAt: Date | null
+    followUpNotes: string | null
+    orderPlaced: boolean | null
+    syncedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleVisitMaxAggregateOutputType = {
+    id: string | null
+    wholesaleCustomerId: string | null
+    userId: string | null
+    visitedAt: Date | null
+    result: $Enums.WholesaleVisitResult | null
+    status: $Enums.WholesaleVisitStatus | null
+    voiceNote: string | null
+    notes: string | null
+    latitude: number | null
+    longitude: number | null
+    nextFollowUpAt: Date | null
+    followUpNotes: string | null
+    orderPlaced: boolean | null
+    syncedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleVisitCountAggregateOutputType = {
+    id: number
+    wholesaleCustomerId: number
+    userId: number
+    visitedAt: number
+    result: number
+    status: number
+    voiceNote: number
+    notes: number
+    photoUrls: number
+    latitude: number
+    longitude: number
+    nextFollowUpAt: number
+    followUpNotes: number
+    orderPlaced: number
+    syncedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WholesaleVisitAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type WholesaleVisitSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type WholesaleVisitMinAggregateInputType = {
+    id?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    visitedAt?: true
+    result?: true
+    status?: true
+    voiceNote?: true
+    notes?: true
+    latitude?: true
+    longitude?: true
+    nextFollowUpAt?: true
+    followUpNotes?: true
+    orderPlaced?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleVisitMaxAggregateInputType = {
+    id?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    visitedAt?: true
+    result?: true
+    status?: true
+    voiceNote?: true
+    notes?: true
+    latitude?: true
+    longitude?: true
+    nextFollowUpAt?: true
+    followUpNotes?: true
+    orderPlaced?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleVisitCountAggregateInputType = {
+    id?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    visitedAt?: true
+    result?: true
+    status?: true
+    voiceNote?: true
+    notes?: true
+    photoUrls?: true
+    latitude?: true
+    longitude?: true
+    nextFollowUpAt?: true
+    followUpNotes?: true
+    orderPlaced?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WholesaleVisitAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleVisit to aggregate.
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleVisits to fetch.
+     */
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WholesaleVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WholesaleVisits
+    **/
+    _count?: true | WholesaleVisitCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WholesaleVisitAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WholesaleVisitSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WholesaleVisitMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WholesaleVisitMaxAggregateInputType
+  }
+
+  export type GetWholesaleVisitAggregateType<T extends WholesaleVisitAggregateArgs> = {
+        [P in keyof T & keyof AggregateWholesaleVisit]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWholesaleVisit[P]>
+      : GetScalarType<T[P], AggregateWholesaleVisit[P]>
+  }
+
+
+
+
+  export type WholesaleVisitGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleVisitWhereInput
+    orderBy?: WholesaleVisitOrderByWithAggregationInput | WholesaleVisitOrderByWithAggregationInput[]
+    by: WholesaleVisitScalarFieldEnum[] | WholesaleVisitScalarFieldEnum
+    having?: WholesaleVisitScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WholesaleVisitCountAggregateInputType | true
+    _avg?: WholesaleVisitAvgAggregateInputType
+    _sum?: WholesaleVisitSumAggregateInputType
+    _min?: WholesaleVisitMinAggregateInputType
+    _max?: WholesaleVisitMaxAggregateInputType
+  }
+
+  export type WholesaleVisitGroupByOutputType = {
+    id: string
+    wholesaleCustomerId: string
+    userId: string | null
+    visitedAt: Date
+    result: $Enums.WholesaleVisitResult
+    status: $Enums.WholesaleVisitStatus
+    voiceNote: string | null
+    notes: string | null
+    photoUrls: string[]
+    latitude: number | null
+    longitude: number | null
+    nextFollowUpAt: Date | null
+    followUpNotes: string | null
+    orderPlaced: boolean
+    syncedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WholesaleVisitCountAggregateOutputType | null
+    _avg: WholesaleVisitAvgAggregateOutputType | null
+    _sum: WholesaleVisitSumAggregateOutputType | null
+    _min: WholesaleVisitMinAggregateOutputType | null
+    _max: WholesaleVisitMaxAggregateOutputType | null
+  }
+
+  type GetWholesaleVisitGroupByPayload<T extends WholesaleVisitGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WholesaleVisitGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WholesaleVisitGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WholesaleVisitGroupByOutputType[P]>
+            : GetScalarType<T[P], WholesaleVisitGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WholesaleVisitSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    visitedAt?: boolean
+    result?: boolean
+    status?: boolean
+    voiceNote?: boolean
+    notes?: boolean
+    photoUrls?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    nextFollowUpAt?: boolean
+    followUpNotes?: boolean
+    orderPlaced?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleVisit"]>
+
+  export type WholesaleVisitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    visitedAt?: boolean
+    result?: boolean
+    status?: boolean
+    voiceNote?: boolean
+    notes?: boolean
+    photoUrls?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    nextFollowUpAt?: boolean
+    followUpNotes?: boolean
+    orderPlaced?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleVisit"]>
+
+  export type WholesaleVisitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    visitedAt?: boolean
+    result?: boolean
+    status?: boolean
+    voiceNote?: boolean
+    notes?: boolean
+    photoUrls?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    nextFollowUpAt?: boolean
+    followUpNotes?: boolean
+    orderPlaced?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleVisit"]>
+
+  export type WholesaleVisitSelectScalar = {
+    id?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    visitedAt?: boolean
+    result?: boolean
+    status?: boolean
+    voiceNote?: boolean
+    notes?: boolean
+    photoUrls?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    nextFollowUpAt?: boolean
+    followUpNotes?: boolean
+    orderPlaced?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WholesaleVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "wholesaleCustomerId" | "userId" | "visitedAt" | "result" | "status" | "voiceNote" | "notes" | "photoUrls" | "latitude" | "longitude" | "nextFollowUpAt" | "followUpNotes" | "orderPlaced" | "syncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleVisit"]>
+  export type WholesaleVisitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }
+  export type WholesaleVisitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }
+  export type WholesaleVisitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleVisit$userArgs<ExtArgs>
+  }
+
+  export type $WholesaleVisitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WholesaleVisit"
+    objects: {
+      wholesaleCustomer: Prisma.$WholesaleCustomerPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      wholesaleCustomerId: string
+      userId: string | null
+      visitedAt: Date
+      result: $Enums.WholesaleVisitResult
+      status: $Enums.WholesaleVisitStatus
+      voiceNote: string | null
+      notes: string | null
+      photoUrls: string[]
+      latitude: number | null
+      longitude: number | null
+      nextFollowUpAt: Date | null
+      followUpNotes: string | null
+      orderPlaced: boolean
+      syncedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["wholesaleVisit"]>
+    composites: {}
+  }
+
+  type WholesaleVisitGetPayload<S extends boolean | null | undefined | WholesaleVisitDefaultArgs> = $Result.GetResult<Prisma.$WholesaleVisitPayload, S>
+
+  type WholesaleVisitCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WholesaleVisitFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WholesaleVisitCountAggregateInputType | true
+    }
+
+  export interface WholesaleVisitDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WholesaleVisit'], meta: { name: 'WholesaleVisit' } }
+    /**
+     * Find zero or one WholesaleVisit that matches the filter.
+     * @param {WholesaleVisitFindUniqueArgs} args - Arguments to find a WholesaleVisit
+     * @example
+     * // Get one WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WholesaleVisitFindUniqueArgs>(args: SelectSubset<T, WholesaleVisitFindUniqueArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WholesaleVisit that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WholesaleVisitFindUniqueOrThrowArgs} args - Arguments to find a WholesaleVisit
+     * @example
+     * // Get one WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WholesaleVisitFindUniqueOrThrowArgs>(args: SelectSubset<T, WholesaleVisitFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleVisit that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitFindFirstArgs} args - Arguments to find a WholesaleVisit
+     * @example
+     * // Get one WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WholesaleVisitFindFirstArgs>(args?: SelectSubset<T, WholesaleVisitFindFirstArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleVisit that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitFindFirstOrThrowArgs} args - Arguments to find a WholesaleVisit
+     * @example
+     * // Get one WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WholesaleVisitFindFirstOrThrowArgs>(args?: SelectSubset<T, WholesaleVisitFindFirstOrThrowArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WholesaleVisits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WholesaleVisits
+     * const wholesaleVisits = await prisma.wholesaleVisit.findMany()
+     * 
+     * // Get first 10 WholesaleVisits
+     * const wholesaleVisits = await prisma.wholesaleVisit.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wholesaleVisitWithIdOnly = await prisma.wholesaleVisit.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WholesaleVisitFindManyArgs>(args?: SelectSubset<T, WholesaleVisitFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WholesaleVisit.
+     * @param {WholesaleVisitCreateArgs} args - Arguments to create a WholesaleVisit.
+     * @example
+     * // Create one WholesaleVisit
+     * const WholesaleVisit = await prisma.wholesaleVisit.create({
+     *   data: {
+     *     // ... data to create a WholesaleVisit
+     *   }
+     * })
+     * 
+     */
+    create<T extends WholesaleVisitCreateArgs>(args: SelectSubset<T, WholesaleVisitCreateArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WholesaleVisits.
+     * @param {WholesaleVisitCreateManyArgs} args - Arguments to create many WholesaleVisits.
+     * @example
+     * // Create many WholesaleVisits
+     * const wholesaleVisit = await prisma.wholesaleVisit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WholesaleVisitCreateManyArgs>(args?: SelectSubset<T, WholesaleVisitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WholesaleVisits and returns the data saved in the database.
+     * @param {WholesaleVisitCreateManyAndReturnArgs} args - Arguments to create many WholesaleVisits.
+     * @example
+     * // Create many WholesaleVisits
+     * const wholesaleVisit = await prisma.wholesaleVisit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WholesaleVisits and only return the `id`
+     * const wholesaleVisitWithIdOnly = await prisma.wholesaleVisit.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WholesaleVisitCreateManyAndReturnArgs>(args?: SelectSubset<T, WholesaleVisitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WholesaleVisit.
+     * @param {WholesaleVisitDeleteArgs} args - Arguments to delete one WholesaleVisit.
+     * @example
+     * // Delete one WholesaleVisit
+     * const WholesaleVisit = await prisma.wholesaleVisit.delete({
+     *   where: {
+     *     // ... filter to delete one WholesaleVisit
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WholesaleVisitDeleteArgs>(args: SelectSubset<T, WholesaleVisitDeleteArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WholesaleVisit.
+     * @param {WholesaleVisitUpdateArgs} args - Arguments to update one WholesaleVisit.
+     * @example
+     * // Update one WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WholesaleVisitUpdateArgs>(args: SelectSubset<T, WholesaleVisitUpdateArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WholesaleVisits.
+     * @param {WholesaleVisitDeleteManyArgs} args - Arguments to filter WholesaleVisits to delete.
+     * @example
+     * // Delete a few WholesaleVisits
+     * const { count } = await prisma.wholesaleVisit.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WholesaleVisitDeleteManyArgs>(args?: SelectSubset<T, WholesaleVisitDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WholesaleVisits
+     * const wholesaleVisit = await prisma.wholesaleVisit.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WholesaleVisitUpdateManyArgs>(args: SelectSubset<T, WholesaleVisitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleVisits and returns the data updated in the database.
+     * @param {WholesaleVisitUpdateManyAndReturnArgs} args - Arguments to update many WholesaleVisits.
+     * @example
+     * // Update many WholesaleVisits
+     * const wholesaleVisit = await prisma.wholesaleVisit.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WholesaleVisits and only return the `id`
+     * const wholesaleVisitWithIdOnly = await prisma.wholesaleVisit.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WholesaleVisitUpdateManyAndReturnArgs>(args: SelectSubset<T, WholesaleVisitUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WholesaleVisit.
+     * @param {WholesaleVisitUpsertArgs} args - Arguments to update or create a WholesaleVisit.
+     * @example
+     * // Update or create a WholesaleVisit
+     * const wholesaleVisit = await prisma.wholesaleVisit.upsert({
+     *   create: {
+     *     // ... data to create a WholesaleVisit
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WholesaleVisit we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WholesaleVisitUpsertArgs>(args: SelectSubset<T, WholesaleVisitUpsertArgs<ExtArgs>>): Prisma__WholesaleVisitClient<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WholesaleVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitCountArgs} args - Arguments to filter WholesaleVisits to count.
+     * @example
+     * // Count the number of WholesaleVisits
+     * const count = await prisma.wholesaleVisit.count({
+     *   where: {
+     *     // ... the filter for the WholesaleVisits we want to count
+     *   }
+     * })
+    **/
+    count<T extends WholesaleVisitCountArgs>(
+      args?: Subset<T, WholesaleVisitCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WholesaleVisitCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WholesaleVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WholesaleVisitAggregateArgs>(args: Subset<T, WholesaleVisitAggregateArgs>): Prisma.PrismaPromise<GetWholesaleVisitAggregateType<T>>
+
+    /**
+     * Group by WholesaleVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleVisitGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WholesaleVisitGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WholesaleVisitGroupByArgs['orderBy'] }
+        : { orderBy?: WholesaleVisitGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WholesaleVisitGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWholesaleVisitGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WholesaleVisit model
+   */
+  readonly fields: WholesaleVisitFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WholesaleVisit.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WholesaleVisitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    wholesaleCustomer<T extends WholesaleCustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomerDefaultArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends WholesaleVisit$userArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleVisit$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WholesaleVisit model
+   */
+  interface WholesaleVisitFieldRefs {
+    readonly id: FieldRef<"WholesaleVisit", 'String'>
+    readonly wholesaleCustomerId: FieldRef<"WholesaleVisit", 'String'>
+    readonly userId: FieldRef<"WholesaleVisit", 'String'>
+    readonly visitedAt: FieldRef<"WholesaleVisit", 'DateTime'>
+    readonly result: FieldRef<"WholesaleVisit", 'WholesaleVisitResult'>
+    readonly status: FieldRef<"WholesaleVisit", 'WholesaleVisitStatus'>
+    readonly voiceNote: FieldRef<"WholesaleVisit", 'String'>
+    readonly notes: FieldRef<"WholesaleVisit", 'String'>
+    readonly photoUrls: FieldRef<"WholesaleVisit", 'String[]'>
+    readonly latitude: FieldRef<"WholesaleVisit", 'Float'>
+    readonly longitude: FieldRef<"WholesaleVisit", 'Float'>
+    readonly nextFollowUpAt: FieldRef<"WholesaleVisit", 'DateTime'>
+    readonly followUpNotes: FieldRef<"WholesaleVisit", 'String'>
+    readonly orderPlaced: FieldRef<"WholesaleVisit", 'Boolean'>
+    readonly syncedAt: FieldRef<"WholesaleVisit", 'DateTime'>
+    readonly createdAt: FieldRef<"WholesaleVisit", 'DateTime'>
+    readonly updatedAt: FieldRef<"WholesaleVisit", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WholesaleVisit findUnique
+   */
+  export type WholesaleVisitFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleVisit to fetch.
+     */
+    where: WholesaleVisitWhereUniqueInput
+  }
+
+  /**
+   * WholesaleVisit findUniqueOrThrow
+   */
+  export type WholesaleVisitFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleVisit to fetch.
+     */
+    where: WholesaleVisitWhereUniqueInput
+  }
+
+  /**
+   * WholesaleVisit findFirst
+   */
+  export type WholesaleVisitFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleVisit to fetch.
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleVisits to fetch.
+     */
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleVisits.
+     */
+    cursor?: WholesaleVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleVisits.
+     */
+    distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleVisit findFirstOrThrow
+   */
+  export type WholesaleVisitFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleVisit to fetch.
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleVisits to fetch.
+     */
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleVisits.
+     */
+    cursor?: WholesaleVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleVisits.
+     */
+    distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleVisit findMany
+   */
+  export type WholesaleVisitFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleVisits to fetch.
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleVisits to fetch.
+     */
+    orderBy?: WholesaleVisitOrderByWithRelationInput | WholesaleVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WholesaleVisits.
+     */
+    cursor?: WholesaleVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleVisits.
+     */
+    skip?: number
+    distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleVisit create
+   */
+  export type WholesaleVisitCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WholesaleVisit.
+     */
+    data: XOR<WholesaleVisitCreateInput, WholesaleVisitUncheckedCreateInput>
+  }
+
+  /**
+   * WholesaleVisit createMany
+   */
+  export type WholesaleVisitCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WholesaleVisits.
+     */
+    data: WholesaleVisitCreateManyInput | WholesaleVisitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WholesaleVisit createManyAndReturn
+   */
+  export type WholesaleVisitCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * The data used to create many WholesaleVisits.
+     */
+    data: WholesaleVisitCreateManyInput | WholesaleVisitCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleVisit update
+   */
+  export type WholesaleVisitUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WholesaleVisit.
+     */
+    data: XOR<WholesaleVisitUpdateInput, WholesaleVisitUncheckedUpdateInput>
+    /**
+     * Choose, which WholesaleVisit to update.
+     */
+    where: WholesaleVisitWhereUniqueInput
+  }
+
+  /**
+   * WholesaleVisit updateMany
+   */
+  export type WholesaleVisitUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WholesaleVisits.
+     */
+    data: XOR<WholesaleVisitUpdateManyMutationInput, WholesaleVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleVisits to update
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * Limit how many WholesaleVisits to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleVisit updateManyAndReturn
+   */
+  export type WholesaleVisitUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * The data used to update WholesaleVisits.
+     */
+    data: XOR<WholesaleVisitUpdateManyMutationInput, WholesaleVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleVisits to update
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * Limit how many WholesaleVisits to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleVisit upsert
+   */
+  export type WholesaleVisitUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WholesaleVisit to update in case it exists.
+     */
+    where: WholesaleVisitWhereUniqueInput
+    /**
+     * In case the WholesaleVisit found by the `where` argument doesn't exist, create a new WholesaleVisit with this data.
+     */
+    create: XOR<WholesaleVisitCreateInput, WholesaleVisitUncheckedCreateInput>
+    /**
+     * In case the WholesaleVisit was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WholesaleVisitUpdateInput, WholesaleVisitUncheckedUpdateInput>
+  }
+
+  /**
+   * WholesaleVisit delete
+   */
+  export type WholesaleVisitDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
+    /**
+     * Filter which WholesaleVisit to delete.
+     */
+    where: WholesaleVisitWhereUniqueInput
+  }
+
+  /**
+   * WholesaleVisit deleteMany
+   */
+  export type WholesaleVisitDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleVisits to delete
+     */
+    where?: WholesaleVisitWhereInput
+    /**
+     * Limit how many WholesaleVisits to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleVisit.user
+   */
+  export type WholesaleVisit$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * WholesaleVisit without action
+   */
+  export type WholesaleVisitDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleVisit
+     */
+    select?: WholesaleVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleVisit
+     */
+    omit?: WholesaleVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleVisitInclude<ExtArgs> | null
   }
 
 
@@ -42663,6 +45644,58 @@ export namespace Prisma {
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+  export const WholesaleCustomerScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    category: 'category',
+    contactName: 'contactName',
+    phone: 'phone',
+    whatsappPhone: 'whatsappPhone',
+    country: 'country',
+    city: 'city',
+    area: 'area',
+    address: 'address',
+    latitude: 'latitude',
+    longitude: 'longitude',
+    googleMapsLink: 'googleMapsLink',
+    assignedUserId: 'assignedUserId',
+    notes: 'notes',
+    preferredVisitAt: 'preferredVisitAt',
+    lastVisitAt: 'lastVisitAt',
+    nextFollowUpAt: 'nextFollowUpAt',
+    lastVisitResult: 'lastVisitResult',
+    visitStatus: 'visitStatus',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WholesaleCustomerScalarFieldEnum = (typeof WholesaleCustomerScalarFieldEnum)[keyof typeof WholesaleCustomerScalarFieldEnum]
+
+
+  export const WholesaleVisitScalarFieldEnum: {
+    id: 'id',
+    wholesaleCustomerId: 'wholesaleCustomerId',
+    userId: 'userId',
+    visitedAt: 'visitedAt',
+    result: 'result',
+    status: 'status',
+    voiceNote: 'voiceNote',
+    notes: 'notes',
+    photoUrls: 'photoUrls',
+    latitude: 'latitude',
+    longitude: 'longitude',
+    nextFollowUpAt: 'nextFollowUpAt',
+    followUpNotes: 'followUpNotes',
+    orderPlaced: 'orderPlaced',
+    syncedAt: 'syncedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WholesaleVisitScalarFieldEnum = (typeof WholesaleVisitScalarFieldEnum)[keyof typeof WholesaleVisitScalarFieldEnum]
+
+
   export const WarrantyScalarFieldEnum: {
     id: 'id',
     type: 'type',
@@ -43121,6 +46154,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'WholesaleCustomerCategory'
+   */
+  export type EnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleCustomerCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'WholesaleCustomerCategory[]'
+   */
+  export type ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleCustomerCategory[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WholesaleVisitResult'
+   */
+  export type EnumWholesaleVisitResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleVisitResult'>
+    
+
+
+  /**
+   * Reference to a field of type 'WholesaleVisitResult[]'
+   */
+  export type ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleVisitResult[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WholesaleVisitStatus'
+   */
+  export type EnumWholesaleVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleVisitStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'WholesaleVisitStatus[]'
+   */
+  export type ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WholesaleVisitStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'WarrantyType'
    */
   export type EnumWarrantyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WarrantyType'>
@@ -43259,6 +46334,8 @@ export namespace Prisma {
     stockMovements?: StockMovementListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
+    assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
+    wholesaleVisits?: WholesaleVisitListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -43296,6 +46373,8 @@ export namespace Prisma {
     stockMovements?: StockMovementOrderByRelationAggregateInput
     affiliateLinks?: AffiliateLinkOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
+    assignedWholesaleCustomers?: WholesaleCustomerOrderByRelationAggregateInput
+    wholesaleVisits?: WholesaleVisitOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -43336,6 +46415,8 @@ export namespace Prisma {
     stockMovements?: StockMovementListRelationFilter
     affiliateLinks?: AffiliateLinkListRelationFilter
     reviews?: ReviewListRelationFilter
+    assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
+    wholesaleVisits?: WholesaleVisitListRelationFilter
   }, "id" | "email" | "affiliateCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -44745,6 +47826,276 @@ export namespace Prisma {
     status?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
+  }
+
+  export type WholesaleCustomerWhereInput = {
+    AND?: WholesaleCustomerWhereInput | WholesaleCustomerWhereInput[]
+    OR?: WholesaleCustomerWhereInput[]
+    NOT?: WholesaleCustomerWhereInput | WholesaleCustomerWhereInput[]
+    id?: StringFilter<"WholesaleCustomer"> | string
+    name?: StringFilter<"WholesaleCustomer"> | string
+    category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
+    contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    phone?: StringNullableListFilter<"WholesaleCustomer">
+    whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    country?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    city?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    area?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    address?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    latitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    googleMapsLink?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    assignedUserId?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    notes?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    preferredVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitResult?: EnumWholesaleVisitResultNullableFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitStatus
+    isActive?: BoolFilter<"WholesaleCustomer"> | boolean
+    createdAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+    assignedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    visits?: WholesaleVisitListRelationFilter
+  }
+
+  export type WholesaleCustomerOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    whatsappPhone?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    area?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    googleMapsLink?: SortOrderInput | SortOrder
+    assignedUserId?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    preferredVisitAt?: SortOrderInput | SortOrder
+    lastVisitAt?: SortOrderInput | SortOrder
+    nextFollowUpAt?: SortOrderInput | SortOrder
+    lastVisitResult?: SortOrderInput | SortOrder
+    visitStatus?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    assignedUser?: UserOrderByWithRelationInput
+    visits?: WholesaleVisitOrderByRelationAggregateInput
+  }
+
+  export type WholesaleCustomerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WholesaleCustomerWhereInput | WholesaleCustomerWhereInput[]
+    OR?: WholesaleCustomerWhereInput[]
+    NOT?: WholesaleCustomerWhereInput | WholesaleCustomerWhereInput[]
+    name?: StringFilter<"WholesaleCustomer"> | string
+    category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
+    contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    phone?: StringNullableListFilter<"WholesaleCustomer">
+    whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    country?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    city?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    area?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    address?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    latitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    googleMapsLink?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    assignedUserId?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    notes?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    preferredVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitResult?: EnumWholesaleVisitResultNullableFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitStatus
+    isActive?: BoolFilter<"WholesaleCustomer"> | boolean
+    createdAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+    assignedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    visits?: WholesaleVisitListRelationFilter
+  }, "id">
+
+  export type WholesaleCustomerOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    whatsappPhone?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    area?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    googleMapsLink?: SortOrderInput | SortOrder
+    assignedUserId?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    preferredVisitAt?: SortOrderInput | SortOrder
+    lastVisitAt?: SortOrderInput | SortOrder
+    nextFollowUpAt?: SortOrderInput | SortOrder
+    lastVisitResult?: SortOrderInput | SortOrder
+    visitStatus?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WholesaleCustomerCountOrderByAggregateInput
+    _avg?: WholesaleCustomerAvgOrderByAggregateInput
+    _max?: WholesaleCustomerMaxOrderByAggregateInput
+    _min?: WholesaleCustomerMinOrderByAggregateInput
+    _sum?: WholesaleCustomerSumOrderByAggregateInput
+  }
+
+  export type WholesaleCustomerScalarWhereWithAggregatesInput = {
+    AND?: WholesaleCustomerScalarWhereWithAggregatesInput | WholesaleCustomerScalarWhereWithAggregatesInput[]
+    OR?: WholesaleCustomerScalarWhereWithAggregatesInput[]
+    NOT?: WholesaleCustomerScalarWhereWithAggregatesInput | WholesaleCustomerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WholesaleCustomer"> | string
+    name?: StringWithAggregatesFilter<"WholesaleCustomer"> | string
+    category?: EnumWholesaleCustomerCategoryWithAggregatesFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
+    contactName?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    phone?: StringNullableListFilter<"WholesaleCustomer">
+    whatsappPhone?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    country?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    city?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    area?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    address?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"WholesaleCustomer"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"WholesaleCustomer"> | number | null
+    googleMapsLink?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    assignedUserId?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    preferredVisitAt?: DateTimeNullableWithAggregatesFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitAt?: DateTimeNullableWithAggregatesFilter<"WholesaleCustomer"> | Date | string | null
+    nextFollowUpAt?: DateTimeNullableWithAggregatesFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitResult?: EnumWholesaleVisitResultNullableWithAggregatesFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusWithAggregatesFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitStatus
+    isActive?: BoolWithAggregatesFilter<"WholesaleCustomer"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"WholesaleCustomer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WholesaleCustomer"> | Date | string
+  }
+
+  export type WholesaleVisitWhereInput = {
+    AND?: WholesaleVisitWhereInput | WholesaleVisitWhereInput[]
+    OR?: WholesaleVisitWhereInput[]
+    NOT?: WholesaleVisitWhereInput | WholesaleVisitWhereInput[]
+    id?: StringFilter<"WholesaleVisit"> | string
+    wholesaleCustomerId?: StringFilter<"WholesaleVisit"> | string
+    userId?: StringNullableFilter<"WholesaleVisit"> | string | null
+    visitedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    result?: EnumWholesaleVisitResultFilter<"WholesaleVisit"> | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFilter<"WholesaleVisit"> | $Enums.WholesaleVisitStatus
+    voiceNote?: StringNullableFilter<"WholesaleVisit"> | string | null
+    notes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    photoUrls?: StringNullableListFilter<"WholesaleVisit">
+    latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
+    syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    wholesaleCustomer?: XOR<WholesaleCustomerScalarRelationFilter, WholesaleCustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type WholesaleVisitOrderByWithRelationInput = {
+    id?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    visitedAt?: SortOrder
+    result?: SortOrder
+    status?: SortOrder
+    voiceNote?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    photoUrls?: SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    nextFollowUpAt?: SortOrderInput | SortOrder
+    followUpNotes?: SortOrderInput | SortOrder
+    orderPlaced?: SortOrder
+    syncedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    wholesaleCustomer?: WholesaleCustomerOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type WholesaleVisitWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WholesaleVisitWhereInput | WholesaleVisitWhereInput[]
+    OR?: WholesaleVisitWhereInput[]
+    NOT?: WholesaleVisitWhereInput | WholesaleVisitWhereInput[]
+    wholesaleCustomerId?: StringFilter<"WholesaleVisit"> | string
+    userId?: StringNullableFilter<"WholesaleVisit"> | string | null
+    visitedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    result?: EnumWholesaleVisitResultFilter<"WholesaleVisit"> | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFilter<"WholesaleVisit"> | $Enums.WholesaleVisitStatus
+    voiceNote?: StringNullableFilter<"WholesaleVisit"> | string | null
+    notes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    photoUrls?: StringNullableListFilter<"WholesaleVisit">
+    latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
+    syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    wholesaleCustomer?: XOR<WholesaleCustomerScalarRelationFilter, WholesaleCustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type WholesaleVisitOrderByWithAggregationInput = {
+    id?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    visitedAt?: SortOrder
+    result?: SortOrder
+    status?: SortOrder
+    voiceNote?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    photoUrls?: SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    nextFollowUpAt?: SortOrderInput | SortOrder
+    followUpNotes?: SortOrderInput | SortOrder
+    orderPlaced?: SortOrder
+    syncedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WholesaleVisitCountOrderByAggregateInput
+    _avg?: WholesaleVisitAvgOrderByAggregateInput
+    _max?: WholesaleVisitMaxOrderByAggregateInput
+    _min?: WholesaleVisitMinOrderByAggregateInput
+    _sum?: WholesaleVisitSumOrderByAggregateInput
+  }
+
+  export type WholesaleVisitScalarWhereWithAggregatesInput = {
+    AND?: WholesaleVisitScalarWhereWithAggregatesInput | WholesaleVisitScalarWhereWithAggregatesInput[]
+    OR?: WholesaleVisitScalarWhereWithAggregatesInput[]
+    NOT?: WholesaleVisitScalarWhereWithAggregatesInput | WholesaleVisitScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WholesaleVisit"> | string
+    wholesaleCustomerId?: StringWithAggregatesFilter<"WholesaleVisit"> | string
+    userId?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
+    visitedAt?: DateTimeWithAggregatesFilter<"WholesaleVisit"> | Date | string
+    result?: EnumWholesaleVisitResultWithAggregatesFilter<"WholesaleVisit"> | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusWithAggregatesFilter<"WholesaleVisit"> | $Enums.WholesaleVisitStatus
+    voiceNote?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
+    photoUrls?: StringNullableListFilter<"WholesaleVisit">
+    latitude?: FloatNullableWithAggregatesFilter<"WholesaleVisit"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"WholesaleVisit"> | number | null
+    nextFollowUpAt?: DateTimeNullableWithAggregatesFilter<"WholesaleVisit"> | Date | string | null
+    followUpNotes?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
+    orderPlaced?: BoolWithAggregatesFilter<"WholesaleVisit"> | boolean
+    syncedAt?: DateTimeNullableWithAggregatesFilter<"WholesaleVisit"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WholesaleVisit"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WholesaleVisit"> | Date | string
   }
 
   export type WarrantyWhereInput = {
@@ -46241,6 +49592,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -46276,6 +49629,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -46311,6 +49666,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -46346,6 +49703,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -47936,6 +51295,329 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleCustomerCreateInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedUser?: UserCreateNestedOneWithoutAssignedWholesaleCustomersInput
+    visits?: WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerUncheckedCreateInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    assignedUserId?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    visits?: WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedUser?: UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput
+    visits?: WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type WholesaleCustomerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type WholesaleCustomerCreateManyInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    assignedUserId?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleCustomerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleCustomerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitCreateInput = {
+    id?: string
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutVisitsInput
+    user?: UserCreateNestedOneWithoutWholesaleVisitsInput
+  }
+
+  export type WholesaleVisitUncheckedCreateInput = {
+    id?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutVisitsNestedInput
+    user?: UserUpdateOneWithoutWholesaleVisitsNestedInput
+  }
+
+  export type WholesaleVisitUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitCreateManyInput = {
+    id?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49708,6 +53390,18 @@ export namespace Prisma {
     none?: ReviewWhereInput
   }
 
+  export type WholesaleCustomerListRelationFilter = {
+    every?: WholesaleCustomerWhereInput
+    some?: WholesaleCustomerWhereInput
+    none?: WholesaleCustomerWhereInput
+  }
+
+  export type WholesaleVisitListRelationFilter = {
+    every?: WholesaleVisitWhereInput
+    some?: WholesaleVisitWhereInput
+    none?: WholesaleVisitWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -49758,6 +53452,14 @@ export namespace Prisma {
   }
 
   export type ReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WholesaleCustomerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WholesaleVisitOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50992,6 +54694,233 @@ export namespace Prisma {
     rating?: SortOrder
   }
 
+  export type EnumWholesaleCustomerCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleCustomerCategory | EnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel> | $Enums.WholesaleCustomerCategory
+  }
+
+  export type EnumWholesaleVisitResultNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel> | $Enums.WholesaleVisitResult | null
+  }
+
+  export type EnumWholesaleVisitStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitStatus | EnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel> | $Enums.WholesaleVisitStatus
+  }
+
+  export type WholesaleCustomerCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    contactName?: SortOrder
+    phone?: SortOrder
+    whatsappPhone?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    area?: SortOrder
+    address?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    googleMapsLink?: SortOrder
+    assignedUserId?: SortOrder
+    notes?: SortOrder
+    preferredVisitAt?: SortOrder
+    lastVisitAt?: SortOrder
+    nextFollowUpAt?: SortOrder
+    lastVisitResult?: SortOrder
+    visitStatus?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleCustomerAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type WholesaleCustomerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    contactName?: SortOrder
+    whatsappPhone?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    area?: SortOrder
+    address?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    googleMapsLink?: SortOrder
+    assignedUserId?: SortOrder
+    notes?: SortOrder
+    preferredVisitAt?: SortOrder
+    lastVisitAt?: SortOrder
+    nextFollowUpAt?: SortOrder
+    lastVisitResult?: SortOrder
+    visitStatus?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleCustomerMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    contactName?: SortOrder
+    whatsappPhone?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    area?: SortOrder
+    address?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    googleMapsLink?: SortOrder
+    assignedUserId?: SortOrder
+    notes?: SortOrder
+    preferredVisitAt?: SortOrder
+    lastVisitAt?: SortOrder
+    nextFollowUpAt?: SortOrder
+    lastVisitResult?: SortOrder
+    visitStatus?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleCustomerSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type EnumWholesaleCustomerCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleCustomerCategory | EnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleCustomerCategoryWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleCustomerCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel>
+  }
+
+  export type EnumWholesaleVisitResultNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWholesaleVisitResultNullableWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitResult | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel>
+  }
+
+  export type EnumWholesaleVisitStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitStatus | EnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitStatusWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel>
+  }
+
+  export type EnumWholesaleVisitResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitResultFilter<$PrismaModel> | $Enums.WholesaleVisitResult
+  }
+
+  export type WholesaleCustomerScalarRelationFilter = {
+    is?: WholesaleCustomerWhereInput
+    isNot?: WholesaleCustomerWhereInput
+  }
+
+  export type WholesaleVisitCountOrderByAggregateInput = {
+    id?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    visitedAt?: SortOrder
+    result?: SortOrder
+    status?: SortOrder
+    voiceNote?: SortOrder
+    notes?: SortOrder
+    photoUrls?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    nextFollowUpAt?: SortOrder
+    followUpNotes?: SortOrder
+    orderPlaced?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleVisitAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type WholesaleVisitMaxOrderByAggregateInput = {
+    id?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    visitedAt?: SortOrder
+    result?: SortOrder
+    status?: SortOrder
+    voiceNote?: SortOrder
+    notes?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    nextFollowUpAt?: SortOrder
+    followUpNotes?: SortOrder
+    orderPlaced?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleVisitMinOrderByAggregateInput = {
+    id?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    visitedAt?: SortOrder
+    result?: SortOrder
+    status?: SortOrder
+    voiceNote?: SortOrder
+    notes?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    nextFollowUpAt?: SortOrder
+    followUpNotes?: SortOrder
+    orderPlaced?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleVisitSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type EnumWholesaleVisitResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitResultWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitResultFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitResultFilter<$PrismaModel>
+  }
+
   export type EnumWarrantyTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
     in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
@@ -52147,6 +56076,20 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type WholesaleCustomerCreateNestedManyWithoutAssignedUserInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput> | WholesaleCustomerCreateWithoutAssignedUserInput[] | WholesaleCustomerUncheckedCreateWithoutAssignedUserInput[]
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutAssignedUserInput | WholesaleCustomerCreateOrConnectWithoutAssignedUserInput[]
+    createMany?: WholesaleCustomerCreateManyAssignedUserInputEnvelope
+    connect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+  }
+
+  export type WholesaleVisitCreateNestedManyWithoutUserInput = {
+    create?: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput> | WholesaleVisitCreateWithoutUserInput[] | WholesaleVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutUserInput | WholesaleVisitCreateOrConnectWithoutUserInput[]
+    createMany?: WholesaleVisitCreateManyUserInputEnvelope
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutParentInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -52228,6 +56171,20 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
     createMany?: ReviewCreateManyUserInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput> | WholesaleCustomerCreateWithoutAssignedUserInput[] | WholesaleCustomerUncheckedCreateWithoutAssignedUserInput[]
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutAssignedUserInput | WholesaleCustomerCreateOrConnectWithoutAssignedUserInput[]
+    createMany?: WholesaleCustomerCreateManyAssignedUserInputEnvelope
+    connect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+  }
+
+  export type WholesaleVisitUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput> | WholesaleVisitCreateWithoutUserInput[] | WholesaleVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutUserInput | WholesaleVisitCreateOrConnectWithoutUserInput[]
+    createMany?: WholesaleVisitCreateManyUserInputEnvelope
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -52457,6 +56414,34 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput> | WholesaleCustomerCreateWithoutAssignedUserInput[] | WholesaleCustomerUncheckedCreateWithoutAssignedUserInput[]
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutAssignedUserInput | WholesaleCustomerCreateOrConnectWithoutAssignedUserInput[]
+    upsert?: WholesaleCustomerUpsertWithWhereUniqueWithoutAssignedUserInput | WholesaleCustomerUpsertWithWhereUniqueWithoutAssignedUserInput[]
+    createMany?: WholesaleCustomerCreateManyAssignedUserInputEnvelope
+    set?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    disconnect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    delete?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    connect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    update?: WholesaleCustomerUpdateWithWhereUniqueWithoutAssignedUserInput | WholesaleCustomerUpdateWithWhereUniqueWithoutAssignedUserInput[]
+    updateMany?: WholesaleCustomerUpdateManyWithWhereWithoutAssignedUserInput | WholesaleCustomerUpdateManyWithWhereWithoutAssignedUserInput[]
+    deleteMany?: WholesaleCustomerScalarWhereInput | WholesaleCustomerScalarWhereInput[]
+  }
+
+  export type WholesaleVisitUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput> | WholesaleVisitCreateWithoutUserInput[] | WholesaleVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutUserInput | WholesaleVisitCreateOrConnectWithoutUserInput[]
+    upsert?: WholesaleVisitUpsertWithWhereUniqueWithoutUserInput | WholesaleVisitUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WholesaleVisitCreateManyUserInputEnvelope
+    set?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    disconnect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    delete?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    update?: WholesaleVisitUpdateWithWhereUniqueWithoutUserInput | WholesaleVisitUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WholesaleVisitUpdateManyWithWhereWithoutUserInput | WholesaleVisitUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutParentNestedInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -52622,6 +56607,34 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput> | WholesaleCustomerCreateWithoutAssignedUserInput[] | WholesaleCustomerUncheckedCreateWithoutAssignedUserInput[]
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutAssignedUserInput | WholesaleCustomerCreateOrConnectWithoutAssignedUserInput[]
+    upsert?: WholesaleCustomerUpsertWithWhereUniqueWithoutAssignedUserInput | WholesaleCustomerUpsertWithWhereUniqueWithoutAssignedUserInput[]
+    createMany?: WholesaleCustomerCreateManyAssignedUserInputEnvelope
+    set?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    disconnect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    delete?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    connect?: WholesaleCustomerWhereUniqueInput | WholesaleCustomerWhereUniqueInput[]
+    update?: WholesaleCustomerUpdateWithWhereUniqueWithoutAssignedUserInput | WholesaleCustomerUpdateWithWhereUniqueWithoutAssignedUserInput[]
+    updateMany?: WholesaleCustomerUpdateManyWithWhereWithoutAssignedUserInput | WholesaleCustomerUpdateManyWithWhereWithoutAssignedUserInput[]
+    deleteMany?: WholesaleCustomerScalarWhereInput | WholesaleCustomerScalarWhereInput[]
+  }
+
+  export type WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput> | WholesaleVisitCreateWithoutUserInput[] | WholesaleVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutUserInput | WholesaleVisitCreateOrConnectWithoutUserInput[]
+    upsert?: WholesaleVisitUpsertWithWhereUniqueWithoutUserInput | WholesaleVisitUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WholesaleVisitCreateManyUserInputEnvelope
+    set?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    disconnect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    delete?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    update?: WholesaleVisitUpdateWithWhereUniqueWithoutUserInput | WholesaleVisitUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WholesaleVisitUpdateManyWithWhereWithoutUserInput | WholesaleVisitUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
   }
 
   export type UserCreateNestedManyWithoutPermissionInput = {
@@ -53870,6 +57883,128 @@ export namespace Prisma {
     deleteMany?: WarrantyScalarWhereInput | WarrantyScalarWhereInput[]
   }
 
+  export type WholesaleCustomerCreatephoneInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutAssignedWholesaleCustomersInput = {
+    create?: XOR<UserCreateWithoutAssignedWholesaleCustomersInput, UserUncheckedCreateWithoutAssignedWholesaleCustomersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedWholesaleCustomersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput = {
+    create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleVisitCreateManyWholesaleCustomerInputEnvelope
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+  }
+
+  export type WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput = {
+    create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleVisitCreateManyWholesaleCustomerInputEnvelope
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+  }
+
+  export type EnumWholesaleCustomerCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.WholesaleCustomerCategory
+  }
+
+  export type WholesaleCustomerUpdatephoneInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type NullableEnumWholesaleVisitResultFieldUpdateOperationsInput = {
+    set?: $Enums.WholesaleVisitResult | null
+  }
+
+  export type EnumWholesaleVisitStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WholesaleVisitStatus
+  }
+
+  export type UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedWholesaleCustomersInput, UserUncheckedCreateWithoutAssignedWholesaleCustomersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedWholesaleCustomersInput
+    upsert?: UserUpsertWithoutAssignedWholesaleCustomersInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedWholesaleCustomersInput, UserUpdateWithoutAssignedWholesaleCustomersInput>, UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput>
+  }
+
+  export type WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput = {
+    create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
+    upsert?: WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleVisitCreateManyWholesaleCustomerInputEnvelope
+    set?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    disconnect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    delete?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    update?: WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput[]
+    updateMany?: WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput | WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput[]
+    deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+  }
+
+  export type WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput = {
+    create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
+    upsert?: WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleVisitCreateManyWholesaleCustomerInputEnvelope
+    set?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    disconnect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    delete?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+    update?: WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput[]
+    updateMany?: WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput | WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput[]
+    deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+  }
+
+  export type WholesaleVisitCreatephotoUrlsInput = {
+    set: string[]
+  }
+
+  export type WholesaleCustomerCreateNestedOneWithoutVisitsInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutVisitsInput, WholesaleCustomerUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutVisitsInput
+    connect?: WholesaleCustomerWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutWholesaleVisitsInput = {
+    create?: XOR<UserCreateWithoutWholesaleVisitsInput, UserUncheckedCreateWithoutWholesaleVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWholesaleVisitsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumWholesaleVisitResultFieldUpdateOperationsInput = {
+    set?: $Enums.WholesaleVisitResult
+  }
+
+  export type WholesaleVisitUpdatephotoUrlsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type WholesaleCustomerUpdateOneRequiredWithoutVisitsNestedInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutVisitsInput, WholesaleCustomerUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutVisitsInput
+    upsert?: WholesaleCustomerUpsertWithoutVisitsInput
+    connect?: WholesaleCustomerWhereUniqueInput
+    update?: XOR<XOR<WholesaleCustomerUpdateToOneWithWhereWithoutVisitsInput, WholesaleCustomerUpdateWithoutVisitsInput>, WholesaleCustomerUncheckedUpdateWithoutVisitsInput>
+  }
+
+  export type UserUpdateOneWithoutWholesaleVisitsNestedInput = {
+    create?: XOR<UserCreateWithoutWholesaleVisitsInput, UserUncheckedCreateWithoutWholesaleVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWholesaleVisitsInput
+    upsert?: UserUpsertWithoutWholesaleVisitsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWholesaleVisitsInput, UserUpdateWithoutWholesaleVisitsInput>, UserUncheckedUpdateWithoutWholesaleVisitsInput>
+  }
+
   export type ProductCreateNestedOneWithoutWarrantiesAsProductInput = {
     create?: XOR<ProductCreateWithoutWarrantiesAsProductInput, ProductUncheckedCreateWithoutWarrantiesAsProductInput>
     connectOrCreate?: ProductCreateOrConnectWithoutWarrantiesAsProductInput
@@ -54850,6 +58985,74 @@ export namespace Prisma {
     _max?: NestedEnumActivityTargetCycleFilter<$PrismaModel>
   }
 
+  export type NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleCustomerCategory | EnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel> | $Enums.WholesaleCustomerCategory
+  }
+
+  export type NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel> | $Enums.WholesaleVisitResult | null
+  }
+
+  export type NestedEnumWholesaleVisitStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitStatus | EnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel> | $Enums.WholesaleVisitStatus
+  }
+
+  export type NestedEnumWholesaleCustomerCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleCustomerCategory | EnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleCustomerCategory[] | ListEnumWholesaleCustomerCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleCustomerCategoryWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleCustomerCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleCustomerCategoryFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWholesaleVisitResultNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWholesaleVisitResultNullableWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitResult | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitResultNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWholesaleVisitStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitStatus | EnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitStatus[] | ListEnumWholesaleVisitStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitStatusWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWholesaleVisitResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitResultFilter<$PrismaModel> | $Enums.WholesaleVisitResult
+  }
+
+  export type NestedEnumWholesaleVisitResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WholesaleVisitResult | EnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    in?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WholesaleVisitResult[] | ListEnumWholesaleVisitResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumWholesaleVisitResultWithAggregatesFilter<$PrismaModel> | $Enums.WholesaleVisitResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWholesaleVisitResultFilter<$PrismaModel>
+    _max?: NestedEnumWholesaleVisitResultFilter<$PrismaModel>
+  }
+
   export type NestedEnumWarrantyTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
     in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
@@ -55001,6 +59204,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -55035,6 +59240,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -55074,6 +59281,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutParentInput = {
@@ -55108,6 +59317,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutParentInput = {
@@ -55650,6 +59861,116 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WholesaleCustomerCreateWithoutAssignedUserInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    visits?: WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerUncheckedCreateWithoutAssignedUserInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    visits?: WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerCreateOrConnectWithoutAssignedUserInput = {
+    where: WholesaleCustomerWhereUniqueInput
+    create: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput>
+  }
+
+  export type WholesaleCustomerCreateManyAssignedUserInputEnvelope = {
+    data: WholesaleCustomerCreateManyAssignedUserInput | WholesaleCustomerCreateManyAssignedUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WholesaleVisitCreateWithoutUserInput = {
+    id?: string
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutVisitsInput
+  }
+
+  export type WholesaleVisitUncheckedCreateWithoutUserInput = {
+    id?: string
+    wholesaleCustomerId: string
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitCreateOrConnectWithoutUserInput = {
+    where: WholesaleVisitWhereUniqueInput
+    create: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput>
+  }
+
+  export type WholesaleVisitCreateManyUserInputEnvelope = {
+    data: WholesaleVisitCreateManyUserInput | WholesaleVisitCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutSubordinatesInput = {
     update: XOR<UserUpdateWithoutSubordinatesInput, UserUncheckedUpdateWithoutSubordinatesInput>
     create: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
@@ -55693,6 +60014,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -55727,6 +60050,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutParentInput = {
@@ -56251,6 +60576,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
 
+  export type WholesaleCustomerUpsertWithWhereUniqueWithoutAssignedUserInput = {
+    where: WholesaleCustomerWhereUniqueInput
+    update: XOR<WholesaleCustomerUpdateWithoutAssignedUserInput, WholesaleCustomerUncheckedUpdateWithoutAssignedUserInput>
+    create: XOR<WholesaleCustomerCreateWithoutAssignedUserInput, WholesaleCustomerUncheckedCreateWithoutAssignedUserInput>
+  }
+
+  export type WholesaleCustomerUpdateWithWhereUniqueWithoutAssignedUserInput = {
+    where: WholesaleCustomerWhereUniqueInput
+    data: XOR<WholesaleCustomerUpdateWithoutAssignedUserInput, WholesaleCustomerUncheckedUpdateWithoutAssignedUserInput>
+  }
+
+  export type WholesaleCustomerUpdateManyWithWhereWithoutAssignedUserInput = {
+    where: WholesaleCustomerScalarWhereInput
+    data: XOR<WholesaleCustomerUpdateManyMutationInput, WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserInput>
+  }
+
+  export type WholesaleCustomerScalarWhereInput = {
+    AND?: WholesaleCustomerScalarWhereInput | WholesaleCustomerScalarWhereInput[]
+    OR?: WholesaleCustomerScalarWhereInput[]
+    NOT?: WholesaleCustomerScalarWhereInput | WholesaleCustomerScalarWhereInput[]
+    id?: StringFilter<"WholesaleCustomer"> | string
+    name?: StringFilter<"WholesaleCustomer"> | string
+    category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
+    contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    phone?: StringNullableListFilter<"WholesaleCustomer">
+    whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    country?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    city?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    area?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    address?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    latitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleCustomer"> | number | null
+    googleMapsLink?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    assignedUserId?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    notes?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    preferredVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleCustomer"> | Date | string | null
+    lastVisitResult?: EnumWholesaleVisitResultNullableFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFilter<"WholesaleCustomer"> | $Enums.WholesaleVisitStatus
+    isActive?: BoolFilter<"WholesaleCustomer"> | boolean
+    createdAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
+  }
+
+  export type WholesaleVisitUpsertWithWhereUniqueWithoutUserInput = {
+    where: WholesaleVisitWhereUniqueInput
+    update: XOR<WholesaleVisitUpdateWithoutUserInput, WholesaleVisitUncheckedUpdateWithoutUserInput>
+    create: XOR<WholesaleVisitCreateWithoutUserInput, WholesaleVisitUncheckedCreateWithoutUserInput>
+  }
+
+  export type WholesaleVisitUpdateWithWhereUniqueWithoutUserInput = {
+    where: WholesaleVisitWhereUniqueInput
+    data: XOR<WholesaleVisitUpdateWithoutUserInput, WholesaleVisitUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WholesaleVisitUpdateManyWithWhereWithoutUserInput = {
+    where: WholesaleVisitScalarWhereInput
+    data: XOR<WholesaleVisitUpdateManyMutationInput, WholesaleVisitUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type WholesaleVisitScalarWhereInput = {
+    AND?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+    OR?: WholesaleVisitScalarWhereInput[]
+    NOT?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+    id?: StringFilter<"WholesaleVisit"> | string
+    wholesaleCustomerId?: StringFilter<"WholesaleVisit"> | string
+    userId?: StringNullableFilter<"WholesaleVisit"> | string | null
+    visitedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    result?: EnumWholesaleVisitResultFilter<"WholesaleVisit"> | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFilter<"WholesaleVisit"> | $Enums.WholesaleVisitStatus
+    voiceNote?: StringNullableFilter<"WholesaleVisit"> | string | null
+    notes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    photoUrls?: StringNullableListFilter<"WholesaleVisit">
+    latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
+    nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
+    orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
+    syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
+  }
+
   export type UserCreateWithoutPermissionInput = {
     id?: string
     username: string
@@ -56283,6 +60692,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPermissionInput = {
@@ -56317,6 +60728,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPermissionInput = {
@@ -57557,6 +61970,8 @@ export namespace Prisma {
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -57591,6 +62006,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -57705,6 +62122,8 @@ export namespace Prisma {
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -57739,6 +62158,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductStockCreateWithoutWarehouseInput = {
@@ -58283,6 +62704,8 @@ export namespace Prisma {
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -58317,6 +62740,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -58463,6 +62888,8 @@ export namespace Prisma {
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -58497,6 +62924,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -58531,6 +62960,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTargetsInput = {
@@ -58565,6 +62996,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTargetsInput = {
@@ -58639,6 +63072,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTargetsInput = {
@@ -58673,6 +63108,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TargetProductUpsertWithWhereUniqueWithoutTargetInput = {
@@ -58723,6 +63160,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutActivityTargetsInput = {
@@ -58757,6 +63196,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutActivityTargetsInput = {
@@ -58807,6 +63248,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityTargetsInput = {
@@ -58841,6 +63284,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserTargetCreateWithoutProductsInput = {
@@ -59268,6 +63713,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCustomersInput = {
@@ -59302,6 +63749,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCustomersInput = {
@@ -59435,6 +63884,510 @@ export namespace Prisma {
   export type WarrantyUpdateManyWithWhereWithoutCustomerInput = {
     where: WarrantyScalarWhereInput
     data: XOR<WarrantyUpdateManyMutationInput, WarrantyUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type UserCreateWithoutAssignedWholesaleCustomersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedWholesaleCustomersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedWholesaleCustomersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedWholesaleCustomersInput, UserUncheckedCreateWithoutAssignedWholesaleCustomersInput>
+  }
+
+  export type WholesaleVisitCreateWithoutWholesaleCustomerInput = {
+    id?: string
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutWholesaleVisitsInput
+  }
+
+  export type WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput = {
+    id?: string
+    userId?: string | null
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput = {
+    where: WholesaleVisitWhereUniqueInput
+    create: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleVisitCreateManyWholesaleCustomerInputEnvelope = {
+    data: WholesaleVisitCreateManyWholesaleCustomerInput | WholesaleVisitCreateManyWholesaleCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAssignedWholesaleCustomersInput = {
+    update: XOR<UserUpdateWithoutAssignedWholesaleCustomersInput, UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput>
+    create: XOR<UserCreateWithoutAssignedWholesaleCustomersInput, UserUncheckedCreateWithoutAssignedWholesaleCustomersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssignedWholesaleCustomersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssignedWholesaleCustomersInput, UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput>
+  }
+
+  export type UserUpdateWithoutAssignedWholesaleCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput = {
+    where: WholesaleVisitWhereUniqueInput
+    update: XOR<WholesaleVisitUpdateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedUpdateWithoutWholesaleCustomerInput>
+    create: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput = {
+    where: WholesaleVisitWhereUniqueInput
+    data: XOR<WholesaleVisitUpdateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedUpdateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput = {
+    where: WholesaleVisitScalarWhereInput
+    data: XOR<WholesaleVisitUpdateManyMutationInput, WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleCustomerCreateWithoutVisitsInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedUser?: UserCreateNestedOneWithoutAssignedWholesaleCustomersInput
+  }
+
+  export type WholesaleCustomerUncheckedCreateWithoutVisitsInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    assignedUserId?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleCustomerCreateOrConnectWithoutVisitsInput = {
+    where: WholesaleCustomerWhereUniqueInput
+    create: XOR<WholesaleCustomerCreateWithoutVisitsInput, WholesaleCustomerUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type UserCreateWithoutWholesaleVisitsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+  }
+
+  export type UserUncheckedCreateWithoutWholesaleVisitsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+  }
+
+  export type UserCreateOrConnectWithoutWholesaleVisitsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWholesaleVisitsInput, UserUncheckedCreateWithoutWholesaleVisitsInput>
+  }
+
+  export type WholesaleCustomerUpsertWithoutVisitsInput = {
+    update: XOR<WholesaleCustomerUpdateWithoutVisitsInput, WholesaleCustomerUncheckedUpdateWithoutVisitsInput>
+    create: XOR<WholesaleCustomerCreateWithoutVisitsInput, WholesaleCustomerUncheckedCreateWithoutVisitsInput>
+    where?: WholesaleCustomerWhereInput
+  }
+
+  export type WholesaleCustomerUpdateToOneWithWhereWithoutVisitsInput = {
+    where?: WholesaleCustomerWhereInput
+    data: XOR<WholesaleCustomerUpdateWithoutVisitsInput, WholesaleCustomerUncheckedUpdateWithoutVisitsInput>
+  }
+
+  export type WholesaleCustomerUpdateWithoutVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedUser?: UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput
+  }
+
+  export type WholesaleCustomerUncheckedUpdateWithoutVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutWholesaleVisitsInput = {
+    update: XOR<UserUpdateWithoutWholesaleVisitsInput, UserUncheckedUpdateWithoutWholesaleVisitsInput>
+    create: XOR<UserCreateWithoutWholesaleVisitsInput, UserUncheckedCreateWithoutWholesaleVisitsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWholesaleVisitsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWholesaleVisitsInput, UserUncheckedUpdateWithoutWholesaleVisitsInput>
+  }
+
+  export type UserUpdateWithoutWholesaleVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWholesaleVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
   }
 
   export type ProductCreateWithoutWarrantiesAsProductInput = {
@@ -59964,6 +64917,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageInput = {
@@ -59998,6 +64953,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageInput = {
@@ -60099,6 +65056,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageInput = {
@@ -60133,6 +65092,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -60212,6 +65173,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -60246,6 +65209,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -60486,6 +65451,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -60520,6 +65487,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -60673,6 +65642,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutExpensesInput = {
@@ -60707,6 +65678,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutExpensesInput = {
@@ -60757,6 +65730,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -60791,6 +65766,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingInput = {
@@ -61290,6 +66267,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
@@ -61324,6 +66303,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSalaryAdjustmentsInput = {
@@ -61374,6 +66355,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
@@ -61408,6 +66391,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateLinksInput = {
@@ -61442,6 +66427,8 @@ export namespace Prisma {
     expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateLinksInput = {
@@ -61476,6 +66463,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateLinksInput = {
@@ -61639,6 +66628,8 @@ export namespace Prisma {
     expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -61673,6 +66664,8 @@ export namespace Prisma {
     expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutAffiliateLinksInput = {
@@ -62365,6 +67358,8 @@ export namespace Prisma {
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWalletTransfersInput = {
@@ -62399,6 +67394,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWalletTransfersInput = {
@@ -62449,6 +67446,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWalletTransfersInput = {
@@ -62483,6 +67482,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyParentInput = {
@@ -62644,6 +67645,50 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type WholesaleCustomerCreateManyAssignedUserInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitCreateManyUserInput = {
+    id?: string
+    wholesaleCustomerId: string
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
@@ -62676,6 +67721,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutParentInput = {
@@ -62710,6 +67757,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutParentInput = {
@@ -63212,6 +68261,140 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WholesaleCustomerUpdateWithoutAssignedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type WholesaleCustomerUncheckedUpdateWithoutAssignedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutVisitsNestedInput
+  }
+
+  export type WholesaleVisitUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyPermissionInput = {
     id?: string
     username: string
@@ -63266,6 +68449,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPermissionInput = {
@@ -63300,6 +68485,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPermissionInput = {
@@ -64413,6 +69600,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomersInput = {
@@ -64447,6 +69636,8 @@ export namespace Prisma {
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCustomersInput = {
@@ -64534,6 +69725,82 @@ export namespace Prisma {
     maintenanceLaborCost?: NullableFloatFieldUpdateOperationsInput | number | null
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitCreateManyWholesaleCustomerInput = {
+    id?: string
+    userId?: string | null
+    visitedAt?: Date | string
+    result: $Enums.WholesaleVisitResult
+    status?: $Enums.WholesaleVisitStatus
+    voiceNote?: string | null
+    notes?: string | null
+    photoUrls?: WholesaleVisitCreatephotoUrlsInput | string[]
+    latitude?: number | null
+    longitude?: number | null
+    nextFollowUpAt?: Date | string | null
+    followUpNotes?: string | null
+    orderPlaced?: boolean
+    syncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleVisitUpdateWithoutWholesaleCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutWholesaleVisitsNestedInput
+  }
+
+  export type WholesaleVisitUncheckedUpdateWithoutWholesaleCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult
+    status?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    voiceNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrls?: WholesaleVisitUpdatephotoUrlsInput | string[]
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    orderPlaced?: BoolFieldUpdateOperationsInput | boolean
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

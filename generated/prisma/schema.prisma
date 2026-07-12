@@ -86,6 +86,29 @@ enum DiscountType {
   FIXED
 }
 
+enum WholesaleCustomerCategory {
+  PHARMACY
+  MARKET
+  CLINIC
+  DISTRIBUTOR
+  OTHER
+}
+
+enum WholesaleVisitResult {
+  VERY_INTERESTED
+  INTERESTED
+  THINKING
+  NOT_INTERESTED
+  PURCHASED
+}
+
+enum WholesaleVisitStatus {
+  PLANNED
+  VISITED
+  FOLLOW_UP_REQUIRED
+  CLOSED
+}
+
 // ============================================
 // User (Existing + New columns)
 // ============================================
@@ -129,8 +152,10 @@ model User {
   stockMovements    StockMovement[]
 
   // ─── NEW: E-commerce Affiliate Relations ───
-  affiliateLinks AffiliateLink[]
-  reviews        Review[]
+  affiliateLinks             AffiliateLink[]
+  reviews                    Review[]
+  assignedWholesaleCustomers WholesaleCustomer[] @relation("WholesaleCustomerAssignedUser")
+  wholesaleVisits            WholesaleVisit[]    @relation("WholesaleVisitUser")
 }
 
 // ============================================
@@ -484,6 +509,69 @@ model Customer {
   users       User[]     @relation("CustomerToUser")
   message     Message[]
   warranties  Warranty[]
+}
+
+model WholesaleCustomer {
+  id               String                    @id @default(uuid())
+  name             String
+  category         WholesaleCustomerCategory @default(PHARMACY)
+  contactName      String?
+  phone            String[]
+  whatsappPhone    String?
+  country          String?
+  city             String?
+  area             String?
+  address          String?
+  latitude         Float?
+  longitude        Float?
+  googleMapsLink   String?
+  assignedUserId   String?
+  notes            String?
+  preferredVisitAt DateTime?
+  lastVisitAt      DateTime?
+  nextFollowUpAt   DateTime?
+  lastVisitResult  WholesaleVisitResult?
+  visitStatus      WholesaleVisitStatus      @default(PLANNED)
+  isActive         Boolean                   @default(true)
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+
+  assignedUser User?            @relation("WholesaleCustomerAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  visits       WholesaleVisit[]
+
+  @@index([assignedUserId])
+  @@index([city, area])
+  @@index([visitStatus])
+  @@index([nextFollowUpAt])
+}
+
+model WholesaleVisit {
+  id                  String               @id @default(uuid())
+  wholesaleCustomerId String
+  userId              String?
+  visitedAt           DateTime             @default(now())
+  result              WholesaleVisitResult
+  status              WholesaleVisitStatus @default(VISITED)
+  voiceNote           String?
+  notes               String?
+  photoUrls           String[]
+  latitude            Float?
+  longitude           Float?
+  nextFollowUpAt      DateTime?
+  followUpNotes       String?
+  orderPlaced         Boolean              @default(false)
+  syncedAt            DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  wholesaleCustomer WholesaleCustomer @relation(fields: [wholesaleCustomerId], references: [id], onDelete: Cascade)
+  user              User?             @relation("WholesaleVisitUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([wholesaleCustomerId])
+  @@index([userId])
+  @@index([visitedAt])
+  @@index([result])
+  @@index([nextFollowUpAt])
 }
 
 // ============================================

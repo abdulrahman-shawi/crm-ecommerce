@@ -352,6 +352,52 @@ exports.Prisma.CustomerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WholesaleCustomerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  contactName: 'contactName',
+  phone: 'phone',
+  whatsappPhone: 'whatsappPhone',
+  country: 'country',
+  city: 'city',
+  area: 'area',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  googleMapsLink: 'googleMapsLink',
+  assignedUserId: 'assignedUserId',
+  notes: 'notes',
+  preferredVisitAt: 'preferredVisitAt',
+  lastVisitAt: 'lastVisitAt',
+  nextFollowUpAt: 'nextFollowUpAt',
+  lastVisitResult: 'lastVisitResult',
+  visitStatus: 'visitStatus',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WholesaleVisitScalarFieldEnum = {
+  id: 'id',
+  wholesaleCustomerId: 'wholesaleCustomerId',
+  userId: 'userId',
+  visitedAt: 'visitedAt',
+  result: 'result',
+  status: 'status',
+  voiceNote: 'voiceNote',
+  notes: 'notes',
+  photoUrls: 'photoUrls',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  nextFollowUpAt: 'nextFollowUpAt',
+  followUpNotes: 'followUpNotes',
+  orderPlaced: 'orderPlaced',
+  syncedAt: 'syncedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WarrantyScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -637,6 +683,29 @@ exports.ActivityWeekDay = exports.$Enums.ActivityWeekDay = {
   FRIDAY: 'FRIDAY'
 };
 
+exports.WholesaleCustomerCategory = exports.$Enums.WholesaleCustomerCategory = {
+  PHARMACY: 'PHARMACY',
+  MARKET: 'MARKET',
+  CLINIC: 'CLINIC',
+  DISTRIBUTOR: 'DISTRIBUTOR',
+  OTHER: 'OTHER'
+};
+
+exports.WholesaleVisitResult = exports.$Enums.WholesaleVisitResult = {
+  VERY_INTERESTED: 'VERY_INTERESTED',
+  INTERESTED: 'INTERESTED',
+  THINKING: 'THINKING',
+  NOT_INTERESTED: 'NOT_INTERESTED',
+  PURCHASED: 'PURCHASED'
+};
+
+exports.WholesaleVisitStatus = exports.$Enums.WholesaleVisitStatus = {
+  PLANNED: 'PLANNED',
+  VISITED: 'VISITED',
+  FOLLOW_UP_REQUIRED: 'FOLLOW_UP_REQUIRED',
+  CLOSED: 'CLOSED'
+};
+
 exports.WarrantyType = exports.$Enums.WarrantyType = {
   REPLACEMENT: 'REPLACEMENT',
   MAINTENANCE: 'MAINTENANCE',
@@ -692,6 +761,8 @@ exports.Prisma.ModelName = {
   TargetProduct: 'TargetProduct',
   ProductImage: 'ProductImage',
   Customer: 'Customer',
+  WholesaleCustomer: 'WholesaleCustomer',
+  WholesaleVisit: 'WholesaleVisit',
   Warranty: 'Warranty',
   Message: 'Message',
   Order: 'Order',
