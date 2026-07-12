@@ -217,6 +217,13 @@ function parseTextList(value: string) {
     .filter(Boolean);
 }
 
+function parseOptionalNumber(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function getCategoryLabel(value: string) {
   return CATEGORY_OPTIONS.find((item) => item.value === value)?.label ?? value;
 }
@@ -415,8 +422,8 @@ export default function WholesaleCustomersPage() {
         city: customerForm.city,
         area: customerForm.area,
         address: customerForm.address,
-        latitude: customerForm.latitude,
-        longitude: customerForm.longitude,
+        latitude: parseOptionalNumber(customerForm.latitude),
+        longitude: parseOptionalNumber(customerForm.longitude),
         googleMapsLink: customerForm.googleMapsLink,
         assignedUserId: customerForm.assignedUserId,
         notes: customerForm.notes,
@@ -461,8 +468,8 @@ export default function WholesaleCustomersPage() {
         notes: visitForm.notes,
         voiceNote: visitForm.voiceNote,
         photoUrls: parseTextList(visitForm.photoUrlsText),
-        latitude: visitForm.latitude,
-        longitude: visitForm.longitude,
+        latitude: parseOptionalNumber(visitForm.latitude),
+        longitude: parseOptionalNumber(visitForm.longitude),
         nextFollowUpAt: visitForm.nextFollowUpAt,
         followUpNotes: visitForm.followUpNotes,
         orderPlaced: visitForm.orderPlaced,
