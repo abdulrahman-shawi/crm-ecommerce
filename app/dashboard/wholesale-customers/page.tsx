@@ -508,7 +508,7 @@ export default function WholesaleCustomersPage() {
   if (loading || isLoading) {
     return (
       <div className="p-6 md:p-8" dir="rtl">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
           جاري تحميل صفحة عملاء الجملة...
         </div>
       </div>
@@ -518,7 +518,7 @@ export default function WholesaleCustomersPage() {
   if (!canManageWholesale) {
     return (
       <div className="p-6 md:p-8" dir="rtl">
-        <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-700 shadow-sm">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-700 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
           لا تملك صلاحية الوصول إلى صفحة عملاء الجملة.
         </div>
       </div>
@@ -560,24 +560,24 @@ export default function WholesaleCustomersPage() {
         <StatCard title="مناطق نشطة" value={stats.activeRoutes} icon={<Route className="h-5 w-5" />} tone="fuchsia" />
       </section>
 
-      <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
         <div className="grid gap-3 lg:grid-cols-[2fr,1fr,1fr,1fr,auto]">
           <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">بحث</label>
+            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">بحث</label>
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="ابحث بالاسم أو المدينة أو المندوب أو رقم الهاتف"
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white"
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-950"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">نوع العميل</label>
+            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">نوع العميل</label>
             <select
               value={selectedCategory}
               onChange={(event) => setSelectedCategory(event.target.value)}
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white"
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:bg-slate-950"
             >
               <option value="ALL">الكل</option>
               {CATEGORY_OPTIONS.map((option) => (
@@ -587,11 +587,11 @@ export default function WholesaleCustomersPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">حالة المتابعة</label>
+            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">حالة المتابعة</label>
             <select
               value={selectedStatus}
               onChange={(event) => setSelectedStatus(event.target.value)}
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white"
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:bg-slate-950"
             >
               <option value="ALL">الكل</option>
               {VISIT_STATUS_OPTIONS.map((option) => (
@@ -601,11 +601,11 @@ export default function WholesaleCustomersPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">المندوب</label>
+            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">المندوب</label>
             <select
               value={selectedRepId}
               onChange={(event) => setSelectedRepId(event.target.value)}
-              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white"
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:bg-slate-950"
             >
               <option value="ALL">الكل</option>
               {salesReps.map((rep) => (
@@ -623,17 +623,17 @@ export default function WholesaleCustomersPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.3fr,0.9fr]">
-        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800">
             <div>
-              <h2 className="text-lg font-black text-slate-900">قائمة عملاء الجملة</h2>
-              <p className="text-sm text-slate-500">{visibleCustomers.length} عميل ظاهر حسب الفلاتر والصلاحيات</p>
+              <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">قائمة عملاء الجملة</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{visibleCustomers.length} عميل ظاهر حسب الفلاتر والصلاحيات</p>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="min-w-full text-right text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <thead className="bg-slate-50 text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
                 <tr>
                   <th className="px-4 py-3 font-bold">العميل</th>
                   <th className="px-4 py-3 font-bold">المنطقة</th>
@@ -649,32 +649,32 @@ export default function WholesaleCustomersPage() {
                   return (
                     <tr
                       key={customer.id}
-                      className={isSelected ? "bg-blue-50/70" : "border-t border-slate-100"}
+                      className={isSelected ? "bg-blue-50/70 dark:bg-blue-950/40" : "border-t border-slate-100 dark:border-slate-800"}
                     >
                       <td className="px-4 py-4">
                         <button type="button" onClick={() => setSelectedCustomerId(customer.id)} className="text-right">
-                          <div className="font-bold text-slate-900">{customer.name}</div>
-                          <div className="mt-1 text-xs text-slate-500">{getCategoryLabel(customer.category)}</div>
-                          <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
+                          <div className="font-bold text-slate-900 dark:text-slate-100">{customer.name}</div>
+                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category)}</div>
+                          <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
                             {customer.phone.slice(0, 2).map((phone) => (
-                              <span key={phone} className="rounded-full bg-slate-100 px-2 py-1">
+                              <span key={phone} className="rounded-full bg-slate-100 px-2 py-1 dark:bg-slate-800 dark:text-slate-200">
                                 {formatPhoneForDisplay(phone)}
                               </span>
                             ))}
                           </div>
                         </button>
                       </td>
-                      <td className="px-4 py-4 text-slate-600">
+                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
                         <div>{customer.city || "-"}</div>
-                        <div className="text-xs text-slate-400">{customer.area || "-"}</div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500">{customer.area || "-"}</div>
                       </td>
-                      <td className="px-4 py-4 text-slate-600">{customer.assignedUser?.username || "غير مسند"}</td>
-                      <td className="px-4 py-4 text-slate-600">{getVisitResultLabel(customer.lastVisitResult)}</td>
+                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{customer.assignedUser?.username || "غير مسند"}</td>
+                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{getVisitResultLabel(customer.lastVisitResult)}</td>
                       <td className="px-4 py-4">
-                        <div className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                        <div className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                           {getVisitStatusLabel(customer.visitStatus)}
                         </div>
-                        <div className="mt-2 text-xs text-slate-500">{formatDateLabel(customer.nextFollowUpAt)}</div>
+                        <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">{formatDateLabel(customer.nextFollowUpAt)}</div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-2">
@@ -695,7 +695,7 @@ export default function WholesaleCustomersPage() {
 
                 {visibleCustomers.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-10 text-center text-slate-500">
+                    <td colSpan={6} className="px-4 py-10 text-center text-slate-500 dark:text-slate-400">
                       لا توجد بيانات مطابقة حالياً.
                     </td>
                   </tr>
@@ -705,15 +705,15 @@ export default function WholesaleCustomersPage() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
           {selectedCustomer ? (
             <div className="space-y-5">
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+              <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
                 <div>
-                  <h2 className="text-xl font-black text-slate-900">{selectedCustomer.name}</h2>
-                  <p className="mt-1 text-sm text-slate-500">{getCategoryLabel(selectedCustomer.category)}</p>
+                  <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{selectedCustomer.name}</h2>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{getCategoryLabel(selectedCustomer.category)}</p>
                 </div>
-                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                   {getVisitStatusLabel(selectedCustomer.visitStatus)}
                 </div>
               </div>
@@ -725,13 +725,13 @@ export default function WholesaleCustomersPage() {
                 <InfoCard icon={<CalendarClock className="h-4 w-4" />} label="المتابعة القادمة" value={formatDateLabel(selectedCustomer.nextFollowUpAt)} />
               </div>
 
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <div className="mb-2 text-sm font-bold text-slate-700">ملاحظات العميل</div>
-                <p className="text-sm leading-7 text-slate-600">{selectedCustomer.notes || "لا توجد ملاحظات مسجلة"}</p>
+              <div className="rounded-3xl bg-slate-50 p-4 dark:bg-slate-900">
+                <div className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">ملاحظات العميل</div>
+                <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{selectedCustomer.notes || "لا توجد ملاحظات مسجلة"}</p>
               </div>
 
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-black text-slate-900">سجل الزيارات</h3>
+                <h3 className="text-lg font-black text-slate-900 dark:text-slate-100">سجل الزيارات</h3>
                 <Button variant="outline" size="sm" onClick={() => openVisitModal(selectedCustomer)} leftIcon={<Plus className="h-3.5 w-3.5" />}>
                   إضافة زيارة
                 </Button>
@@ -739,24 +739,24 @@ export default function WholesaleCustomersPage() {
 
               <div className="space-y-3">
                 {selectedCustomer.visits.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
                     لا توجد زيارات مسجلة لهذا العميل بعد.
                   </div>
                 )}
 
                 {selectedCustomer.visits.map((visit) => (
-                  <div key={visit.id} className="rounded-3xl border border-slate-200 p-4">
+                  <div key={visit.id} className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <div className="font-bold text-slate-900">{getVisitResultLabel(visit.result)}</div>
-                        <div className="mt-1 text-xs text-slate-500">{formatDateLabel(visit.visitedAt)}</div>
+                        <div className="font-bold text-slate-900 dark:text-slate-100">{getVisitResultLabel(visit.result)}</div>
+                        <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{formatDateLabel(visit.visitedAt)}</div>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-700">{getVisitStatusLabel(visit.status)}</span>
+                        <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{getVisitStatusLabel(visit.status)}</span>
                         {visit.orderPlaced && <span className="rounded-full bg-emerald-100 px-3 py-1 font-bold text-emerald-700">تم الشراء</span>}
                       </div>
                     </div>
-                    <div className="mt-3 grid gap-2 text-sm text-slate-600">
+                    <div className="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-300">
                       <div>المندوب: {visit.user?.username || "غير محدد"}</div>
                       <div>المتابعة التالية: {formatDateLabel(visit.nextFollowUpAt)}</div>
                       <div>الملاحظات: {visit.notes || "-"}</div>
@@ -767,7 +767,7 @@ export default function WholesaleCustomersPage() {
               </div>
             </div>
           ) : (
-            <div className="flex min-h-[300px] items-center justify-center text-center text-slate-500">
+            <div className="flex min-h-[300px] items-center justify-center text-center text-slate-500 dark:text-slate-400">
               اختر عميل جملة من القائمة لعرض التفاصيل.
             </div>
           )}
@@ -847,7 +847,7 @@ export default function WholesaleCustomersPage() {
             </select>
           </Field>
           <Field label="الحالة">
-            <label className="flex h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700">
+            <label className="flex h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
               <input type="checkbox" checked={customerForm.isActive} onChange={(event) => setCustomerForm((current) => ({ ...current, isActive: event.target.checked }))} />
               نشط وقابل للمتابعة
             </label>
@@ -908,7 +908,7 @@ export default function WholesaleCustomersPage() {
             <input type="datetime-local" value={visitForm.nextFollowUpAt} onChange={(event) => setVisitForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
           </Field>
           <Field label="تم الشراء؟">
-            <label className="flex h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700">
+            <label className="flex h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
               <input type="checkbox" checked={visitForm.orderPlaced} onChange={(event) => setVisitForm((current) => ({ ...current, orderPlaced: event.target.checked }))} />
               نعم، تم الشراء بعد الزيارة
             </label>
@@ -944,16 +944,35 @@ export default function WholesaleCustomersPage() {
           border-radius: 1rem;
           border: 1px solid rgb(226 232 240);
           background: rgb(248 250 252);
+          color: rgb(15 23 42);
           padding: 0.75rem 1rem;
           font-size: 0.95rem;
           outline: none;
           transition: all 0.2s ease;
         }
 
+        :global(.dark) .field-input {
+          border-color: rgb(51 65 85);
+          background: rgb(15 23 42);
+          color: rgb(226 232 240);
+        }
+
+        .field-input::placeholder {
+          color: rgb(148 163 184);
+        }
+
+        :global(.dark) .field-input::placeholder {
+          color: rgb(100 116 139);
+        }
+
         .field-input:focus {
           border-color: rgb(59 130 246);
           background: white;
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        :global(.dark) .field-input:focus {
+          background: rgb(2 6 23);
         }
       `}</style>
     </div>
@@ -962,7 +981,7 @@ export default function WholesaleCustomersPage() {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block space-y-2 text-sm font-bold text-slate-700">
+    <label className="block space-y-2 text-sm font-bold text-slate-700 dark:text-slate-200">
       <span>{label}</span>
       {children}
     </label>
@@ -981,20 +1000,20 @@ function StatCard({
   tone: "blue" | "amber" | "emerald" | "fuchsia";
 }) {
   const tones = {
-    blue: "from-blue-50 to-cyan-50 text-blue-700",
-    amber: "from-amber-50 to-orange-50 text-amber-700",
-    emerald: "from-emerald-50 to-green-50 text-emerald-700",
-    fuchsia: "from-fuchsia-50 to-pink-50 text-fuchsia-700",
+    blue: "from-blue-50 to-cyan-50 text-blue-700 dark:from-blue-950/60 dark:to-cyan-950/40 dark:text-blue-300",
+    amber: "from-amber-50 to-orange-50 text-amber-700 dark:from-amber-950/60 dark:to-orange-950/40 dark:text-amber-300",
+    emerald: "from-emerald-50 to-green-50 text-emerald-700 dark:from-emerald-950/60 dark:to-green-950/40 dark:text-emerald-300",
+    fuchsia: "from-fuchsia-50 to-pink-50 text-fuchsia-700 dark:from-fuchsia-950/60 dark:to-pink-950/40 dark:text-fuchsia-300",
   };
 
   return (
-    <div className={`rounded-[28px] border border-slate-200 bg-gradient-to-br ${tones[tone]} p-5 shadow-sm`}>
+    <div className={`rounded-[28px] border border-slate-200 bg-gradient-to-br ${tones[tone]} p-5 shadow-sm dark:border-slate-800`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-sm font-bold text-slate-500">{title}</div>
-          <div className="mt-3 text-3xl font-black text-slate-900">{value}</div>
+          <div className="text-sm font-bold text-slate-500 dark:text-slate-300">{title}</div>
+          <div className="mt-3 text-3xl font-black text-slate-900 dark:text-slate-100">{value}</div>
         </div>
-        <div className="rounded-2xl bg-white/80 p-3 shadow-sm">{icon}</div>
+        <div className="rounded-2xl bg-white/80 p-3 shadow-sm dark:bg-slate-900/80">{icon}</div>
       </div>
     </div>
   );
@@ -1002,12 +1021,12 @@ function StatCard({
 
 function InfoCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-      <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+      <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
         {icon}
         <span>{label}</span>
       </div>
-      <div className="mt-2 text-sm font-bold text-slate-900">{value}</div>
+      <div className="mt-2 text-sm font-bold text-slate-900 dark:text-slate-100">{value}</div>
     </div>
   );
 }

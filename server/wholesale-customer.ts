@@ -149,6 +149,11 @@ export async function getWholesaleCustomers() {
 export async function getWholesaleSalesReps() {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        accountType: {
+          not: 'AFFILIATE',
+        },
+      },
       orderBy: { username: 'asc' },
       select: {
         id: true,
