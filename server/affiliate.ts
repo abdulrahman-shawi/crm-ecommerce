@@ -568,20 +568,242 @@ export async function getAffiliateUsersAdminList() {
           id: true,
         },
       },
+      walletTransfers: {
+        orderBy: { transferredAt: 'desc' },
+        select: {
+          id: true,
+          amount: true,
+          status: true,
+          transferredAt: true,
+          receivedAt: true,
+        },
+      },
     },
+  });
+
+  const userIds = users.map((user) => user.id);
+  const eligibleCommissions = userIds.length
+    ? await prisma.commission.findMany({
+        where: {
+          affiliateLink: {
+            userId: { in: userIds },
+          },
+          status: { not: 'CANCELLED' },
+          OR: [
+            { status: 'PAID' },
+            {
+              order: {
+                status: {
+                  in: Array.from(DELIVERED_ORDER_STATUSES),
+                },
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          amount: true,
+          affiliateLink: {
+            select: {
+              userId: true,
+            },
+          },
+          order: {
+            select: {
+              id: true,
+              status: true,
+            },
+          },
+        },
+      })
+    : [];
+
+  const commissionSummaryByUser = new Map<
+    string,
+    {
+      deliveredCommissionTotal: number;
+      deliveredOrdersCount: number;
+      eligibleCommissionIds: string[];
+      orderIds: Set<number>;
+    }
+  >();
+
+  for (const commission of eligibleCommissions) {
+    const userId = commission.affiliateLink.userId;
+    const currentSummary =
+      commissionSummaryByUser.get(userId) || {
+        deliveredCommissionTotal: 0,
+        deliveredOrdersCount: 0,
+        eligibleCommissionIds: [],
+        orderIds: new Set<number>(),
+      };
+
+    currentSummary.deliveredCommissionTotal += Number(commission.amount || 0);
+    currentSummary.eligibleCommissionIds.push(commission.id);
+
+    const orderId = Number(commission.order?.id || 0);
+    if (orderId > 0 && !currentSummary.orderIds.has(orderId)) {
+      currentSummary.orderIds.add(orderId);
+      currentSummary.deliveredOrdersCount += 1;
+    }
+
+    commissionSummaryByUser.set(userId, currentSummary);
+  }
+
+  const enrichedUsers = users.map((user) => {
+    const commissionSummary = commissionSummaryByUser.get(user.id);
+    const deliveredCommissionTotal = Number(
+      (commissionSummary?.deliveredCommissionTotal || 0).toFixed(2)
+    );
+    const transferredTotal = Number(
+      user.walletTransfers
+        .reduce((sum, transfer) => sum + Number(transfer.amount || 0), 0)
+        .toFixed(2)
+    );
+    const availableTransferAmount = Number(
+      Math.max(deliveredCommissionTotal - transferredTotal, 0).toFixed(2)
+    );
+
+    return {
+      ...user,
+      deliveredOrdersCount: commissionSummary?.deliveredOrdersCount || 0,
+      deliveredCommissionTotal,
+      transferredTotal,
+      availableTransferAmount,
+      lastTransferAt: user.walletTransfers[0]?.receivedAt || user.walletTransfers[0]?.transferredAt || null,
+      walletTransfersCount: user.walletTransfers.length,
+      eligibleCommissionIds: commissionSummary?.eligibleCommissionIds || [],
+    };
   });
 
   return {
     success: true,
     data: {
       summary: {
-        total: users.length,
-        pending: users.filter((item) => !item.affiliateApproved).length,
-        approved: users.filter((item) => item.affiliateApproved).length,
+        total: enrichedUsers.length,
+        pending: enrichedUsers.filter((item) => !item.affiliateApproved).length,
+        approved: enrichedUsers.filter((item) => item.affiliateApproved).length,
       },
-      users,
+      users: enrichedUsers,
     },
   };
+}
+
+export async function transferAffiliateDeliveredCommissions(userId: string) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بتحويل عمولات الأفلييت' };
+  }
+
+  const normalizedUserId = String(userId || '').trim();
+  if (!normalizedUserId) {
+    return { success: false, error: 'معرف المستخدم غير صالح' };
+  }
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const affiliateUser = await tx.user.findUnique({
+        where: { id: normalizedUserId },
+        select: {
+          id: true,
+          username: true,
+          accountType: true,
+          isAffiliate: true,
+          affiliateApproved: true,
+        },
+      });
+
+      if (!affiliateUser || !isAffiliateUser(affiliateUser)) {
+        throw new Error('المستخدم المحدد ليس حساب أفلييت');
+      }
+
+      if (!affiliateUser.affiliateApproved) {
+        throw new Error('لا يمكن تحويل عمولات حساب أفلييت غير معتمد');
+      }
+
+      const commissions = await tx.commission.findMany({
+        where: {
+          affiliateLink: {
+            userId: normalizedUserId,
+          },
+          status: { not: 'CANCELLED' },
+          OR: [
+            { status: 'PAID' },
+            {
+              order: {
+                status: {
+                  in: Array.from(DELIVERED_ORDER_STATUSES),
+                },
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          amount: true,
+          orderId: true,
+        },
+      });
+
+      const deliveredCommissionTotal = Number(
+        commissions.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(2)
+      );
+
+      const transferredAggregate = await tx.affiliateWalletTransfer.aggregate({
+        where: {
+          userId: normalizedUserId,
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+
+      const transferredTotal = Number(transferredAggregate._sum.amount || 0);
+      const availableTransferAmount = Number(
+        Math.max(deliveredCommissionTotal - transferredTotal, 0).toFixed(2)
+      );
+
+      if (availableTransferAmount <= 0) {
+        throw new Error('لا توجد عمولات مستحقة جديدة للتحويل لهذا المستخدم');
+      }
+
+      const orderIds = Array.from(new Set(commissions.map((item) => Number(item.orderId || 0)).filter((id) => id > 0)));
+
+      const transfer = await tx.affiliateWalletTransfer.create({
+        data: {
+          userId: normalizedUserId,
+          amount: availableTransferAmount,
+          status: 'RECEIVED',
+          reference: `AFF-${Date.now()}`,
+          notes: `تحويل عمولات أفلييت لطلبات مسلمة (${orderIds.length} طلب)`,
+          receivedAt: new Date(),
+        },
+        select: {
+          id: true,
+          amount: true,
+          status: true,
+          transferredAt: true,
+          receivedAt: true,
+        },
+      });
+
+      return {
+        user: affiliateUser,
+        transfer,
+        deliveredOrdersCount: orderIds.length,
+        deliveredCommissionTotal,
+        transferredTotal: Number((transferredTotal + availableTransferAmount).toFixed(2)),
+        availableTransferAmount,
+      };
+    });
+
+    return { success: true, data: result };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'تعذر تحويل عمولات الأفلييت',
+    };
+  }
 }
 
 export async function setAffiliateUserApproval(

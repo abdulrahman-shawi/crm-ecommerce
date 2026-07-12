@@ -569,6 +569,19 @@ exports.Prisma.CommissionScalarFieldEnum = {
   paidAt: 'paidAt'
 };
 
+exports.Prisma.AffiliateWalletTransferScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  status: 'status',
+  reference: 'reference',
+  notes: 'notes',
+  transferredAt: 'transferredAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -658,6 +671,11 @@ exports.CommissionStatus = exports.$Enums.CommissionStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.WalletTransferStatus = exports.$Enums.WalletTransferStatus = {
+  PENDING: 'PENDING',
+  RECEIVED: 'RECEIVED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Permission: 'Permission',
@@ -688,7 +706,8 @@ exports.Prisma.ModelName = {
   AffiliateLink: 'AffiliateLink',
   Offer: 'Offer',
   OfferDiscount: 'OfferDiscount',
-  Commission: 'Commission'
+  Commission: 'Commission',
+  AffiliateWalletTransfer: 'AffiliateWalletTransfer'
 };
 
 /**

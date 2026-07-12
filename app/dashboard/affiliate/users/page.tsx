@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import toast from 'react-hot-toast';
-import { getAffiliateUsersAdminList, setAffiliateUserApproval } from '@/server/affiliate';
+import { getAffiliateUsersAdminList, setAffiliateUserApproval, transferAffiliateDeliveredCommissions } from '@/server/affiliate';
 
 type AffiliateUserRow = {
   id: string;
@@ -17,6 +17,12 @@ type AffiliateUserRow = {
   affiliateApprovedAt?: string | Date | null;
   createdAt?: string | Date;
   affiliateLinks?: Array<{ id: string }>;
+  deliveredOrdersCount?: number;
+  deliveredCommissionTotal?: number;
+  transferredTotal?: number;
+  availableTransferAmount?: number;
+  lastTransferAt?: string | Date | null;
+  walletTransfersCount?: number;
 };
 
 type AffiliateUsersPayload = {
@@ -44,10 +50,13 @@ const formatDate = (value?: string | Date | null) => {
   return date.toLocaleDateString('ar');
 };
 
+const formatAmount = (value?: number | null) => Number(value || 0).toFixed(2);
+
 export default function AffiliateUsersPage() {
   const [payload, setPayload] = React.useState<AffiliateUsersPayload>(defaultPayload);
   const [loading, setLoading] = React.useState(true);
   const [savingByUser, setSavingByUser] = React.useState<Record<string, boolean>>({});
+  const [transferringByUser, setTransferringByUser] = React.useState<Record<string, boolean>>({});
 
   const loadData = React.useCallback(async () => {
     setLoading(true);
@@ -81,6 +90,22 @@ export default function AffiliateUsersPage() {
       await loadData();
     } finally {
       setSavingByUser((prev) => ({ ...prev, [userId]: false }));
+    }
+  };
+
+  const handleTransfer = async (userId: string) => {
+    setTransferringByUser((prev) => ({ ...prev, [userId]: true }));
+    try {
+      const result = await transferAffiliateDeliveredCommissions(userId);
+      if (!result.success) {
+        toast.error(result.error || 'تعذر تحويل العمولات');
+        return;
+      }
+
+      toast.success(`تم تحويل ${formatAmount(result.data?.transfer?.amount)} إلى المستخدم`);
+      await loadData();
+    } finally {
+      setTransferringByUser((prev) => ({ ...prev, [userId]: false }));
     }
   };
 
@@ -124,6 +149,10 @@ export default function AffiliateUsersPage() {
                 <th className="px-3 py-3">تاريخ الطلب</th>
                 <th className="px-3 py-3">تاريخ الموافقة</th>
                 <th className="px-3 py-3">عدد الروابط</th>
+                <th className="px-3 py-3">طلبات مسلمة</th>
+                <th className="px-3 py-3">عمولات مستحقة</th>
+                <th className="px-3 py-3">تم تحويله</th>
+                <th className="px-3 py-3">قابل للتحويل</th>
                 <th className="px-3 py-3">الحالة</th>
                 <th className="px-3 py-3">الإجراء</th>
               </tr>
@@ -141,6 +170,16 @@ export default function AffiliateUsersPage() {
                   <td className="px-3 py-4">{formatDate(user.affiliateRequestedAt || user.createdAt)}</td>
                   <td className="px-3 py-4">{formatDate(user.affiliateApprovedAt)}</td>
                   <td className="px-3 py-4">{Array.isArray(user.affiliateLinks) ? user.affiliateLinks.length : 0}</td>
+                  <td className="px-3 py-4">{Number(user.deliveredOrdersCount || 0)}</td>
+                  <td className="px-3 py-4 font-bold text-emerald-700 dark:text-emerald-300">{formatAmount(user.deliveredCommissionTotal)}</td>
+                  <td className="px-3 py-4">
+                    <div className="font-bold text-slate-700 dark:text-slate-200">{formatAmount(user.transferredTotal)}</div>
+                    <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      {Number(user.walletTransfersCount || 0)} تحويلة
+                      {user.lastTransferAt ? ` - آخرها ${formatDate(user.lastTransferAt)}` : ''}
+                    </div>
+                  </td>
+                  <td className="px-3 py-4 font-bold text-sky-700 dark:text-sky-300">{formatAmount(user.availableTransferAmount)}</td>
                   <td className="px-3 py-4">
                     <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${user.affiliateApproved ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'}`}>
                       {user.affiliateApproved ? 'موافق عليه' : 'معلق'}
@@ -163,6 +202,14 @@ export default function AffiliateUsersPage() {
                         className="rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         إلغاء الموافقة
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleTransfer(user.id)}
+                        disabled={transferringByUser[user.id] || !user.affiliateApproved || Number(user.availableTransferAmount || 0) <= 0}
+                        className="rounded-xl border border-sky-200 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        تحويل العمولات
                       </button>
                     </div>
                   </td>

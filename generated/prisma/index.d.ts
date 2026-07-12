@@ -163,6 +163,11 @@ export type OfferDiscount = $Result.DefaultSelection<Prisma.$OfferDiscountPayloa
  * 
  */
 export type Commission = $Result.DefaultSelection<Prisma.$CommissionPayload>
+/**
+ * Model AffiliateWalletTransfer
+ * 
+ */
+export type AffiliateWalletTransfer = $Result.DefaultSelection<Prisma.$AffiliateWalletTransferPayload>
 
 /**
  * Enums
@@ -245,6 +250,14 @@ export const AccountType: {
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
 
+export const WalletTransferStatus: {
+  PENDING: 'PENDING',
+  RECEIVED: 'RECEIVED'
+};
+
+export type WalletTransferStatus = (typeof WalletTransferStatus)[keyof typeof WalletTransferStatus]
+
+
 export const EcommerceRole: {
   ADMIN: 'ADMIN',
   AFFILIATE: 'AFFILIATE',
@@ -303,6 +316,10 @@ export const PaidFromOffice: typeof $Enums.PaidFromOffice
 export type AccountType = $Enums.AccountType
 
 export const AccountType: typeof $Enums.AccountType
+
+export type WalletTransferStatus = $Enums.WalletTransferStatus
+
+export const WalletTransferStatus: typeof $Enums.WalletTransferStatus
 
 export type EcommerceRole = $Enums.EcommerceRole
 
@@ -732,6 +749,16 @@ export class PrismaClient<
     * ```
     */
   get commission(): Prisma.CommissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.affiliateWalletTransfer`: Exposes CRUD operations for the **AffiliateWalletTransfer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AffiliateWalletTransfers
+    * const affiliateWalletTransfers = await prisma.affiliateWalletTransfer.findMany()
+    * ```
+    */
+  get affiliateWalletTransfer(): Prisma.AffiliateWalletTransferDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1195,7 +1222,8 @@ export namespace Prisma {
     AffiliateLink: 'AffiliateLink',
     Offer: 'Offer',
     OfferDiscount: 'OfferDiscount',
-    Commission: 'Commission'
+    Commission: 'Commission',
+    AffiliateWalletTransfer: 'AffiliateWalletTransfer'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1211,7 +1239,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission"
+      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3435,6 +3463,80 @@ export namespace Prisma {
           }
         }
       }
+      AffiliateWalletTransfer: {
+        payload: Prisma.$AffiliateWalletTransferPayload<ExtArgs>
+        fields: Prisma.AffiliateWalletTransferFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AffiliateWalletTransferFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AffiliateWalletTransferFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          findFirst: {
+            args: Prisma.AffiliateWalletTransferFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AffiliateWalletTransferFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          findMany: {
+            args: Prisma.AffiliateWalletTransferFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+          }
+          create: {
+            args: Prisma.AffiliateWalletTransferCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          createMany: {
+            args: Prisma.AffiliateWalletTransferCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AffiliateWalletTransferCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+          }
+          delete: {
+            args: Prisma.AffiliateWalletTransferDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          update: {
+            args: Prisma.AffiliateWalletTransferUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          deleteMany: {
+            args: Prisma.AffiliateWalletTransferDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AffiliateWalletTransferUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AffiliateWalletTransferUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+          }
+          upsert: {
+            args: Prisma.AffiliateWalletTransferUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+          }
+          aggregate: {
+            args: Prisma.AffiliateWalletTransferAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAffiliateWalletTransfer>
+          }
+          groupBy: {
+            args: Prisma.AffiliateWalletTransferGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateWalletTransferGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AffiliateWalletTransferCountArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateWalletTransferCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3573,6 +3675,7 @@ export namespace Prisma {
     offer?: OfferOmit
     offerDiscount?: OfferDiscountOmit
     commission?: CommissionOmit
+    affiliateWalletTransfer?: AffiliateWalletTransferOmit
   }
 
   /* Types for Logging */
@@ -3655,6 +3758,7 @@ export namespace Prisma {
   export type UserCountOutputType = {
     subordinates: number
     orders: number
+    walletTransfers: number
     customers: number
     message: number
     targets: number
@@ -3669,6 +3773,7 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subordinates?: boolean | UserCountOutputTypeCountSubordinatesArgs
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
+    walletTransfers?: boolean | UserCountOutputTypeCountWalletTransfersArgs
     customers?: boolean | UserCountOutputTypeCountCustomersArgs
     message?: boolean | UserCountOutputTypeCountMessageArgs
     targets?: boolean | UserCountOutputTypeCountTargetsArgs
@@ -3703,6 +3808,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWalletTransfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateWalletTransferWhereInput
   }
 
   /**
@@ -4579,6 +4691,7 @@ export namespace Prisma {
     parent?: boolean | User$parentArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
+    walletTransfers?: boolean | User$walletTransfersArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
@@ -4670,6 +4783,7 @@ export namespace Prisma {
     parent?: boolean | User$parentArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
+    walletTransfers?: boolean | User$walletTransfersArgs<ExtArgs>
     permission?: boolean | User$permissionArgs<ExtArgs>
     customers?: boolean | User$customersArgs<ExtArgs>
     message?: boolean | User$messageArgs<ExtArgs>
@@ -4697,6 +4811,7 @@ export namespace Prisma {
       parent: Prisma.$UserPayload<ExtArgs> | null
       subordinates: Prisma.$UserPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      walletTransfers: Prisma.$AffiliateWalletTransferPayload<ExtArgs>[]
       permission: Prisma.$PermissionPayload<ExtArgs> | null
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       message: Prisma.$MessagePayload<ExtArgs>[]
@@ -5126,6 +5241,7 @@ export namespace Prisma {
     parent<T extends User$parentArgs<ExtArgs> = {}>(args?: Subset<T, User$parentArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subordinates<T extends User$subordinatesArgs<ExtArgs> = {}>(args?: Subset<T, User$subordinatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    walletTransfers<T extends User$walletTransfersArgs<ExtArgs> = {}>(args?: Subset<T, User$walletTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     permission<T extends User$permissionArgs<ExtArgs> = {}>(args?: Subset<T, User$permissionArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     customers<T extends User$customersArgs<ExtArgs> = {}>(args?: Subset<T, User$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     message<T extends User$messageArgs<ExtArgs> = {}>(args?: Subset<T, User$messageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5645,6 +5761,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * User.walletTransfers
+   */
+  export type User$walletTransfersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    where?: AffiliateWalletTransferWhereInput
+    orderBy?: AffiliateWalletTransferOrderByWithRelationInput | AffiliateWalletTransferOrderByWithRelationInput[]
+    cursor?: AffiliateWalletTransferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AffiliateWalletTransferScalarFieldEnum | AffiliateWalletTransferScalarFieldEnum[]
   }
 
   /**
@@ -41076,6 +41216,1163 @@ export namespace Prisma {
 
 
   /**
+   * Model AffiliateWalletTransfer
+   */
+
+  export type AggregateAffiliateWalletTransfer = {
+    _count: AffiliateWalletTransferCountAggregateOutputType | null
+    _avg: AffiliateWalletTransferAvgAggregateOutputType | null
+    _sum: AffiliateWalletTransferSumAggregateOutputType | null
+    _min: AffiliateWalletTransferMinAggregateOutputType | null
+    _max: AffiliateWalletTransferMaxAggregateOutputType | null
+  }
+
+  export type AffiliateWalletTransferAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type AffiliateWalletTransferSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type AffiliateWalletTransferMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    amount: number | null
+    status: $Enums.WalletTransferStatus | null
+    reference: string | null
+    notes: string | null
+    transferredAt: Date | null
+    receivedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AffiliateWalletTransferMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    amount: number | null
+    status: $Enums.WalletTransferStatus | null
+    reference: string | null
+    notes: string | null
+    transferredAt: Date | null
+    receivedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AffiliateWalletTransferCountAggregateOutputType = {
+    id: number
+    userId: number
+    amount: number
+    status: number
+    reference: number
+    notes: number
+    transferredAt: number
+    receivedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AffiliateWalletTransferAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type AffiliateWalletTransferSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type AffiliateWalletTransferMinAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    status?: true
+    reference?: true
+    notes?: true
+    transferredAt?: true
+    receivedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AffiliateWalletTransferMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    status?: true
+    reference?: true
+    notes?: true
+    transferredAt?: true
+    receivedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AffiliateWalletTransferCountAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    status?: true
+    reference?: true
+    notes?: true
+    transferredAt?: true
+    receivedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AffiliateWalletTransferAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateWalletTransfer to aggregate.
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateWalletTransfers to fetch.
+     */
+    orderBy?: AffiliateWalletTransferOrderByWithRelationInput | AffiliateWalletTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AffiliateWalletTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateWalletTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateWalletTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AffiliateWalletTransfers
+    **/
+    _count?: true | AffiliateWalletTransferCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AffiliateWalletTransferAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AffiliateWalletTransferSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AffiliateWalletTransferMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AffiliateWalletTransferMaxAggregateInputType
+  }
+
+  export type GetAffiliateWalletTransferAggregateType<T extends AffiliateWalletTransferAggregateArgs> = {
+        [P in keyof T & keyof AggregateAffiliateWalletTransfer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAffiliateWalletTransfer[P]>
+      : GetScalarType<T[P], AggregateAffiliateWalletTransfer[P]>
+  }
+
+
+
+
+  export type AffiliateWalletTransferGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateWalletTransferWhereInput
+    orderBy?: AffiliateWalletTransferOrderByWithAggregationInput | AffiliateWalletTransferOrderByWithAggregationInput[]
+    by: AffiliateWalletTransferScalarFieldEnum[] | AffiliateWalletTransferScalarFieldEnum
+    having?: AffiliateWalletTransferScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AffiliateWalletTransferCountAggregateInputType | true
+    _avg?: AffiliateWalletTransferAvgAggregateInputType
+    _sum?: AffiliateWalletTransferSumAggregateInputType
+    _min?: AffiliateWalletTransferMinAggregateInputType
+    _max?: AffiliateWalletTransferMaxAggregateInputType
+  }
+
+  export type AffiliateWalletTransferGroupByOutputType = {
+    id: string
+    userId: string
+    amount: number
+    status: $Enums.WalletTransferStatus
+    reference: string | null
+    notes: string | null
+    transferredAt: Date
+    receivedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AffiliateWalletTransferCountAggregateOutputType | null
+    _avg: AffiliateWalletTransferAvgAggregateOutputType | null
+    _sum: AffiliateWalletTransferSumAggregateOutputType | null
+    _min: AffiliateWalletTransferMinAggregateOutputType | null
+    _max: AffiliateWalletTransferMaxAggregateOutputType | null
+  }
+
+  type GetAffiliateWalletTransferGroupByPayload<T extends AffiliateWalletTransferGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AffiliateWalletTransferGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AffiliateWalletTransferGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AffiliateWalletTransferGroupByOutputType[P]>
+            : GetScalarType<T[P], AffiliateWalletTransferGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AffiliateWalletTransferSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    status?: boolean
+    reference?: boolean
+    notes?: boolean
+    transferredAt?: boolean
+    receivedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateWalletTransfer"]>
+
+  export type AffiliateWalletTransferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    status?: boolean
+    reference?: boolean
+    notes?: boolean
+    transferredAt?: boolean
+    receivedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateWalletTransfer"]>
+
+  export type AffiliateWalletTransferSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    status?: boolean
+    reference?: boolean
+    notes?: boolean
+    transferredAt?: boolean
+    receivedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateWalletTransfer"]>
+
+  export type AffiliateWalletTransferSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    status?: boolean
+    reference?: boolean
+    notes?: boolean
+    transferredAt?: boolean
+    receivedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AffiliateWalletTransferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "reference" | "notes" | "transferredAt" | "receivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["affiliateWalletTransfer"]>
+  export type AffiliateWalletTransferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AffiliateWalletTransferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AffiliateWalletTransferIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AffiliateWalletTransferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AffiliateWalletTransfer"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      amount: number
+      status: $Enums.WalletTransferStatus
+      reference: string | null
+      notes: string | null
+      transferredAt: Date
+      receivedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["affiliateWalletTransfer"]>
+    composites: {}
+  }
+
+  type AffiliateWalletTransferGetPayload<S extends boolean | null | undefined | AffiliateWalletTransferDefaultArgs> = $Result.GetResult<Prisma.$AffiliateWalletTransferPayload, S>
+
+  type AffiliateWalletTransferCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AffiliateWalletTransferFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AffiliateWalletTransferCountAggregateInputType | true
+    }
+
+  export interface AffiliateWalletTransferDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AffiliateWalletTransfer'], meta: { name: 'AffiliateWalletTransfer' } }
+    /**
+     * Find zero or one AffiliateWalletTransfer that matches the filter.
+     * @param {AffiliateWalletTransferFindUniqueArgs} args - Arguments to find a AffiliateWalletTransfer
+     * @example
+     * // Get one AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AffiliateWalletTransferFindUniqueArgs>(args: SelectSubset<T, AffiliateWalletTransferFindUniqueArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AffiliateWalletTransfer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AffiliateWalletTransferFindUniqueOrThrowArgs} args - Arguments to find a AffiliateWalletTransfer
+     * @example
+     * // Get one AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AffiliateWalletTransferFindUniqueOrThrowArgs>(args: SelectSubset<T, AffiliateWalletTransferFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateWalletTransfer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferFindFirstArgs} args - Arguments to find a AffiliateWalletTransfer
+     * @example
+     * // Get one AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AffiliateWalletTransferFindFirstArgs>(args?: SelectSubset<T, AffiliateWalletTransferFindFirstArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateWalletTransfer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferFindFirstOrThrowArgs} args - Arguments to find a AffiliateWalletTransfer
+     * @example
+     * // Get one AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AffiliateWalletTransferFindFirstOrThrowArgs>(args?: SelectSubset<T, AffiliateWalletTransferFindFirstOrThrowArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AffiliateWalletTransfers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AffiliateWalletTransfers
+     * const affiliateWalletTransfers = await prisma.affiliateWalletTransfer.findMany()
+     * 
+     * // Get first 10 AffiliateWalletTransfers
+     * const affiliateWalletTransfers = await prisma.affiliateWalletTransfer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const affiliateWalletTransferWithIdOnly = await prisma.affiliateWalletTransfer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AffiliateWalletTransferFindManyArgs>(args?: SelectSubset<T, AffiliateWalletTransferFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AffiliateWalletTransfer.
+     * @param {AffiliateWalletTransferCreateArgs} args - Arguments to create a AffiliateWalletTransfer.
+     * @example
+     * // Create one AffiliateWalletTransfer
+     * const AffiliateWalletTransfer = await prisma.affiliateWalletTransfer.create({
+     *   data: {
+     *     // ... data to create a AffiliateWalletTransfer
+     *   }
+     * })
+     * 
+     */
+    create<T extends AffiliateWalletTransferCreateArgs>(args: SelectSubset<T, AffiliateWalletTransferCreateArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AffiliateWalletTransfers.
+     * @param {AffiliateWalletTransferCreateManyArgs} args - Arguments to create many AffiliateWalletTransfers.
+     * @example
+     * // Create many AffiliateWalletTransfers
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AffiliateWalletTransferCreateManyArgs>(args?: SelectSubset<T, AffiliateWalletTransferCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AffiliateWalletTransfers and returns the data saved in the database.
+     * @param {AffiliateWalletTransferCreateManyAndReturnArgs} args - Arguments to create many AffiliateWalletTransfers.
+     * @example
+     * // Create many AffiliateWalletTransfers
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AffiliateWalletTransfers and only return the `id`
+     * const affiliateWalletTransferWithIdOnly = await prisma.affiliateWalletTransfer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AffiliateWalletTransferCreateManyAndReturnArgs>(args?: SelectSubset<T, AffiliateWalletTransferCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AffiliateWalletTransfer.
+     * @param {AffiliateWalletTransferDeleteArgs} args - Arguments to delete one AffiliateWalletTransfer.
+     * @example
+     * // Delete one AffiliateWalletTransfer
+     * const AffiliateWalletTransfer = await prisma.affiliateWalletTransfer.delete({
+     *   where: {
+     *     // ... filter to delete one AffiliateWalletTransfer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AffiliateWalletTransferDeleteArgs>(args: SelectSubset<T, AffiliateWalletTransferDeleteArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AffiliateWalletTransfer.
+     * @param {AffiliateWalletTransferUpdateArgs} args - Arguments to update one AffiliateWalletTransfer.
+     * @example
+     * // Update one AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AffiliateWalletTransferUpdateArgs>(args: SelectSubset<T, AffiliateWalletTransferUpdateArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AffiliateWalletTransfers.
+     * @param {AffiliateWalletTransferDeleteManyArgs} args - Arguments to filter AffiliateWalletTransfers to delete.
+     * @example
+     * // Delete a few AffiliateWalletTransfers
+     * const { count } = await prisma.affiliateWalletTransfer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AffiliateWalletTransferDeleteManyArgs>(args?: SelectSubset<T, AffiliateWalletTransferDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateWalletTransfers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AffiliateWalletTransfers
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AffiliateWalletTransferUpdateManyArgs>(args: SelectSubset<T, AffiliateWalletTransferUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateWalletTransfers and returns the data updated in the database.
+     * @param {AffiliateWalletTransferUpdateManyAndReturnArgs} args - Arguments to update many AffiliateWalletTransfers.
+     * @example
+     * // Update many AffiliateWalletTransfers
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AffiliateWalletTransfers and only return the `id`
+     * const affiliateWalletTransferWithIdOnly = await prisma.affiliateWalletTransfer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AffiliateWalletTransferUpdateManyAndReturnArgs>(args: SelectSubset<T, AffiliateWalletTransferUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AffiliateWalletTransfer.
+     * @param {AffiliateWalletTransferUpsertArgs} args - Arguments to update or create a AffiliateWalletTransfer.
+     * @example
+     * // Update or create a AffiliateWalletTransfer
+     * const affiliateWalletTransfer = await prisma.affiliateWalletTransfer.upsert({
+     *   create: {
+     *     // ... data to create a AffiliateWalletTransfer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AffiliateWalletTransfer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AffiliateWalletTransferUpsertArgs>(args: SelectSubset<T, AffiliateWalletTransferUpsertArgs<ExtArgs>>): Prisma__AffiliateWalletTransferClient<$Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AffiliateWalletTransfers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferCountArgs} args - Arguments to filter AffiliateWalletTransfers to count.
+     * @example
+     * // Count the number of AffiliateWalletTransfers
+     * const count = await prisma.affiliateWalletTransfer.count({
+     *   where: {
+     *     // ... the filter for the AffiliateWalletTransfers we want to count
+     *   }
+     * })
+    **/
+    count<T extends AffiliateWalletTransferCountArgs>(
+      args?: Subset<T, AffiliateWalletTransferCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AffiliateWalletTransferCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AffiliateWalletTransfer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AffiliateWalletTransferAggregateArgs>(args: Subset<T, AffiliateWalletTransferAggregateArgs>): Prisma.PrismaPromise<GetAffiliateWalletTransferAggregateType<T>>
+
+    /**
+     * Group by AffiliateWalletTransfer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateWalletTransferGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AffiliateWalletTransferGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AffiliateWalletTransferGroupByArgs['orderBy'] }
+        : { orderBy?: AffiliateWalletTransferGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AffiliateWalletTransferGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAffiliateWalletTransferGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AffiliateWalletTransfer model
+   */
+  readonly fields: AffiliateWalletTransferFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AffiliateWalletTransfer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AffiliateWalletTransferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AffiliateWalletTransfer model
+   */
+  interface AffiliateWalletTransferFieldRefs {
+    readonly id: FieldRef<"AffiliateWalletTransfer", 'String'>
+    readonly userId: FieldRef<"AffiliateWalletTransfer", 'String'>
+    readonly amount: FieldRef<"AffiliateWalletTransfer", 'Float'>
+    readonly status: FieldRef<"AffiliateWalletTransfer", 'WalletTransferStatus'>
+    readonly reference: FieldRef<"AffiliateWalletTransfer", 'String'>
+    readonly notes: FieldRef<"AffiliateWalletTransfer", 'String'>
+    readonly transferredAt: FieldRef<"AffiliateWalletTransfer", 'DateTime'>
+    readonly receivedAt: FieldRef<"AffiliateWalletTransfer", 'DateTime'>
+    readonly createdAt: FieldRef<"AffiliateWalletTransfer", 'DateTime'>
+    readonly updatedAt: FieldRef<"AffiliateWalletTransfer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AffiliateWalletTransfer findUnique
+   */
+  export type AffiliateWalletTransferFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateWalletTransfer to fetch.
+     */
+    where: AffiliateWalletTransferWhereUniqueInput
+  }
+
+  /**
+   * AffiliateWalletTransfer findUniqueOrThrow
+   */
+  export type AffiliateWalletTransferFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateWalletTransfer to fetch.
+     */
+    where: AffiliateWalletTransferWhereUniqueInput
+  }
+
+  /**
+   * AffiliateWalletTransfer findFirst
+   */
+  export type AffiliateWalletTransferFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateWalletTransfer to fetch.
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateWalletTransfers to fetch.
+     */
+    orderBy?: AffiliateWalletTransferOrderByWithRelationInput | AffiliateWalletTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateWalletTransfers.
+     */
+    cursor?: AffiliateWalletTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateWalletTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateWalletTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateWalletTransfers.
+     */
+    distinct?: AffiliateWalletTransferScalarFieldEnum | AffiliateWalletTransferScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateWalletTransfer findFirstOrThrow
+   */
+  export type AffiliateWalletTransferFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateWalletTransfer to fetch.
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateWalletTransfers to fetch.
+     */
+    orderBy?: AffiliateWalletTransferOrderByWithRelationInput | AffiliateWalletTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateWalletTransfers.
+     */
+    cursor?: AffiliateWalletTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateWalletTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateWalletTransfers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateWalletTransfers.
+     */
+    distinct?: AffiliateWalletTransferScalarFieldEnum | AffiliateWalletTransferScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateWalletTransfer findMany
+   */
+  export type AffiliateWalletTransferFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateWalletTransfers to fetch.
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateWalletTransfers to fetch.
+     */
+    orderBy?: AffiliateWalletTransferOrderByWithRelationInput | AffiliateWalletTransferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AffiliateWalletTransfers.
+     */
+    cursor?: AffiliateWalletTransferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateWalletTransfers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateWalletTransfers.
+     */
+    skip?: number
+    distinct?: AffiliateWalletTransferScalarFieldEnum | AffiliateWalletTransferScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateWalletTransfer create
+   */
+  export type AffiliateWalletTransferCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AffiliateWalletTransfer.
+     */
+    data: XOR<AffiliateWalletTransferCreateInput, AffiliateWalletTransferUncheckedCreateInput>
+  }
+
+  /**
+   * AffiliateWalletTransfer createMany
+   */
+  export type AffiliateWalletTransferCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AffiliateWalletTransfers.
+     */
+    data: AffiliateWalletTransferCreateManyInput | AffiliateWalletTransferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AffiliateWalletTransfer createManyAndReturn
+   */
+  export type AffiliateWalletTransferCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * The data used to create many AffiliateWalletTransfers.
+     */
+    data: AffiliateWalletTransferCreateManyInput | AffiliateWalletTransferCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateWalletTransfer update
+   */
+  export type AffiliateWalletTransferUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AffiliateWalletTransfer.
+     */
+    data: XOR<AffiliateWalletTransferUpdateInput, AffiliateWalletTransferUncheckedUpdateInput>
+    /**
+     * Choose, which AffiliateWalletTransfer to update.
+     */
+    where: AffiliateWalletTransferWhereUniqueInput
+  }
+
+  /**
+   * AffiliateWalletTransfer updateMany
+   */
+  export type AffiliateWalletTransferUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AffiliateWalletTransfers.
+     */
+    data: XOR<AffiliateWalletTransferUpdateManyMutationInput, AffiliateWalletTransferUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateWalletTransfers to update
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * Limit how many AffiliateWalletTransfers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateWalletTransfer updateManyAndReturn
+   */
+  export type AffiliateWalletTransferUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * The data used to update AffiliateWalletTransfers.
+     */
+    data: XOR<AffiliateWalletTransferUpdateManyMutationInput, AffiliateWalletTransferUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateWalletTransfers to update
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * Limit how many AffiliateWalletTransfers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateWalletTransfer upsert
+   */
+  export type AffiliateWalletTransferUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AffiliateWalletTransfer to update in case it exists.
+     */
+    where: AffiliateWalletTransferWhereUniqueInput
+    /**
+     * In case the AffiliateWalletTransfer found by the `where` argument doesn't exist, create a new AffiliateWalletTransfer with this data.
+     */
+    create: XOR<AffiliateWalletTransferCreateInput, AffiliateWalletTransferUncheckedCreateInput>
+    /**
+     * In case the AffiliateWalletTransfer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AffiliateWalletTransferUpdateInput, AffiliateWalletTransferUncheckedUpdateInput>
+  }
+
+  /**
+   * AffiliateWalletTransfer delete
+   */
+  export type AffiliateWalletTransferDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+    /**
+     * Filter which AffiliateWalletTransfer to delete.
+     */
+    where: AffiliateWalletTransferWhereUniqueInput
+  }
+
+  /**
+   * AffiliateWalletTransfer deleteMany
+   */
+  export type AffiliateWalletTransferDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateWalletTransfers to delete
+     */
+    where?: AffiliateWalletTransferWhereInput
+    /**
+     * Limit how many AffiliateWalletTransfers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateWalletTransfer without action
+   */
+  export type AffiliateWalletTransferDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateWalletTransfer
+     */
+    select?: AffiliateWalletTransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateWalletTransfer
+     */
+    omit?: AffiliateWalletTransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateWalletTransferInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -41628,6 +42925,22 @@ export namespace Prisma {
   export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
 
 
+  export const AffiliateWalletTransferScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    amount: 'amount',
+    status: 'status',
+    reference: 'reference',
+    notes: 'notes',
+    transferredAt: 'transferredAt',
+    receivedAt: 'receivedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AffiliateWalletTransferScalarFieldEnum = (typeof AffiliateWalletTransferScalarFieldEnum)[keyof typeof AffiliateWalletTransferScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -41889,6 +43202,20 @@ export namespace Prisma {
    */
   export type ListEnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'WalletTransferStatus'
+   */
+  export type EnumWalletTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransferStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'WalletTransferStatus[]'
+   */
+  export type ListEnumWalletTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransferStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -41921,6 +43248,7 @@ export namespace Prisma {
     parent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
     orders?: OrderListRelationFilter
+    walletTransfers?: AffiliateWalletTransferListRelationFilter
     permission?: XOR<PermissionNullableScalarRelationFilter, PermissionWhereInput> | null
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
@@ -41957,6 +43285,7 @@ export namespace Prisma {
     parent?: UserOrderByWithRelationInput
     subordinates?: UserOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
+    walletTransfers?: AffiliateWalletTransferOrderByRelationAggregateInput
     permission?: PermissionOrderByWithRelationInput
     customers?: CustomerOrderByRelationAggregateInput
     message?: MessageOrderByRelationAggregateInput
@@ -41996,6 +43325,7 @@ export namespace Prisma {
     parent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
     orders?: OrderListRelationFilter
+    walletTransfers?: AffiliateWalletTransferListRelationFilter
     permission?: XOR<PermissionNullableScalarRelationFilter, PermissionWhereInput> | null
     customers?: CustomerListRelationFilter
     message?: MessageListRelationFilter
@@ -44796,6 +46126,88 @@ export namespace Prisma {
     paidAt?: DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
   }
 
+  export type AffiliateWalletTransferWhereInput = {
+    AND?: AffiliateWalletTransferWhereInput | AffiliateWalletTransferWhereInput[]
+    OR?: AffiliateWalletTransferWhereInput[]
+    NOT?: AffiliateWalletTransferWhereInput | AffiliateWalletTransferWhereInput[]
+    id?: StringFilter<"AffiliateWalletTransfer"> | string
+    userId?: StringFilter<"AffiliateWalletTransfer"> | string
+    amount?: FloatFilter<"AffiliateWalletTransfer"> | number
+    status?: EnumWalletTransferStatusFilter<"AffiliateWalletTransfer"> | $Enums.WalletTransferStatus
+    reference?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    notes?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    transferredAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    receivedAt?: DateTimeNullableFilter<"AffiliateWalletTransfer"> | Date | string | null
+    createdAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AffiliateWalletTransferOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    transferredAt?: SortOrder
+    receivedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type AffiliateWalletTransferWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AffiliateWalletTransferWhereInput | AffiliateWalletTransferWhereInput[]
+    OR?: AffiliateWalletTransferWhereInput[]
+    NOT?: AffiliateWalletTransferWhereInput | AffiliateWalletTransferWhereInput[]
+    userId?: StringFilter<"AffiliateWalletTransfer"> | string
+    amount?: FloatFilter<"AffiliateWalletTransfer"> | number
+    status?: EnumWalletTransferStatusFilter<"AffiliateWalletTransfer"> | $Enums.WalletTransferStatus
+    reference?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    notes?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    transferredAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    receivedAt?: DateTimeNullableFilter<"AffiliateWalletTransfer"> | Date | string | null
+    createdAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type AffiliateWalletTransferOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    transferredAt?: SortOrder
+    receivedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AffiliateWalletTransferCountOrderByAggregateInput
+    _avg?: AffiliateWalletTransferAvgOrderByAggregateInput
+    _max?: AffiliateWalletTransferMaxOrderByAggregateInput
+    _min?: AffiliateWalletTransferMinOrderByAggregateInput
+    _sum?: AffiliateWalletTransferSumOrderByAggregateInput
+  }
+
+  export type AffiliateWalletTransferScalarWhereWithAggregatesInput = {
+    AND?: AffiliateWalletTransferScalarWhereWithAggregatesInput | AffiliateWalletTransferScalarWhereWithAggregatesInput[]
+    OR?: AffiliateWalletTransferScalarWhereWithAggregatesInput[]
+    NOT?: AffiliateWalletTransferScalarWhereWithAggregatesInput | AffiliateWalletTransferScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AffiliateWalletTransfer"> | string
+    userId?: StringWithAggregatesFilter<"AffiliateWalletTransfer"> | string
+    amount?: FloatWithAggregatesFilter<"AffiliateWalletTransfer"> | number
+    status?: EnumWalletTransferStatusWithAggregatesFilter<"AffiliateWalletTransfer"> | $Enums.WalletTransferStatus
+    reference?: StringNullableWithAggregatesFilter<"AffiliateWalletTransfer"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"AffiliateWalletTransfer"> | string | null
+    transferredAt?: DateTimeWithAggregatesFilter<"AffiliateWalletTransfer"> | Date | string
+    receivedAt?: DateTimeNullableWithAggregatesFilter<"AffiliateWalletTransfer"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AffiliateWalletTransfer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AffiliateWalletTransfer"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -44818,6 +46230,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -44853,6 +46266,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -44886,6 +46300,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -44921,6 +46336,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -48034,6 +49450,96 @@ export namespace Prisma {
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type AffiliateWalletTransferCreateInput = {
+    id?: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutWalletTransfersInput
+  }
+
+  export type AffiliateWalletTransferUncheckedCreateInput = {
+    id?: string
+    userId: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliateWalletTransferUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutWalletTransfersNestedInput
+  }
+
+  export type AffiliateWalletTransferUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateWalletTransferCreateManyInput = {
+    id?: string
+    userId: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliateWalletTransferUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateWalletTransferUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -48137,6 +49643,12 @@ export namespace Prisma {
     none?: OrderWhereInput
   }
 
+  export type AffiliateWalletTransferListRelationFilter = {
+    every?: AffiliateWalletTransferWhereInput
+    some?: AffiliateWalletTransferWhereInput
+    none?: AffiliateWalletTransferWhereInput
+  }
+
   export type PermissionNullableScalarRelationFilter = {
     is?: PermissionWhereInput | null
     isNot?: PermissionWhereInput | null
@@ -48206,6 +49718,10 @@ export namespace Prisma {
   }
 
   export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AffiliateWalletTransferOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50472,6 +51988,70 @@ export namespace Prisma {
     _max?: NestedEnumCommissionStatusFilter<$PrismaModel>
   }
 
+  export type EnumWalletTransferStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WalletTransferStatus | EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWalletTransferStatusFilter<$PrismaModel> | $Enums.WalletTransferStatus
+  }
+
+  export type AffiliateWalletTransferCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    notes?: SortOrder
+    transferredAt?: SortOrder
+    receivedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliateWalletTransferAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type AffiliateWalletTransferMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    notes?: SortOrder
+    transferredAt?: SortOrder
+    receivedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliateWalletTransferMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    reference?: SortOrder
+    notes?: SortOrder
+    transferredAt?: SortOrder
+    receivedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliateWalletTransferSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type EnumWalletTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WalletTransferStatus | EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.WalletTransferStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
+    _max?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedOneWithoutSubordinatesInput = {
     create?: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSubordinatesInput
@@ -50490,6 +52070,13 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
     createMany?: OrderCreateManyUserInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type AffiliateWalletTransferCreateNestedManyWithoutUserInput = {
+    create?: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput> | AffiliateWalletTransferCreateWithoutUserInput[] | AffiliateWalletTransferUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateWalletTransferCreateOrConnectWithoutUserInput | AffiliateWalletTransferCreateOrConnectWithoutUserInput[]
+    createMany?: AffiliateWalletTransferCreateManyUserInputEnvelope
+    connect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
   }
 
   export type PermissionCreateNestedOneWithoutUsersInput = {
@@ -50572,6 +52159,13 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
     createMany?: OrderCreateManyUserInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput> | AffiliateWalletTransferCreateWithoutUserInput[] | AffiliateWalletTransferUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateWalletTransferCreateOrConnectWithoutUserInput | AffiliateWalletTransferCreateOrConnectWithoutUserInput[]
+    createMany?: AffiliateWalletTransferCreateManyUserInputEnvelope
+    connect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
   }
 
   export type CustomerUncheckedCreateNestedManyWithoutUsersInput = {
@@ -50712,6 +52306,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type AffiliateWalletTransferUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput> | AffiliateWalletTransferCreateWithoutUserInput[] | AffiliateWalletTransferUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateWalletTransferCreateOrConnectWithoutUserInput | AffiliateWalletTransferCreateOrConnectWithoutUserInput[]
+    upsert?: AffiliateWalletTransferUpsertWithWhereUniqueWithoutUserInput | AffiliateWalletTransferUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AffiliateWalletTransferCreateManyUserInputEnvelope
+    set?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    disconnect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    delete?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    connect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    update?: AffiliateWalletTransferUpdateWithWhereUniqueWithoutUserInput | AffiliateWalletTransferUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AffiliateWalletTransferUpdateManyWithWhereWithoutUserInput | AffiliateWalletTransferUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AffiliateWalletTransferScalarWhereInput | AffiliateWalletTransferScalarWhereInput[]
   }
 
   export type PermissionUpdateOneWithoutUsersNestedInput = {
@@ -50875,6 +52483,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput> | AffiliateWalletTransferCreateWithoutUserInput[] | AffiliateWalletTransferUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AffiliateWalletTransferCreateOrConnectWithoutUserInput | AffiliateWalletTransferCreateOrConnectWithoutUserInput[]
+    upsert?: AffiliateWalletTransferUpsertWithWhereUniqueWithoutUserInput | AffiliateWalletTransferUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AffiliateWalletTransferCreateManyUserInputEnvelope
+    set?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    disconnect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    delete?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    connect?: AffiliateWalletTransferWhereUniqueInput | AffiliateWalletTransferWhereUniqueInput[]
+    update?: AffiliateWalletTransferUpdateWithWhereUniqueWithoutUserInput | AffiliateWalletTransferUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AffiliateWalletTransferUpdateManyWithWhereWithoutUserInput | AffiliateWalletTransferUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AffiliateWalletTransferScalarWhereInput | AffiliateWalletTransferScalarWhereInput[]
   }
 
   export type CustomerUncheckedUpdateManyWithoutUsersNestedInput = {
@@ -52903,6 +54525,24 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutCommissionsInput, OrderUpdateWithoutCommissionsInput>, OrderUncheckedUpdateWithoutCommissionsInput>
   }
 
+  export type UserCreateNestedOneWithoutWalletTransfersInput = {
+    create?: XOR<UserCreateWithoutWalletTransfersInput, UserUncheckedCreateWithoutWalletTransfersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletTransfersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumWalletTransferStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WalletTransferStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutWalletTransfersNestedInput = {
+    create?: XOR<UserCreateWithoutWalletTransfersInput, UserUncheckedCreateWithoutWalletTransfersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletTransfersInput
+    upsert?: UserUpsertWithoutWalletTransfersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWalletTransfersInput, UserUpdateWithoutWalletTransfersInput>, UserUncheckedUpdateWithoutWalletTransfersInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -53312,6 +54952,23 @@ export namespace Prisma {
     _max?: NestedEnumCommissionStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumWalletTransferStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WalletTransferStatus | EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWalletTransferStatusFilter<$PrismaModel> | $Enums.WalletTransferStatus
+  }
+
+  export type NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WalletTransferStatus | EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WalletTransferStatus[] | ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.WalletTransferStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
+    _max?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutSubordinatesInput = {
     id?: string
     username: string
@@ -53333,6 +54990,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -53367,6 +55025,7 @@ export namespace Prisma {
     affiliateRequestedAt?: Date | string | null
     affiliateApprovedAt?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -53404,6 +55063,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -53438,6 +55098,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -53545,6 +55206,40 @@ export namespace Prisma {
 
   export type OrderCreateManyUserInputEnvelope = {
     data: OrderCreateManyUserInput | OrderCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AffiliateWalletTransferCreateWithoutUserInput = {
+    id?: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliateWalletTransferUncheckedCreateWithoutUserInput = {
+    id?: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliateWalletTransferCreateOrConnectWithoutUserInput = {
+    where: AffiliateWalletTransferWhereUniqueInput
+    create: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput>
+  }
+
+  export type AffiliateWalletTransferCreateManyUserInputEnvelope = {
+    data: AffiliateWalletTransferCreateManyUserInput | AffiliateWalletTransferCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -53987,6 +55682,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -54021,6 +55717,7 @@ export namespace Prisma {
     affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -54129,6 +55826,38 @@ export namespace Prisma {
     manualCreatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+  }
+
+  export type AffiliateWalletTransferUpsertWithWhereUniqueWithoutUserInput = {
+    where: AffiliateWalletTransferWhereUniqueInput
+    update: XOR<AffiliateWalletTransferUpdateWithoutUserInput, AffiliateWalletTransferUncheckedUpdateWithoutUserInput>
+    create: XOR<AffiliateWalletTransferCreateWithoutUserInput, AffiliateWalletTransferUncheckedCreateWithoutUserInput>
+  }
+
+  export type AffiliateWalletTransferUpdateWithWhereUniqueWithoutUserInput = {
+    where: AffiliateWalletTransferWhereUniqueInput
+    data: XOR<AffiliateWalletTransferUpdateWithoutUserInput, AffiliateWalletTransferUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AffiliateWalletTransferUpdateManyWithWhereWithoutUserInput = {
+    where: AffiliateWalletTransferScalarWhereInput
+    data: XOR<AffiliateWalletTransferUpdateManyMutationInput, AffiliateWalletTransferUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AffiliateWalletTransferScalarWhereInput = {
+    AND?: AffiliateWalletTransferScalarWhereInput | AffiliateWalletTransferScalarWhereInput[]
+    OR?: AffiliateWalletTransferScalarWhereInput[]
+    NOT?: AffiliateWalletTransferScalarWhereInput | AffiliateWalletTransferScalarWhereInput[]
+    id?: StringFilter<"AffiliateWalletTransfer"> | string
+    userId?: StringFilter<"AffiliateWalletTransfer"> | string
+    amount?: FloatFilter<"AffiliateWalletTransfer"> | number
+    status?: EnumWalletTransferStatusFilter<"AffiliateWalletTransfer"> | $Enums.WalletTransferStatus
+    reference?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    notes?: StringNullableFilter<"AffiliateWalletTransfer"> | string | null
+    transferredAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    receivedAt?: DateTimeNullableFilter<"AffiliateWalletTransfer"> | Date | string | null
+    createdAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliateWalletTransfer"> | Date | string
   }
 
   export type PermissionUpsertWithoutUsersInput = {
@@ -54544,6 +56273,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
@@ -54577,6 +56307,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -55816,6 +57547,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -55850,6 +57582,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -55962,6 +57695,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -55996,6 +57730,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -56538,6 +58273,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -56572,6 +58308,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -56716,6 +58453,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -56750,6 +58488,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -56782,6 +58521,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -56816,6 +58556,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
@@ -56888,6 +58629,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -56922,6 +58664,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -56970,6 +58713,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -57004,6 +58748,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -57052,6 +58797,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -57086,6 +58832,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -57511,6 +59258,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
@@ -57545,6 +59293,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
@@ -58205,6 +59954,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     targets?: UserTargetCreateNestedManyWithoutUserInput
@@ -58239,6 +59989,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
     activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
@@ -58338,6 +60089,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
@@ -58372,6 +60124,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -58448,6 +60201,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -58482,6 +60236,7 @@ export namespace Prisma {
     affiliateRequestedAt?: Date | string | null
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -58720,6 +60475,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -58754,6 +60510,7 @@ export namespace Prisma {
     affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -58906,6 +60663,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -58940,6 +60698,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -58988,6 +60747,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -59022,6 +60782,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -59519,6 +61280,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -59553,6 +61315,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -59601,6 +61364,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -59635,6 +61399,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -59667,6 +61432,7 @@ export namespace Prisma {
     parent?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutParentInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
     permission?: PermissionCreateNestedOneWithoutUsersInput
     customers?: CustomerCreateNestedManyWithoutUsersInput
     message?: MessageCreateNestedManyWithoutUserInput
@@ -59701,6 +61467,7 @@ export namespace Prisma {
     affiliateApprovedAt?: Date | string | null
     subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
     customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
     message?: MessageUncheckedCreateNestedManyWithoutUserInput
     targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
@@ -59862,6 +61629,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -59896,6 +61664,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -60564,6 +62333,158 @@ export namespace Prisma {
     warranties?: WarrantyUncheckedUpdateManyWithoutOrderNestedInput
   }
 
+  export type UserCreateWithoutWalletTransfersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutWalletTransfersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutWalletTransfersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWalletTransfersInput, UserUncheckedCreateWithoutWalletTransfersInput>
+  }
+
+  export type UserUpsertWithoutWalletTransfersInput = {
+    update: XOR<UserUpdateWithoutWalletTransfersInput, UserUncheckedUpdateWithoutWalletTransfersInput>
+    create: XOR<UserCreateWithoutWalletTransfersInput, UserUncheckedCreateWithoutWalletTransfersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWalletTransfersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWalletTransfersInput, UserUncheckedUpdateWithoutWalletTransfersInput>
+  }
+
+  export type UserUpdateWithoutWalletTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWalletTransfersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateManyParentInput = {
     id?: string
     username: string
@@ -60619,6 +62540,18 @@ export namespace Prisma {
     warehouseId?: number | null
     shippingId?: number | null
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliateWalletTransferCreateManyUserInput = {
+    id?: string
+    amount: number
+    status?: $Enums.WalletTransferStatus
+    reference?: string | null
+    notes?: string | null
+    transferredAt?: Date | string
+    receivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -60732,6 +62665,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
@@ -60766,6 +62700,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -60911,6 +62846,42 @@ export namespace Prisma {
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateWalletTransferUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateWalletTransferUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateWalletTransferUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: EnumWalletTransferStatusFieldUpdateOperationsInput | $Enums.WalletTransferStatus
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    transferredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -61285,6 +63256,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     customers?: CustomerUpdateManyWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
@@ -61318,6 +63290,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -62430,6 +64403,7 @@ export namespace Prisma {
     parent?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutParentNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
     permission?: PermissionUpdateOneWithoutUsersNestedInput
     message?: MessageUpdateManyWithoutUserNestedInput
     targets?: UserTargetUpdateManyWithoutUserNestedInput
@@ -62464,6 +64438,7 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
     activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
