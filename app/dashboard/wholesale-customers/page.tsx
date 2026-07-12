@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import PhoneInput from "react-phone-number-input";
 import toast from "react-hot-toast";
 import {
   Building2,
@@ -93,7 +94,7 @@ type CustomerFormState = {
   name: string;
   category: string;
   contactName: string;
-  phoneText: string;
+  phoneNumbers: string[];
   whatsappPhone: string;
   country: string;
   city: string;
@@ -133,6 +134,39 @@ const CATEGORY_OPTIONS = [
   { value: "OTHER", label: "أخرى" },
 ];
 
+const WHOLESALE_COUNTRY_OPTIONS = ["سوريا", "تركيا"] as const;
+
+const WHOLESALE_CITIES_BY_COUNTRY: Record<(typeof WHOLESALE_COUNTRY_OPTIONS)[number], string[]> = {
+  "سوريا": [
+    "دمشق",
+    "ريف دمشق",
+    "حلب",
+    "حمص",
+    "حماة",
+    "اللاذقية",
+    "طرطوس",
+    "إدلب",
+    "درعا",
+    "السويداء",
+    "القنيطرة",
+    "دير الزور",
+    "الرقة",
+    "الحسكة",
+  ],
+  "تركيا": [
+    "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin",
+    "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa",
+    "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan",
+    "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay",
+    "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli",
+    "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin",
+    "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt",
+    "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Uşak",
+    "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman",
+    "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce",
+  ],
+};
+
 const VISIT_RESULT_OPTIONS = [
   { value: "VERY_INTERESTED", label: "مهتم جداً" },
   { value: "INTERESTED", label: "مهتم" },
@@ -153,9 +187,9 @@ function createEmptyCustomerForm(): CustomerFormState {
     name: "",
     category: "PHARMACY",
     contactName: "",
-    phoneText: "",
+    phoneNumbers: [""],
     whatsappPhone: "",
-    country: "",
+    country: "سوريا",
     city: "",
     area: "",
     address: "",
@@ -217,6 +251,18 @@ function parseTextList(value: string) {
     .filter(Boolean);
 }
 
+function normalizePhoneListInput(values: string[]) {
+  return values.map((item) => item.trim()).filter(Boolean);
+}
+
+function isWholesaleCountry(value: string): value is (typeof WHOLESALE_COUNTRY_OPTIONS)[number] {
+  return WHOLESALE_COUNTRY_OPTIONS.includes(value as (typeof WHOLESALE_COUNTRY_OPTIONS)[number]);
+}
+
+function getPhoneDefaultCountry(country: string) {
+  return country === "تركيا" ? "TR" : "SY";
+}
+
 function parseOptionalNumber(value: string) {
   const normalized = value.trim();
   if (!normalized) return null;
@@ -262,6 +308,11 @@ export default function WholesaleCustomersPage() {
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
   const [isPending, startTransition] = React.useTransition();
   const [isLoading, setIsLoading] = React.useState(true);
+
+  const availableCities = React.useMemo(() => {
+    if (!isWholesaleCountry(customerForm.country)) return [];
+    return WHOLESALE_CITIES_BY_COUNTRY[customerForm.country];
+  }, [customerForm.country]);
 
   const canManageWholesale = React.useMemo(() => {
     if (!user) return false;
@@ -369,9 +420,9 @@ export default function WholesaleCustomersPage() {
       name: customer.name,
       category: customer.category,
       contactName: customer.contactName || "",
-      phoneText: customer.phone.join("\n"),
+      phoneNumbers: customer.phone.length > 0 ? customer.phone : [""],
       whatsappPhone: customer.whatsappPhone || "",
-      country: customer.country || "",
+      country: isWholesaleCountry(customer.country || "") ? customer.country || "سوريا" : "سوريا",
       city: customer.city || "",
       area: customer.area || "",
       address: customer.address || "",
@@ -405,9 +456,50 @@ export default function WholesaleCustomersPage() {
     setSelectedRepId("ALL");
   }
 
+  function handleCustomerPhoneChange(index: number, value?: string) {
+    setCustomerForm((current) => ({
+      ...current,
+      phoneNumbers: current.phoneNumbers.map((phone, phoneIndex) => (phoneIndex === index ? value || "" : phone)),
+    }));
+  }
+
+  function addCustomerPhoneField() {
+    setCustomerForm((current) => {
+      if (current.phoneNumbers.length >= 2) return current;
+      return {
+        ...current,
+        phoneNumbers: [...current.phoneNumbers, ""],
+      };
+    });
+  }
+
+  function removeCustomerPhoneField(index: number) {
+    setCustomerForm((current) => {
+      const nextPhones = current.phoneNumbers.filter((_, phoneIndex) => phoneIndex !== index);
+      return {
+        ...current,
+        phoneNumbers: nextPhones.length > 0 ? nextPhones : [""],
+      };
+    });
+  }
+
+  function handleCustomerCountryChange(value: string) {
+    setCustomerForm((current) => ({
+      ...current,
+      country: value,
+      city: isWholesaleCountry(value) && WHOLESALE_CITIES_BY_COUNTRY[value].includes(current.city) ? current.city : "",
+    }));
+  }
+
   function handleSaveCustomer() {
     if (!customerForm.name.trim()) {
       toast.error("اسم عميل الجملة مطلوب");
+      return;
+    }
+
+    const normalizedPhones = normalizePhoneListInput(customerForm.phoneNumbers);
+    if (normalizedPhones.length === 0) {
+      toast.error("أدخل رقم هاتف واحد على الأقل");
       return;
     }
 
@@ -416,7 +508,7 @@ export default function WholesaleCustomersPage() {
         name: customerForm.name,
         category: customerForm.category,
         contactName: customerForm.contactName,
-        phone: parseTextList(customerForm.phoneText),
+        phone: normalizedPhones,
         whatsappPhone: customerForm.whatsappPhone,
         country: customerForm.country,
         city: customerForm.city,
@@ -809,17 +901,70 @@ export default function WholesaleCustomersPage() {
               ))}
             </select>
           </Field>
-          <Field label="أرقام الهاتف">
-            <textarea value={customerForm.phoneText} onChange={(event) => setCustomerForm((current) => ({ ...current, phoneText: event.target.value }))} className="field-input min-h-[110px]" placeholder="كل رقم في سطر أو افصل بينها بفاصلة" />
-          </Field>
+          <div className="space-y-3 md:col-span-2">
+            <div className="flex items-center justify-between gap-3">
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200">أرقام الهاتف</label>
+              {customerForm.phoneNumbers.length < 2 && (
+                <button
+                  type="button"
+                  onClick={addCustomerPhoneField}
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  إضافة رقم هاتف ثاني
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              {customerForm.phoneNumbers.map((phone, index) => (
+                <div key={`customer-phone-${index}`} className="flex items-start gap-2">
+                  <div className="flex-1" dir="ltr">
+                    <PhoneInput
+                      international
+                      withCountryCallingCode
+                      defaultCountry={getPhoneDefaultCountry(customerForm.country)}
+                      value={phone || undefined}
+                      onChange={(value) => handleCustomerPhoneChange(index, value)}
+                      className="PhoneInput"
+                      numberInputProps={{
+                        className: "field-input",
+                        placeholder: index === 0 ? "أدخل رقم الهاتف الأساسي" : "أدخل رقم الهاتف الثاني",
+                      }}
+                    />
+                  </div>
+
+                  {customerForm.phoneNumbers.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeCustomerPhoneField(index)}
+                      className="mt-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300"
+                      aria-label="حذف رقم الهاتف"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
           <Field label="واتساب">
             <input value={customerForm.whatsappPhone} onChange={(event) => setCustomerForm((current) => ({ ...current, whatsappPhone: event.target.value }))} className="field-input" />
           </Field>
           <Field label="الدولة">
-            <input value={customerForm.country} onChange={(event) => setCustomerForm((current) => ({ ...current, country: event.target.value }))} className="field-input" />
+            <select value={customerForm.country} onChange={(event) => handleCustomerCountryChange(event.target.value)} className="field-input">
+              {WHOLESALE_COUNTRY_OPTIONS.map((country) => (
+                <option key={country} value={country}>{country}</option>
+              ))}
+            </select>
           </Field>
           <Field label="المدينة">
-            <input value={customerForm.city} onChange={(event) => setCustomerForm((current) => ({ ...current, city: event.target.value }))} className="field-input" />
+            <select value={customerForm.city} onChange={(event) => setCustomerForm((current) => ({ ...current, city: event.target.value }))} className="field-input" disabled={!customerForm.country}>
+              <option value="">اختر المدينة</option>
+              {availableCities.map((city) => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
           </Field>
           <Field label="المنطقة">
             <input value={customerForm.area} onChange={(event) => setCustomerForm((current) => ({ ...current, area: event.target.value }))} className="field-input" />
