@@ -159,9 +159,9 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         (user && isAdmin(user)) &&
         { icon: BadgePercent, label: "خصومات العروض", href: "/dashboard/offer-discounts" },
         (user && isAdmin(user)) &&
-        { icon: Ticket, label: "Affiliate", href: "/dashboard/affiliate" },
+        { icon: Ticket, label: "سفراء skynova", href: "/dashboard/affiliate" },
         (user && isAdmin(user)) &&
-        { icon: Users2, label: "مستخدمو الأفلييت", href: "/dashboard/affiliate/users" },
+        { icon: Users2, label: "مستخدمو سفراء skynova", href: "/dashboard/affiliate/users" },
       ].filter(Boolean)
     },
   ].filter(group => group.items.length > 0) : [];
