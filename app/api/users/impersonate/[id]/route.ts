@@ -1,5 +1,6 @@
 import { decrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withWholesalePermissionAliases } from "@/lib/wholesale-permissions";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -52,7 +53,7 @@ export async function GET(_: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: "ليس لديك صلاحية" }, { status: 403 });
     }
 
-    return NextResponse.json({ success: true, data: targetUser }, { status: 200 });
+    return NextResponse.json({ success: true, data: withWholesalePermissionAliases(targetUser) }, { status: 200 });
   } catch (error) {
     console.error("Impersonate User Error:", error);
     return NextResponse.json({ success: false, error: "فشل في تحميل المستخدم" }, { status: 500 });

@@ -1,6 +1,7 @@
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { PermissionKey, User } from './type';
+import { resolvePermissionKey } from './wholesale-permissions';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,11 +12,12 @@ export function isAdmin(user?: User | null) {
 }
 
 export function hasPermission(user: User | null | undefined, permission: PermissionKey) {
-  return isAdmin(user) || Boolean(user?.permission?.[permission]);
+  const resolvedPermission = resolvePermissionKey(permission);
+  return isAdmin(user) || Boolean(user?.permission?.[permission]) || Boolean(user?.permission?.[resolvedPermission]);
 }
 
 export function hasAnyPermission(user: User | null | undefined, permissions: PermissionKey[]) {
-  return isAdmin(user) || permissions.some((permission) => Boolean(user?.permission?.[permission]));
+  return isAdmin(user) || permissions.some((permission) => hasPermission(user, permission));
 }
 
 export function formatPhoneForDisplay(phone: string) {

@@ -699,6 +699,78 @@ export async function GetOrdersByCity(userId: string, dateFilter?: OrderDateFilt
   }
 }
 
+export async function GetWholesaleActiveRegions(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { permission: true },
+    });
+
+    if (!user) return { success: false, error: "User not found", data: [] };
+
+    const canViewWholesale = isAdmin(user)
+      || Boolean(user.permission?.viewCustomers)
+      || Boolean(user.permission?.addCustomers)
+      || Boolean(user.permission?.editCustomers)
+      || Boolean(user.permission?.deleteCustomers);
+
+    if (!canViewWholesale) {
+      return { success: false, error: "Unauthorized", data: [] };
+    }
+
+    const whereClause = isAdmin(user)
+      ? {}
+      : {
+          OR: [
+            { assignedUserId: userId },
+            { visits: { some: { userId } } },
+          ],
+        };
+
+    const customers = await prisma.wholesaleCustomer.findMany({
+      where: whereClause,
+      select: {
+        city: true,
+        area: true,
+        _count: {
+          select: {
+            visits: true,
+          },
+        },
+      },
+    });
+
+    const grouped = customers.reduce((acc, customer) => {
+      const city = String(customer.city || "غير محدد").trim() || "غير محدد";
+      const area = String(customer.area || "بدون منطقة").trim() || "بدون منطقة";
+      const key = `${city}__${area}`;
+
+      if (!acc[key]) {
+        acc[key] = {
+          city,
+          area,
+          customersCount: 0,
+          visitsCount: 0,
+        };
+      }
+
+      acc[key].customersCount += 1;
+      acc[key].visitsCount += Number(customer._count?.visits || 0);
+      return acc;
+    }, {} as Record<string, { city: string; area: string; customersCount: number; visitsCount: number }>);
+
+    const data = Object.values(grouped).sort((a, b) => {
+      if (b.customersCount !== a.customersCount) return b.customersCount - a.customersCount;
+      return b.visitsCount - a.visitsCount;
+    });
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error in GetWholesaleActiveRegions:", error);
+    return { success: false, data: [] };
+  }
+}
+
 export async function GetShippingTotalsByCompany(userId: string, dateFilter?: OrderDateFilter) {
   try {
     const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();

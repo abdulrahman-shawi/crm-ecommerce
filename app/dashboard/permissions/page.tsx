@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ShieldCheck, Save, CheckCircle2, Plus, Trash2, Loader2, Info, X, ChevronDown
@@ -16,22 +16,35 @@ export default function PermissionsPage() {
     const [loading, setLoading] = useState(false);
 
     const { user } = useAuth()
-    useEffect(() => {
-        fetchRoles();
-    }, []);
 
-    const fetchRoles = async () => {
+    const syncWholesalePermissions = (role: any) => {
+        if (!role) return role;
+        return {
+            ...role,
+            viewWholesaleCustomers: Boolean(role.viewWholesaleCustomers),
+            addWholesaleCustomers: Boolean(role.addWholesaleCustomers),
+            editWholesaleCustomers: Boolean(role.editWholesaleCustomers),
+            deleteWholesaleCustomers: Boolean(role.deleteWholesaleCustomers),
+        };
+    };
+
+    const fetchRoles = useCallback(async () => {
         try {
             const res = await fetch('/api/permissions');
             const response = await res.json();
             if (response.success && Array.isArray(response.data)) {
-                setRoles(response.data);
-                if (response.data.length > 0) setSelectedRole(response.data[0]);
+                const normalizedRoles = response.data.map(syncWholesalePermissions);
+                setRoles(normalizedRoles);
+                if (normalizedRoles.length > 0) setSelectedRole(normalizedRoles[0]);
             }
         } catch (err) {
             toast.error("خطأ في جلب البيانات");
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchRoles();
+    }, [fetchRoles]);
 
     const handleAddNewRole = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -43,8 +56,9 @@ export default function PermissionsPage() {
             const response = await result.json();
 
             if (response.success && response.data) {
-                setRoles(prev => [...prev, response.data]);
-                setSelectedRole(response.data);
+                const normalizedRole = syncWholesalePermissions(response.data);
+                setRoles(prev => [...prev, normalizedRole]);
+                setSelectedRole(normalizedRole);
                 setIsAddRoleModalOpen(false);
                 (e.target as HTMLFormElement).reset();
                 toast.success("تم إنشاء الدور بنجاح");
@@ -65,12 +79,14 @@ export default function PermissionsPage() {
         setSelectedRole((prevRole: any) => {
             const updated = { ...prevRole, [fieldName]: !prevRole[fieldName] };
 
+            const normalized = syncWholesalePermissions(updated);
+
             // تحديث المصفوفة الكلية أيضاً لضمان مزامنة القائمة الجانبية
             setRoles((prevRoles) =>
-                prevRoles.map(r => r.id === prevRole.id ? updated : r)
+                prevRoles.map(r => r.id === prevRole.id ? normalized : r)
             );
 
-            return updated;
+            return normalized;
         });
     };
 
@@ -133,7 +149,7 @@ export default function PermissionsPage() {
                                 {Array.isArray(roles) && roles.map((role) => (
                                     <div
                                         key={role?.id || Math.random()}
-                                        onClick={() => setSelectedRole(role)}
+                                        onClick={() => setSelectedRole(syncWholesalePermissions(role))}
                                         className={`group relative p-6 rounded-[2rem] border-2 cursor-pointer transition-all ${selectedRole?.id === role?.id
                                             ? 'bg-white dark:bg-slate-900 border-indigo-500 shadow-xl'
                                             : 'bg-slate-100/50 dark:bg-slate-900/50 border-transparent hover:border-slate-200'
@@ -186,6 +202,7 @@ export default function PermissionsPage() {
                                         <PermissionRow title="الطلبات" suffix="Orders" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الكفالة" suffix="Warranty" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="عملاء الجملة" suffix="WholesaleCustomers" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="المصاريف" suffix="Expenses" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الصلاحيات" suffix="Permissions" role={selectedRole} onToggle={togglePermission} />

@@ -18,6 +18,7 @@ import {
   GetSalesByStatusAction,
   GetSalesTimelineAction,
   GetTopSellingUsersByPermission,
+  GetWholesaleActiveRegions,
   GetWarrantyStatusProducts,
 } from "@/server/analytics";
 import {
@@ -123,6 +124,7 @@ const AnalyticPage: React.FC = () => {
     details: { damaged: any[]; replacement: any[]; maintenance: any[] };
   }>({ success: true, data: { damaged: [], replacement: [], maintenance: [] }, details: { damaged: [], replacement: [], maintenance: [] } });
   const [topSellingUsers, setTopSellingUsers] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
+  const [wholesaleRegions, setWholesaleRegions] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [timelineData, setTimelineData] = React.useState<any[]>([]);
   const [msgTimeline, setMsgTimeline] = React.useState<{ success: boolean; data: any[] }>({ success: true, data: [] });
   const [employeeCustomerReport, setEmployeeCustomerReport] = React.useState<{ success: boolean; data: any[] }>({
@@ -336,6 +338,7 @@ const AnalyticPage: React.FC = () => {
           resLowStock,
           resWarrantyStatusProducts,
           resTopUsers,
+          resWholesaleRegions,
           resTimeline,
           resMsgTimeline,
         ] = await Promise.all([
@@ -349,6 +352,7 @@ const AnalyticPage: React.FC = () => {
           GetLowStockProducts(user.id),
           GetWarrantyStatusProducts(user.id, orderDateFilter),
           GetTopSellingUsersByPermission(user.id, orderDateFilter),
+          GetWholesaleActiveRegions(user.id),
           GetSalesTimelineAction(user.id, orderDateFilter),
           GetCustomerAcquisitionMonth(user.id, orderDateFilter),
         ]);
@@ -363,6 +367,7 @@ const AnalyticPage: React.FC = () => {
         setLowStock(resLowStock as any);
         setWarrantyStatusProducts(resWarrantyStatusProducts as any);
         setTopSellingUsers(resTopUsers as any);
+        setWholesaleRegions(resWholesaleRegions as any);
         setTimelineData((resTimeline as any)?.data || []);
         setMsgTimeline(resMsgTimeline as any);
       } catch (error) {
@@ -416,6 +421,7 @@ const AnalyticPage: React.FC = () => {
     (warrantyStatusProducts.data?.replacement?.length || 0) > 0 ||
     (warrantyStatusProducts.data?.maintenance?.length || 0) > 0;
   const showTopSellingUsers = loading || (topSellingUsers.data?.length || 0) > 0;
+  const showWholesaleRegions = loading || (wholesaleRegions.data?.length || 0) > 0;
   const showEmployeeCustomerReport = employeeReportLoading || (employeeCustomerReport.data?.length || 0) > 0;
   const selectedWarrantyDetails = selectedWarrantyCard ? warrantyStatusProducts.details?.[selectedWarrantyCard.key] || [] : [];
 
@@ -894,6 +900,26 @@ const AnalyticPage: React.FC = () => {
                 <Tooltip formatter={(value: number | undefined) => [`${formatUSD(value)}$`, "إجمالي المبيعات"]} />
               </PieChart>
             </ResponsiveContainer>
+          </DynamicCard.Content>
+        </DynamicCard>
+      )}
+
+      {showWholesaleRegions && (
+        <DynamicCard isLoading={loading} isError={!wholesaleRegions.success} isEmpty={!loading && wholesaleRegions.data?.length === 0} variant="glass" className="mt-6">
+          <DynamicCard.Header title="المناطق النشطة لعملاء الجملة" description="توزيع العملاء والزيارات حسب المدينة والمنطقة" icon={<MapPin size={20} className="text-fuchsia-500" />} />
+          <DynamicCard.Content className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {wholesaleRegions.data?.map((item: any) => (
+              <div key={`${item.city}-${item.area}`} className="flex justify-between items-center p-4 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-slate-800 min-h-24 gap-4">
+                <div className="flex flex-col justify-center">
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">{item.city || "غير محدد"}</span>
+                  <span className="text-xs text-slate-500">{item.area || "بدون منطقة"}</span>
+                </div>
+                <div className="text-left">
+                  <div className="text-fuchsia-600 dark:text-fuchsia-400 font-bold text-lg">{Number(item.customersCount || 0).toLocaleString()} عميل</div>
+                  <div className="text-xs text-slate-500">{Number(item.visitsCount || 0).toLocaleString()} زيارة</div>
+                </div>
+              </div>
+            ))}
           </DynamicCard.Content>
         </DynamicCard>
       )}

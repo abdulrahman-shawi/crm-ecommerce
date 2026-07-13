@@ -1,6 +1,7 @@
 import { decrypt } from "@/lib/auth";
 import { isAffiliateAccount } from "@/lib/affiliate";
 import { prisma } from "@/lib/prisma";
+import { withWholesalePermissionAliases } from "@/lib/wholesale-permissions";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -49,7 +50,7 @@ export async function GET() {
 
         return NextResponse.json({ 
             success: true, 
-            data: users 
+            data: users ? withWholesalePermissionAliases(users) : users 
         }, { status: 200 });
     } catch (error) {
         console.error("Fetch Users Error:", error);

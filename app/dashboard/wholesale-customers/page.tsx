@@ -11,7 +11,6 @@ import {
   Pencil,
   Phone,
   Plus,
-  Route,
   Trash2,
   UserRound,
   ClipboardList,
@@ -19,7 +18,7 @@ import {
 import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { formatPhoneForDisplay, hasAnyPermission, isAdmin } from "@/lib/utils";
+import { formatPhoneForDisplay, hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
 import {
   createWholesaleCustomer,
   createWholesaleVisit,
@@ -42,6 +41,8 @@ type WholesaleVisit = {
   visitedAt: string | Date;
   result: string;
   status: string;
+  rejectionReasonCode?: string | null;
+  rejectionReasonOther?: string | null;
   notes: string | null;
   voiceNote: string | null;
   photoUrls: string[];
@@ -63,6 +64,7 @@ type WholesaleCustomer = {
   id: string;
   name: string;
   category: string;
+  categoryOther?: string | null;
   contactName: string | null;
   phone: string[];
   whatsappPhone: string | null;
@@ -93,6 +95,7 @@ type WholesaleCustomer = {
 type CustomerFormState = {
   name: string;
   category: string;
+  categoryOther: string;
   contactName: string;
   phoneNumbers: string[];
   whatsappPhone: string;
@@ -115,24 +118,28 @@ type VisitFormState = {
   userId: string;
   visitedAt: string;
   result: string;
-  status: string;
   notes: string;
-  voiceNote: string;
-  photoUrlsText: string;
-  latitude: string;
-  longitude: string;
   nextFollowUpAt: string;
   followUpNotes: string;
-  orderPlaced: boolean;
+  rejectionReasonCode: string;
+  rejectionReasonOther: string;
 };
 
-const CATEGORY_OPTIONS = [
-  { value: "PHARMACY", label: "صيدلية" },
-  { value: "MARKET", label: "سوبر ماركت" },
-  { value: "CLINIC", label: "عيادة" },
-  { value: "DISTRIBUTOR", label: "موزع" },
-  { value: "OTHER", label: "أخرى" },
+const ACTIVITY_OPTIONS = [
+  { value: "PHARMACY", label: "🏥 صيدلية" },
+  { value: "SALON", label: "💇 كوافير / صالون تجميل" },
+  { value: "BEAUTY_STORE", label: "💄 محل تجميل" },
+  { value: "ELECTRONICS_STORE", label: "⚡ محل أجهزة كهربائية" },
+  { value: "DISTRIBUTOR", label: "📦 موزع / تاجر جملة" },
+  { value: "ONLINE_STORE", label: "🌐 متجر إلكتروني" },
+  { value: "COMPANY", label: "🏢 شركة" },
+  { value: "OTHER", label: "❓ أخرى" },
 ];
+
+const LEGACY_ACTIVITY_LABELS: Record<string, string> = {
+  MARKET: "سوبر ماركت",
+  CLINIC: "عيادة",
+};
 
 const WHOLESALE_COUNTRY_OPTIONS = ["سوريا", "تركيا"] as const;
 
@@ -168,11 +175,23 @@ const WHOLESALE_CITIES_BY_COUNTRY: Record<(typeof WHOLESALE_COUNTRY_OPTIONS)[num
 };
 
 const VISIT_RESULT_OPTIONS = [
-  { value: "VERY_INTERESTED", label: "مهتم جداً" },
-  { value: "INTERESTED", label: "مهتم" },
-  { value: "THINKING", label: "يفكر" },
-  { value: "NOT_INTERESTED", label: "غير مهتم" },
-  { value: "PURCHASED", label: "تم الشراء" },
+  { value: "VERY_INTERESTED", label: "🔥 فرصة ساخنة" },
+  { value: "INTERESTED", label: "✨ فرصة" },
+  { value: "THINKING", label: "🔄 متابعة" },
+  { value: "NOT_INTERESTED", label: "🔴 مرفوض" },
+  { value: "PURCHASED", label: "💰 تم البيع" },
+];
+
+const REJECTION_REASON_OPTIONS = [
+  { value: "PRICE_HIGH", label: "💰 السعر مرتفع." },
+  { value: "NO_DEMAND", label: "📦 لا يوجد طلب على المنتج." },
+  { value: "COMPETITOR_BRAND", label: "🏷️ يبيع ماركة منافسة." },
+  { value: "NO_BEAUTY_DEVICES", label: "🚫 لا يبيع أجهزة تجميل." },
+  { value: "NOT_DECISION_MAKER", label: "👤 ليس صاحب القرار." },
+  { value: "REVIEW_LATER", label: "⏳ طلب المراجعة لاحقًا." },
+  { value: "NOT_CONVINCED", label: "❌ غير مقتنع بالمنتج." },
+  { value: "FIXED_SUPPLIER", label: "🤝 لديه مورد ثابت." },
+  { value: "OTHER", label: "✍️ سبب آخر" },
 ];
 
 const VISIT_STATUS_OPTIONS = [
@@ -186,6 +205,7 @@ function createEmptyCustomerForm(): CustomerFormState {
   return {
     name: "",
     category: "PHARMACY",
+    categoryOther: "",
     contactName: "",
     phoneNumbers: [""],
     whatsappPhone: "",
@@ -210,15 +230,11 @@ function createEmptyVisitForm(): VisitFormState {
     userId: "",
     visitedAt: toDateTimeLocalValue(new Date()),
     result: "INTERESTED",
-    status: "VISITED",
     notes: "",
-    voiceNote: "",
-    photoUrlsText: "",
-    latitude: "",
-    longitude: "",
     nextFollowUpAt: "",
     followUpNotes: "",
-    orderPlaced: false,
+    rejectionReasonCode: "",
+    rejectionReasonOther: "",
   };
 }
 
@@ -270,8 +286,17 @@ function parseOptionalNumber(value: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function getCategoryLabel(value: string) {
-  return CATEGORY_OPTIONS.find((item) => item.value === value)?.label ?? value;
+function isFollowUpResult(value: string) {
+  return value === "VERY_INTERESTED" || value === "INTERESTED" || value === "THINKING";
+}
+
+function isRejectedResult(value: string) {
+  return value === "NOT_INTERESTED";
+}
+
+function getCategoryLabel(value: string, other?: string | null) {
+  if (value === "OTHER" && other) return other;
+  return ACTIVITY_OPTIONS.find((item) => item.value === value)?.label ?? LEGACY_ACTIVITY_LABELS[value] ?? other ?? value;
 }
 
 function getVisitResultLabel(value: string | null | undefined) {
@@ -283,12 +308,10 @@ function getVisitStatusLabel(value: string) {
   return VISIT_STATUS_OPTIONS.find((item) => item.value === value)?.label ?? value;
 }
 
-function getVisibleCustomers(customers: WholesaleCustomer[], userId?: string, admin?: boolean) {
-  if (admin || !userId) return customers;
-  return customers.filter((customer) => {
-    if (customer.assignedUserId === userId) return true;
-    return customer.visits.some((visit) => visit.user?.id === userId);
-  });
+function getRejectionReasonLabel(code?: string | null, other?: string | null) {
+  if (!code) return "-";
+  if (code === "OTHER") return other || "سبب آخر";
+  return REJECTION_REASON_OPTIONS.find((item) => item.value === code)?.label ?? other ?? code;
 }
 
 export default function WholesaleCustomersPage() {
@@ -308,16 +331,22 @@ export default function WholesaleCustomersPage() {
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
   const [isPending, startTransition] = React.useTransition();
   const [isLoading, setIsLoading] = React.useState(true);
+  const isUserAdmin = isAdmin(user);
 
   const availableCities = React.useMemo(() => {
     if (!isWholesaleCountry(customerForm.country)) return [];
     return WHOLESALE_CITIES_BY_COUNTRY[customerForm.country];
   }, [customerForm.country]);
 
-  const canManageWholesale = React.useMemo(() => {
+  const canAccessWholesale = React.useMemo(() => {
     if (!user) return false;
-    return hasAnyPermission(user, ["viewCustomers", "addCustomers", "editCustomers", "deleteCustomers"]);
+    return hasAnyPermission(user, ["viewWholesaleCustomers", "addWholesaleCustomers", "editWholesaleCustomers", "deleteWholesaleCustomers"]);
   }, [user]);
+
+  const canAddWholesale = Boolean(user && hasPermission(user, "addWholesaleCustomers"));
+  const canEditWholesale = Boolean(user && hasPermission(user, "editWholesaleCustomers"));
+  const canDeleteWholesale = Boolean(user && hasPermission(user, "deleteWholesaleCustomers"));
+  const canRegisterVisit = canEditWholesale || canAddWholesale;
 
   const loadData = React.useCallback(async () => {
     setIsLoading(true);
@@ -343,18 +372,17 @@ export default function WholesaleCustomersPage() {
 
   React.useEffect(() => {
     if (loading) return;
-    if (!canManageWholesale) {
+    if (!canAccessWholesale) {
       setIsLoading(false);
       return;
     }
     void loadData();
-  }, [canManageWholesale, loadData, loading]);
+  }, [canAccessWholesale, loadData, loading]);
 
   const visibleCustomers = React.useMemo(() => {
-    const scoped = getVisibleCustomers(customers, user?.id, isAdmin(user));
     const normalizedSearch = deferredSearch.trim().toLowerCase();
 
-    return scoped.filter((customer) => {
+    return customers.filter((customer) => {
       const matchesSearch = !normalizedSearch
         ? true
         : [
@@ -365,6 +393,7 @@ export default function WholesaleCustomersPage() {
             customer.country,
             customer.address,
             customer.assignedUser?.username,
+            getCategoryLabel(customer.category, customer.categoryOther),
             ...customer.phone,
           ]
             .filter(Boolean)
@@ -376,7 +405,7 @@ export default function WholesaleCustomersPage() {
 
       return matchesSearch && matchesCategory && matchesStatus && matchesRep;
     });
-  }, [customers, deferredSearch, selectedCategory, selectedRepId, selectedStatus, user]);
+  }, [customers, deferredSearch, selectedCategory, selectedRepId, selectedStatus]);
 
   const selectedCustomer = React.useMemo(() => {
     return visibleCustomers.find((customer) => customer.id === selectedCustomerId) ?? visibleCustomers[0] ?? null;
@@ -393,19 +422,28 @@ export default function WholesaleCustomersPage() {
   }, [selectedCustomer, visibleCustomers]);
 
   const stats = React.useMemo(() => {
-    const total = visibleCustomers.length;
-    const dueFollowUp = visibleCustomers.filter((customer) => {
-      if (!customer.nextFollowUpAt) return false;
-      return new Date(customer.nextFollowUpAt).getTime() <= Date.now();
-    }).length;
-    const purchased = visibleCustomers.filter((customer) => customer.lastVisitResult === "PURCHASED").length;
-    const activeRoutes = new Set(
-      visibleCustomers
-        .map((customer) => `${customer.city || ""}-${customer.area || ""}`)
-        .filter((value) => value !== "-")
-    ).size;
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    return { total, dueFollowUp, purchased, activeRoutes };
+    const total = visibleCustomers.length;
+    const todayVisits = visibleCustomers.reduce((count, customer) => {
+      return count + customer.visits.filter((visit) => {
+        const visitedAt = new Date(visit.visitedAt);
+        return !Number.isNaN(visitedAt.getTime()) && visitedAt >= startOfToday;
+      }).length;
+    }, 0);
+    const hotLeads = visibleCustomers.filter((customer) => customer.lastVisitResult === "VERY_INTERESTED").length;
+    const monthlySales = visibleCustomers.reduce((count, customer) => {
+      return count + customer.visits.filter((visit) => {
+        const visitedAt = new Date(visit.visitedAt);
+        return !Number.isNaN(visitedAt.getTime())
+          && visitedAt >= startOfMonth
+          && (visit.orderPlaced || visit.result === "PURCHASED");
+      }).length;
+    }, 0);
+
+    return { total, todayVisits, hotLeads, monthlySales };
   }, [visibleCustomers]);
 
   function openCreateCustomerModal() {
@@ -419,6 +457,7 @@ export default function WholesaleCustomersPage() {
     setCustomerForm({
       name: customer.name,
       category: customer.category,
+      categoryOther: customer.categoryOther || "",
       contactName: customer.contactName || "",
       phoneNumbers: customer.phone.length > 0 ? customer.phone : [""],
       whatsappPhone: customer.whatsappPhone || "",
@@ -447,6 +486,17 @@ export default function WholesaleCustomersPage() {
       nextFollowUpAt: toDateTimeLocalValue(customer.nextFollowUpAt),
     });
     setIsVisitModalOpen(true);
+  }
+
+  function handleVisitResultChange(value: string) {
+    setVisitForm((current) => ({
+      ...current,
+      result: value,
+      nextFollowUpAt: isFollowUpResult(value) ? current.nextFollowUpAt : "",
+      followUpNotes: isFollowUpResult(value) ? current.followUpNotes : "",
+      rejectionReasonCode: isRejectedResult(value) ? current.rejectionReasonCode : "",
+      rejectionReasonOther: isRejectedResult(value) ? current.rejectionReasonOther : "",
+    }));
   }
 
   function resetFilters() {
@@ -507,6 +557,8 @@ export default function WholesaleCustomersPage() {
       const payload = {
         name: customerForm.name,
         category: customerForm.category,
+        activityKey: customerForm.category,
+        categoryOther: customerForm.categoryOther,
         contactName: customerForm.contactName,
         phone: normalizedPhones,
         whatsappPhone: customerForm.whatsappPhone,
@@ -534,7 +586,7 @@ export default function WholesaleCustomersPage() {
         return;
       }
 
-      toast.success(editingCustomerId ? "تم تعديل عميل الجملة" : "تمت إضافة عميل الجملة");
+      toast.success(editingCustomerId ? "تم تعديل العميل" : "تمت إضافة عميل جديد");
       setIsCustomerModalOpen(false);
       await loadData();
       const createdId = (response.data as WholesaleCustomer | undefined)?.id;
@@ -550,21 +602,37 @@ export default function WholesaleCustomersPage() {
       return;
     }
 
+    if (isFollowUpResult(visitForm.result) && !visitForm.nextFollowUpAt) {
+      toast.error("حدد موعد المتابعة");
+      return;
+    }
+
+    if (isFollowUpResult(visitForm.result) && !visitForm.followUpNotes.trim()) {
+      toast.error("حدد الإجراء القادم");
+      return;
+    }
+
+    if (isRejectedResult(visitForm.result) && !visitForm.rejectionReasonCode) {
+      toast.error("حدد سبب عدم التعاون");
+      return;
+    }
+
+    if (visitForm.rejectionReasonCode === "OTHER" && !visitForm.rejectionReasonOther.trim()) {
+      toast.error("اكتب سبب عدم التعاون");
+      return;
+    }
+
     startTransition(async () => {
       const response = await createWholesaleVisit({
         wholesaleCustomerId: selectedCustomerId,
         userId: visitForm.userId || undefined,
         visitedAt: visitForm.visitedAt,
         result: visitForm.result,
-        status: visitForm.status,
         notes: visitForm.notes,
-        voiceNote: visitForm.voiceNote,
-        photoUrls: parseTextList(visitForm.photoUrlsText),
-        latitude: parseOptionalNumber(visitForm.latitude),
-        longitude: parseOptionalNumber(visitForm.longitude),
         nextFollowUpAt: visitForm.nextFollowUpAt,
         followUpNotes: visitForm.followUpNotes,
-        orderPlaced: visitForm.orderPlaced,
+        rejectionReasonCode: visitForm.rejectionReasonCode,
+        rejectionReasonOther: visitForm.rejectionReasonOther,
       });
 
       if (!response.success) {
@@ -607,7 +675,7 @@ export default function WholesaleCustomersPage() {
     );
   }
 
-  if (!canManageWholesale) {
+  if (!canAccessWholesale) {
     return (
       <div className="p-6 md:p-8" dir="rtl">
         <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-700 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
@@ -638,8 +706,8 @@ export default function WholesaleCustomersPage() {
             <Button variant="secondary" size="md" onClick={() => selectedCustomer && openVisitModal(selectedCustomer)} leftIcon={<ClipboardList className="h-4 w-4" />} disabled={!selectedCustomer}>
               تسجيل زيارة
             </Button>
-            <Button variant="primary" size="md" onClick={openCreateCustomerModal} leftIcon={<Plus className="h-4 w-4" />} className="bg-white text-blue-700 hover:bg-blue-50">
-              إضافة عميل جملة
+            <Button variant="primary" size="md" onClick={openCreateCustomerModal} leftIcon={<Plus className="h-4 w-4" />} className="bg-white text-blue-700 hover:bg-blue-50" disabled={!canAddWholesale}>
+              إضافة عميل جديد
             </Button>
           </div>
         </div>
@@ -647,13 +715,13 @@ export default function WholesaleCustomersPage() {
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard title="إجمالي العملاء" value={stats.total} icon={<Building2 className="h-5 w-5" />} tone="blue" />
-        <StatCard title="متابعات مستحقة" value={stats.dueFollowUp} icon={<CalendarClock className="h-5 w-5" />} tone="amber" />
-        <StatCard title="تم الشراء" value={stats.purchased} icon={<CheckCircle2 className="h-5 w-5" />} tone="emerald" />
-        <StatCard title="مناطق نشطة" value={stats.activeRoutes} icon={<Route className="h-5 w-5" />} tone="fuchsia" />
+        <StatCard title="زيارات اليوم" value={stats.todayVisits} icon={<CalendarClock className="h-5 w-5" />} tone="amber" />
+        <StatCard title="الفرص الساخنة" value={stats.hotLeads} icon={<CheckCircle2 className="h-5 w-5" />} tone="emerald" />
+        <StatCard title="المبيعات هذا الشهر" value={stats.monthlySales} icon={<ClipboardList className="h-5 w-5" />} tone="fuchsia" />
       </section>
 
       <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-        <div className="grid gap-3 lg:grid-cols-[2fr,1fr,1fr,1fr,auto]">
+        <div className={`grid gap-3 ${isUserAdmin ? "lg:grid-cols-[2fr,1fr,1fr,1fr,auto]" : "lg:grid-cols-[2fr,1fr,1fr,auto]"}`}>
           <div>
             <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">بحث</label>
             <input
@@ -665,14 +733,14 @@ export default function WholesaleCustomersPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">نوع العميل</label>
+            <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">نوع النشاط</label>
             <select
               value={selectedCategory}
               onChange={(event) => setSelectedCategory(event.target.value)}
               className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:bg-slate-950"
             >
               <option value="ALL">الكل</option>
-              {CATEGORY_OPTIONS.map((option) => (
+              {ACTIVITY_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
@@ -692,6 +760,7 @@ export default function WholesaleCustomersPage() {
             </select>
           </div>
 
+          {isUserAdmin && (
           <div>
             <label className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-200">المندوب</label>
             <select
@@ -705,6 +774,7 @@ export default function WholesaleCustomersPage() {
               ))}
             </select>
           </div>
+          )}
 
           <div className="flex items-end">
             <Button variant="outline" size="md" onClick={resetFilters} className="w-full lg:w-auto">
@@ -746,7 +816,7 @@ export default function WholesaleCustomersPage() {
                       <td className="px-4 py-4">
                         <button type="button" onClick={() => setSelectedCustomerId(customer.id)} className="text-right">
                           <div className="font-bold text-slate-900 dark:text-slate-100">{customer.name}</div>
-                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category)}</div>
+                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category, customer.categoryOther)}</div>
                           <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
                             {customer.phone.slice(0, 2).map((phone) => (
                               <span key={phone} className="rounded-full bg-slate-100 px-2 py-1 dark:bg-slate-800 dark:text-slate-200">
@@ -770,13 +840,13 @@ export default function WholesaleCustomersPage() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-2">
-                          <Button variant="outline" size="sm" onClick={() => openEditCustomerModal(customer)} leftIcon={<Pencil className="h-3.5 w-3.5" />}>
+                          <Button variant="outline" size="sm" onClick={() => openEditCustomerModal(customer)} leftIcon={<Pencil className="h-3.5 w-3.5" />} disabled={!canEditWholesale}>
                             تعديل
                           </Button>
-                          <Button variant="secondary" size="sm" onClick={() => openVisitModal(customer)} leftIcon={<Plus className="h-3.5 w-3.5" />}>
+                          <Button variant="secondary" size="sm" onClick={() => openVisitModal(customer)} leftIcon={<Plus className="h-3.5 w-3.5" />} disabled={!canRegisterVisit}>
                             زيارة
                           </Button>
-                          <Button variant="danger" size="sm" onClick={() => handleDeleteCustomer(customer)} leftIcon={<Trash2 className="h-3.5 w-3.5" />}>
+                          <Button variant="danger" size="sm" onClick={() => handleDeleteCustomer(customer)} leftIcon={<Trash2 className="h-3.5 w-3.5" />} disabled={!canDeleteWholesale}>
                             حذف
                           </Button>
                         </div>
@@ -803,7 +873,7 @@ export default function WholesaleCustomersPage() {
               <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
                 <div>
                   <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{selectedCustomer.name}</h2>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{getCategoryLabel(selectedCustomer.category)}</p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{getCategoryLabel(selectedCustomer.category, selectedCustomer.categoryOther)}</p>
                 </div>
                 <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                   {getVisitStatusLabel(selectedCustomer.visitStatus)}
@@ -811,6 +881,7 @@ export default function WholesaleCustomersPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
+                <InfoCard icon={<Building2 className="h-4 w-4" />} label="نوع النشاط" value={getCategoryLabel(selectedCustomer.category, selectedCustomer.categoryOther)} />
                 <InfoCard icon={<UserRound className="h-4 w-4" />} label="المندوب" value={selectedCustomer.assignedUser?.username || "غير مسند"} />
                 <InfoCard icon={<Phone className="h-4 w-4" />} label="هاتف" value={selectedCustomer.phone.map(formatPhoneForDisplay).join(" - ") || "-"} />
                 <InfoCard icon={<MapPin className="h-4 w-4" />} label="المنطقة" value={[selectedCustomer.city, selectedCustomer.area].filter(Boolean).join(" - ") || "-"} />
@@ -824,7 +895,7 @@ export default function WholesaleCustomersPage() {
 
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-black text-slate-900 dark:text-slate-100">سجل الزيارات</h3>
-                <Button variant="outline" size="sm" onClick={() => openVisitModal(selectedCustomer)} leftIcon={<Plus className="h-3.5 w-3.5" />}>
+                <Button variant="outline" size="sm" onClick={() => openVisitModal(selectedCustomer)} leftIcon={<Plus className="h-3.5 w-3.5" />} disabled={!canRegisterVisit}>
                   إضافة زيارة
                 </Button>
               </div>
@@ -852,7 +923,8 @@ export default function WholesaleCustomersPage() {
                       <div>المندوب: {visit.user?.username || "غير محدد"}</div>
                       <div>المتابعة التالية: {formatDateLabel(visit.nextFollowUpAt)}</div>
                       <div>الملاحظات: {visit.notes || "-"}</div>
-                      <div>ملاحظات المتابعة: {visit.followUpNotes || "-"}</div>
+                      <div>الإجراء القادم: {visit.followUpNotes || "-"}</div>
+                      {visit.rejectionReasonCode && <div>سبب عدم التعاون: {getRejectionReasonLabel(visit.rejectionReasonCode, visit.rejectionReasonOther)}</div>}
                     </div>
                   </div>
                 ))}
@@ -869,7 +941,7 @@ export default function WholesaleCustomersPage() {
       <AppModal
         isOpen={isCustomerModalOpen}
         onClose={() => setIsCustomerModalOpen(false)}
-        title={editingCustomerId ? "تعديل عميل جملة" : "إضافة عميل جملة"}
+        title={editingCustomerId ? "تعديل العميل" : "إضافة عميل جديد"}
         description="أدخل بيانات الجهة المستهدفة والمندوب المسؤول عنها."
         size="xl"
         footer={
@@ -883,16 +955,25 @@ export default function WholesaleCustomersPage() {
           <Field label="اسم العميل">
             <input value={customerForm.name} onChange={(event) => setCustomerForm((current) => ({ ...current, name: event.target.value }))} className="field-input" />
           </Field>
-          <Field label="نوع العميل">
+          <Field label="نوع النشاط">
             <select value={customerForm.category} onChange={(event) => setCustomerForm((current) => ({ ...current, category: event.target.value }))} className="field-input">
-              {CATEGORY_OPTIONS.map((option) => (
+              {!ACTIVITY_OPTIONS.some((option) => option.value === customerForm.category) && (
+                <option value={customerForm.category}>{getCategoryLabel(customerForm.category, customerForm.categoryOther)}</option>
+              )}
+              {ACTIVITY_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </Field>
+          {customerForm.category === "OTHER" && (
+            <Field label="ما هو نوع النشاط؟">
+              <input value={customerForm.categoryOther} onChange={(event) => setCustomerForm((current) => ({ ...current, categoryOther: event.target.value }))} className="field-input" placeholder="اكتب نوع النشاط" />
+            </Field>
+          )}
           <Field label="اسم جهة التواصل">
             <input value={customerForm.contactName} onChange={(event) => setCustomerForm((current) => ({ ...current, contactName: event.target.value }))} className="field-input" />
           </Field>
+          {isUserAdmin ? (
           <Field label="المندوب المسؤول">
             <select value={customerForm.assignedUserId} onChange={(event) => setCustomerForm((current) => ({ ...current, assignedUserId: event.target.value }))} className="field-input">
               <option value="">غير مسند</option>
@@ -901,6 +982,11 @@ export default function WholesaleCustomersPage() {
               ))}
             </select>
           </Field>
+          ) : (
+          <Field label="المندوب المسؤول">
+            <input value={user?.username || ""} className="field-input" disabled />
+          </Field>
+          )}
           <div className="space-y-3 md:col-span-2">
             <div className="flex items-center justify-between gap-3">
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-200">أرقام الهاتف</label>
@@ -1023,8 +1109,39 @@ export default function WholesaleCustomersPage() {
           </>
         }
       >
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="المندوب">
+        <div className="space-y-5">
+          <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">1. إنشاء العميل</div>
+            <div className="grid gap-3 md:grid-cols-2 text-sm text-slate-600 dark:text-slate-300">
+              <div>اسم العميل: {selectedCustomer?.name || "-"}</div>
+              <div>تاريخ الإنشاء: {formatDateLabel(selectedCustomer?.createdAt)}</div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">2. نوع النشاط</div>
+            <div className="text-sm text-slate-600 dark:text-slate-300">{selectedCustomer ? getCategoryLabel(selectedCustomer.category, selectedCustomer.categoryOther) : "-"}</div>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">3. بيانات التواصل</div>
+            <div className="grid gap-3 md:grid-cols-2 text-sm text-slate-600 dark:text-slate-300">
+              <div>اسم جهة التواصل: {selectedCustomer?.contactName || "-"}</div>
+              <div>الهاتف: {selectedCustomer?.phone.map(formatPhoneForDisplay).join(" - ") || "-"}</div>
+              <div>واتساب: {selectedCustomer?.whatsappPhone || "-"}</div>
+              <div>العنوان: {[selectedCustomer?.city, selectedCustomer?.area, selectedCustomer?.address].filter(Boolean).join(" - ") || "-"}</div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">4. الملاحظات</div>
+            <textarea value={visitForm.notes} onChange={(event) => setVisitForm((current) => ({ ...current, notes: event.target.value }))} className="field-input min-h-[100px]" placeholder={selectedCustomer?.notes || "أضف ملاحظات الزيارة هنا"} />
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">5. نتيجة الزيارة</div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="المندوب">
             <select value={visitForm.userId} onChange={(event) => setVisitForm((current) => ({ ...current, userId: event.target.value }))} className="field-input">
               <option value="">غير محدد</option>
               {salesReps.map((rep) => (
@@ -1032,54 +1149,62 @@ export default function WholesaleCustomersPage() {
               ))}
             </select>
           </Field>
-          <Field label="تاريخ الزيارة">
+              <Field label="تاريخ الزيارة">
             <input type="datetime-local" value={visitForm.visitedAt} onChange={(event) => setVisitForm((current) => ({ ...current, visitedAt: event.target.value }))} className="field-input" />
           </Field>
-          <Field label="نتيجة الزيارة">
-            <select value={visitForm.result} onChange={(event) => setVisitForm((current) => ({ ...current, result: event.target.value }))} className="field-input">
+              <Field label="نتيجة الزيارة">
+            <select value={visitForm.result} onChange={(event) => handleVisitResultChange(event.target.value)} className="field-input">
               {VISIT_RESULT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </Field>
-          <Field label="الحالة بعد الزيارة">
-            <select value={visitForm.status} onChange={(event) => setVisitForm((current) => ({ ...current, status: event.target.value }))} className="field-input">
+              <Field label="الحالة بعد الزيارة">
+            <select value={isRejectedResult(visitForm.result) || visitForm.result === "PURCHASED" ? "CLOSED" : isFollowUpResult(visitForm.result) ? "FOLLOW_UP_REQUIRED" : "VISITED"} className="field-input" disabled>
               {VISIT_STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </Field>
-          <Field label="موعد المتابعة القادم">
-            <input type="datetime-local" value={visitForm.nextFollowUpAt} onChange={(event) => setVisitForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="تم الشراء؟">
-            <label className="flex h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-              <input type="checkbox" checked={visitForm.orderPlaced} onChange={(event) => setVisitForm((current) => ({ ...current, orderPlaced: event.target.checked }))} />
-              نعم، تم الشراء بعد الزيارة
-            </label>
-          </Field>
-          <div className="md:col-span-2">
-            <Field label="ملاحظات الزيارة">
-              <textarea value={visitForm.notes} onChange={(event) => setVisitForm((current) => ({ ...current, notes: event.target.value }))} className="field-input min-h-[100px]" />
-            </Field>
+            </div>
           </div>
-          <div className="md:col-span-2">
-            <Field label="ملاحظات المتابعة">
-              <textarea value={visitForm.followUpNotes} onChange={(event) => setVisitForm((current) => ({ ...current, followUpNotes: event.target.value }))} className="field-input min-h-[100px]" />
-            </Field>
-          </div>
-          <Field label="رابط الملاحظة الصوتية">
-            <input value={visitForm.voiceNote} onChange={(event) => setVisitForm((current) => ({ ...current, voiceNote: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="روابط الصور">
-            <textarea value={visitForm.photoUrlsText} onChange={(event) => setVisitForm((current) => ({ ...current, photoUrlsText: event.target.value }))} className="field-input min-h-[100px]" placeholder="كل رابط في سطر أو افصل بينها بفاصلة" />
-          </Field>
-          <Field label="خط العرض">
-            <input value={visitForm.latitude} onChange={(event) => setVisitForm((current) => ({ ...current, latitude: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="خط الطول">
-            <input value={visitForm.longitude} onChange={(event) => setVisitForm((current) => ({ ...current, longitude: event.target.value }))} className="field-input" />
-          </Field>
+
+          {isFollowUpResult(visitForm.result) && (
+            <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+              <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">6. المتابعة القادمة</div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="موعد المتابعة">
+                  <input type="datetime-local" value={visitForm.nextFollowUpAt} onChange={(event) => setVisitForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
+                </Field>
+                <div className="md:col-span-2">
+                  <Field label="الإجراء القادم">
+                    <textarea value={visitForm.followUpNotes} onChange={(event) => setVisitForm((current) => ({ ...current, followUpNotes: event.target.value }))} className="field-input min-h-[100px]" />
+                  </Field>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isRejectedResult(visitForm.result) && (
+            <div className="rounded-3xl border border-red-200 bg-red-50/70 p-4 dark:border-red-900/50 dark:bg-red-950/20">
+              <div className="mb-3 text-sm font-black text-red-700 dark:text-red-300">سبب عدم التعاون</div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="اختر السبب">
+                  <select value={visitForm.rejectionReasonCode} onChange={(event) => setVisitForm((current) => ({ ...current, rejectionReasonCode: event.target.value }))} className="field-input">
+                    <option value="">اختر السبب</option>
+                    {REJECTION_REASON_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </Field>
+                {visitForm.rejectionReasonCode === "OTHER" && (
+                  <Field label="اكتب السبب">
+                    <input value={visitForm.rejectionReasonOther} onChange={(event) => setVisitForm((current) => ({ ...current, rejectionReasonOther: event.target.value }))} className="field-input" />
+                  </Field>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </AppModal>
 

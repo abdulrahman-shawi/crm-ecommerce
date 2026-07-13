@@ -6405,6 +6405,10 @@ export namespace Prisma {
     addCustomers: boolean | null
     editCustomers: boolean | null
     deleteCustomers: boolean | null
+    viewWholesaleCustomers: boolean | null
+    addWholesaleCustomers: boolean | null
+    editWholesaleCustomers: boolean | null
+    deleteWholesaleCustomers: boolean | null
     viewEmployees: boolean | null
     addEmployees: boolean | null
     editEmployees: boolean | null
@@ -6453,6 +6457,10 @@ export namespace Prisma {
     addCustomers: boolean | null
     editCustomers: boolean | null
     deleteCustomers: boolean | null
+    viewWholesaleCustomers: boolean | null
+    addWholesaleCustomers: boolean | null
+    editWholesaleCustomers: boolean | null
+    deleteWholesaleCustomers: boolean | null
     viewEmployees: boolean | null
     addEmployees: boolean | null
     editEmployees: boolean | null
@@ -6501,6 +6509,10 @@ export namespace Prisma {
     addCustomers: number
     editCustomers: number
     deleteCustomers: number
+    viewWholesaleCustomers: number
+    addWholesaleCustomers: number
+    editWholesaleCustomers: number
+    deleteWholesaleCustomers: number
     viewEmployees: number
     addEmployees: number
     editEmployees: number
@@ -6551,6 +6563,10 @@ export namespace Prisma {
     addCustomers?: true
     editCustomers?: true
     deleteCustomers?: true
+    viewWholesaleCustomers?: true
+    addWholesaleCustomers?: true
+    editWholesaleCustomers?: true
+    deleteWholesaleCustomers?: true
     viewEmployees?: true
     addEmployees?: true
     editEmployees?: true
@@ -6599,6 +6615,10 @@ export namespace Prisma {
     addCustomers?: true
     editCustomers?: true
     deleteCustomers?: true
+    viewWholesaleCustomers?: true
+    addWholesaleCustomers?: true
+    editWholesaleCustomers?: true
+    deleteWholesaleCustomers?: true
     viewEmployees?: true
     addEmployees?: true
     editEmployees?: true
@@ -6647,6 +6667,10 @@ export namespace Prisma {
     addCustomers?: true
     editCustomers?: true
     deleteCustomers?: true
+    viewWholesaleCustomers?: true
+    addWholesaleCustomers?: true
+    editWholesaleCustomers?: true
+    deleteWholesaleCustomers?: true
     viewEmployees?: true
     addEmployees?: true
     editEmployees?: true
@@ -6768,6 +6792,10 @@ export namespace Prisma {
     addCustomers: boolean
     editCustomers: boolean
     deleteCustomers: boolean
+    viewWholesaleCustomers: boolean
+    addWholesaleCustomers: boolean
+    editWholesaleCustomers: boolean
+    deleteWholesaleCustomers: boolean
     viewEmployees: boolean
     addEmployees: boolean
     editEmployees: boolean
@@ -6833,6 +6861,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -6883,6 +6915,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -6931,6 +6967,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -6979,6 +7019,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -7004,7 +7048,7 @@ export namespace Prisma {
     accessTurkey?: boolean
   }
 
-  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "accessSyria" | "accessTurkey", ExtArgs["result"]["permission"]>
+  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewWholesaleCustomers" | "addWholesaleCustomers" | "editWholesaleCustomers" | "deleteWholesaleCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "accessSyria" | "accessTurkey", ExtArgs["result"]["permission"]>
   export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
@@ -7040,6 +7084,10 @@ export namespace Prisma {
       addCustomers: boolean
       editCustomers: boolean
       deleteCustomers: boolean
+      viewWholesaleCustomers: boolean
+      addWholesaleCustomers: boolean
+      editWholesaleCustomers: boolean
+      deleteWholesaleCustomers: boolean
       viewEmployees: boolean
       addEmployees: boolean
       editEmployees: boolean
@@ -7509,6 +7557,10 @@ export namespace Prisma {
     readonly addCustomers: FieldRef<"Permission", 'Boolean'>
     readonly editCustomers: FieldRef<"Permission", 'Boolean'>
     readonly deleteCustomers: FieldRef<"Permission", 'Boolean'>
+    readonly viewWholesaleCustomers: FieldRef<"Permission", 'Boolean'>
+    readonly addWholesaleCustomers: FieldRef<"Permission", 'Boolean'>
+    readonly editWholesaleCustomers: FieldRef<"Permission", 'Boolean'>
+    readonly deleteWholesaleCustomers: FieldRef<"Permission", 'Boolean'>
     readonly viewEmployees: FieldRef<"Permission", 'Boolean'>
     readonly addEmployees: FieldRef<"Permission", 'Boolean'>
     readonly editEmployees: FieldRef<"Permission", 'Boolean'>
@@ -45416,6 +45468,10 @@ export namespace Prisma {
     addCustomers: 'addCustomers',
     editCustomers: 'editCustomers',
     deleteCustomers: 'deleteCustomers',
+    viewWholesaleCustomers: 'viewWholesaleCustomers',
+    addWholesaleCustomers: 'addWholesaleCustomers',
+    editWholesaleCustomers: 'editWholesaleCustomers',
+    deleteWholesaleCustomers: 'deleteWholesaleCustomers',
     viewEmployees: 'viewEmployees',
     addEmployees: 'addEmployees',
     editEmployees: 'editEmployees',
@@ -46499,6 +46555,10 @@ export namespace Prisma {
     addCustomers?: BoolFilter<"Permission"> | boolean
     editCustomers?: BoolFilter<"Permission"> | boolean
     deleteCustomers?: BoolFilter<"Permission"> | boolean
+    viewWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    addWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    editWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    deleteWholesaleCustomers?: BoolFilter<"Permission"> | boolean
     viewEmployees?: BoolFilter<"Permission"> | boolean
     addEmployees?: BoolFilter<"Permission"> | boolean
     editEmployees?: BoolFilter<"Permission"> | boolean
@@ -46548,6 +46608,10 @@ export namespace Prisma {
     addCustomers?: SortOrder
     editCustomers?: SortOrder
     deleteCustomers?: SortOrder
+    viewWholesaleCustomers?: SortOrder
+    addWholesaleCustomers?: SortOrder
+    editWholesaleCustomers?: SortOrder
+    deleteWholesaleCustomers?: SortOrder
     viewEmployees?: SortOrder
     addEmployees?: SortOrder
     editEmployees?: SortOrder
@@ -46600,6 +46664,10 @@ export namespace Prisma {
     addCustomers?: BoolFilter<"Permission"> | boolean
     editCustomers?: BoolFilter<"Permission"> | boolean
     deleteCustomers?: BoolFilter<"Permission"> | boolean
+    viewWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    addWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    editWholesaleCustomers?: BoolFilter<"Permission"> | boolean
+    deleteWholesaleCustomers?: BoolFilter<"Permission"> | boolean
     viewEmployees?: BoolFilter<"Permission"> | boolean
     addEmployees?: BoolFilter<"Permission"> | boolean
     editEmployees?: BoolFilter<"Permission"> | boolean
@@ -46649,6 +46717,10 @@ export namespace Prisma {
     addCustomers?: SortOrder
     editCustomers?: SortOrder
     deleteCustomers?: SortOrder
+    viewWholesaleCustomers?: SortOrder
+    addWholesaleCustomers?: SortOrder
+    editWholesaleCustomers?: SortOrder
+    deleteWholesaleCustomers?: SortOrder
     viewEmployees?: SortOrder
     addEmployees?: SortOrder
     editEmployees?: SortOrder
@@ -46703,6 +46775,10 @@ export namespace Prisma {
     addCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
     editCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
     deleteCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
+    viewWholesaleCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
+    addWholesaleCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
+    editWholesaleCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
+    deleteWholesaleCustomers?: BoolWithAggregatesFilter<"Permission"> | boolean
     viewEmployees?: BoolWithAggregatesFilter<"Permission"> | boolean
     addEmployees?: BoolWithAggregatesFilter<"Permission"> | boolean
     editEmployees?: BoolWithAggregatesFilter<"Permission"> | boolean
@@ -49797,6 +49873,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -49846,6 +49926,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -49895,6 +49979,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean
@@ -49944,6 +50032,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean
@@ -49993,6 +50085,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -50041,6 +50137,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean
@@ -50089,6 +50189,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean
@@ -53679,6 +53783,10 @@ export namespace Prisma {
     addCustomers?: SortOrder
     editCustomers?: SortOrder
     deleteCustomers?: SortOrder
+    viewWholesaleCustomers?: SortOrder
+    addWholesaleCustomers?: SortOrder
+    editWholesaleCustomers?: SortOrder
+    deleteWholesaleCustomers?: SortOrder
     viewEmployees?: SortOrder
     addEmployees?: SortOrder
     editEmployees?: SortOrder
@@ -53727,6 +53835,10 @@ export namespace Prisma {
     addCustomers?: SortOrder
     editCustomers?: SortOrder
     deleteCustomers?: SortOrder
+    viewWholesaleCustomers?: SortOrder
+    addWholesaleCustomers?: SortOrder
+    editWholesaleCustomers?: SortOrder
+    deleteWholesaleCustomers?: SortOrder
     viewEmployees?: SortOrder
     addEmployees?: SortOrder
     editEmployees?: SortOrder
@@ -53775,6 +53887,10 @@ export namespace Prisma {
     addCustomers?: SortOrder
     editCustomers?: SortOrder
     deleteCustomers?: SortOrder
+    viewWholesaleCustomers?: SortOrder
+    addWholesaleCustomers?: SortOrder
+    editWholesaleCustomers?: SortOrder
+    deleteWholesaleCustomers?: SortOrder
     viewEmployees?: SortOrder
     addEmployees?: SortOrder
     editEmployees?: SortOrder
@@ -59477,6 +59593,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -59525,6 +59645,10 @@ export namespace Prisma {
     addCustomers?: boolean
     editCustomers?: boolean
     deleteCustomers?: boolean
+    viewWholesaleCustomers?: boolean
+    addWholesaleCustomers?: boolean
+    editWholesaleCustomers?: boolean
+    deleteWholesaleCustomers?: boolean
     viewEmployees?: boolean
     addEmployees?: boolean
     editEmployees?: boolean
@@ -60219,6 +60343,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean
@@ -60267,6 +60395,10 @@ export namespace Prisma {
     addCustomers?: BoolFieldUpdateOperationsInput | boolean
     editCustomers?: BoolFieldUpdateOperationsInput | boolean
     deleteCustomers?: BoolFieldUpdateOperationsInput | boolean
+    viewWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    addWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    editWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
+    deleteWholesaleCustomers?: BoolFieldUpdateOperationsInput | boolean
     viewEmployees?: BoolFieldUpdateOperationsInput | boolean
     addEmployees?: BoolFieldUpdateOperationsInput | boolean
     editEmployees?: BoolFieldUpdateOperationsInput | boolean

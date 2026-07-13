@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { decoratePermission, getWholesalePermissionMirror } from "@/lib/wholesale-permissions";
 import { NextRequest, NextResponse } from "next/server";
 
 // تعريف الواجهة لبيانات الـ Params
@@ -11,6 +12,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     try {
         const data = await req.json();
         const { id } = params; 
+        const wholesalePermissions = getWholesalePermissionMirror(data);
 
         const updatedPermission = await prisma.permission.update({
             where: { id: id },
@@ -47,6 +49,12 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
                 editCustomers: Boolean(data.editCustomers),
                 deleteCustomers: Boolean(data.deleteCustomers),
 
+                // عملاء الجملة
+                viewWholesaleCustomers: wholesalePermissions.viewWholesaleCustomers,
+                addWholesaleCustomers: wholesalePermissions.addWholesaleCustomers,
+                editWholesaleCustomers: wholesalePermissions.editWholesaleCustomers,
+                deleteWholesaleCustomers: wholesalePermissions.deleteWholesaleCustomers,
+
                 // الموظفين
                 viewEmployees: Boolean(data.viewEmployees),
                 addEmployees: Boolean(data.addEmployees),
@@ -78,7 +86,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
             }
         });
 
-        return NextResponse.json({ success: true, data: updatedPermission });
+        return NextResponse.json({ success: true, data: decoratePermission(updatedPermission) });
     } catch (error) {
         console.error("Update Error:", error);
         return NextResponse.json({ success: false, error: "فشل تحديث البيانات" }, { status: 500 });
