@@ -201,6 +201,30 @@ const VISIT_STATUS_OPTIONS = [
   { value: "CLOSED", label: "مغلقة" },
 ];
 
+const COUNTRY_MAP_CONFIG = {
+  "سوريا": {
+    center: { latitude: 34.8, longitude: 38.8 },
+    delta: { latitude: 2.2, longitude: 2.8 },
+  },
+  "تركيا": {
+    center: { latitude: 39.0, longitude: 35.0 },
+    delta: { latitude: 5.5, longitude: 8.5 },
+  },
+} as const;
+
+type WholesaleCountry = (typeof WHOLESALE_COUNTRY_OPTIONS)[number];
+
+type GeoCoordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+type LocationState = {
+  status: "idle" | "loading" | "ready" | "denied" | "unsupported" | "error";
+  coordinates: GeoCoordinates | null;
+  country: WholesaleCountry;
+};
+
 function createEmptyCustomerForm(): CustomerFormState {
   return {
     name: "",
@@ -279,6 +303,82 @@ function getPhoneDefaultCountry(country: string) {
   return country === "تركيا" ? "TR" : "SY";
 }
 
+function isWithinBounds(
+  latitude: number,
+  longitude: number,
+  bounds: { minLatitude: number; maxLatitude: number; minLongitude: number; maxLongitude: number }
+) {
+  return latitude >= bounds.minLatitude
+    && latitude <= bounds.maxLatitude
+    && longitude >= bounds.minLongitude
+    && longitude <= bounds.maxLongitude;
+}
+
+function getCountryFromCoordinates(latitude: number, longitude: number): WholesaleCountry {
+  if (isWithinBounds(latitude, longitude, {
+    minLatitude: 35.8,
+    maxLatitude: 42.2,
+    minLongitude: 25.5,
+    maxLongitude: 45.0,
+  })) {
+    return "تركيا";
+  }
+
+  if (isWithinBounds(latitude, longitude, {
+    minLatitude: 32.0,
+    maxLatitude: 37.5,
+    minLongitude: 35.5,
+    maxLongitude: 42.5,
+  })) {
+    return "سوريا";
+  }
+
+  return "سوريا";
+}
+
+function createGoogleMapsLink(latitude: number, longitude: number) {
+  return `https://www.google.com/maps?q=${latitude},${longitude}`;
+}
+
+function formatCoordinate(value: number) {
+  return value.toFixed(6);
+}
+
+function createMapEmbedUrl(center: GeoCoordinates, country: WholesaleCountry, focusOnLocation: boolean) {
+  const baseDelta = focusOnLocation
+    ? { latitude: 0.08, longitude: 0.12 }
+    : COUNTRY_MAP_CONFIG[country].delta;
+
+  const minLongitude = center.longitude - baseDelta.longitude;
+  const maxLongitude = center.longitude + baseDelta.longitude;
+  const minLatitude = center.latitude - baseDelta.latitude;
+  const maxLatitude = center.latitude + baseDelta.latitude;
+  const params = new URLSearchParams({
+    bbox: `${minLongitude},${minLatitude},${maxLongitude},${maxLatitude}`,
+    layer: "mapnik",
+    marker: `${center.latitude},${center.longitude}`,
+  });
+
+  return `https://www.openstreetmap.org/export/embed.html?${params.toString()}`;
+}
+
+function getLocationStatusMessage(status: LocationState["status"]) {
+  switch (status) {
+    case "loading":
+      return "جارٍ تحديد موقع المسؤول الحالي...";
+    case "ready":
+      return "تم تحديد موقع المسؤول الحالي وعرضه على الخريطة.";
+    case "denied":
+      return "تم رفض صلاحية الموقع. تم فتح الخريطة على سوريا بشكل افتراضي.";
+    case "unsupported":
+      return "المتصفح لا يدعم تحديد الموقع. تم فتح الخريطة على سوريا بشكل افتراضي.";
+    case "error":
+      return "تعذر تحديد الموقع الحالي. تم فتح الخريطة على سوريا بشكل افتراضي.";
+    default:
+      return "سيتم فتح الخريطة على موقع المسؤول إن توفر، وإلا على سوريا افتراضياً.";
+  }
+}
+
 function parseOptionalNumber(value: string) {
   const normalized = value.trim();
   if (!normalized) return null;
@@ -331,6 +431,11 @@ export default function WholesaleCustomersPage() {
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
   const [isPending, startTransition] = React.useTransition();
   const [isLoading, setIsLoading] = React.useState(true);
+  const [locationState, setLocationState] = React.useState<LocationState>({
+    status: "idle",
+    coordinates: null,
+    country: "سوريا",
+  });
   const isUserAdmin = isAdmin(user);
 
   const availableCities = React.useMemo(() => {
@@ -378,6 +483,52 @@ export default function WholesaleCustomersPage() {
     }
     void loadData();
   }, [canAccessWholesale, loadData, loading]);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!("geolocation" in navigator)) {
+      setLocationState({
+        status: "unsupported",
+        coordinates: null,
+        country: "سوريا",
+      });
+      return;
+    }
+
+    let isActive = true;
+    setLocationState((current) => ({ ...current, status: "loading" }));
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        if (!isActive) return;
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const country = getCountryFromCoordinates(latitude, longitude);
+        setLocationState({
+          status: "ready",
+          coordinates: { latitude, longitude },
+          country,
+        });
+      },
+      (error) => {
+        if (!isActive) return;
+        setLocationState({
+          status: error.code === error.PERMISSION_DENIED ? "denied" : "error",
+          coordinates: null,
+          country: "سوريا",
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
+      }
+    );
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const visibleCustomers = React.useMemo(() => {
     const normalizedSearch = deferredSearch.trim().toLowerCase();
@@ -446,9 +597,57 @@ export default function WholesaleCustomersPage() {
     return { total, todayVisits, hotLeads, monthlySales };
   }, [visibleCustomers]);
 
+  const mapCountry = React.useMemo<WholesaleCountry>(() => {
+    if (isWholesaleCountry(customerForm.country)) {
+      return customerForm.country;
+    }
+    return locationState.country;
+  }, [customerForm.country, locationState.country]);
+
+  const mapCoordinates = React.useMemo<GeoCoordinates>(() => {
+    const latitude = parseOptionalNumber(customerForm.latitude);
+    const longitude = parseOptionalNumber(customerForm.longitude);
+
+    if (latitude !== null && longitude !== null) {
+      return { latitude, longitude };
+    }
+
+    if (locationState.coordinates) {
+      return locationState.coordinates;
+    }
+
+    return COUNTRY_MAP_CONFIG[mapCountry].center;
+  }, [customerForm.latitude, customerForm.longitude, locationState.coordinates, mapCountry]);
+
+  const mapEmbedUrl = React.useMemo(() => {
+    const hasManualCoordinates = parseOptionalNumber(customerForm.latitude) !== null && parseOptionalNumber(customerForm.longitude) !== null;
+    return createMapEmbedUrl(mapCoordinates, mapCountry, hasManualCoordinates || locationState.status === "ready");
+  }, [customerForm.latitude, customerForm.longitude, locationState.status, mapCoordinates, mapCountry]);
+
+  const canUseCurrentLocation = locationState.coordinates !== null;
+
+  function applyCoordinatesToCustomerForm(coordinates: GeoCoordinates, country: WholesaleCountry) {
+    setCustomerForm((current) => ({
+      ...current,
+      country,
+      city: isWholesaleCountry(country) && WHOLESALE_CITIES_BY_COUNTRY[country].includes(current.city) ? current.city : "",
+      latitude: formatCoordinate(coordinates.latitude),
+      longitude: formatCoordinate(coordinates.longitude),
+      googleMapsLink: createGoogleMapsLink(coordinates.latitude, coordinates.longitude),
+    }));
+  }
+
   function openCreateCustomerModal() {
     setEditingCustomerId(null);
-    setCustomerForm(createEmptyCustomerForm());
+    const nextForm = createEmptyCustomerForm();
+    if (locationState.coordinates) {
+      const country = locationState.country;
+      nextForm.country = country;
+      nextForm.latitude = formatCoordinate(locationState.coordinates.latitude);
+      nextForm.longitude = formatCoordinate(locationState.coordinates.longitude);
+      nextForm.googleMapsLink = createGoogleMapsLink(locationState.coordinates.latitude, locationState.coordinates.longitude);
+    }
+    setCustomerForm(nextForm);
     setIsCustomerModalOpen(true);
   }
 
@@ -539,6 +738,16 @@ export default function WholesaleCustomersPage() {
       country: value,
       city: isWholesaleCountry(value) && WHOLESALE_CITIES_BY_COUNTRY[value].includes(current.city) ? current.city : "",
     }));
+  }
+
+  function handleUseCurrentLocation() {
+    if (!locationState.coordinates) {
+      toast.error("تعذر تحديد الموقع الحالي للمسؤول");
+      return;
+    }
+
+    applyCoordinatesToCustomerForm(locationState.coordinates, locationState.country);
+    toast.success("تم استخدام موقع المسؤول الحالي على الخريطة");
   }
 
   function handleSaveCustomer() {
@@ -718,6 +927,35 @@ export default function WholesaleCustomersPage() {
         <StatCard title="زيارات اليوم" value={stats.todayVisits} icon={<CalendarClock className="h-5 w-5" />} tone="amber" />
         <StatCard title="الفرص الساخنة" value={stats.hotLeads} icon={<CheckCircle2 className="h-5 w-5" />} tone="emerald" />
         <StatCard title="المبيعات هذا الشهر" value={stats.monthlySales} icon={<ClipboardList className="h-5 w-5" />} tone="fuchsia" />
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
+        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 dark:border-slate-800 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">خريطة المسؤول الميداني</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{getLocationStatusMessage(locationState.status)}</p>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              <MapPin className="h-3.5 w-3.5" />
+              {mapCountry}
+            </div>
+          </div>
+
+          <iframe
+            title="خريطة صفحة عملاء الجملة"
+            src={mapEmbedUrl}
+            className="h-[320px] w-full border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
+          <InfoCard icon={<MapPin className="h-4 w-4" />} label="الدولة الافتراضية" value={mapCountry} />
+          <InfoCard icon={<MapPin className="h-4 w-4" />} label="خط العرض الحالي" value={formatCoordinate(mapCoordinates.latitude)} />
+          <InfoCard icon={<MapPin className="h-4 w-4" />} label="خط الطول الحالي" value={formatCoordinate(mapCoordinates.longitude)} />
+        </div>
       </section>
 
       <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -942,7 +1180,7 @@ export default function WholesaleCustomersPage() {
         isOpen={isCustomerModalOpen}
         onClose={() => setIsCustomerModalOpen(false)}
         title={editingCustomerId ? "تعديل العميل" : "إضافة عميل جديد"}
-        description="أدخل بيانات الجهة المستهدفة والمندوب المسؤول عنها."
+        description="أدخل بيانات الجهة المستهدفة والمسؤول ميداني عنها."
         size="xl"
         footer={
           <>
@@ -974,7 +1212,7 @@ export default function WholesaleCustomersPage() {
             <input value={customerForm.contactName} onChange={(event) => setCustomerForm((current) => ({ ...current, contactName: event.target.value }))} className="field-input" />
           </Field>
           {isUserAdmin ? (
-          <Field label="المندوب المسؤول">
+          <Field label="المسؤول ميداني">
             <select value={customerForm.assignedUserId} onChange={(event) => setCustomerForm((current) => ({ ...current, assignedUserId: event.target.value }))} className="field-input">
               <option value="">غير مسند</option>
               {salesReps.map((rep) => (
@@ -983,7 +1221,7 @@ export default function WholesaleCustomersPage() {
             </select>
           </Field>
           ) : (
-          <Field label="المندوب المسؤول">
+          <Field label="المسؤول ميداني">
             <input value={user?.username || ""} className="field-input" disabled />
           </Field>
           )}
@@ -1055,15 +1293,54 @@ export default function WholesaleCustomersPage() {
           <Field label="المنطقة">
             <input value={customerForm.area} onChange={(event) => setCustomerForm((current) => ({ ...current, area: event.target.value }))} className="field-input" />
           </Field>
-          <Field label="رابط خرائط Google">
-            <input value={customerForm.googleMapsLink} onChange={(event) => setCustomerForm((current) => ({ ...current, googleMapsLink: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="خط العرض">
-            <input value={customerForm.latitude} onChange={(event) => setCustomerForm((current) => ({ ...current, latitude: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="خط الطول">
-            <input value={customerForm.longitude} onChange={(event) => setCustomerForm((current) => ({ ...current, longitude: event.target.value }))} className="field-input" />
-          </Field>
+          <div className="md:col-span-2 space-y-3 rounded-[24px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="text-sm font-black text-slate-900 dark:text-slate-100">موقع المسؤول على الخريطة</div>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {getLocationStatusMessage(locationState.status)}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" onClick={handleUseCurrentLocation} disabled={!canUseCurrentLocation} leftIcon={<MapPin className="h-3.5 w-3.5" />}>
+                  استخدام موقعي الحالي
+                </Button>
+                <a
+                  href={customerForm.googleMapsLink || createGoogleMapsLink(mapCoordinates.latitude, mapCoordinates.longitude)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  فتح في Google Maps
+                </a>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[20px] border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950">
+              <iframe
+                title="خريطة موقع المسؤول"
+                src={mapEmbedUrl}
+                className="h-[280px] w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            <div className="grid gap-3 text-sm text-slate-600 dark:text-slate-300 md:grid-cols-3">
+              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                <div className="text-xs font-bold text-slate-500 dark:text-slate-400">الدولة المعروضة</div>
+                <div className="mt-1 font-bold text-slate-900 dark:text-slate-100">{mapCountry}</div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                <div className="text-xs font-bold text-slate-500 dark:text-slate-400">خط العرض</div>
+                <div className="mt-1 font-bold text-slate-900 dark:text-slate-100">{customerForm.latitude || formatCoordinate(mapCoordinates.latitude)}</div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                <div className="text-xs font-bold text-slate-500 dark:text-slate-400">خط الطول</div>
+                <div className="mt-1 font-bold text-slate-900 dark:text-slate-100">{customerForm.longitude || formatCoordinate(mapCoordinates.longitude)}</div>
+              </div>
+            </div>
+          </div>
           <Field label="الزيارة المفضلة">
             <input type="datetime-local" value={customerForm.preferredVisitAt} onChange={(event) => setCustomerForm((current) => ({ ...current, preferredVisitAt: event.target.value }))} className="field-input" />
           </Field>
