@@ -1392,6 +1392,13 @@ export default function WholesaleCustomersPage() {
               dir="ltr"
             />
           </Field>
+          <Field label="البلد">
+            <select value={customerForm.country} onChange={(event) => setCustomerForm((current) => ({ ...current, country: event.target.value }))} className="field-input">
+              {allowedCountriesForAssignee.map((country) => (
+                <option key={country} value={country}>{country}</option>
+              ))}
+            </select>
+          </Field>
           <Field label="المدينة">
             <select value={customerForm.city} onChange={(event) => setCustomerForm((current) => ({ ...current, city: event.target.value }))} className="field-input" disabled={!customerForm.country}>
               <option value="">اختر المدينة</option>
@@ -1474,11 +1481,6 @@ export default function WholesaleCustomersPage() {
               <input type="datetime-local" value={customerForm.nextFollowUpAt} onChange={(event) => setCustomerForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
             </Field>
           )}
-          <div className="md:col-span-2">
-            <Field label="العنوان">
-              <textarea value={customerForm.address} onChange={(event) => setCustomerForm((current) => ({ ...current, address: event.target.value }))} className="field-input min-h-[88px]" />
-            </Field>
-          </div>
           {customerForm.visitStatus === "VISITED" && (
             <div className="md:col-span-2">
               <Field label="تفاصيل إضافية">

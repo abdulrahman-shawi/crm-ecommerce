@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { hasPermission, isAdmin } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { getCurrentSessionUser } from "@/server/order";
 
@@ -21,8 +22,29 @@ const typeLabel: Record<WarrantyPayload["type"], string> = {
   DAMAGED: "تالف",
 };
 
+function canViewWarranty(user: any) {
+  return isAdmin(user) || hasPermission(user, "viewWarranty");
+}
+
+function canAddWarranty(user: any) {
+  return isAdmin(user) || hasPermission(user, "addWarranty");
+}
+
+function canEditWarranty(user: any) {
+  return isAdmin(user) || hasPermission(user, "editWarranty");
+}
+
+function canDeleteWarranty(user: any) {
+  return isAdmin(user) || hasPermission(user, "deleteWarranty");
+}
+
 export async function getWarrantyData() {
   try {
+    const currentUser = await getCurrentSessionUser();
+    if (!canViewWarranty(currentUser)) {
+      return { success: false, error: "لا تملك صلاحية عرض الكفالة" };
+    }
+
     const [records, products, customers, warehouses] = await Promise.all([
       prisma.warranty.findMany({
         orderBy: { createdAt: "desc" },
@@ -46,6 +68,11 @@ export async function getWarrantyData() {
 
 export async function createWarrantyAction(payload: WarrantyPayload) {
   try {
+    const currentUser = await getCurrentSessionUser();
+    if (!canAddWarranty(currentUser)) {
+      return { success: false, error: "لا تملك صلاحية إضافة حركة كفالة" };
+    }
+
     if (!payload.productId || !payload.type) {
       return { success: false, error: "البيانات الأساسية غير مكتملة" };
     }
@@ -61,9 +88,6 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
     if (!payload.quantity || Number(payload.quantity) <= 0) {
       return { success: false, error: "يرجى إدخال كمية صحيحة" };
     }
-
-    const currentUser = await getCurrentSessionUser();
-
     const result = await prisma.$transaction(async (tx) => {
       const productId = Number(payload.productId);
       const warehouseId = Number(payload.warehouseId);
@@ -196,6 +220,11 @@ export async function createWarrantyAction(payload: WarrantyPayload) {
 
 export async function updateWarrantyAction(id: string, payload: WarrantyPayload) {
   try {
+    const currentUser = await getCurrentSessionUser();
+    if (!canEditWarranty(currentUser)) {
+      return { success: false, error: "لا تملك صلاحية تعديل حركة الكفالة" };
+    }
+
     if (!id) {
       return { success: false, error: "معرف الكفالة غير صالح" };
     }
@@ -215,9 +244,6 @@ export async function updateWarrantyAction(id: string, payload: WarrantyPayload)
     if (!payload.quantity || Number(payload.quantity) <= 0) {
       return { success: false, error: "يرجى إدخال كمية صحيحة" };
     }
-
-    const currentUser = await getCurrentSessionUser();
-
     const existing = await prisma.warranty.findUnique({
       where: { id },
       include: {
@@ -458,6 +484,11 @@ export async function updateWarrantyAction(id: string, payload: WarrantyPayload)
 
 export async function deleteWarrantyAction(id: string) {
   try {
+    const currentUser = await getCurrentSessionUser();
+    if (!canDeleteWarranty(currentUser)) {
+      return { success: false, error: "لا تملك صلاحية حذف حركة الكفالة" };
+    }
+
     const warranty = await prisma.warranty.findUnique({
       where: { id },
       include: {

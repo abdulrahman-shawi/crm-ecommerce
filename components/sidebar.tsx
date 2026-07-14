@@ -1,6 +1,6 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
-import { hasAnyPermission, isAdmin } from "@/lib/utils";
+import { hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
 import { 
   Home, BarChart2, Users, Settings, ChevronRight, ChevronLeft, 
   Receipt, Box, FileText, PieChart, ShieldCheck, HelpCircle, LogOut, 
@@ -14,7 +14,8 @@ import {
   MessageCircle,
   ImageIcon,
   BadgePercent,
-  Ticket
+  Ticket,
+  ChevronDown
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,7 +25,8 @@ import { useState, useEffect } from "react";
 type MenuItem = {
   icon: any;
   label: string;
-  href: string;
+  href?: string;
+  children?: MenuItem[];
 };
 
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
@@ -33,6 +35,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [canInstall, setCanInstall] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
 
   // التقاط beforeinstallprompt event والكشف عن iOS
   useEffect(() => {
@@ -87,6 +90,26 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
       </div>
     ), { duration: 5000, position: "top-center" });
   };
+  const isItemActive = (item: MenuItem): boolean => {
+    if (item.href) {
+      return pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
+    }
+
+    return item.children?.some(isItemActive) ?? false;
+  };
+
+  const isItemExpanded = (item: MenuItem) => {
+    if (!item.children?.length) return false;
+    return expandedItems[item.label] ?? isItemActive(item);
+  };
+
+  const toggleItem = (label: string) => {
+    setExpandedItems((current) => ({
+      ...current,
+      [label]: !(current[label] ?? false),
+    }));
+  };
+
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = user ? [
     {
@@ -123,12 +146,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   // 
   (user && isAdmin(user)) &&
   { icon: Wallet, label: "التحصيلات", href: "/dashboard/collections" },
-  (user && hasAnyPermission(user, [
-    "viewWarranty", "viewOrders",
-    "addWarranty", "addOrders",
-    "editWarranty", "editOrders",
-    "deleteWarranty", "deleteOrders",
-  ])) &&
+  (user && hasPermission(user, "viewWarranty")) &&
   { icon: ShieldCheck, label: "الكفالة", href: "/dashboard/warranty" },
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
@@ -148,23 +166,42 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
     {
       group: "إعدادات النظام",
       items: [
-        (user && isAdmin(user)) &&
-        { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
-        (user && isAdmin(user)) &&
-        { icon: MessageCircle, label: "التعليقات", href: "/dashboard/comments" },
-        (user && hasAnyPermission(user, ["viewPages", "addPages", "editPages", "deletePages"])) &&
-        { icon: FileText, label: "الصفحات", href: "/dashboard/pages" },
-        (user && isAdmin(user)) &&
-        { icon: ImageIcon, label: "سلايدر الرئيسية", href: "/dashboard/hero-slides" },
-        (user && isAdmin(user)) &&
-        { icon: Ticket, label: "العروض", href: "/dashboard/offers" },
-        (user && isAdmin(user)) &&
-        { icon: BadgePercent, label: "خصومات العروض", href: "/dashboard/offer-discounts" },
-        (user && isAdmin(user)) &&
-        { icon: Ticket, label: "سفراء skynova", href: "/dashboard/affiliate" },
-        (user && isAdmin(user)) &&
-        { icon: Users2, label: "مستخدمو سفراء skynova", href: "/dashboard/affiliate/users" },
+        {
+          icon: Settings,
+          label: "الإعدادات",
+          children: [
+            (user && isAdmin(user)) &&
+            { icon: Settings, label: "الإعدادات العامة", href: "/dashboard/settings" },
+            (user && isAdmin(user)) &&
+            { icon: MessageCircle, label: "التعليقات", href: "/dashboard/comments" },
+            (user && isAdmin(user)) &&
+            { icon: ImageIcon, label: "سلايدر الرئيسية", href: "/dashboard/hero-slides" },
+            (user && isAdmin(user)) &&
+            { icon: Ticket, label: "العروض", href: "/dashboard/offers" },
+            (user && isAdmin(user)) &&
+            { icon: BadgePercent, label: "خصومات العروض", href: "/dashboard/offer-discounts" },
+          ].filter(Boolean) as MenuItem[],
+        },
+        {
+          icon: FileText,
+          label: "صفحات الموقع",
+          children: [
+            (user && hasAnyPermission(user, ["viewPages", "addPages", "editPages", "deletePages"])) &&
+            { icon: FileText, label: "الصفحات", href: "/dashboard/pages" },
+          ].filter(Boolean) as MenuItem[],
+        },
+        {
+          icon: Ticket,
+          label: "السفراء",
+          children: [
+            (user && isAdmin(user)) &&
+            { icon: Ticket, label: "سفراء skynova", href: "/dashboard/affiliate" },
+            (user && isAdmin(user)) &&
+            { icon: Users2, label: "مستخدمو سفراء skynova", href: "/dashboard/affiliate/users" },
+          ].filter(Boolean) as MenuItem[],
+        },
       ].filter(Boolean)
+        .filter((item) => item.children ? item.children.length > 0 : true)
     },
   ].filter(group => group.items.length > 0) : [];
 
@@ -227,6 +264,57 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
                 <div className="space-y-1">
                   {group.items.map((item) => {
                     const isActive = pathname === item.href;
+                    const isExpanded = isItemExpanded(item);
+
+                    if (item.children?.length) {
+                      return (
+                        <div key={item.label} className="space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => toggleItem(item.label)}
+                            className={`
+                              relative flex w-full items-center gap-4 h-12 px-4 rounded-xl transition-all duration-300 group
+                              ${isItemActive(item)
+                                ? "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300"
+                                : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}
+                            `}
+                          >
+                            <item.icon size={22} className="shrink-0" />
+                            <span className={`font-bold text-sm whitespace-nowrap transition-all duration-300 ${isCollapsed ? "md:opacity-0 md:translate-x-10" : "opacity-100"}`}>
+                              {item.label}
+                            </span>
+                            {!isCollapsed && (
+                              <ChevronDown size={18} className={`mr-auto transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} />
+                            )}
+                          </button>
+
+                          {!isCollapsed && isExpanded && (
+                            <div className="mr-4 space-y-1 border-r border-slate-200 pr-3 dark:border-slate-800">
+                              {item.children.map((child: MenuItem) => {
+                                const isChildActive = isItemActive(child);
+                                return (
+                                  <Link
+                                    key={child.href}
+                                    href={child.href!}
+                                    onClick={() => window.innerWidth < 768 && setIsCollapsed(true)}
+                                    className={`
+                                      flex items-center gap-3 h-10 rounded-xl px-3 text-sm font-bold transition-all duration-300
+                                      ${isChildActive
+                                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                                        : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}
+                                    `}
+                                  >
+                                    <child.icon size={18} className="shrink-0" />
+                                    <span>{child.label}</span>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
                     return (
                       <Link
                         key={item.href}

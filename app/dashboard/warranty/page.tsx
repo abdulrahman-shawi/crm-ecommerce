@@ -8,7 +8,7 @@ import { FormInput } from "@/components/ui/form-input";
 import { FormSelect } from "@/components/ui/select-form";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useAuth } from "@/context/AuthContext";
-import { hasAnyPermission } from "@/lib/utils";
+import { hasPermission } from "@/lib/utils";
 import { createWarrantyAction, deleteWarrantyAction, getWarrantyData, updateWarrantyAction } from "@/server/warranty";
 import { Plus, Trash2, Edit } from "lucide-react";
 import React from "react";
@@ -35,15 +35,10 @@ const typeLabel: Record<string, string> = {
 
 export default function WarrantyPage() {
   const { user } = useAuth();
-  const canView = user && hasAnyPermission(user, [
-    "viewWarranty", "viewOrders",
-    "addWarranty", "addOrders",
-    "editWarranty", "editOrders",
-    "deleteWarranty", "deleteOrders",
-  ]);
-  const canAdd = user && hasAnyPermission(user, ["addWarranty", "addOrders"]);
-  const canEdit = user && hasAnyPermission(user, ["editWarranty", "editOrders"]);
-  const canDelete = user && hasAnyPermission(user, ["deleteWarranty", "deleteOrders"]);
+  const canView = Boolean(user && hasPermission(user, "viewWarranty"));
+  const canAdd = Boolean(user && hasPermission(user, "addWarranty"));
+  const canEdit = Boolean(user && hasPermission(user, "editWarranty"));
+  const canDelete = Boolean(user && hasPermission(user, "deleteWarranty"));
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -60,7 +55,7 @@ export default function WarrantyPage() {
   const [damagedPage, setDamagedPage] = React.useState(1);
   const PAGE_SIZE = 10;
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     if (!canView) return;
     const res = await getWarrantyData();
     if (!res.success) {
@@ -73,11 +68,11 @@ export default function WarrantyPage() {
     setProducts(payload?.products || []);
     setCustomers(payload?.customers || []);
     setWarehouses(payload?.warehouses || []);
-  };
+  }, [canView]);
 
   React.useEffect(() => {
-    loadData();
-  }, [canView]);
+    void loadData();
+  }, [loadData]);
 
   const handleClose = () => {
     setIsOpen(false);
