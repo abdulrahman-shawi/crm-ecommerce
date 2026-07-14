@@ -12,6 +12,8 @@ type WholesaleCustomerPayload = {
   activityKey?: string;
   categoryOther?: string;
   contactName?: string;
+  contactRole?: string;
+  contactRoleOther?: string;
   phone?: string[];
   country?: string;
   city?: string;
@@ -51,6 +53,8 @@ const wholesaleCustomerSelect = {
   name: true,
   category: true,
   contactName: true,
+  contactRole: true,
+  contactRoleOther: true,
   phone: true,
   whatsappPhone: true,
   country: true,
@@ -205,11 +209,15 @@ function serializeWholesaleCustomer(customer: any) {
   const customerNotes = extractWholesaleMeta(customer.notes);
   const activityKey = toNullableString(customerNotes.meta.activityKey) ?? customer.category;
   const categoryOther = toNullableString(customerNotes.meta.categoryOther);
+  const contactRole = toNullableString(customer.contactRole) ?? toNullableString(customerNotes.meta.contactRole);
+  const contactRoleOther = toNullableString(customer.contactRoleOther) ?? toNullableString(customerNotes.meta.contactRoleOther);
 
   return {
     ...customer,
     category: activityKey,
     categoryOther,
+    contactRole,
+    contactRoleOther,
     notes: customerNotes.text,
     visits: customer.visits.map((visit: any) => {
       const visitNotes = extractWholesaleMeta(visit.notes);
@@ -456,8 +464,14 @@ export async function createWholesaleCustomer(payload: WholesaleCustomerPayload)
 
     const activityKey = toNullableString(payload.activityKey) ?? toNullableString(payload.category) ?? 'PHARMACY';
     const categoryOther = activityKey === 'OTHER' ? toNullableString(payload.categoryOther) : null;
+    const contactRole = toNullableString(payload.contactRole);
+    const contactRoleOther = contactRole === 'OTHER' ? toNullableString(payload.contactRoleOther) : null;
     if (activityKey === 'OTHER' && !categoryOther) {
       return { success: false, error: 'اكتب نوع النشاط عند اختيار أخرى' };
+    }
+
+    if (contactRole === 'OTHER' && !contactRoleOther) {
+      return { success: false, error: 'اكتب صفة جهة الاتصال' };
     }
 
     const assignedUserId = isAdmin(currentUser)
@@ -485,6 +499,8 @@ export async function createWholesaleCustomer(payload: WholesaleCustomerPayload)
         longitude: normalizeFloat(payload.longitude),
         googleMapsLink: normalizeString(payload.googleMapsLink),
         assignedUserId,
+        contactRole,
+        contactRoleOther,
         notes: withWholesaleMeta(payload.notes, { activityKey, categoryOther }),
         preferredVisitAt: normalizeDate(payload.preferredVisitAt),
         nextFollowUpAt: normalizeDate(payload.nextFollowUpAt),
@@ -521,8 +537,14 @@ export async function updateWholesaleCustomer(id: string, payload: WholesaleCust
 
     const activityKey = toNullableString(payload.activityKey) ?? toNullableString(payload.category) ?? 'PHARMACY';
     const categoryOther = activityKey === 'OTHER' ? toNullableString(payload.categoryOther) : null;
+    const contactRole = toNullableString(payload.contactRole);
+    const contactRoleOther = contactRole === 'OTHER' ? toNullableString(payload.contactRoleOther) : null;
     if (activityKey === 'OTHER' && !categoryOther) {
       return { success: false, error: 'اكتب نوع النشاط عند اختيار أخرى' };
+    }
+
+    if (contactRole === 'OTHER' && !contactRoleOther) {
+      return { success: false, error: 'اكتب صفة جهة الاتصال' };
     }
 
     const assignedUserId = isAdmin(currentUser)
@@ -551,6 +573,8 @@ export async function updateWholesaleCustomer(id: string, payload: WholesaleCust
         longitude: normalizeFloat(payload.longitude),
         googleMapsLink: normalizeString(payload.googleMapsLink),
         assignedUserId,
+        contactRole,
+        contactRoleOther,
         notes: withWholesaleMeta(payload.notes, { activityKey, categoryOther }),
         preferredVisitAt: normalizeDate(payload.preferredVisitAt),
         nextFollowUpAt: normalizeDate(payload.nextFollowUpAt),

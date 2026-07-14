@@ -23694,6 +23694,8 @@ export namespace Prisma {
     name: string | null
     category: $Enums.WholesaleCustomerCategory | null
     contactName: string | null
+    contactRole: string | null
+    contactRoleOther: string | null
     whatsappPhone: string | null
     country: string | null
     city: string | null
@@ -23719,6 +23721,8 @@ export namespace Prisma {
     name: string | null
     category: $Enums.WholesaleCustomerCategory | null
     contactName: string | null
+    contactRole: string | null
+    contactRoleOther: string | null
     whatsappPhone: string | null
     country: string | null
     city: string | null
@@ -23744,6 +23748,8 @@ export namespace Prisma {
     name: number
     category: number
     contactName: number
+    contactRole: number
+    contactRoleOther: number
     phone: number
     whatsappPhone: number
     country: number
@@ -23782,6 +23788,8 @@ export namespace Prisma {
     name?: true
     category?: true
     contactName?: true
+    contactRole?: true
+    contactRoleOther?: true
     whatsappPhone?: true
     country?: true
     city?: true
@@ -23807,6 +23815,8 @@ export namespace Prisma {
     name?: true
     category?: true
     contactName?: true
+    contactRole?: true
+    contactRoleOther?: true
     whatsappPhone?: true
     country?: true
     city?: true
@@ -23832,6 +23842,8 @@ export namespace Prisma {
     name?: true
     category?: true
     contactName?: true
+    contactRole?: true
+    contactRoleOther?: true
     phone?: true
     whatsappPhone?: true
     country?: true
@@ -23945,6 +23957,8 @@ export namespace Prisma {
     name: string
     category: $Enums.WholesaleCustomerCategory
     contactName: string | null
+    contactRole: string | null
+    contactRoleOther: string | null
     phone: string[]
     whatsappPhone: string | null
     country: string | null
@@ -23990,6 +24004,8 @@ export namespace Prisma {
     name?: boolean
     category?: boolean
     contactName?: boolean
+    contactRole?: boolean
+    contactRoleOther?: boolean
     phone?: boolean
     whatsappPhone?: boolean
     country?: boolean
@@ -24019,6 +24035,8 @@ export namespace Prisma {
     name?: boolean
     category?: boolean
     contactName?: boolean
+    contactRole?: boolean
+    contactRoleOther?: boolean
     phone?: boolean
     whatsappPhone?: boolean
     country?: boolean
@@ -24046,6 +24064,8 @@ export namespace Prisma {
     name?: boolean
     category?: boolean
     contactName?: boolean
+    contactRole?: boolean
+    contactRoleOther?: boolean
     phone?: boolean
     whatsappPhone?: boolean
     country?: boolean
@@ -24073,6 +24093,8 @@ export namespace Prisma {
     name?: boolean
     category?: boolean
     contactName?: boolean
+    contactRole?: boolean
+    contactRoleOther?: boolean
     phone?: boolean
     whatsappPhone?: boolean
     country?: boolean
@@ -24094,7 +24116,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WholesaleCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "contactName" | "phone" | "whatsappPhone" | "country" | "city" | "area" | "address" | "latitude" | "longitude" | "googleMapsLink" | "assignedUserId" | "notes" | "preferredVisitAt" | "lastVisitAt" | "nextFollowUpAt" | "lastVisitResult" | "visitStatus" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleCustomer"]>
+  export type WholesaleCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "contactName" | "contactRole" | "contactRoleOther" | "phone" | "whatsappPhone" | "country" | "city" | "area" | "address" | "latitude" | "longitude" | "googleMapsLink" | "assignedUserId" | "notes" | "preferredVisitAt" | "lastVisitAt" | "nextFollowUpAt" | "lastVisitResult" | "visitStatus" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleCustomer"]>
   export type WholesaleCustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
     visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
@@ -24118,6 +24140,8 @@ export namespace Prisma {
       name: string
       category: $Enums.WholesaleCustomerCategory
       contactName: string | null
+      contactRole: string | null
+      contactRoleOther: string | null
       phone: string[]
       whatsappPhone: string | null
       country: string | null
@@ -24566,6 +24590,8 @@ export namespace Prisma {
     readonly name: FieldRef<"WholesaleCustomer", 'String'>
     readonly category: FieldRef<"WholesaleCustomer", 'WholesaleCustomerCategory'>
     readonly contactName: FieldRef<"WholesaleCustomer", 'String'>
+    readonly contactRole: FieldRef<"WholesaleCustomer", 'String'>
+    readonly contactRoleOther: FieldRef<"WholesaleCustomer", 'String'>
     readonly phone: FieldRef<"WholesaleCustomer", 'String[]'>
     readonly whatsappPhone: FieldRef<"WholesaleCustomer", 'String'>
     readonly country: FieldRef<"WholesaleCustomer", 'String'>
@@ -45705,6 +45731,8 @@ export namespace Prisma {
     name: 'name',
     category: 'category',
     contactName: 'contactName',
+    contactRole: 'contactRole',
+    contactRoleOther: 'contactRoleOther',
     phone: 'phone',
     whatsappPhone: 'whatsappPhone',
     country: 'country',
@@ -47912,6 +47940,8 @@ export namespace Prisma {
     name?: StringFilter<"WholesaleCustomer"> | string
     category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
     contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -47940,6 +47970,8 @@ export namespace Prisma {
     name?: SortOrder
     category?: SortOrder
     contactName?: SortOrderInput | SortOrder
+    contactRole?: SortOrderInput | SortOrder
+    contactRoleOther?: SortOrderInput | SortOrder
     phone?: SortOrder
     whatsappPhone?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
@@ -47971,6 +48003,8 @@ export namespace Prisma {
     name?: StringFilter<"WholesaleCustomer"> | string
     category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
     contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -47999,6 +48033,8 @@ export namespace Prisma {
     name?: SortOrder
     category?: SortOrder
     contactName?: SortOrderInput | SortOrder
+    contactRole?: SortOrderInput | SortOrder
+    contactRoleOther?: SortOrderInput | SortOrder
     phone?: SortOrder
     whatsappPhone?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
@@ -48033,6 +48069,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"WholesaleCustomer"> | string
     category?: EnumWholesaleCustomerCategoryWithAggregatesFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
     contactName?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    contactRole?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
+    contactRoleOther?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
     whatsappPhone?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
@@ -51408,6 +51446,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -51435,6 +51475,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -51462,6 +51504,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51489,6 +51533,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51516,6 +51562,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -51542,6 +51590,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51567,6 +51617,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54836,6 +54888,8 @@ export namespace Prisma {
     name?: SortOrder
     category?: SortOrder
     contactName?: SortOrder
+    contactRole?: SortOrder
+    contactRoleOther?: SortOrder
     phone?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
@@ -54867,6 +54921,8 @@ export namespace Prisma {
     name?: SortOrder
     category?: SortOrder
     contactName?: SortOrder
+    contactRole?: SortOrder
+    contactRoleOther?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -54892,6 +54948,8 @@ export namespace Prisma {
     name?: SortOrder
     category?: SortOrder
     contactName?: SortOrder
+    contactRole?: SortOrder
+    contactRoleOther?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -59990,6 +60048,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -60016,6 +60076,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -60732,6 +60794,8 @@ export namespace Prisma {
     name?: StringFilter<"WholesaleCustomer"> | string
     category?: EnumWholesaleCustomerCategoryFilter<"WholesaleCustomer"> | $Enums.WholesaleCustomerCategory
     contactName?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
+    contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -64247,6 +64311,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -64273,6 +64339,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -64392,6 +64460,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64418,6 +64488,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67782,6 +67854,8 @@ export namespace Prisma {
     name: string
     category?: $Enums.WholesaleCustomerCategory
     contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
     whatsappPhone?: string | null
     country?: string | null
@@ -68398,6 +68472,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68424,6 +68500,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68450,6 +68528,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
     contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null

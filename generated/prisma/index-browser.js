@@ -361,6 +361,8 @@ exports.Prisma.WholesaleCustomerScalarFieldEnum = {
   name: 'name',
   category: 'category',
   contactName: 'contactName',
+  contactRole: 'contactRole',
+  contactRoleOther: 'contactRoleOther',
   phone: 'phone',
   whatsappPhone: 'whatsappPhone',
   country: 'country',

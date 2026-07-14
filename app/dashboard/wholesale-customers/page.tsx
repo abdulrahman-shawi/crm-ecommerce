@@ -70,6 +70,8 @@ type WholesaleCustomer = {
   category: string;
   categoryOther?: string | null;
   contactName: string | null;
+  contactRole?: string | null;
+  contactRoleOther?: string | null;
   phone: string[];
   whatsappPhone: string | null;
   country: string | null;
@@ -101,6 +103,8 @@ type CustomerFormState = {
   category: string;
   categoryOther: string;
   contactName: string;
+  contactRole: string;
+  contactRoleOther: string;
   phoneNumbers: string[];
   country: string;
   city: string;
@@ -204,6 +208,14 @@ const VISIT_STATUS_OPTIONS = [
   { value: "CLOSED", label: "مغلقة" },
 ];
 
+const CONTACT_ROLE_OPTIONS = [
+  { value: "OWNER", label: "مالك" },
+  { value: "MANAGER", label: "مدير" },
+  { value: "SALES_EMPLOYEE", label: "موظف مبيعات" },
+  { value: "EMPLOYEE", label: "موظف" },
+  { value: "OTHER", label: "أخرى" },
+];
+
 const COUNTRY_MAP_CONFIG = {
   "سوريا": {
     center: { latitude: 34.8, longitude: 38.8 },
@@ -234,6 +246,8 @@ function createEmptyCustomerForm(): CustomerFormState {
     category: "PHARMACY",
     categoryOther: "",
     contactName: "",
+    contactRole: "OWNER",
+    contactRoleOther: "",
     phoneNumbers: [""],
     country: "سوريا",
     city: "",
@@ -459,6 +473,12 @@ function getVisitResultLabel(value: string | null | undefined) {
 
 function getVisitStatusLabel(value: string) {
   return VISIT_STATUS_OPTIONS.find((item) => item.value === value)?.label ?? value;
+}
+
+function getContactRoleLabel(value?: string | null, other?: string | null) {
+  if (!value) return "-";
+  if (value === "OTHER") return other || "أخرى";
+  return CONTACT_ROLE_OPTIONS.find((item) => item.value === value)?.label ?? other ?? value;
 }
 
 function getRejectionReasonLabel(code?: string | null, other?: string | null) {
@@ -764,6 +784,8 @@ export default function WholesaleCustomersPage() {
       category: customer.category,
       categoryOther: customer.categoryOther || "",
       contactName: customer.contactName || "",
+      contactRole: customer.contactRole || "OWNER",
+      contactRoleOther: customer.contactRoleOther || "",
       phoneNumbers: customer.phone.length > 0 ? customer.phone : [""],
       country: isWholesaleCountry(customer.country || "") ? customer.country || "سوريا" : "سوريا",
       city: customer.city || "",
@@ -881,6 +903,8 @@ export default function WholesaleCustomersPage() {
         activityKey: customerForm.category,
         categoryOther: customerForm.categoryOther,
         contactName: customerForm.contactName,
+        contactRole: customerForm.contactRole,
+        contactRoleOther: customerForm.contactRole === "OTHER" ? customerForm.contactRoleOther : "",
         phone: normalizedPhones,
         country: resolvedCustomerCountry,
         city: customerForm.city,
@@ -1147,6 +1171,8 @@ export default function WholesaleCustomersPage() {
               <thead className="bg-slate-50 text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
                 <tr>
                   <th className="px-4 py-3 font-bold">العميل</th>
+                  <th className="px-4 py-3 font-bold">جهة التواصل</th>
+                  <th className="px-4 py-3 font-bold">بيانات التواصل</th>
                   <th className="px-4 py-3 font-bold">المنطقة</th>
                   <th className="px-4 py-3 font-bold">المندوب</th>
                   <th className="px-4 py-3 font-bold">آخر نتيجة</th>
@@ -1166,14 +1192,15 @@ export default function WholesaleCustomersPage() {
                         <button type="button" onClick={() => setSelectedCustomerId(customer.id)} className="text-right">
                           <div className="font-bold text-slate-900 dark:text-slate-100">{customer.name}</div>
                           <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category, customer.categoryOther)}</div>
-                          <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
-                            {customer.phone.slice(0, 2).map((phone) => (
-                              <span key={phone} className="rounded-full bg-slate-100 px-2 py-1 dark:bg-slate-800 dark:text-slate-200">
-                                {formatPhoneForDisplay(phone)}
-                              </span>
-                            ))}
-                          </div>
                         </button>
+                      </td>
+                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
+                        <div>{customer.contactName || "-"}</div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500">{getContactRoleLabel(customer.contactRole, customer.contactRoleOther)}</div>
+                      </td>
+                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
+                        <div>الأساسي: {customer.phone[0] ? formatPhoneForDisplay(customer.phone[0]) : "-"}</div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500">الإضافي: {customer.phone[1] ? formatPhoneForDisplay(customer.phone[1]) : "-"}</div>
                       </td>
                       <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
                         <div>{customer.city || "-"}</div>
@@ -1206,7 +1233,7 @@ export default function WholesaleCustomersPage() {
 
                 {visibleCustomers.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-10 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={8} className="px-4 py-10 text-center text-slate-500 dark:text-slate-400">
                       لا توجد بيانات مطابقة حالياً.
                     </td>
                   </tr>
@@ -1322,6 +1349,18 @@ export default function WholesaleCustomersPage() {
           <Field label="اسم جهة التواصل">
             <input value={customerForm.contactName} onChange={(event) => setCustomerForm((current) => ({ ...current, contactName: event.target.value }))} className="field-input" />
           </Field>
+          <Field label="صفة جهة الاتصال">
+            <select value={customerForm.contactRole} onChange={(event) => setCustomerForm((current) => ({ ...current, contactRole: event.target.value, contactRoleOther: event.target.value === "OTHER" ? current.contactRoleOther : "" }))} className="field-input">
+              {CONTACT_ROLE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </Field>
+          {customerForm.contactRole === "OTHER" && (
+            <Field label="ما هي الصفة؟">
+              <input value={customerForm.contactRoleOther} onChange={(event) => setCustomerForm((current) => ({ ...current, contactRoleOther: event.target.value }))} className="field-input" placeholder="اكتب صفة جهة الاتصال" />
+            </Field>
+          )}
           {isUserAdmin ? (
           <Field label="المسؤول ميداني">
             <select value={customerForm.assignedUserId} onChange={(event) => setCustomerForm((current) => ({ ...current, assignedUserId: event.target.value }))} className="field-input">
@@ -1338,7 +1377,7 @@ export default function WholesaleCustomersPage() {
           )}
           <div className="space-y-3 md:col-span-2">
             <div className="flex items-center justify-between gap-3">
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200">أرقام الهاتف</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200">بيانات التواصل</label>
               {customerForm.phoneNumbers.length < 2 && (
                 <button
                   type="button"
@@ -1346,7 +1385,7 @@ export default function WholesaleCustomersPage() {
                   className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  إضافة رقم هاتف ثاني
+                  إضافة رقم إضافي
                 </button>
               )}
             </div>
@@ -1355,6 +1394,9 @@ export default function WholesaleCustomersPage() {
               {customerForm.phoneNumbers.map((phone, index) => (
                 <div key={`customer-phone-${index}`} className="flex items-start gap-2">
                   <div className="flex-1" dir="ltr">
+                    <div className="mb-1 text-right text-xs font-bold text-slate-500 dark:text-slate-400" dir="rtl">
+                      {index === 0 ? "رقم الأساسي" : "رقم إضافي"}
+                    </div>
                     <PhoneInput
                       international
                       withCountryCallingCode
@@ -1364,7 +1406,7 @@ export default function WholesaleCustomersPage() {
                       className="PhoneInput"
                       numberInputProps={{
                         className: "field-input",
-                        placeholder: index === 0 ? "أدخل رقم الهاتف الأساسي" : "أدخل رقم الهاتف الثاني",
+                        placeholder: index === 0 ? "أدخل الرقم الأساسي" : "أدخل الرقم الإضافي",
                       }}
                     />
                   </div>
@@ -1522,7 +1564,9 @@ export default function WholesaleCustomersPage() {
             <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">3. بيانات التواصل</div>
             <div className="grid gap-3 md:grid-cols-2 text-sm text-slate-600 dark:text-slate-300">
               <div>اسم جهة التواصل: {selectedCustomer?.contactName || "-"}</div>
-              <div>الهاتف: {selectedCustomer?.phone.map(formatPhoneForDisplay).join(" - ") || "-"}</div>
+              <div>صفة جهة الاتصال: {getContactRoleLabel(selectedCustomer?.contactRole, selectedCustomer?.contactRoleOther)}</div>
+              <div>رقم الأساسي: {selectedCustomer?.phone[0] ? formatPhoneForDisplay(selectedCustomer.phone[0]) : "-"}</div>
+              <div>رقم إضافي: {selectedCustomer?.phone[1] ? formatPhoneForDisplay(selectedCustomer.phone[1]) : "-"}</div>
               <div>العنوان: {[selectedCustomer?.city, selectedCustomer?.area, selectedCustomer?.address].filter(Boolean).join(" - ") || "-"}</div>
             </div>
           </div>
