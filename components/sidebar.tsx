@@ -29,6 +29,12 @@ type MenuItem = {
   children?: MenuItem[];
 };
 
+type MenuGroup = {
+  group: string;
+  items: MenuItem[];
+  collapsible?: boolean;
+};
+
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
   const pathname = usePathname();
   const {user} = useAuth()
@@ -36,6 +42,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   const [canInstall, setCanInstall] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   // التقاط beforeinstallprompt event والكشف عن iOS
   useEffect(() => {
@@ -110,8 +117,29 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
     }));
   };
 
+  const isGroupExpanded = (group: MenuGroup) => {
+    if (!group.collapsible) return true;
+    return expandedGroups[group.group] ?? false;
+  };
+
+  const toggleGroup = (groupName: string) => {
+    setExpandedGroups((current) => ({
+      ...current,
+      [groupName]: !(current[groupName] ?? false),
+    }));
+  };
+
   // تنظيم الروابط في مجموعات لسهولة القراءة
-  const menuGroups = user ? [
+  const menuGroups: MenuGroup[] = user ? [
+    {
+      group: "الرئيسية",
+      collapsible: true,
+      items: [
+        { icon: Home, label: "لوحة التحكم", href: "/dashboard" },
+        (user && hasAnyPermission(user, ["viewAnalytics"])) &&
+        { icon: BarChart2, label: "التحليلات", href: "/dashboard/analytics" },
+      ].filter(Boolean) as MenuItem[]
+    },
     {
       group: "الأقسام الرئيسية",
       items : [
@@ -143,6 +171,18 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
 ].filter(Boolean) // هذا السطر هو الأهم: يقوم بحذف أي قيمة false من المصفوفة
+    },
+    {
+      group: "المستخدمين و الأدوار",
+      collapsible: true,
+      items: [
+        (user && hasAnyPermission(user, ["viewEmployees", "addEmployees", "editEmployees", "deleteEmployees"])) &&
+        { icon: Users, label: "المستخدمين", href: "/dashboard/users" },
+        (user && isAdmin(user)) &&
+        { icon: Users2, label: "رواتب الموظفين", href: "/dashboard/employee-salaries" },
+        (user && hasAnyPermission(user, ["viewPermissions", "addPermissions", "editPermissions", "deletePermissions"])) &&
+        { icon: RollerCoasterIcon, label: "الأدوار", href: "/dashboard/permissions" },
+      ].filter(Boolean) as MenuItem[],
     },
     {
       group: "إعدادات النظام",
@@ -238,11 +278,22 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 space-y-8 custom-scrollbar no-scrollbar">
             {menuGroups.map((group, idx) => (
               <div key={idx} className="space-y-2">
-                <p className={`px-4 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[2px] transition-opacity duration-300 ${isCollapsed ? "md:opacity-0" : "opacity-100"}`}>
-                  {group.group}
-                </p>
+                {group.collapsible ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(group.group)}
+                    className={`flex w-full items-center px-4 text-[11px] font-bold text-slate-400 transition-opacity duration-300 dark:text-slate-500 uppercase tracking-[2px] ${isCollapsed ? "md:opacity-0" : "opacity-100"}`}
+                  >
+                    <span>{group.group}</span>
+                    <ChevronDown size={14} className={`mr-auto transition-transform duration-300 ${isGroupExpanded(group) ? "rotate-180" : ""}`} />
+                  </button>
+                ) : (
+                  <p className={`px-4 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[2px] transition-opacity duration-300 ${isCollapsed ? "md:opacity-0" : "opacity-100"}`}>
+                    {group.group}
+                  </p>
+                )}
                 
-                <div className="space-y-1">
+                <div className={`space-y-1 ${group.collapsible && !isGroupExpanded(group) ? "hidden" : ""}`}>
                   {group.items.map((item) => {
                     const isActive = pathname === item.href;
                     const isExpanded = isItemExpanded(item);
@@ -299,7 +350,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
                     return (
                       <Link
                         key={item.href}
-                        href={item.href}
+                        href={item.href!}
                         onClick={() => window.innerWidth < 768 && setIsCollapsed(true)}
                         className={`
                           relative flex items-center gap-4 h-12 px-4 rounded-xl transition-all duration-300 group
