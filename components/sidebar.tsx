@@ -113,14 +113,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   // تنظيم الروابط في مجموعات لسهولة القراءة
   const menuGroups = user ? [
     {
-      group: "الرئيسية",
-      items: [
-        { icon: Home, label: "لوحة التحكم", href: "/dashboard" },
-        (user && hasAnyPermission(user, ["viewAnalytics"])) &&
-        { icon: BarChart2, label: "التحليلات", href: "/dashboard/analytics" },
-      ].filter(Boolean)
-    },
-    {
       group: "الأقسام الرئيسية",
       items : [
         (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
@@ -151,17 +143,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   (user && isAdmin(user)) &&
   { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
 ].filter(Boolean) // هذا السطر هو الأهم: يقوم بحذف أي قيمة false من المصفوفة
-    },
-    {
-      group: "المستخدمين و الأدوار",
-      items: [
-          (user && hasAnyPermission(user, ["viewEmployees", "addEmployees", "editEmployees", "deleteEmployees"])) &&
-       { icon: Users, label: "المستخدمين", href: "/dashboard/users" },
-         (user && isAdmin(user)) &&
-       { icon: Users2, label: "رواتب الموظفين", href: "/dashboard/employee-salaries" },
-         (user && hasAnyPermission(user, ["viewPermissions", "addPermissions", "editPermissions", "deletePermissions"])) &&
-       { icon: RollerCoasterIcon, label: "الأدوار", href: "/dashboard/permissions" },
-      ].filter(Boolean),
     },
     {
       group: "إعدادات النظام",
