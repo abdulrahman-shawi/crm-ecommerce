@@ -13,7 +13,6 @@ type WholesaleCustomerPayload = {
   categoryOther?: string;
   contactName?: string;
   phone?: string[];
-  whatsappPhone?: string;
   country?: string;
   city?: string;
   area?: string;
@@ -246,15 +245,88 @@ function hasWholesaleAccess(user: any) {
     || hasPermission(user, "deleteWholesaleCustomers");
 }
 
+function getAllowedWholesaleCountries(user: any) {
+  const countries: string[] = [];
+  if (user?.permission?.accessSyria === true) countries.push("سوريا");
+  if (user?.permission?.accessTurkey === true) countries.push("تركيا");
+  return countries;
+}
+
+function getScopedWholesaleCountryWhere(user: any) {
+  if (isAdmin(user)) return {};
+
+  const countries = getAllowedWholesaleCountries(user);
+  if (countries.length === 0) {
+    return {
+      country: {
+        in: ["__SKYNOVA_NO_COUNTRY_ACCESS__"],
+      },
+    };
+  }
+
+  return {
+    country: {
+      in: countries,
+    },
+  };
+}
+
 function getScopedWholesaleWhere(user: any) {
   if (isAdmin(user)) return {};
 
   return {
-    OR: [
-      { assignedUserId: user.id },
-      { visits: { some: { userId: user.id } } },
+    AND: [
+      getScopedWholesaleCountryWhere(user),
+      {
+        OR: [
+          { assignedUserId: user.id },
+          { visits: { some: { userId: user.id } } },
+        ],
+      },
     ],
   };
+}
+
+function normalizeWholesaleCountry(value: unknown) {
+  const normalized = String(value ?? "").trim();
+  if (normalized === "سوريا" || normalized === "تركيا") {
+    return normalized;
+  }
+  return null;
+}
+
+function resolveScopedCountry(preferredCountry: unknown, user: any) {
+  const normalizedPreferred = normalizeWholesaleCountry(preferredCountry);
+
+  if (isAdmin(user)) {
+    return normalizedPreferred;
+  }
+
+  const allowedCountries = getAllowedWholesaleCountries(user);
+  if (normalizedPreferred && allowedCountries.includes(normalizedPreferred)) {
+    return normalizedPreferred;
+  }
+
+  return allowedCountries[0] ?? null;
+}
+
+async function getUserCountryScope(userId: string | null | undefined) {
+  const normalizedUserId = normalizeString(userId);
+  if (!normalizedUserId) return null;
+
+  return prisma.user.findUnique({
+    where: { id: normalizedUserId },
+    select: {
+      id: true,
+      accountType: true,
+      permission: {
+        select: {
+          accessSyria: true,
+          accessTurkey: true,
+        },
+      },
+    },
+  });
 }
 
 async function getAccessibleCustomerId(id: string, user: any) {
@@ -320,6 +392,27 @@ export async function getWholesaleSalesReps() {
       return { success: false, error: 'لا تملك صلاحية عرض المستخدمين' };
     }
 
+    if (!currentUser) {
+      return { success: false, error: 'تعذر تحديد المستخدم الحالي' };
+    }
+
+    if (!isAdmin(currentUser)) {
+      return {
+        success: true,
+        data: [{
+          id: currentUser.id,
+          username: currentUser.username,
+          email: currentUser.email,
+          avatar: currentUser.avatar,
+          accountType: currentUser.accountType,
+          permission: {
+            accessSyria: Boolean(currentUser.permission?.accessSyria),
+            accessTurkey: Boolean(currentUser.permission?.accessTurkey),
+          },
+        }],
+      };
+    }
+
     const users = await prisma.user.findMany({
       where: {
         accountType: {
@@ -333,6 +426,12 @@ export async function getWholesaleSalesReps() {
         email: true,
         avatar: true,
         accountType: true,
+        permission: {
+          select: {
+            accessSyria: true,
+            accessTurkey: true,
+          },
+        },
       },
     });
 
@@ -364,6 +463,13 @@ export async function createWholesaleCustomer(payload: WholesaleCustomerPayload)
     const assignedUserId = isAdmin(currentUser)
       ? normalizeString(payload.assignedUserId)
       : currentUser.id;
+    const assignedUser = await getUserCountryScope(assignedUserId);
+    const countryOwner = assignedUser ?? currentUser;
+    const country = resolveScopedCountry(payload.country, countryOwner);
+
+    if (!country) {
+      return { success: false, error: 'تعذر تحديد دولة العميل من صلاحيات المستخدم' };
+    }
 
     const created = await prisma.wholesaleCustomer.create({
       data: {
@@ -371,8 +477,7 @@ export async function createWholesaleCustomer(payload: WholesaleCustomerPayload)
         category: normalizeActivityCategory(payload.category),
         contactName: normalizeString(payload.contactName),
         phone: normalizePhoneList(payload.phone),
-        whatsappPhone: normalizeString(payload.whatsappPhone),
-        country: normalizeString(payload.country),
+        country,
         city: normalizeString(payload.city),
         area: normalizeString(payload.area),
         address: normalizeString(payload.address),
@@ -423,6 +528,13 @@ export async function updateWholesaleCustomer(id: string, payload: WholesaleCust
     const assignedUserId = isAdmin(currentUser)
       ? normalizeString(payload.assignedUserId)
       : (accessibleCustomer.assignedUserId ?? currentUser.id);
+    const assignedUser = await getUserCountryScope(assignedUserId);
+    const countryOwner = assignedUser ?? currentUser;
+    const country = resolveScopedCountry(payload.country, countryOwner);
+
+    if (!country) {
+      return { success: false, error: 'تعذر تحديد دولة العميل من صلاحيات المستخدم' };
+    }
 
     const updated = await prisma.wholesaleCustomer.update({
       where: { id },
@@ -431,8 +543,7 @@ export async function updateWholesaleCustomer(id: string, payload: WholesaleCust
         category: normalizeActivityCategory(payload.category),
         contactName: normalizeString(payload.contactName),
         phone: normalizePhoneList(payload.phone),
-        whatsappPhone: normalizeString(payload.whatsappPhone),
-        country: normalizeString(payload.country),
+        country,
         city: normalizeString(payload.city),
         area: normalizeString(payload.area),
         address: normalizeString(payload.address),

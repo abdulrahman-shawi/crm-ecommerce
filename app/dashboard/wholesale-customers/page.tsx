@@ -34,6 +34,10 @@ type SalesRep = {
   email: string;
   avatar: string | null;
   accountType: string;
+  permission?: {
+    accessSyria: boolean;
+    accessTurkey: boolean;
+  } | null;
 };
 
 type WholesaleVisit = {
@@ -98,7 +102,6 @@ type CustomerFormState = {
   categoryOther: string;
   contactName: string;
   phoneNumbers: string[];
-  whatsappPhone: string;
   country: string;
   city: string;
   area: string;
@@ -232,7 +235,6 @@ function createEmptyCustomerForm(): CustomerFormState {
     categoryOther: "",
     contactName: "",
     phoneNumbers: [""],
-    whatsappPhone: "",
     country: "سوريا",
     city: "",
     area: "",
@@ -301,6 +303,57 @@ function isWholesaleCountry(value: string): value is (typeof WHOLESALE_COUNTRY_O
 
 function getPhoneDefaultCountry(country: string) {
   return country === "تركيا" ? "TR" : "SY";
+}
+
+function getAllowedCountriesFromAccess(accessSyria?: boolean, accessTurkey?: boolean): WholesaleCountry[] {
+  const countries: WholesaleCountry[] = [];
+  if (accessSyria) countries.push("سوريا");
+  if (accessTurkey) countries.push("تركيا");
+  return countries;
+}
+
+function getAllowedCountriesFromUser(value: { permission?: { accessSyria?: boolean; accessTurkey?: boolean } | null } | null | undefined) {
+  return getAllowedCountriesFromAccess(value?.permission?.accessSyria, value?.permission?.accessTurkey);
+}
+
+function parseMapLinkCoordinates(value: string): GeoCoordinates | null {
+  const normalized = value.trim();
+  if (!normalized) return null;
+
+  const patterns = [
+    /[?&]q=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i,
+    /[?&]ll=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i,
+    /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i,
+    /(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    if (!match) continue;
+
+    const latitude = Number(match[1]);
+    const longitude = Number(match[2]);
+    if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      return { latitude, longitude };
+    }
+  }
+
+  try {
+    const url = new URL(normalized);
+    const q = url.searchParams.get("q") || url.searchParams.get("ll");
+    if (!q) return null;
+
+    const [latitudeText, longitudeText] = q.split(",");
+    const latitude = Number(latitudeText);
+    const longitude = Number(longitudeText);
+    if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      return { latitude, longitude };
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
 }
 
 function isWithinBounds(
@@ -597,14 +650,62 @@ export default function WholesaleCustomersPage() {
     return { total, todayVisits, hotLeads, monthlySales };
   }, [visibleCustomers]);
 
-  const mapCountry = React.useMemo<WholesaleCountry>(() => {
-    if (isWholesaleCountry(customerForm.country)) {
+  const selectedSalesRep = React.useMemo(() => {
+    return salesReps.find((rep) => rep.id === customerForm.assignedUserId) ?? null;
+  }, [customerForm.assignedUserId, salesReps]);
+
+  const mapLinkCoordinates = React.useMemo(() => {
+    return parseMapLinkCoordinates(customerForm.googleMapsLink);
+  }, [customerForm.googleMapsLink]);
+
+  const allowedCountriesForAssignee = React.useMemo<WholesaleCountry[]>(() => {
+    const scopedCountries = getAllowedCountriesFromUser(selectedSalesRep ?? user);
+    return scopedCountries.length > 0 ? scopedCountries : [...WHOLESALE_COUNTRY_OPTIONS];
+  }, [selectedSalesRep, user]);
+
+  const resolvedCustomerCountry = React.useMemo<WholesaleCountry>(() => {
+    const linkCountry = mapLinkCoordinates
+      ? getCountryFromCoordinates(mapLinkCoordinates.latitude, mapLinkCoordinates.longitude)
+      : null;
+
+    if (linkCountry && allowedCountriesForAssignee.includes(linkCountry)) {
+      return linkCountry;
+    }
+
+    if (isWholesaleCountry(customerForm.country) && allowedCountriesForAssignee.includes(customerForm.country)) {
       return customerForm.country;
     }
-    return locationState.country;
-  }, [customerForm.country, locationState.country]);
+
+    if (locationState.coordinates && allowedCountriesForAssignee.includes(locationState.country)) {
+      return locationState.country;
+    }
+
+    return allowedCountriesForAssignee[0] ?? "سوريا";
+  }, [allowedCountriesForAssignee, customerForm.country, locationState.coordinates, locationState.country, mapLinkCoordinates]);
+
+  React.useEffect(() => {
+    setCustomerForm((current) => {
+      if (current.country === resolvedCustomerCountry) return current;
+      return {
+        ...current,
+        country: resolvedCustomerCountry,
+        city: WHOLESALE_CITIES_BY_COUNTRY[resolvedCustomerCountry].includes(current.city) ? current.city : "",
+      };
+    });
+  }, [resolvedCustomerCountry]);
+
+  const mapCountry = React.useMemo<WholesaleCountry>(() => {
+    if (mapLinkCoordinates) {
+      return getCountryFromCoordinates(mapLinkCoordinates.latitude, mapLinkCoordinates.longitude);
+    }
+    return resolvedCustomerCountry;
+  }, [mapLinkCoordinates, resolvedCustomerCountry]);
 
   const mapCoordinates = React.useMemo<GeoCoordinates>(() => {
+    if (mapLinkCoordinates) {
+      return mapLinkCoordinates;
+    }
+
     const latitude = parseOptionalNumber(customerForm.latitude);
     const longitude = parseOptionalNumber(customerForm.longitude);
 
@@ -617,7 +718,7 @@ export default function WholesaleCustomersPage() {
     }
 
     return COUNTRY_MAP_CONFIG[mapCountry].center;
-  }, [customerForm.latitude, customerForm.longitude, locationState.coordinates, mapCountry]);
+  }, [customerForm.latitude, customerForm.longitude, locationState.coordinates, mapCountry, mapLinkCoordinates]);
 
   const mapEmbedUrl = React.useMemo(() => {
     const hasManualCoordinates = parseOptionalNumber(customerForm.latitude) !== null && parseOptionalNumber(customerForm.longitude) !== null;
@@ -627,10 +728,14 @@ export default function WholesaleCustomersPage() {
   const canUseCurrentLocation = locationState.coordinates !== null;
 
   function applyCoordinatesToCustomerForm(coordinates: GeoCoordinates, country: WholesaleCountry) {
+    const nextCountry = allowedCountriesForAssignee.includes(country)
+      ? country
+      : (allowedCountriesForAssignee[0] ?? country);
+
     setCustomerForm((current) => ({
       ...current,
-      country,
-      city: isWholesaleCountry(country) && WHOLESALE_CITIES_BY_COUNTRY[country].includes(current.city) ? current.city : "",
+      country: nextCountry,
+      city: WHOLESALE_CITIES_BY_COUNTRY[nextCountry].includes(current.city) ? current.city : "",
       latitude: formatCoordinate(coordinates.latitude),
       longitude: formatCoordinate(coordinates.longitude),
       googleMapsLink: createGoogleMapsLink(coordinates.latitude, coordinates.longitude),
@@ -640,6 +745,7 @@ export default function WholesaleCustomersPage() {
   function openCreateCustomerModal() {
     setEditingCustomerId(null);
     const nextForm = createEmptyCustomerForm();
+    nextForm.assignedUserId = isUserAdmin ? "" : (user?.id || "");
     if (locationState.coordinates) {
       const country = locationState.country;
       nextForm.country = country;
@@ -659,7 +765,6 @@ export default function WholesaleCustomersPage() {
       categoryOther: customer.categoryOther || "",
       contactName: customer.contactName || "",
       phoneNumbers: customer.phone.length > 0 ? customer.phone : [""],
-      whatsappPhone: customer.whatsappPhone || "",
       country: isWholesaleCountry(customer.country || "") ? customer.country || "سوريا" : "سوريا",
       city: customer.city || "",
       area: customer.area || "",
@@ -732,11 +837,12 @@ export default function WholesaleCustomersPage() {
     });
   }
 
-  function handleCustomerCountryChange(value: string) {
+  function handleCustomerVisitStatusChange(value: string) {
     setCustomerForm((current) => ({
       ...current,
-      country: value,
-      city: isWholesaleCountry(value) && WHOLESALE_CITIES_BY_COUNTRY[value].includes(current.city) ? current.city : "",
+      visitStatus: value,
+      preferredVisitAt: value === "PLANNED" ? current.preferredVisitAt : "",
+      nextFollowUpAt: value === "VISITED" ? current.nextFollowUpAt : "",
     }));
   }
 
@@ -763,6 +869,12 @@ export default function WholesaleCustomersPage() {
     }
 
     startTransition(async () => {
+      const manualMapCoordinates = parseMapLinkCoordinates(customerForm.googleMapsLink);
+      const fallbackMapLink = createGoogleMapsLink(mapCoordinates.latitude, mapCoordinates.longitude);
+      const latitude = manualMapCoordinates?.latitude ?? parseOptionalNumber(customerForm.latitude) ?? mapCoordinates.latitude;
+      const longitude = manualMapCoordinates?.longitude ?? parseOptionalNumber(customerForm.longitude) ?? mapCoordinates.longitude;
+      const googleMapsLink = customerForm.googleMapsLink.trim() || fallbackMapLink;
+
       const payload = {
         name: customerForm.name,
         category: customerForm.category,
@@ -770,18 +882,17 @@ export default function WholesaleCustomersPage() {
         categoryOther: customerForm.categoryOther,
         contactName: customerForm.contactName,
         phone: normalizedPhones,
-        whatsappPhone: customerForm.whatsappPhone,
-        country: customerForm.country,
+        country: resolvedCustomerCountry,
         city: customerForm.city,
         area: customerForm.area,
         address: customerForm.address,
-        latitude: parseOptionalNumber(customerForm.latitude),
-        longitude: parseOptionalNumber(customerForm.longitude),
-        googleMapsLink: customerForm.googleMapsLink,
+        latitude,
+        longitude,
+        googleMapsLink,
         assignedUserId: customerForm.assignedUserId,
         notes: customerForm.notes,
-        preferredVisitAt: customerForm.preferredVisitAt,
-        nextFollowUpAt: customerForm.nextFollowUpAt,
+        preferredVisitAt: customerForm.visitStatus === "PLANNED" ? customerForm.preferredVisitAt : "",
+        nextFollowUpAt: customerForm.visitStatus === "VISITED" ? customerForm.nextFollowUpAt : "",
         visitStatus: customerForm.visitStatus,
         isActive: customerForm.isActive,
       };
@@ -1190,7 +1301,7 @@ export default function WholesaleCustomersPage() {
         }
       >
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="اسم العميل">
+          <Field label="اسم النشاط">
             <input value={customerForm.name} onChange={(event) => setCustomerForm((current) => ({ ...current, name: event.target.value }))} className="field-input" />
           </Field>
           <Field label="نوع النشاط">
@@ -1247,7 +1358,7 @@ export default function WholesaleCustomersPage() {
                     <PhoneInput
                       international
                       withCountryCallingCode
-                      defaultCountry={getPhoneDefaultCountry(customerForm.country)}
+                      defaultCountry={getPhoneDefaultCountry(resolvedCustomerCountry)}
                       value={phone || undefined}
                       onChange={(value) => handleCustomerPhoneChange(index, value)}
                       className="PhoneInput"
@@ -1272,15 +1383,14 @@ export default function WholesaleCustomersPage() {
               ))}
             </div>
           </div>
-          <Field label="واتساب">
-            <input value={customerForm.whatsappPhone} onChange={(event) => setCustomerForm((current) => ({ ...current, whatsappPhone: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="الدولة">
-            <select value={customerForm.country} onChange={(event) => handleCustomerCountryChange(event.target.value)} className="field-input">
-              {WHOLESALE_COUNTRY_OPTIONS.map((country) => (
-                <option key={country} value={country}>{country}</option>
-              ))}
-            </select>
+          <Field label="رابط الخريطة">
+            <input
+              value={customerForm.googleMapsLink}
+              onChange={(event) => setCustomerForm((current) => ({ ...current, googleMapsLink: event.target.value }))}
+              className="field-input"
+              placeholder="ألصق رابط Google Maps أو اتركه فارغًا لاستخدام الخريطة الحالية"
+              dir="ltr"
+            />
           </Field>
           <Field label="المدينة">
             <select value={customerForm.city} onChange={(event) => setCustomerForm((current) => ({ ...current, city: event.target.value }))} className="field-input" disabled={!customerForm.country}>
@@ -1306,7 +1416,7 @@ export default function WholesaleCustomersPage() {
                   استخدام موقعي الحالي
                 </Button>
                 <a
-                  href={customerForm.googleMapsLink || createGoogleMapsLink(mapCoordinates.latitude, mapCoordinates.longitude)}
+                  href={customerForm.googleMapsLink.trim() || createGoogleMapsLink(mapCoordinates.latitude, mapCoordinates.longitude)}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -1328,8 +1438,8 @@ export default function WholesaleCustomersPage() {
 
             <div className="grid gap-3 text-sm text-slate-600 dark:text-slate-300 md:grid-cols-3">
               <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
-                <div className="text-xs font-bold text-slate-500 dark:text-slate-400">الدولة المعروضة</div>
-                <div className="mt-1 font-bold text-slate-900 dark:text-slate-100">{mapCountry}</div>
+                <div className="text-xs font-bold text-slate-500 dark:text-slate-400">الدولة المعتمدة</div>
+                <div className="mt-1 font-bold text-slate-900 dark:text-slate-100">{resolvedCustomerCountry}</div>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
                 <div className="text-xs font-bold text-slate-500 dark:text-slate-400">خط العرض</div>
@@ -1341,14 +1451,8 @@ export default function WholesaleCustomersPage() {
               </div>
             </div>
           </div>
-          <Field label="الزيارة المفضلة">
-            <input type="datetime-local" value={customerForm.preferredVisitAt} onChange={(event) => setCustomerForm((current) => ({ ...current, preferredVisitAt: event.target.value }))} className="field-input" />
-          </Field>
-          <Field label="المتابعة القادمة">
-            <input type="datetime-local" value={customerForm.nextFollowUpAt} onChange={(event) => setCustomerForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
-          </Field>
           <Field label="حالة العميل">
-            <select value={customerForm.visitStatus} onChange={(event) => setCustomerForm((current) => ({ ...current, visitStatus: event.target.value }))} className="field-input">
+            <select value={customerForm.visitStatus} onChange={(event) => handleCustomerVisitStatusChange(event.target.value)} className="field-input">
               {VISIT_STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
@@ -1360,16 +1464,28 @@ export default function WholesaleCustomersPage() {
               نشط وقابل للمتابعة
             </label>
           </Field>
+          {customerForm.visitStatus === "PLANNED" && (
+            <Field label="الزيارة المفضلة">
+              <input type="datetime-local" value={customerForm.preferredVisitAt} onChange={(event) => setCustomerForm((current) => ({ ...current, preferredVisitAt: event.target.value }))} className="field-input" />
+            </Field>
+          )}
+          {customerForm.visitStatus === "VISITED" && (
+            <Field label="المتابعة القادمة">
+              <input type="datetime-local" value={customerForm.nextFollowUpAt} onChange={(event) => setCustomerForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
+            </Field>
+          )}
           <div className="md:col-span-2">
             <Field label="العنوان">
               <textarea value={customerForm.address} onChange={(event) => setCustomerForm((current) => ({ ...current, address: event.target.value }))} className="field-input min-h-[88px]" />
             </Field>
           </div>
-          <div className="md:col-span-2">
-            <Field label="ملاحظات عامة">
-              <textarea value={customerForm.notes} onChange={(event) => setCustomerForm((current) => ({ ...current, notes: event.target.value }))} className="field-input min-h-[110px]" />
-            </Field>
-          </div>
+          {customerForm.visitStatus === "VISITED" && (
+            <div className="md:col-span-2">
+              <Field label="تفاصيل إضافية">
+                <textarea value={customerForm.notes} onChange={(event) => setCustomerForm((current) => ({ ...current, notes: event.target.value }))} className="field-input min-h-[110px]" />
+              </Field>
+            </div>
+          )}
         </div>
       </AppModal>
 
@@ -1405,7 +1521,6 @@ export default function WholesaleCustomersPage() {
             <div className="grid gap-3 md:grid-cols-2 text-sm text-slate-600 dark:text-slate-300">
               <div>اسم جهة التواصل: {selectedCustomer?.contactName || "-"}</div>
               <div>الهاتف: {selectedCustomer?.phone.map(formatPhoneForDisplay).join(" - ") || "-"}</div>
-              <div>واتساب: {selectedCustomer?.whatsappPhone || "-"}</div>
               <div>العنوان: {[selectedCustomer?.city, selectedCustomer?.area, selectedCustomer?.address].filter(Boolean).join(" - ") || "-"}</div>
             </div>
           </div>
@@ -1418,14 +1533,20 @@ export default function WholesaleCustomersPage() {
           <div className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/50">
             <div className="mb-3 text-sm font-black text-slate-900 dark:text-slate-100">5. نتيجة الزيارة</div>
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="المندوب">
-            <select value={visitForm.userId} onChange={(event) => setVisitForm((current) => ({ ...current, userId: event.target.value }))} className="field-input">
-              <option value="">غير محدد</option>
-              {salesReps.map((rep) => (
-                <option key={rep.id} value={rep.id}>{rep.username}</option>
-              ))}
-            </select>
-          </Field>
+              {isUserAdmin ? (
+                <Field label="المندوب">
+                  <select value={visitForm.userId} onChange={(event) => setVisitForm((current) => ({ ...current, userId: event.target.value }))} className="field-input">
+                    <option value="">غير محدد</option>
+                    {salesReps.map((rep) => (
+                      <option key={rep.id} value={rep.id}>{rep.username}</option>
+                    ))}
+                  </select>
+                </Field>
+              ) : (
+                <Field label="المندوب">
+                  <input value={user?.username || ""} className="field-input" disabled />
+                </Field>
+              )}
               <Field label="تاريخ الزيارة">
             <input type="datetime-local" value={visitForm.visitedAt} onChange={(event) => setVisitForm((current) => ({ ...current, visitedAt: event.target.value }))} className="field-input" />
           </Field>
