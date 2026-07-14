@@ -36,6 +36,7 @@ type WholesaleVisitPayload = {
   visitedAt?: string | null;
   result: string;
   status?: string;
+  followUpType?: string;
   rejectionReasonCode?: string;
   rejectionReasonOther?: string;
   voiceNote?: string;
@@ -98,6 +99,7 @@ const wholesaleCustomerSelect = {
       latitude: true,
       longitude: true,
       nextFollowUpAt: true,
+      followUpType: true,
       followUpNotes: true,
       orderPlaced: true,
       syncedAt: true,
@@ -121,6 +123,7 @@ const wholesaleCustomerSelect = {
 const NOTE_META_PREFIX = "\n<!-- skynova-wholesale-meta:";
 const NOTE_META_SUFFIX = "-->";
 const FOLLOW_UP_RESULTS = new Set(["VERY_INTERESTED", "INTERESTED", "THINKING"]);
+const FOLLOW_UP_TYPE_RESULTS = new Set(["VERY_INTERESTED", "INTERESTED", "THINKING"]);
 
 function toNullableString(value: unknown) {
   const normalized = String(value ?? "").trim();
@@ -201,6 +204,14 @@ function normalizeVisitResult(result: unknown) {
   const value = String(result ?? "").trim();
   if (["VERY_INTERESTED", "INTERESTED", "THINKING", "NOT_INTERESTED", "PURCHASED"].includes(value)) {
     return value;
+  }
+  return null;
+}
+
+function normalizeFollowUpType(value: unknown) {
+  const normalized = String(value ?? '').trim();
+  if (normalized === 'VISIT' || normalized === 'CALL') {
+    return normalized;
   }
   return null;
 }
@@ -643,10 +654,15 @@ export async function createWholesaleVisit(payload: WholesaleVisitPayload) {
     const isRejectedResult = resultKey === 'NOT_INTERESTED';
     const rejectionReasonCode = isRejectedResult ? toNullableString(payload.rejectionReasonCode) : null;
     const rejectionReasonOther = rejectionReasonCode === 'OTHER' ? toNullableString(payload.rejectionReasonOther) : null;
+    const followUpType = FOLLOW_UP_TYPE_RESULTS.has(resultKey) ? normalizeFollowUpType(payload.followUpType) : null;
     const followUpNotes = isFollowUpResult ? normalizeString(payload.followUpNotes) : null;
 
     if (isFollowUpResult && !nextFollowUpAt) {
       return { success: false, error: 'حدد موعد المتابعة للفرص والمتابعات' };
+    }
+
+    if (FOLLOW_UP_TYPE_RESULTS.has(resultKey) && !followUpType) {
+      return { success: false, error: 'حدد نوع المتابعة القادمة' };
     }
 
     if (isFollowUpResult && !followUpNotes) {
@@ -684,6 +700,7 @@ export async function createWholesaleVisit(payload: WholesaleVisitPayload) {
           latitude: normalizeFloat(payload.latitude),
           longitude: normalizeFloat(payload.longitude),
           nextFollowUpAt: isFollowUpResult ? nextFollowUpAt : null,
+          followUpType,
           followUpNotes,
           orderPlaced: resultKey === 'PURCHASED' || Boolean(payload.orderPlaced),
         },

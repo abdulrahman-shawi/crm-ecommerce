@@ -568,6 +568,7 @@ model WholesaleVisit {
   latitude          Float?
   longitude         Float?
   nextFollowUpAt    DateTime?
+  followUpType      String?
   followUpNotes     String?
   orderPlaced       Boolean              @default(false)
   syncedAt          DateTime?

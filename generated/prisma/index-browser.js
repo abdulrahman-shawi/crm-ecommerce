@@ -397,6 +397,7 @@ exports.Prisma.WholesaleVisitScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   nextFollowUpAt: 'nextFollowUpAt',
+  followUpType: 'followUpType',
   followUpNotes: 'followUpNotes',
   orderPlaced: 'orderPlaced',
   syncedAt: 'syncedAt',

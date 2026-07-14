@@ -45,6 +45,7 @@ type WholesaleVisit = {
   visitedAt: string | Date;
   result: string;
   status: string;
+  followUpType?: string | null;
   rejectionReasonCode?: string | null;
   rejectionReasonOther?: string | null;
   notes: string | null;
@@ -127,6 +128,7 @@ type VisitFormState = {
   result: string;
   notes: string;
   nextFollowUpAt: string;
+  followUpType: string;
   followUpNotes: string;
   rejectionReasonCode: string;
   rejectionReasonOther: string;
@@ -208,6 +210,11 @@ const VISIT_STATUS_OPTIONS = [
   { value: "CLOSED", label: "مغلقة" },
 ];
 
+const FOLLOW_UP_TYPE_OPTIONS = [
+  { value: "VISIT", label: "زيارة" },
+  { value: "CALL", label: "اتصال" },
+];
+
 const CONTACT_ROLE_OPTIONS = [
   { value: "OWNER", label: "مالك" },
   { value: "MANAGER", label: "مدير" },
@@ -272,6 +279,7 @@ function createEmptyVisitForm(): VisitFormState {
     result: "INTERESTED",
     notes: "",
     nextFollowUpAt: "",
+    followUpType: "VISIT",
     followUpNotes: "",
     rejectionReasonCode: "",
     rejectionReasonOther: "",
@@ -457,6 +465,10 @@ function isFollowUpResult(value: string) {
   return value === "VERY_INTERESTED" || value === "INTERESTED" || value === "THINKING";
 }
 
+function requiresFollowUpType(value: string) {
+  return value === "VERY_INTERESTED" || value === "INTERESTED" || value === "THINKING";
+}
+
 function isRejectedResult(value: string) {
   return value === "NOT_INTERESTED";
 }
@@ -473,6 +485,11 @@ function getVisitResultLabel(value: string | null | undefined) {
 
 function getVisitStatusLabel(value: string) {
   return VISIT_STATUS_OPTIONS.find((item) => item.value === value)?.label ?? value;
+}
+
+function getFollowUpTypeLabel(value?: string | null) {
+  if (!value) return "-";
+  return FOLLOW_UP_TYPE_OPTIONS.find((item) => item.value === value)?.label ?? value;
 }
 
 function getContactRoleLabel(value?: string | null, other?: string | null) {
@@ -829,6 +846,7 @@ export default function WholesaleCustomersPage() {
       ...current,
       result: value,
       nextFollowUpAt: isFollowUpResult(value) ? current.nextFollowUpAt : "",
+      followUpType: requiresFollowUpType(value) ? (current.followUpType || "VISIT") : "",
       followUpNotes: isFollowUpResult(value) ? current.followUpNotes : "",
       rejectionReasonCode: isRejectedResult(value) ? current.rejectionReasonCode : "",
       rejectionReasonOther: isRejectedResult(value) ? current.rejectionReasonOther : "",
@@ -981,6 +999,11 @@ export default function WholesaleCustomersPage() {
       return;
     }
 
+    if (requiresFollowUpType(visitForm.result) && !visitForm.followUpType) {
+      toast.error("حدد نوع المتابعة");
+      return;
+    }
+
     if (isFollowUpResult(visitForm.result) && !visitForm.followUpNotes.trim()) {
       toast.error("حدد الإجراء القادم");
       return;
@@ -1004,6 +1027,7 @@ export default function WholesaleCustomersPage() {
         result: visitForm.result,
         notes: visitForm.notes,
         nextFollowUpAt: visitForm.nextFollowUpAt,
+        followUpType: visitForm.followUpType,
         followUpNotes: visitForm.followUpNotes,
         rejectionReasonCode: visitForm.rejectionReasonCode,
         rejectionReasonOther: visitForm.rejectionReasonOther,
@@ -1328,6 +1352,7 @@ export default function WholesaleCustomersPage() {
                     <div className="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-300">
                       <div>المندوب: {visit.user?.username || "غير محدد"}</div>
                       <div>المتابعة التالية: {formatDateLabel(visit.nextFollowUpAt)}</div>
+                      <div>نوع المتابعة: {getFollowUpTypeLabel(visit.followUpType)}</div>
                       <div>الملاحظات: {visit.notes || "-"}</div>
                       <div>الإجراء القادم: {visit.followUpNotes || "-"}</div>
                       {visit.rejectionReasonCode && <div>سبب عدم التعاون: {getRejectionReasonLabel(visit.rejectionReasonCode, visit.rejectionReasonOther)}</div>}
@@ -1650,6 +1675,16 @@ export default function WholesaleCustomersPage() {
                 <Field label="موعد المتابعة">
                   <input type="datetime-local" value={visitForm.nextFollowUpAt} onChange={(event) => setVisitForm((current) => ({ ...current, nextFollowUpAt: event.target.value }))} className="field-input" />
                 </Field>
+                {requiresFollowUpType(visitForm.result) && (
+                  <Field label="نوع المتابعة">
+                    <select value={visitForm.followUpType} onChange={(event) => setVisitForm((current) => ({ ...current, followUpType: event.target.value }))} className="field-input">
+                      <option value="">اختر النوع</option>
+                      {FOLLOW_UP_TYPE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </Field>
+                )}
                 <div className="md:col-span-2">
                   <Field label="الإجراء القادم">
                     <textarea value={visitForm.followUpNotes} onChange={(event) => setVisitForm((current) => ({ ...current, followUpNotes: event.target.value }))} className="field-input min-h-[100px]" />

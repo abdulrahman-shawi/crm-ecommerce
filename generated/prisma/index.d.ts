@@ -25102,6 +25102,7 @@ export namespace Prisma {
     latitude: number | null
     longitude: number | null
     nextFollowUpAt: Date | null
+    followUpType: string | null
     followUpNotes: string | null
     orderPlaced: boolean | null
     syncedAt: Date | null
@@ -25121,6 +25122,7 @@ export namespace Prisma {
     latitude: number | null
     longitude: number | null
     nextFollowUpAt: Date | null
+    followUpType: string | null
     followUpNotes: string | null
     orderPlaced: boolean | null
     syncedAt: Date | null
@@ -25141,6 +25143,7 @@ export namespace Prisma {
     latitude: number
     longitude: number
     nextFollowUpAt: number
+    followUpType: number
     followUpNotes: number
     orderPlaced: number
     syncedAt: number
@@ -25172,6 +25175,7 @@ export namespace Prisma {
     latitude?: true
     longitude?: true
     nextFollowUpAt?: true
+    followUpType?: true
     followUpNotes?: true
     orderPlaced?: true
     syncedAt?: true
@@ -25191,6 +25195,7 @@ export namespace Prisma {
     latitude?: true
     longitude?: true
     nextFollowUpAt?: true
+    followUpType?: true
     followUpNotes?: true
     orderPlaced?: true
     syncedAt?: true
@@ -25211,6 +25216,7 @@ export namespace Prisma {
     latitude?: true
     longitude?: true
     nextFollowUpAt?: true
+    followUpType?: true
     followUpNotes?: true
     orderPlaced?: true
     syncedAt?: true
@@ -25318,6 +25324,7 @@ export namespace Prisma {
     latitude: number | null
     longitude: number | null
     nextFollowUpAt: Date | null
+    followUpType: string | null
     followUpNotes: string | null
     orderPlaced: boolean
     syncedAt: Date | null
@@ -25357,6 +25364,7 @@ export namespace Prisma {
     latitude?: boolean
     longitude?: boolean
     nextFollowUpAt?: boolean
+    followUpType?: boolean
     followUpNotes?: boolean
     orderPlaced?: boolean
     syncedAt?: boolean
@@ -25379,6 +25387,7 @@ export namespace Prisma {
     latitude?: boolean
     longitude?: boolean
     nextFollowUpAt?: boolean
+    followUpType?: boolean
     followUpNotes?: boolean
     orderPlaced?: boolean
     syncedAt?: boolean
@@ -25401,6 +25410,7 @@ export namespace Prisma {
     latitude?: boolean
     longitude?: boolean
     nextFollowUpAt?: boolean
+    followUpType?: boolean
     followUpNotes?: boolean
     orderPlaced?: boolean
     syncedAt?: boolean
@@ -25423,6 +25433,7 @@ export namespace Prisma {
     latitude?: boolean
     longitude?: boolean
     nextFollowUpAt?: boolean
+    followUpType?: boolean
     followUpNotes?: boolean
     orderPlaced?: boolean
     syncedAt?: boolean
@@ -25430,7 +25441,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WholesaleVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "wholesaleCustomerId" | "userId" | "visitedAt" | "result" | "status" | "voiceNote" | "notes" | "photoUrls" | "latitude" | "longitude" | "nextFollowUpAt" | "followUpNotes" | "orderPlaced" | "syncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleVisit"]>
+  export type WholesaleVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "wholesaleCustomerId" | "userId" | "visitedAt" | "result" | "status" | "voiceNote" | "notes" | "photoUrls" | "latitude" | "longitude" | "nextFollowUpAt" | "followUpType" | "followUpNotes" | "orderPlaced" | "syncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleVisit"]>
   export type WholesaleVisitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
     user?: boolean | WholesaleVisit$userArgs<ExtArgs>
@@ -25463,6 +25474,7 @@ export namespace Prisma {
       latitude: number | null
       longitude: number | null
       nextFollowUpAt: Date | null
+      followUpType: string | null
       followUpNotes: string | null
       orderPlaced: boolean
       syncedAt: Date | null
@@ -25905,6 +25917,7 @@ export namespace Prisma {
     readonly latitude: FieldRef<"WholesaleVisit", 'Float'>
     readonly longitude: FieldRef<"WholesaleVisit", 'Float'>
     readonly nextFollowUpAt: FieldRef<"WholesaleVisit", 'DateTime'>
+    readonly followUpType: FieldRef<"WholesaleVisit", 'String'>
     readonly followUpNotes: FieldRef<"WholesaleVisit", 'String'>
     readonly orderPlaced: FieldRef<"WholesaleVisit", 'Boolean'>
     readonly syncedAt: FieldRef<"WholesaleVisit", 'DateTime'>
@@ -45770,6 +45783,7 @@ export namespace Prisma {
     latitude: 'latitude',
     longitude: 'longitude',
     nextFollowUpAt: 'nextFollowUpAt',
+    followUpType: 'followUpType',
     followUpNotes: 'followUpNotes',
     orderPlaced: 'orderPlaced',
     syncedAt: 'syncedAt',
@@ -48108,6 +48122,7 @@ export namespace Prisma {
     latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpType?: StringNullableFilter<"WholesaleVisit"> | string | null
     followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
     orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
     syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
@@ -48130,6 +48145,7 @@ export namespace Prisma {
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
     nextFollowUpAt?: SortOrderInput | SortOrder
+    followUpType?: SortOrderInput | SortOrder
     followUpNotes?: SortOrderInput | SortOrder
     orderPlaced?: SortOrder
     syncedAt?: SortOrderInput | SortOrder
@@ -48155,6 +48171,7 @@ export namespace Prisma {
     latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpType?: StringNullableFilter<"WholesaleVisit"> | string | null
     followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
     orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
     syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
@@ -48177,6 +48194,7 @@ export namespace Prisma {
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
     nextFollowUpAt?: SortOrderInput | SortOrder
+    followUpType?: SortOrderInput | SortOrder
     followUpNotes?: SortOrderInput | SortOrder
     orderPlaced?: SortOrder
     syncedAt?: SortOrderInput | SortOrder
@@ -48205,6 +48223,7 @@ export namespace Prisma {
     latitude?: FloatNullableWithAggregatesFilter<"WholesaleVisit"> | number | null
     longitude?: FloatNullableWithAggregatesFilter<"WholesaleVisit"> | number | null
     nextFollowUpAt?: DateTimeNullableWithAggregatesFilter<"WholesaleVisit"> | Date | string | null
+    followUpType?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
     followUpNotes?: StringNullableWithAggregatesFilter<"WholesaleVisit"> | string | null
     orderPlaced?: BoolWithAggregatesFilter<"WholesaleVisit"> | boolean
     syncedAt?: DateTimeNullableWithAggregatesFilter<"WholesaleVisit"> | Date | string | null
@@ -51651,6 +51670,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -51673,6 +51693,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -51691,6 +51712,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51713,6 +51735,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51733,6 +51756,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -51751,6 +51775,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51771,6 +51796,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -55030,6 +55056,7 @@ export namespace Prisma {
     latitude?: SortOrder
     longitude?: SortOrder
     nextFollowUpAt?: SortOrder
+    followUpType?: SortOrder
     followUpNotes?: SortOrder
     orderPlaced?: SortOrder
     syncedAt?: SortOrder
@@ -55054,6 +55081,7 @@ export namespace Prisma {
     latitude?: SortOrder
     longitude?: SortOrder
     nextFollowUpAt?: SortOrder
+    followUpType?: SortOrder
     followUpNotes?: SortOrder
     orderPlaced?: SortOrder
     syncedAt?: SortOrder
@@ -55073,6 +55101,7 @@ export namespace Prisma {
     latitude?: SortOrder
     longitude?: SortOrder
     nextFollowUpAt?: SortOrder
+    followUpType?: SortOrder
     followUpNotes?: SortOrder
     orderPlaced?: SortOrder
     syncedAt?: SortOrder
@@ -60120,6 +60149,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -60140,6 +60170,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -60849,6 +60880,7 @@ export namespace Prisma {
     latitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     longitude?: FloatNullableFilter<"WholesaleVisit"> | number | null
     nextFollowUpAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
+    followUpType?: StringNullableFilter<"WholesaleVisit"> | string | null
     followUpNotes?: StringNullableFilter<"WholesaleVisit"> | string | null
     orderPlaced?: BoolFilter<"WholesaleVisit"> | boolean
     syncedAt?: DateTimeNullableFilter<"WholesaleVisit"> | Date | string | null
@@ -64170,6 +64202,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -64190,6 +64223,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -67888,6 +67922,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -68561,6 +68596,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68581,6 +68617,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68600,6 +68637,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69953,6 +69991,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     nextFollowUpAt?: Date | string | null
+    followUpType?: string | null
     followUpNotes?: string | null
     orderPlaced?: boolean
     syncedAt?: Date | string | null
@@ -69971,6 +70010,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69991,6 +70031,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70010,6 +70051,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    followUpType?: NullableStringFieldUpdateOperationsInput | string | null
     followUpNotes?: NullableStringFieldUpdateOperationsInput | string | null
     orderPlaced?: BoolFieldUpdateOperationsInput | boolean
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
