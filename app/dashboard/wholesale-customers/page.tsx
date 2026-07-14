@@ -962,8 +962,8 @@ export default function WholesaleCustomersPage() {
       if (options?.openVisitModalOnSuccess && savedCustomerId) {
         openVisitModalForCustomerData({
           id: savedCustomerId,
-          assignedUserId: savedCustomer?.assignedUserId ?? payload.assignedUserId || null,
-          nextFollowUpAt: savedCustomer?.nextFollowUpAt ?? payload.nextFollowUpAt || null,
+          assignedUserId: savedCustomer?.assignedUserId ?? (payload.assignedUserId || null),
+          nextFollowUpAt: savedCustomer?.nextFollowUpAt ?? (payload.nextFollowUpAt || null),
         });
       }
       await loadData();
@@ -1353,7 +1353,7 @@ export default function WholesaleCustomersPage() {
         footer={
           <>
             <Button variant="outline" onClick={() => setIsCustomerModalOpen(false)}>إلغاء</Button>
-            <Button onClick={handleSaveCustomer} isLoading={isPending}>حفظ البيانات</Button>
+            <Button onClick={() => handleSaveCustomer()} isLoading={isPending}>حفظ البيانات</Button>
           </>
         }
       >
