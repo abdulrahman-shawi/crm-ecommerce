@@ -814,6 +814,16 @@ export default function WholesaleCustomersPage() {
     setIsVisitModalOpen(true);
   }
 
+  function openVisitModalForCustomerData(customer: Pick<WholesaleCustomer, "id" | "assignedUserId" | "nextFollowUpAt">) {
+    setSelectedCustomerId(customer.id);
+    setVisitForm({
+      ...createEmptyVisitForm(),
+      userId: customer.assignedUserId || user?.id || "",
+      nextFollowUpAt: toDateTimeLocalValue(customer.nextFollowUpAt),
+    });
+    setIsVisitModalOpen(true);
+  }
+
   function handleVisitResultChange(value: string) {
     setVisitForm((current) => ({
       ...current,
@@ -860,12 +870,21 @@ export default function WholesaleCustomersPage() {
   }
 
   function handleCustomerVisitStatusChange(value: string) {
-    setCustomerForm((current) => ({
-      ...current,
+    const nextForm = {
+      ...customerForm,
       visitStatus: value,
-      preferredVisitAt: value === "PLANNED" ? current.preferredVisitAt : "",
-      nextFollowUpAt: value === "VISITED" ? current.nextFollowUpAt : "",
-    }));
+      preferredVisitAt: value === "PLANNED" ? customerForm.preferredVisitAt : "",
+      nextFollowUpAt: value === "VISITED" ? customerForm.nextFollowUpAt : "",
+    };
+
+    setCustomerForm(nextForm);
+
+    if (value === "VISITED" && !editingCustomerId && isCustomerModalOpen) {
+      handleSaveCustomer(nextForm, {
+        openVisitModalOnSuccess: true,
+        successMessage: "تم حفظ بيانات العميل",
+      });
+    }
   }
 
   function handleUseCurrentLocation() {
@@ -878,47 +897,50 @@ export default function WholesaleCustomersPage() {
     toast.success("تم استخدام موقع المسؤول الحالي على الخريطة");
   }
 
-  function handleSaveCustomer() {
-    if (!customerForm.name.trim()) {
+  function handleSaveCustomer(
+    formState: CustomerFormState = customerForm,
+    options?: { openVisitModalOnSuccess?: boolean; successMessage?: string }
+  ) {
+    if (!formState.name.trim()) {
       toast.error("اسم عميل الجملة مطلوب");
       return;
     }
 
-    const normalizedPhones = normalizePhoneListInput(customerForm.phoneNumbers);
+    const normalizedPhones = normalizePhoneListInput(formState.phoneNumbers);
     if (normalizedPhones.length === 0) {
       toast.error("أدخل رقم هاتف واحد على الأقل");
       return;
     }
 
     startTransition(async () => {
-      const manualMapCoordinates = parseMapLinkCoordinates(customerForm.googleMapsLink);
+      const manualMapCoordinates = parseMapLinkCoordinates(formState.googleMapsLink);
       const fallbackMapLink = createGoogleMapsLink(mapCoordinates.latitude, mapCoordinates.longitude);
-      const latitude = manualMapCoordinates?.latitude ?? parseOptionalNumber(customerForm.latitude) ?? mapCoordinates.latitude;
-      const longitude = manualMapCoordinates?.longitude ?? parseOptionalNumber(customerForm.longitude) ?? mapCoordinates.longitude;
-      const googleMapsLink = customerForm.googleMapsLink.trim() || fallbackMapLink;
+      const latitude = manualMapCoordinates?.latitude ?? parseOptionalNumber(formState.latitude) ?? mapCoordinates.latitude;
+      const longitude = manualMapCoordinates?.longitude ?? parseOptionalNumber(formState.longitude) ?? mapCoordinates.longitude;
+      const googleMapsLink = formState.googleMapsLink.trim() || fallbackMapLink;
 
       const payload = {
-        name: customerForm.name,
-        category: customerForm.category,
-        activityKey: customerForm.category,
-        categoryOther: customerForm.categoryOther,
-        contactName: customerForm.contactName,
-        contactRole: customerForm.contactRole,
-        contactRoleOther: customerForm.contactRole === "OTHER" ? customerForm.contactRoleOther : "",
+        name: formState.name,
+        category: formState.category,
+        activityKey: formState.category,
+        categoryOther: formState.categoryOther,
+        contactName: formState.contactName,
+        contactRole: formState.contactRole,
+        contactRoleOther: formState.contactRole === "OTHER" ? formState.contactRoleOther : "",
         phone: normalizedPhones,
         country: resolvedCustomerCountry,
-        city: customerForm.city,
-        area: customerForm.area,
-        address: customerForm.address,
+        city: formState.city,
+        area: formState.area,
+        address: formState.address,
         latitude,
         longitude,
         googleMapsLink,
-        assignedUserId: customerForm.assignedUserId,
-        notes: customerForm.notes,
-        preferredVisitAt: customerForm.visitStatus === "PLANNED" ? customerForm.preferredVisitAt : "",
-        nextFollowUpAt: customerForm.visitStatus === "VISITED" ? customerForm.nextFollowUpAt : "",
-        visitStatus: customerForm.visitStatus,
-        isActive: customerForm.isActive,
+        assignedUserId: formState.assignedUserId,
+        notes: formState.notes,
+        preferredVisitAt: formState.visitStatus === "PLANNED" ? formState.preferredVisitAt : "",
+        nextFollowUpAt: formState.visitStatus === "VISITED" ? formState.nextFollowUpAt : "",
+        visitStatus: formState.visitStatus,
+        isActive: formState.isActive,
       };
 
       const response = editingCustomerId
@@ -930,13 +952,21 @@ export default function WholesaleCustomersPage() {
         return;
       }
 
-      toast.success(editingCustomerId ? "تم تعديل العميل" : "تمت إضافة عميل جديد");
+      const savedCustomer = (response.data as WholesaleCustomer | undefined) ?? null;
+      toast.success(options?.successMessage || (editingCustomerId ? "تم تعديل العميل" : "تمت إضافة عميل جديد"));
       setIsCustomerModalOpen(false);
-      await loadData();
-      const createdId = (response.data as WholesaleCustomer | undefined)?.id;
-      if (createdId) {
-        setSelectedCustomerId(createdId);
+      const savedCustomerId = savedCustomer?.id ?? editingCustomerId;
+      if (savedCustomerId) {
+        setSelectedCustomerId(savedCustomerId);
       }
+      if (options?.openVisitModalOnSuccess && savedCustomerId) {
+        openVisitModalForCustomerData({
+          id: savedCustomerId,
+          assignedUserId: savedCustomer?.assignedUserId ?? payload.assignedUserId || null,
+          nextFollowUpAt: savedCustomer?.nextFollowUpAt ?? payload.nextFollowUpAt || null,
+        });
+      }
+      await loadData();
     });
   }
 
