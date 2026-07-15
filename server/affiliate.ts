@@ -559,10 +559,18 @@ export async function getAffiliateUsersAdminList() {
       jobTitle: true,
       accountType: true,
       isAffiliate: true,
+      salesCommissionPercent: true,
+      wage: true,
       affiliateApproved: true,
       affiliateRequestedAt: true,
       affiliateApprovedAt: true,
       createdAt: true,
+      permission: {
+        select: {
+          id: true,
+          roleName: true,
+        },
+      },
       affiliateLinks: {
         select: {
           id: true,
