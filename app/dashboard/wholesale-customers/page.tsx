@@ -1160,7 +1160,7 @@ export default function WholesaleCustomersPage() {
     }
 
     return actions;
-  }, [canDeleteWholesale, canEditWholesale, canRegisterVisit]);
+  }, [canDeleteWholesale, canEditWholesale, canRegisterVisit, handleDeleteCustomer, openEditCustomerModal, openVisitModal]);
 
   if (loading || isLoading) {
     return (
