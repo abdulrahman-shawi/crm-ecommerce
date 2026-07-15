@@ -9,7 +9,7 @@ import { DynamicForm } from '@/components/shared/dynamic-form';
 import { AppModal } from '@/components/ui/app-modal';
 import { FormInput } from '@/components/ui/form-input';
 import { getAffiliateUsersAdminList, setAffiliateUserApproval, transferAffiliateDeliveredCommissions } from '@/server/affiliate';
-import { deleteuser, updateuser } from '@/server/user';
+import { createuser, deleteuser, updateuser } from '@/server/user';
 
 const userSchema = z.object({
   username: z.string().min(3, 'اسم المستخدم مطلوب'),
@@ -83,12 +83,27 @@ const formatDate = (value?: string | Date | null) => {
 
 const formatAmount = (value?: number | null) => Number(value || 0).toFixed(2);
 
+const createDefaultUserFormValues = (): z.infer<typeof userSchema> => ({
+  username: '',
+  email: '',
+  phone: '',
+  notes: '',
+  password: '',
+  jobTitle: '',
+  accountType: 'AFFILIATE',
+  isAffiliate: true,
+  permissions: '',
+  salesCommissionPercent: 0,
+  wage: 0,
+});
+
 export default function AffiliateUsersPage() {
   const [payload, setPayload] = React.useState<AffiliateUsersPayload>(defaultPayload);
   const [loading, setLoading] = React.useState(true);
   const [roles, setRoles] = React.useState<Array<{ id: string; roleName: string }>>([]);
   const [savingByUser, setSavingByUser] = React.useState<Record<string, boolean>>({});
   const [transferringByUser, setTransferringByUser] = React.useState<Record<string, boolean>>({});
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState<z.infer<typeof userSchema> | null>(null);
@@ -136,6 +151,10 @@ export default function AffiliateUsersPage() {
     setIsEditOpen(false);
     setEditId(null);
     setFormData(null);
+  };
+
+  const handleCloseCreate = () => {
+    setIsCreateOpen(false);
   };
 
   const handleApprovalChange = async (userId: string, approved: boolean) => {
@@ -211,6 +230,30 @@ export default function AffiliateUsersPage() {
     }
   };
 
+  const handleCreate = async (data: z.infer<typeof userSchema>) => {
+    const loadingToast = toast.loading('جاري إنشاء حساب الأفلييت...');
+    try {
+      const result = await createuser({
+        ...data,
+        accountType: 'AFFILIATE',
+        isAffiliate: true,
+      });
+
+      if (!result?.success) {
+        toast.error(result?.error || 'فشل في إنشاء حساب الأفلييت');
+        return;
+      }
+
+      toast.success('تم إنشاء حساب الأفلييت بنجاح');
+      handleCloseCreate();
+      await loadData();
+    } catch {
+      toast.error('حدث خطأ غير متوقع أثناء إنشاء الحساب');
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  };
+
   const handleDelete = async (userId: string) => {
     const confirmed = window.confirm('هل أنت متأكد من حذف هذا المستخدم؟');
     if (!confirmed) return;
@@ -232,6 +275,96 @@ export default function AffiliateUsersPage() {
     }
   };
 
+  const renderUserFormFields = ({ register, control, formState: { errors } }: any, passwordPlaceholder?: string) => (
+    <div className="grid gap-4">
+      <div className="rounded-2xl border border-slate-200/80 p-4 dark:border-slate-800">
+        <div className="mb-3 text-sm font-black text-slate-800 dark:text-slate-100">البيانات الأساسية</div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormInput className="text-gray-800 dark:text-white" label="اسم المستخدم" {...register('username')} error={errors.username?.message as string} />
+          <FormInput className="text-gray-800 dark:text-white" label="البريد الإلكتروني" {...register('email')} error={errors.email?.message as string} />
+          <div className="flex flex-col gap-2 md:col-span-2">
+            <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
+            <div className="dir-ltr">
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <PhoneInput
+                    international
+                    withCountryCallingCode
+                    defaultCountry="SY"
+                    value={typeof value === 'string' ? value : undefined}
+                    onChange={(nextValue) => onChange(nextValue ?? '')}
+                    className="PhoneInputCustom"
+                    numberInputProps={{
+                      className: 'w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
+                    }}
+                  />
+                )}
+              />
+            </div>
+            {errors.phone && <p className="text-xs text-red-500">{errors.phone.message as string}</p>}
+          </div>
+          <div className="md:col-span-2">
+            <FormInput
+              className="text-gray-800 dark:text-white"
+              label="كلمة المرور"
+              type="password"
+              {...register('password')}
+              placeholder={passwordPlaceholder}
+              error={errors.password?.message as string}
+            />
+          </div>
+        </div>
+      </div>
+
+      <FormInput className="text-gray-800 dark:text-white" label="ملاحظات المستخدم" {...register('notes')} error={errors.notes?.message as string} />
+      <FormInput className="text-gray-800 dark:text-white" label="المسمى الوظيفي" {...register('jobTitle')} error={errors.jobTitle?.message as string} />
+      <FormInput
+        className="text-gray-800 dark:text-white"
+        label="نسبة عمولة المبيعات (%)"
+        type="text"
+        inputMode="decimal"
+        pattern="[0-9]+([.,][0-9]+)?"
+        min={0}
+        {...register('salesCommissionPercent')}
+        error={errors.salesCommissionPercent?.message as string}
+      />
+      <FormInput
+        className="text-gray-800 dark:text-white"
+        label="البدل الثابت"
+        type="number"
+        step="1"
+        min={0}
+        {...register('wage')}
+        error={errors.wage?.message as string}
+      />
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-semibold dark:text-slate-300">نوع الحساب</label>
+        <select className={selectClasses} {...register('accountType')}>
+          <option value="ADMIN">مشرف نظام</option>
+          <option value="MANAGER">مدير</option>
+          <option value="STAFF">موظف</option>
+          <option value="AFFILIATE">أفلييت</option>
+        </select>
+      </div>
+      <label className="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-300">
+        <input type="checkbox" className="h-4 w-4" {...register('isAffiliate')} />
+        <span>هذا الحساب أفلييت ويحتاج موافقة الأدمن قبل الاستخدام</span>
+      </label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-semibold dark:text-slate-300">مجموعة الصلاحيات</label>
+        <select className={selectClasses} {...register('permissions')}>
+          <option value="">اختر الصلاحية...</option>
+          {roles.map((role) => (
+            <option key={role.id} value={role.id}>{role.roleName}</option>
+          ))}
+        </select>
+        {errors.permissions && <p className="text-xs text-red-500">{errors.permissions.message as string}</p>}
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
@@ -239,6 +372,13 @@ export default function AffiliateUsersPage() {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white">مستخدمو الأفلييت</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">أي حساب أفلييت جديد يبقى بانتظار موافقة الأدمن قبل أن يتمكن من تسجيل الدخول أو استخدام روابط الأفلييت.</p>
         </div>
+        <button
+          type="button"
+          onClick={() => setIsCreateOpen(true)}
+          className="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white transition hover:bg-blue-700"
+        >
+          إضافة عميل أفلييت جديد
+        </button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -370,80 +510,21 @@ export default function AffiliateUsersPage() {
             key={editId || 'affiliate-edit'}
             submitLabel="تحديث البيانات"
           >
-            {({ register, control, formState: { errors } }) => (
-              <div className="grid gap-4">
-                <FormInput className="text-gray-800 dark:text-white" label="اسم المستخدم" {...register('username')} error={errors.username?.message as string} />
-                <FormInput className="text-gray-800 dark:text-white" label="البريد الإلكتروني" {...register('email')} error={errors.email?.message as string} />
-                <FormInput className="text-gray-800 dark:text-white" label="ملاحظات المستخدم" {...register('notes')} error={errors.notes?.message as string} />
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
-                  <div className="dir-ltr">
-                    <Controller
-                      name="phone"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <PhoneInput
-                          international
-                          withCountryCallingCode
-                          defaultCountry="SY"
-                          value={typeof value === 'string' ? value : undefined}
-                          onChange={(nextValue) => onChange(nextValue ?? '')}
-                          className="PhoneInputCustom"
-                          numberInputProps={{
-                            className: 'w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-                  {errors.phone && <p className="text-xs text-red-500">{errors.phone.message as string}</p>}
-                </div>
-                <FormInput className="text-gray-800 dark:text-white" label="كلمة المرور" type="password" {...register('password')} placeholder="اتركها فارغة لعدم التغيير" error={errors.password?.message as string} />
-                <FormInput className="text-gray-800 dark:text-white" label="المسمى الوظيفي" {...register('jobTitle')} error={errors.jobTitle?.message as string} />
-                <FormInput
-                  className="text-gray-800 dark:text-white"
-                  label="نسبة عمولة المبيعات (%)"
-                  type="text"
-                  inputMode="decimal"
-                  pattern="[0-9]+([.,][0-9]+)?"
-                  min={0}
-                  {...register('salesCommissionPercent')}
-                  error={errors.salesCommissionPercent?.message as string}
-                />
-                <FormInput
-                  className="text-gray-800 dark:text-white"
-                  label="البدل الثابت"
-                  type="number"
-                  step="1"
-                  min={0}
-                  {...register('wage')}
-                  error={errors.wage?.message as string}
-                />
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold dark:text-slate-300">نوع الحساب</label>
-                  <select className={selectClasses} {...register('accountType')}>
-                    <option value="ADMIN">مشرف نظام</option>
-                    <option value="MANAGER">مدير</option>
-                    <option value="STAFF">موظف</option>
-                    <option value="AFFILIATE">أفلييت</option>
-                  </select>
-                </div>
-                <label className="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-300">
-                  <input type="checkbox" className="h-4 w-4" {...register('isAffiliate')} />
-                  <span>هذا الحساب أفلييت ويحتاج موافقة الأدمن قبل الاستخدام</span>
-                </label>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold dark:text-slate-300">مجموعة الصلاحيات</label>
-                  <select className={selectClasses} {...register('permissions')}>
-                    <option value="">اختر الصلاحية...</option>
-                    {roles.map((role) => (
-                      <option key={role.id} value={role.id}>{role.roleName}</option>
-                    ))}
-                  </select>
-                  {errors.permissions && <p className="text-xs text-red-500">{errors.permissions.message as string}</p>}
-                </div>
-              </div>
-            )}
+            {(methods) => renderUserFormFields(methods, 'اتركها فارغة لعدم التغيير')}
+          </DynamicForm>
+        </div>
+      </AppModal>
+
+      <AppModal title="إضافة عميل أفلييت جديد" isOpen={isCreateOpen} onClose={handleCloseCreate}>
+        <div className="max-h-[80vh] p-2">
+          <DynamicForm
+            schema={userSchema}
+            onSubmit={handleCreate}
+            defaultValues={createDefaultUserFormValues()}
+            key={isCreateOpen ? 'affiliate-create-open' : 'affiliate-create'}
+            submitLabel="إنشاء الحساب"
+          >
+            {(methods) => renderUserFormFields(methods)}
           </DynamicForm>
         </div>
       </AppModal>
