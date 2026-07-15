@@ -204,7 +204,6 @@ export default function PermissionsPage() {
                                         <PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="عملاء الجملة" suffix="WholesaleCustomers" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
-                                        <PermissionRow title="المصاريف" suffix="Expenses" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الصلاحيات" suffix="Permissions" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الصفحات الثابتة" suffix="Pages" role={selectedRole} onToggle={togglePermission} />
 
@@ -220,28 +219,6 @@ export default function PermissionsPage() {
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                                 <SinglePermissionBox label="عرض التحليلات" fieldName="viewAnalytics" role={selectedRole} onToggle={togglePermission} />
                                             </div>
-                                        </div>
-                                        <div className="border-b dark:border-slate-800 last:border-0 pb-8 mt-10">
-                                            <h4 className="font-black mb-4 flex items-center gap-2 text-slate-800 dark:text-slate-200">
-                                                <div className="w-2 h-2 rounded-full bg-emerald-500" /> النطاق الجغرافي للمستودعات
-                                            </h4>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                                <SinglePermissionBox
-                                                    label="وصول مستودعات سوريا"
-                                                    fieldName="accessSyria"
-                                                    role={selectedRole}
-                                                    onToggle={togglePermission}
-                                                />
-                                                <SinglePermissionBox
-                                                    label="وصول مستودعات تركيا"
-                                                    fieldName="accessTurkey"
-                                                    role={selectedRole}
-                                                    onToggle={togglePermission}
-                                                />
-                                            </div>
-                                            <p className="text-xs text-slate-400 mt-2 px-2 italic">
-                                                * سيتمكن المستخدم من رؤية الطلبات المرتبطة بمستودعات هذا الموقع فقط.
-                                            </p>
                                         </div>
                                     </div>
                                 </>

@@ -122,10 +122,8 @@ function canViewOrders(user: any) {
 }
 
 function getAllowedWarehouseLocations(user: any) {
-    const locations: string[] = [];
-    if (user?.permission?.accessSyria === true) locations.push("سوريا");
-    if (user?.permission?.accessTurkey === true) locations.push("تركيا");
-    return locations;
+    void user;
+    return ["سوريا", "تركيا"];
 }
 
 export async function getCurrentSessionUser() {

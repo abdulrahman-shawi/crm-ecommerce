@@ -190,9 +190,7 @@ exports.Prisma.PermissionScalarFieldEnum = {
   viewPages: 'viewPages',
   addPages: 'addPages',
   editPages: 'editPages',
-  deletePages: 'deletePages',
-  accessSyria: 'accessSyria',
-  accessTurkey: 'accessTurkey'
+  deletePages: 'deletePages'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {

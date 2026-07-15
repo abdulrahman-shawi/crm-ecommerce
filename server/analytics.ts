@@ -860,78 +860,8 @@ export async function GetDailyExpensesAnalytics(userId: string, dateFilter?: Ord
     });
 
     if (!user) return { success: false, error: "User not found", data: [] };
-
-    const isAdminUser = isAdmin(user);
-    const canViewExpenses = isAdminUser || Boolean(user?.permission?.viewExpenses);
-    if (!canViewExpenses) return { success: true, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
-
-    const createdAtFilter = buildOrderDateWhere(dateFilter);
-    const allowedPaidOffices: Array<"SYRIA" | "TURKEY"> = [];
-    if (user?.permission?.accessSyria === true) allowedPaidOffices.push("SYRIA");
-    if (user?.permission?.accessTurkey === true) allowedPaidOffices.push("TURKEY");
-
-    const whereClause: any = {
-      type: "DAILY",
-      ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
-    };
-
-    if (!isAdminUser) {
-      if (allowedPaidOffices.length === 0) {
-        return { success: true, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
-      }
-      whereClause.paidFromOffice = { in: allowedPaidOffices };
-    }
-
-    const expenses = await prisma.expense.findMany({
-      where: whereClause,
-      select: {
-        amount: true,
-        currency: true,
-        createdAt: true,
-      },
-      orderBy: { createdAt: "asc" },
-    });
-
-    const groupedByDay = expenses.reduce((acc, expense) => {
-      const dateKey = new Date(expense.createdAt).toISOString().split("T")[0];
-      const currencyKey = String(expense.currency || "USD").toUpperCase();
-      const safeAmount = Number(expense.amount || 0);
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = {
-          date: dateKey,
-          count: 0,
-          USD: 0,
-          TRY: 0,
-          SYP: 0,
-        };
-      }
-
-      acc[dateKey].count += 1;
-      if (currencyKey === "TRY") {
-        acc[dateKey].TRY += safeAmount;
-      } else if (currencyKey === "SYP") {
-        acc[dateKey].SYP += safeAmount;
-      } else {
-        acc[dateKey].USD += safeAmount;
-      }
-
-      return acc;
-    }, {} as Record<string, { date: string; count: number; USD: number; TRY: number; SYP: number }>);
-
-    const dailyData = Object.values(groupedByDay).sort((a, b) => a.date.localeCompare(b.date));
-
-    const summary = dailyData.reduce(
-      (acc, day) => {
-        acc.USD += Number(day.USD || 0);
-        acc.TRY += Number(day.TRY || 0);
-        acc.SYP += Number(day.SYP || 0);
-        return acc;
-      },
-      { USD: 0, TRY: 0, SYP: 0 }
-    );
-
-    return { success: true, data: dailyData, summary };
+    void dateFilter;
+    return { success: true, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
   } catch (error) {
     console.error("Error in GetDailyExpensesAnalytics:", error);
     return { success: false, data: [], summary: { USD: 0, TRY: 0, SYP: 0 } };
@@ -1718,139 +1648,14 @@ export async function GetEmployeeCustomerReport(userId: string, periodOrFilter: 
 
 export async function GetTopSellingUsersByPermission(userId: string, dateFilter?: OrderDateFilter) {
   try {
-    const turkeyExchangeRate = await getTurkeyExchangeRateFromSettings();
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { permission: true }
     });
 
-    if (!user) return { success: false, error: "User not found" };
-
-    const canViewEmployees = isAdmin(user) || Boolean(user.permission?.viewEmployees);
-    if (!canViewEmployees) return { success: true, data: [] };
-
-    const statusBlacklist = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
-    const createdAtFilter = buildOrderDateWhere(dateFilter);
-    const warehouseScope = buildWarehouseScope(dateFilter?.warehouseLocation);
-
-    const revenueOrders = await prisma.order.findMany({
-      where: {
-        userId: { not: null },
-        status: { notIn: statusBlacklist },
-        ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
-        ...(warehouseScope ? warehouseScope : {}),
-      },
-      select: {
-        id: true,
-        userId: true,
-        orderNumber: true,
-        finalAmount: true,
-        discount: true,
-        usdToTryRateAtOrder: true,
-        status: true,
-        createdAt: true,
-        warehouse: {
-          select: {
-            location: true,
-          }
-        },
-        customer: {
-          select: {
-            id: true,
-            name: true,
-          }
-        },
-        items: {
-          select: {
-            id: true,
-            quantity: true,
-            price: true,
-            discount: true,
-            product: {
-              select: {
-                id: true,
-                name: true,
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
-    const salesByUser = new Map<string, number>();
-    const deliveredOrdersByUser = new Map<string, number>();
-
-    for (const order of revenueOrders) {
-      if (!order.userId) continue;
-      const amountUSD = getOrderAmountFromItemsInUSD(order, turkeyExchangeRate);
-      const currentSales = salesByUser.get(order.userId) || 0;
-      salesByUser.set(order.userId, currentSales + amountUSD);
-
-      const currentDelivered = deliveredOrdersByUser.get(order.userId) || 0;
-      deliveredOrdersByUser.set(order.userId, currentDelivered + 1);
-    }
-
-    const userIds = Array.from(salesByUser.keys());
-    if (userIds.length === 0) {
-      return { success: true, data: [] };
-    }
-
-    const allOrdersCounts = await Promise.all(
-      userIds.map(async (id) => ({
-        userId: id,
-        count: await prisma.order.count({
-          where: {
-            userId: id,
-            ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
-            ...(warehouseScope ? warehouseScope : {}),
-          },
-        }),
-      }))
-    );
-
-    const allOrdersCountByUser = new Map(
-      allOrdersCounts.map(item => [item.userId, item.count || 0])
-    );
-
-    const userDetails = await prisma.user.findMany({
-      where: {
-        id: { in: userIds }
-      },
-      select: {
-        id: true,
-        username: true
-      }
-    });
-
-    const finalData = userIds
-      .map((id) => {
-        const userInfo = userDetails.find((u) => u.id === id);
-        const userOrders = revenueOrders
-          .filter((order) => order.userId === id)
-          .map((order) => ({
-            ...order,
-            orderAmountUSD: getOrderAmountFromItemsInUSD(order, turkeyExchangeRate),
-          }));
-        const totalOrdersAll = allOrdersCountByUser.get(id) || 0;
-        const deliveredOrders = deliveredOrdersByUser.get(id) || 0;
-
-        return {
-          userId: id,
-          name: userInfo?.username || "مستخدم غير معروف",
-          totalOrders: totalOrdersAll,
-          totalOrdersAll,
-          deliveredOrders,
-          totalSalesAmount: salesByUser.get(id) || 0,
-          orders: userOrders
-        };
-      })
-      .sort((a, b) => b.totalSalesAmount - a.totalSalesAmount)
-      .slice(0, 10);
-
-    return { success: true, data: finalData };
+    if (!user) return { success: false, error: "User not found", data: [] };
+    void dateFilter;
+    return { success: true, data: [] };
   } catch (error) {
     console.error("Error in GetTopSellingUsersByPermission:", error);
     return { success: false, data: [] };

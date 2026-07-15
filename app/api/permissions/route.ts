@@ -34,13 +34,10 @@ export async function POST(req: NextRequest) {
                 editWholesaleCustomers: wholesalePermissions.editWholesaleCustomers,
                 deleteWholesaleCustomers: wholesalePermissions.deleteWholesaleCustomers,
                 viewEmployees: false, addEmployees: false, editEmployees: false, deleteEmployees: false,
-                viewExpenses: false, addExpenses: false, editExpenses: false, deleteExpenses: false,
                 viewCategories: false, addCategories: false, editCategories: false, deleteCategories: false,
                 viewPermissions: false, addPermissions: false, editPermissions: false, deletePermissions: false,
                 viewPages: false, addPages: false, editPages: false, deletePages: false,
                 viewAnalytics: false,
-                accessSyria: false,
-                accessTurkey: false,
             }
         });
         

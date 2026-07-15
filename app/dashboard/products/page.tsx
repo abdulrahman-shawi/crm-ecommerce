@@ -287,27 +287,7 @@ const ProductLayout = () => {
     const { user } = useAuth()
     const PAGE_SIZE = 10;
 
-    const isAdminUser = user?.accountType === "ADMIN";
-    const canAccessSyria = user?.permission?.accessSyria === true;
-    const canAccessTurkey = user?.permission?.accessTurkey === true;
-
-    const hasLocationAccess = React.useCallback((location: string) => {
-        const normalizedLocation = String(location || '').trim();
-
-        if (isAdminUser) {
-            return true;
-        }
-
-        if (normalizedLocation === 'سوريا') {
-            return canAccessSyria;
-        }
-
-        if (normalizedLocation === 'تركيا') {
-            return canAccessTurkey;
-        }
-
-        return false;
-    }, [isAdminUser, canAccessSyria, canAccessTurkey]);
+    const hasLocationAccess = React.useCallback((_location: string) => true, []);
 
     React.useEffect(() => {
         getallcategory().then(setCategories).catch(console.error);

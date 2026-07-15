@@ -8,8 +8,6 @@ interface User {
   permission?: {
     viewOrders?: boolean;
     roleName?: string;
-    accessSyria?: boolean;
-    accessTurkey?: boolean;
   };
 }
 
@@ -29,12 +27,9 @@ export const useOrderFilters = (orders: any[], user?: User) => {
     const isWarehouseUser = String(user?.permission?.roleName || "").trim().includes("مستودع");
     const canViewOrders = !user || isAdminUser || isWarehouseUser || user?.permission?.viewOrders === true;
 
-    const allowedWarehouseLocations = [
-      user?.permission?.accessSyria === true ? "سوريا" : null,
-      user?.permission?.accessTurkey === true ? "تركيا" : null,
-    ].filter(Boolean) as string[];
+    const allowedWarehouseLocations = ["سوريا", "تركيا"];
 
-    const canAccessWarehouseOrders = isWarehouseUser && allowedWarehouseLocations.length > 0;
+    const canAccessWarehouseOrders = isWarehouseUser;
 
     const normalizeWarehouseLocation = (location?: string | null) => {
       const normalized = String(location || "").trim().toLowerCase();

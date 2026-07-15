@@ -35,10 +35,6 @@ type SalesRep = {
   email: string;
   avatar: string | null;
   accountType: string;
-  permission?: {
-    accessSyria: boolean;
-    accessTurkey: boolean;
-  } | null;
 };
 
 type WholesaleVisit = {
@@ -338,15 +334,12 @@ function getPhoneDefaultCountry(country: string) {
   return country === "تركيا" ? "TR" : "SY";
 }
 
-function getAllowedCountriesFromAccess(accessSyria?: boolean, accessTurkey?: boolean): WholesaleCountry[] {
-  const countries: WholesaleCountry[] = [];
-  if (accessSyria) countries.push("سوريا");
-  if (accessTurkey) countries.push("تركيا");
-  return countries;
+function getAllowedCountriesFromAccess(): WholesaleCountry[] {
+  return [...WHOLESALE_COUNTRY_OPTIONS];
 }
 
-function getAllowedCountriesFromUser(value: { permission?: { accessSyria?: boolean; accessTurkey?: boolean } | null } | null | undefined) {
-  return getAllowedCountriesFromAccess(value?.permission?.accessSyria, value?.permission?.accessTurkey);
+function getAllowedCountriesFromUser(_value: unknown) {
+  return getAllowedCountriesFromAccess();
 }
 
 function parseMapLinkCoordinates(value: string): GeoCoordinates | null {

@@ -6430,8 +6430,6 @@ export namespace Prisma {
     addPages: boolean | null
     editPages: boolean | null
     deletePages: boolean | null
-    accessSyria: boolean | null
-    accessTurkey: boolean | null
   }
 
   export type PermissionMaxAggregateOutputType = {
@@ -6482,8 +6480,6 @@ export namespace Prisma {
     addPages: boolean | null
     editPages: boolean | null
     deletePages: boolean | null
-    accessSyria: boolean | null
-    accessTurkey: boolean | null
   }
 
   export type PermissionCountAggregateOutputType = {
@@ -6534,8 +6530,6 @@ export namespace Prisma {
     addPages: number
     editPages: number
     deletePages: number
-    accessSyria: number
-    accessTurkey: number
     _all: number
   }
 
@@ -6588,8 +6582,6 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
-    accessSyria?: true
-    accessTurkey?: true
   }
 
   export type PermissionMaxAggregateInputType = {
@@ -6640,8 +6632,6 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
-    accessSyria?: true
-    accessTurkey?: true
   }
 
   export type PermissionCountAggregateInputType = {
@@ -6692,8 +6682,6 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
-    accessSyria?: true
-    accessTurkey?: true
     _all?: true
   }
 
@@ -6817,8 +6805,6 @@ export namespace Prisma {
     addPages: boolean
     editPages: boolean
     deletePages: boolean
-    accessSyria: boolean
-    accessTurkey: boolean
     _count: PermissionCountAggregateOutputType | null
     _min: PermissionMinAggregateOutputType | null
     _max: PermissionMaxAggregateOutputType | null
@@ -6886,8 +6872,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["permission"]>
@@ -6940,8 +6924,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }, ExtArgs["result"]["permission"]>
 
   export type PermissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6992,8 +6974,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }, ExtArgs["result"]["permission"]>
 
   export type PermissionSelectScalar = {
@@ -7044,11 +7024,9 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }
 
-  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewWholesaleCustomers" | "addWholesaleCustomers" | "editWholesaleCustomers" | "deleteWholesaleCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "accessSyria" | "accessTurkey", ExtArgs["result"]["permission"]>
+  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewWholesaleCustomers" | "addWholesaleCustomers" | "editWholesaleCustomers" | "deleteWholesaleCustomers" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages", ExtArgs["result"]["permission"]>
   export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
@@ -7109,8 +7087,6 @@ export namespace Prisma {
       addPages: boolean
       editPages: boolean
       deletePages: boolean
-      accessSyria: boolean
-      accessTurkey: boolean
     }, ExtArgs["result"]["permission"]>
     composites: {}
   }
@@ -7582,8 +7558,6 @@ export namespace Prisma {
     readonly addPages: FieldRef<"Permission", 'Boolean'>
     readonly editPages: FieldRef<"Permission", 'Boolean'>
     readonly deletePages: FieldRef<"Permission", 'Boolean'>
-    readonly accessSyria: FieldRef<"Permission", 'Boolean'>
-    readonly accessTurkey: FieldRef<"Permission", 'Boolean'>
   }
     
 
@@ -45531,9 +45505,7 @@ export namespace Prisma {
     viewPages: 'viewPages',
     addPages: 'addPages',
     editPages: 'editPages',
-    deletePages: 'deletePages',
-    accessSyria: 'accessSyria',
-    accessTurkey: 'accessTurkey'
+    deletePages: 'deletePages'
   };
 
   export type PermissionScalarFieldEnum = (typeof PermissionScalarFieldEnum)[keyof typeof PermissionScalarFieldEnum]
@@ -46622,8 +46594,6 @@ export namespace Prisma {
     addPages?: BoolFilter<"Permission"> | boolean
     editPages?: BoolFilter<"Permission"> | boolean
     deletePages?: BoolFilter<"Permission"> | boolean
-    accessSyria?: BoolFilter<"Permission"> | boolean
-    accessTurkey?: BoolFilter<"Permission"> | boolean
     users?: UserListRelationFilter
   }
 
@@ -46675,8 +46645,6 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
-    accessSyria?: SortOrder
-    accessTurkey?: SortOrder
     users?: UserOrderByRelationAggregateInput
   }
 
@@ -46731,8 +46699,6 @@ export namespace Prisma {
     addPages?: BoolFilter<"Permission"> | boolean
     editPages?: BoolFilter<"Permission"> | boolean
     deletePages?: BoolFilter<"Permission"> | boolean
-    accessSyria?: BoolFilter<"Permission"> | boolean
-    accessTurkey?: BoolFilter<"Permission"> | boolean
     users?: UserListRelationFilter
   }, "id">
 
@@ -46784,8 +46750,6 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
-    accessSyria?: SortOrder
-    accessTurkey?: SortOrder
     _count?: PermissionCountOrderByAggregateInput
     _max?: PermissionMaxOrderByAggregateInput
     _min?: PermissionMinOrderByAggregateInput
@@ -46842,8 +46806,6 @@ export namespace Prisma {
     addPages?: BoolWithAggregatesFilter<"Permission"> | boolean
     editPages?: BoolWithAggregatesFilter<"Permission"> | boolean
     deletePages?: BoolWithAggregatesFilter<"Permission"> | boolean
-    accessSyria?: BoolWithAggregatesFilter<"Permission"> | boolean
-    accessTurkey?: BoolWithAggregatesFilter<"Permission"> | boolean
   }
 
   export type CategoryWhereInput = {
@@ -49955,8 +49917,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
     users?: UserCreateNestedManyWithoutPermissionInput
   }
 
@@ -50008,8 +49968,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
     users?: UserUncheckedCreateNestedManyWithoutPermissionInput
   }
 
@@ -50061,8 +50019,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUpdateManyWithoutPermissionNestedInput
   }
 
@@ -50114,8 +50070,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUncheckedUpdateManyWithoutPermissionNestedInput
   }
 
@@ -50167,8 +50121,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }
 
   export type PermissionUpdateManyMutationInput = {
@@ -50219,8 +50171,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PermissionUncheckedUpdateManyInput = {
@@ -50271,8 +50221,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CategoryCreateInput = {
@@ -53886,8 +53834,6 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
-    accessSyria?: SortOrder
-    accessTurkey?: SortOrder
   }
 
   export type PermissionMaxOrderByAggregateInput = {
@@ -53938,8 +53884,6 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
-    accessSyria?: SortOrder
-    accessTurkey?: SortOrder
   }
 
   export type PermissionMinOrderByAggregateInput = {
@@ -53990,8 +53934,6 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
-    accessSyria?: SortOrder
-    accessTurkey?: SortOrder
   }
 
   export type ProductListRelationFilter = {
@@ -59705,8 +59647,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }
 
   export type PermissionUncheckedCreateWithoutUsersInput = {
@@ -59757,8 +59697,6 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
-    accessSyria?: boolean
-    accessTurkey?: boolean
   }
 
   export type PermissionCreateOrConnectWithoutUsersInput = {
@@ -60461,8 +60399,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PermissionUncheckedUpdateWithoutUsersInput = {
@@ -60513,8 +60449,6 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
-    accessSyria?: BoolFieldUpdateOperationsInput | boolean
-    accessTurkey?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerUpsertWithWhereUniqueWithoutUsersInput = {

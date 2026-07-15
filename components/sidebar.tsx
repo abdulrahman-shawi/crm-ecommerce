@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
 import { 
   Home, BarChart2, Users, Settings, ChevronRight, ChevronLeft, 
-  Receipt, Box, FileText, PieChart, ShieldCheck, HelpCircle, LogOut, 
+  Receipt, Box, FileText, ShieldCheck, HelpCircle, LogOut, 
   Settings2,
   Users2,
   RollerCoasterIcon,
@@ -157,8 +157,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
   { icon: Users, label: "العملاء", href: "/dashboard/customers-complated" },
           (user && hasAnyPermission(user, ["viewWholesaleCustomers", "addWholesaleCustomers", "editWholesaleCustomers", "deleteWholesaleCustomers"])) &&
         { icon: Users2, label: "عملاء الجملة", href: "/dashboard/wholesale-customers" },
-          (user && hasAnyPermission(user, ["viewExpenses", "addExpenses", "editExpenses", "deleteExpenses"])) &&
-          { icon: PieChart, label: "المصاريف اليومية", href: "/dashboard/expenses" },
   
   // نستخدم الـ Optional Chaining (?.) لضمان عدم حدوث خطأ إذا كان الـ user غير موجود بعد
   (user && hasAnyPermission(user, ["viewOrders", "addOrders", "editOrders", "deleteOrders"])) &&
