@@ -325,7 +325,9 @@ function getUniqueDisplayPhones(values: string[] | null | undefined) {
     ? values.map((item) => String(item || "").trim()).filter(Boolean)
     : [];
 
-  return [...new Set(normalizedValues)].map((item) => formatPhoneForDisplay(item));
+  const uniqueValues = normalizedValues.filter((item, index) => normalizedValues.indexOf(item) === index);
+
+  return uniqueValues.map((item) => formatPhoneForDisplay(item));
 }
 
 function isWholesaleCountry(value: string): value is (typeof WHOLESALE_COUNTRY_OPTIONS)[number] {
