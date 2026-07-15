@@ -5,6 +5,7 @@ import z from 'zod';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-number-input';
 import { Controller } from 'react-hook-form';
+import { MoreVertical } from 'lucide-react';
 import { DynamicForm } from '@/components/shared/dynamic-form';
 import { AppModal } from '@/components/ui/app-modal';
 import { FormInput } from '@/components/ui/form-input';
@@ -120,10 +121,12 @@ export default function AffiliateUsersPage() {
   const [roles, setRoles] = React.useState<Array<{ id: string; roleName: string }>>([]);
   const [savingByUser, setSavingByUser] = React.useState<Record<string, boolean>>({});
   const [transferringByUser, setTransferringByUser] = React.useState<Record<string, boolean>>({});
+  const [openMenuUserId, setOpenMenuUserId] = React.useState<string | null>(null);
   const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState<z.infer<typeof userSchema> | null>(null);
+  const actionsMenuRef = React.useRef<HTMLDivElement | null>(null);
 
   const loadData = React.useCallback(async () => {
     setLoading(true);
@@ -162,6 +165,20 @@ export default function AffiliateUsersPage() {
     void loadRoles();
   }, []);
 
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!actionsMenuRef.current) return;
+      if (!actionsMenuRef.current.contains(event.target as Node)) {
+        setOpenMenuUserId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleCloseEdit = () => {
     setIsEditOpen(false);
     setEditId(null);
@@ -182,6 +199,7 @@ export default function AffiliateUsersPage() {
       }
 
       toast.success(approved ? 'تمت الموافقة على حساب الأفلييت' : 'تم إلغاء الموافقة على حساب الأفلييت');
+      setOpenMenuUserId(null);
       await loadData();
     } finally {
       setSavingByUser((prev) => ({ ...prev, [userId]: false }));
@@ -198,6 +216,7 @@ export default function AffiliateUsersPage() {
       }
 
       toast.success(`تم تحويل ${formatAmount(result.data?.transfer?.amount)} إلى المستخدم`);
+      setOpenMenuUserId(null);
       await loadData();
     } finally {
       setTransferringByUser((prev) => ({ ...prev, [userId]: false }));
@@ -205,6 +224,7 @@ export default function AffiliateUsersPage() {
   };
 
   const handleEdit = (user: AffiliateUserRow) => {
+    setOpenMenuUserId(null);
     setEditId(user.id);
     setFormData({
       username: user.username,
@@ -286,6 +306,7 @@ export default function AffiliateUsersPage() {
       }
 
       toast.success('تم حذف المستخدم بنجاح');
+      setOpenMenuUserId(null);
       await loadData();
     } catch {
       toast.error('فشل في حذف المستخدم');
@@ -420,45 +441,58 @@ export default function AffiliateUsersPage() {
                     </span>
                   </td>
                   <td className="px-3 py-4">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="relative" ref={openMenuUserId === user.id ? actionsMenuRef : null}>
                       <button
                         type="button"
-                        onClick={() => handleApprovalChange(user.id, true)}
-                        disabled={savingByUser[user.id] || user.affiliateApproved}
-                        className="rounded-xl border border-emerald-200 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        onClick={() => setOpenMenuUserId((current) => (current === user.id ? null : user.id))}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                        aria-label="فتح قائمة الإجراءات"
                       >
-                        موافقة
+                        <MoreVertical className="h-5 w-5" />
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleApprovalChange(user.id, false)}
-                        disabled={savingByUser[user.id] || !user.affiliateApproved}
-                        className="rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        إلغاء الموافقة
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleTransfer(user.id)}
-                        disabled={transferringByUser[user.id] || !user.affiliateApproved || Number(user.availableTransferAmount || 0) <= 0}
-                        className="rounded-xl border border-sky-200 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        تحويل العمولات
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEdit(user)}
-                        className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                      >
-                        تعديل
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(user.id)}
-                        className="rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-950/30"
-                      >
-                        حذف
-                      </button>
+
+                      {openMenuUserId === user.id ? (
+                        <div className="absolute left-0 top-12 z-20 w-44 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
+                          <button
+                            type="button"
+                            onClick={() => handleApprovalChange(user.id, true)}
+                            disabled={savingByUser[user.id] || user.affiliateApproved}
+                            className="block w-full px-4 py-3 text-right text-sm font-bold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-emerald-950/30"
+                          >
+                            موافقة
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleApprovalChange(user.id, false)}
+                            disabled={savingByUser[user.id] || !user.affiliateApproved}
+                            className="block w-full px-4 py-3 text-right text-sm font-bold text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-rose-950/30"
+                          >
+                            إلغاء الموافقة
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleTransfer(user.id)}
+                            disabled={transferringByUser[user.id] || !user.affiliateApproved || Number(user.availableTransferAmount || 0) <= 0}
+                            className="block w-full px-4 py-3 text-right text-sm font-bold text-sky-700 transition hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-sky-950/30"
+                          >
+                            تحويل العمولات
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleEdit(user)}
+                            className="block w-full px-4 py-3 text-right text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+                          >
+                            تعديل
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(user.id)}
+                            className="block w-full px-4 py-3 text-right text-sm font-bold text-rose-700 transition hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-950/30"
+                          >
+                            حذف
+                          </button>
+                        </div>
+                      ) : null}
                     </div>
                   </td>
                 </tr>
