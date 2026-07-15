@@ -83,18 +83,35 @@ const formatDate = (value?: string | Date | null) => {
 
 const formatAmount = (value?: number | null) => Number(value || 0).toFixed(2);
 
-const createDefaultUserFormValues = (): z.infer<typeof userSchema> => ({
+const createDefaultUserFormValues = (defaultPermissionId = ''): z.infer<typeof userSchema> => ({
   username: '',
   email: '',
   phone: '',
   notes: '',
   password: '',
-  jobTitle: '',
+  jobTitle: 'أفلييت',
   accountType: 'AFFILIATE',
   isAffiliate: true,
-  permissions: '',
+  permissions: defaultPermissionId,
   salesCommissionPercent: 0,
   wage: 0,
+});
+
+const buildAffiliatePayload = (
+  values: Partial<z.infer<typeof userSchema>>,
+  fallbackPermissionId = '',
+  baseValues?: Partial<z.infer<typeof userSchema>>
+): z.infer<typeof userSchema> => ({
+  ...createDefaultUserFormValues(fallbackPermissionId),
+  ...baseValues,
+  ...values,
+  notes: '',
+  jobTitle: values.jobTitle || baseValues?.jobTitle || 'أفلييت',
+  accountType: 'AFFILIATE',
+  isAffiliate: true,
+  permissions: values.permissions || baseValues?.permissions || fallbackPermissionId,
+  salesCommissionPercent: Number(values.salesCommissionPercent ?? baseValues?.salesCommissionPercent ?? 0),
+  wage: Number(values.wage ?? baseValues?.wage ?? 0),
 });
 
 export default function AffiliateUsersPage() {
@@ -107,8 +124,6 @@ export default function AffiliateUsersPage() {
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState<z.infer<typeof userSchema> | null>(null);
-
-  const selectClasses = 'w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200';
 
   const loadData = React.useCallback(async () => {
     setLoading(true);
@@ -212,9 +227,11 @@ export default function AffiliateUsersPage() {
   const handleSubmit = async (data: z.infer<typeof userSchema>) => {
     if (!editId) return;
 
+    const payload = buildAffiliatePayload(data, roles[0]?.id || '', formData || undefined);
+
     const loadingToast = toast.loading('جاري تحديث بيانات الحساب...');
     try {
-      const result = await updateuser(editId, data);
+      const result = await updateuser(editId, payload);
       if (!result?.success) {
         toast.error(result?.error || 'فشل في تحديث بيانات المستخدم');
         return;
@@ -231,13 +248,15 @@ export default function AffiliateUsersPage() {
   };
 
   const handleCreate = async (data: z.infer<typeof userSchema>) => {
+    if (!roles[0]?.id) {
+      toast.error('لا توجد مجموعة صلاحيات متاحة لإنشاء حساب أفلييت');
+      return;
+    }
+
     const loadingToast = toast.loading('جاري إنشاء حساب الأفلييت...');
     try {
-      const result = await createuser({
-        ...data,
-        accountType: 'AFFILIATE',
-        isAffiliate: true,
-      });
+      const payload = buildAffiliatePayload(data, roles[0].id);
+      const result = await createuser(payload);
 
       if (!result?.success) {
         toast.error(result?.error || 'فشل في إنشاء حساب الأفلييت');
@@ -277,90 +296,42 @@ export default function AffiliateUsersPage() {
 
   const renderUserFormFields = ({ register, control, formState: { errors } }: any, passwordPlaceholder?: string) => (
     <div className="grid gap-4">
-      <div className="rounded-2xl border border-slate-200/80 p-4 dark:border-slate-800">
-        <div className="mb-3 text-sm font-black text-slate-800 dark:text-slate-100">البيانات الأساسية</div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <FormInput className="text-gray-800 dark:text-white" label="اسم المستخدم" {...register('username')} error={errors.username?.message as string} />
-          <FormInput className="text-gray-800 dark:text-white" label="البريد الإلكتروني" {...register('email')} error={errors.email?.message as string} />
-          <div className="flex flex-col gap-2 md:col-span-2">
-            <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
-            <div className="dir-ltr">
-              <Controller
-                name="phone"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <PhoneInput
-                    international
-                    withCountryCallingCode
-                    defaultCountry="SY"
-                    value={typeof value === 'string' ? value : undefined}
-                    onChange={(nextValue) => onChange(nextValue ?? '')}
-                    className="PhoneInputCustom"
-                    numberInputProps={{
-                      className: 'w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
-                    }}
-                  />
-                )}
-              />
-            </div>
-            {errors.phone && <p className="text-xs text-red-500">{errors.phone.message as string}</p>}
-          </div>
-          <div className="md:col-span-2">
-            <FormInput
-              className="text-gray-800 dark:text-white"
-              label="كلمة المرور"
-              type="password"
-              {...register('password')}
-              placeholder={passwordPlaceholder}
-              error={errors.password?.message as string}
+      <div className="grid gap-4 md:grid-cols-2">
+        <FormInput className="text-gray-800 dark:text-white" label="اسم المستخدم" {...register('username')} error={errors.username?.message as string} />
+        <FormInput className="text-gray-800 dark:text-white" label="البريد الإلكتروني" {...register('email')} error={errors.email?.message as string} />
+        <div className="flex flex-col gap-2 md:col-span-2">
+          <label className="text-sm font-semibold dark:text-slate-300">رقم الهاتف</label>
+          <div className="dir-ltr">
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <PhoneInput
+                  international
+                  withCountryCallingCode
+                  defaultCountry="SY"
+                  value={typeof value === 'string' ? value : undefined}
+                  onChange={(nextValue) => onChange(nextValue ?? '')}
+                  className="PhoneInputCustom"
+                  numberInputProps={{
+                    className: 'w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
+                  }}
+                />
+              )}
             />
           </div>
+          {errors.phone && <p className="text-xs text-red-500">{errors.phone.message as string}</p>}
         </div>
-      </div>
-
-      <FormInput className="text-gray-800 dark:text-white" label="ملاحظات المستخدم" {...register('notes')} error={errors.notes?.message as string} />
-      <FormInput className="text-gray-800 dark:text-white" label="المسمى الوظيفي" {...register('jobTitle')} error={errors.jobTitle?.message as string} />
-      <FormInput
-        className="text-gray-800 dark:text-white"
-        label="نسبة عمولة المبيعات (%)"
-        type="text"
-        inputMode="decimal"
-        pattern="[0-9]+([.,][0-9]+)?"
-        min={0}
-        {...register('salesCommissionPercent')}
-        error={errors.salesCommissionPercent?.message as string}
-      />
-      <FormInput
-        className="text-gray-800 dark:text-white"
-        label="البدل الثابت"
-        type="number"
-        step="1"
-        min={0}
-        {...register('wage')}
-        error={errors.wage?.message as string}
-      />
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold dark:text-slate-300">نوع الحساب</label>
-        <select className={selectClasses} {...register('accountType')}>
-          <option value="ADMIN">مشرف نظام</option>
-          <option value="MANAGER">مدير</option>
-          <option value="STAFF">موظف</option>
-          <option value="AFFILIATE">أفلييت</option>
-        </select>
-      </div>
-      <label className="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-300">
-        <input type="checkbox" className="h-4 w-4" {...register('isAffiliate')} />
-        <span>هذا الحساب أفلييت ويحتاج موافقة الأدمن قبل الاستخدام</span>
-      </label>
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold dark:text-slate-300">مجموعة الصلاحيات</label>
-        <select className={selectClasses} {...register('permissions')}>
-          <option value="">اختر الصلاحية...</option>
-          {roles.map((role) => (
-            <option key={role.id} value={role.id}>{role.roleName}</option>
-          ))}
-        </select>
-        {errors.permissions && <p className="text-xs text-red-500">{errors.permissions.message as string}</p>}
+        <div className="md:col-span-2">
+          <FormInput
+            className="text-gray-800 dark:text-white"
+            label="كلمة المرور"
+            type="password"
+            {...register('password')}
+            placeholder={passwordPlaceholder}
+            error={errors.password?.message as string}
+          />
+        </div>
       </div>
     </div>
   );
@@ -520,7 +491,7 @@ export default function AffiliateUsersPage() {
           <DynamicForm
             schema={userSchema}
             onSubmit={handleCreate}
-            defaultValues={createDefaultUserFormValues()}
+            defaultValues={createDefaultUserFormValues(roles[0]?.id || '')}
             key={isCreateOpen ? 'affiliate-create-open' : 'affiliate-create'}
             submitLabel="إنشاء الحساب"
           >
