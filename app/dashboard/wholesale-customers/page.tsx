@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AppModal } from "@/components/ui/app-modal";
 import { Button } from "@/components/ui/button";
+import { DataTable, type Column, type TableAction } from "@/components/shared/DataTable";
 import { useAuth } from "@/context/AuthContext";
 import { formatPhoneForDisplay, hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
 import {
@@ -319,6 +320,14 @@ function normalizePhoneListInput(values: string[]) {
   return values.map((item) => item.trim()).filter(Boolean);
 }
 
+function getUniqueDisplayPhones(values: string[] | null | undefined) {
+  const normalizedValues = Array.isArray(values)
+    ? values.map((item) => String(item || "").trim()).filter(Boolean)
+    : [];
+
+  return [...new Set(normalizedValues)].map((item) => formatPhoneForDisplay(item));
+}
+
 function isWholesaleCountry(value: string): value is (typeof WHOLESALE_COUNTRY_OPTIONS)[number] {
   return WHOLESALE_COUNTRY_OPTIONS.includes(value as (typeof WHOLESALE_COUNTRY_OPTIONS)[number]);
 }
@@ -505,9 +514,11 @@ function getRejectionReasonLabel(code?: string | null, other?: string | null) {
 }
 
 export default function WholesaleCustomersPage() {
+  const PAGE_SIZE = 12;
   const { user, loading } = useAuth();
   const [customers, setCustomers] = React.useState<WholesaleCustomer[]>([]);
   const [salesReps, setSalesReps] = React.useState<SalesRep[]>([]);
+  const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const deferredSearch = React.useDeferredValue(search);
   const [selectedCategory, setSelectedCategory] = React.useState("ALL");
@@ -651,6 +662,10 @@ export default function WholesaleCustomersPage() {
   const selectedCustomer = React.useMemo(() => {
     return visibleCustomers.find((customer) => customer.id === selectedCustomerId) ?? visibleCustomers[0] ?? null;
   }, [selectedCustomerId, visibleCustomers]);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, selectedCategory, selectedRepId, selectedStatus]);
 
   React.useEffect(() => {
     if (!selectedCustomer && visibleCustomers.length === 0) {
@@ -1063,6 +1078,90 @@ export default function WholesaleCustomersPage() {
     });
   }
 
+  const tableColumns = React.useMemo<Column<WholesaleCustomer>[]>(() => [
+    {
+      header: "العميل",
+      accessor: (customer) => {
+        const isSelected = selectedCustomer?.id === customer.id;
+        return (
+          <button
+            type="button"
+            onClick={() => setSelectedCustomerId(customer.id)}
+            className={`inline-flex max-w-full items-center gap-2 rounded-xl px-2 py-1 text-right transition ${isSelected ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200" : "text-slate-900 dark:text-slate-100"}`}
+          >
+            <span className="font-bold">{customer.name}</span>
+            <span className="truncate text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category, customer.categoryOther)}</span>
+          </button>
+        );
+      },
+      className: "min-w-[230px]",
+    },
+    {
+      header: "جهة التواصل",
+      accessor: (customer) => [customer.contactName || "-", getContactRoleLabel(customer.contactRole, customer.contactRoleOther)].filter(Boolean).join(" - "),
+      className: "min-w-[170px]",
+    },
+    {
+      header: "الأرقام",
+      accessor: (customer) => {
+        const uniquePhones = getUniqueDisplayPhones(customer.phone);
+        return uniquePhones.length > 0 ? uniquePhones.join(" / ") : "-";
+      },
+      className: "min-w-[220px]",
+    },
+    {
+      header: "المنطقة",
+      accessor: (customer) => [customer.country, customer.city, customer.area].filter(Boolean).join(" - ") || "-",
+      className: "min-w-[190px]",
+    },
+    {
+      header: "المندوب",
+      accessor: (customer) => customer.assignedUser?.username || "غير مسند",
+      className: "min-w-[120px]",
+    },
+    {
+      header: "آخر نتيجة",
+      accessor: (customer) => getVisitResultLabel(customer.lastVisitResult),
+      className: "min-w-[130px]",
+    },
+    {
+      header: "المتابعة",
+      accessor: (customer) => [getVisitStatusLabel(customer.visitStatus), formatDateLabel(customer.nextFollowUpAt)].filter(Boolean).join(" - "),
+      className: "min-w-[210px]",
+    },
+  ], [selectedCustomer]);
+
+  const tableActions = React.useMemo<TableAction<WholesaleCustomer>[]>(() => {
+    const actions: TableAction<WholesaleCustomer>[] = [];
+
+    if (canEditWholesale) {
+      actions.push({
+        label: "تعديل",
+        icon: <Pencil className="h-4 w-4" />,
+        onClick: (customer) => openEditCustomerModal(customer),
+      });
+    }
+
+    if (canRegisterVisit) {
+      actions.push({
+        label: "زيارة",
+        icon: <Plus className="h-4 w-4" />,
+        onClick: (customer) => openVisitModal(customer),
+      });
+    }
+
+    if (canDeleteWholesale) {
+      actions.push({
+        label: "حذف",
+        icon: <Trash2 className="h-4 w-4" />,
+        variant: "danger",
+        onClick: (customer) => handleDeleteCustomer(customer),
+      });
+    }
+
+    return actions;
+  }, [canDeleteWholesale, canEditWholesale, canRegisterVisit]);
+
   if (loading || isLoading) {
     return (
       <div className="p-6 md:p-8" dir="rtl">
@@ -1220,81 +1319,16 @@ export default function WholesaleCustomersPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-right text-sm">
-              <thead className="bg-slate-50 text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
-                <tr>
-                  <th className="px-4 py-3 font-bold">العميل</th>
-                  <th className="px-4 py-3 font-bold">جهة التواصل</th>
-                  <th className="px-4 py-3 font-bold">بيانات التواصل</th>
-                  <th className="px-4 py-3 font-bold">المنطقة</th>
-                  <th className="px-4 py-3 font-bold">المندوب</th>
-                  <th className="px-4 py-3 font-bold">آخر نتيجة</th>
-                  <th className="px-4 py-3 font-bold">المتابعة</th>
-                  <th className="px-4 py-3 font-bold">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleCustomers.map((customer) => {
-                  const isSelected = selectedCustomer?.id === customer.id;
-                  return (
-                    <tr
-                      key={customer.id}
-                      className={isSelected ? "bg-blue-50/70 dark:bg-blue-950/40" : "border-t border-slate-100 dark:border-slate-800"}
-                    >
-                      <td className="px-4 py-4">
-                        <button type="button" onClick={() => setSelectedCustomerId(customer.id)} className="text-right">
-                          <div className="font-bold text-slate-900 dark:text-slate-100">{customer.name}</div>
-                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category, customer.categoryOther)}</div>
-                        </button>
-                      </td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
-                        <div>{customer.contactName || "-"}</div>
-                        <div className="text-xs text-slate-400 dark:text-slate-500">{getContactRoleLabel(customer.contactRole, customer.contactRoleOther)}</div>
-                      </td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
-                        <div>الأساسي: {customer.phone[0] ? formatPhoneForDisplay(customer.phone[0]) : "-"}</div>
-                        <div className="text-xs text-slate-400 dark:text-slate-500">الإضافي: {customer.phone[1] ? formatPhoneForDisplay(customer.phone[1]) : "-"}</div>
-                      </td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">
-                        <div>{customer.city || "-"}</div>
-                        <div className="text-xs text-slate-400 dark:text-slate-500">{customer.area || "-"}</div>
-                      </td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{customer.assignedUser?.username || "غير مسند"}</td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{getVisitResultLabel(customer.lastVisitResult)}</td>
-                      <td className="px-4 py-4">
-                        <div className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                          {getVisitStatusLabel(customer.visitStatus)}
-                        </div>
-                        <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">{formatDateLabel(customer.nextFollowUpAt)}</div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          <Button variant="outline" size="sm" onClick={() => openEditCustomerModal(customer)} leftIcon={<Pencil className="h-3.5 w-3.5" />} disabled={!canEditWholesale}>
-                            تعديل
-                          </Button>
-                          <Button variant="secondary" size="sm" onClick={() => openVisitModal(customer)} leftIcon={<Plus className="h-3.5 w-3.5" />} disabled={!canRegisterVisit}>
-                            زيارة
-                          </Button>
-                          <Button variant="danger" size="sm" onClick={() => handleDeleteCustomer(customer)} leftIcon={<Trash2 className="h-3.5 w-3.5" />} disabled={!canDeleteWholesale}>
-                            حذف
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-
-                {visibleCustomers.length === 0 && (
-                  <tr>
-                    <td colSpan={8} className="px-4 py-10 text-center text-slate-500 dark:text-slate-400">
-                      لا توجد بيانات مطابقة حالياً.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            data={visibleCustomers}
+            columns={tableColumns}
+            actions={tableActions.length > 0 ? tableActions : undefined}
+            totalCount={visibleCustomers.length}
+            pageSize={PAGE_SIZE}
+            currentPage={page}
+            onPageChange={setPage}
+            isLoading={isLoading || isPending}
+          />
         </div>
 
         <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
