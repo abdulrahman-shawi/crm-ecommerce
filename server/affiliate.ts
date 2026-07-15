@@ -478,6 +478,128 @@ export async function createAffiliateLinkByAdmin(payload: {
   };
 }
 
+export async function deleteAffiliateLinkByAdmin(linkId: string) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'فقط الأدمن يمكنه حذف روابط الإحالة' };
+  }
+
+  const normalizedLinkId = String(linkId || '').trim();
+  if (!normalizedLinkId) {
+    return { success: false, error: 'معرف الرابط غير صالح' };
+  }
+
+  const existing = await prisma.affiliateLink.findUnique({
+    where: { id: normalizedLinkId },
+    select: { id: true },
+  });
+
+  if (!existing) {
+    return { success: false, error: 'الرابط المطلوب غير موجود' };
+  }
+
+  await prisma.affiliateLink.delete({
+    where: { id: normalizedLinkId },
+  });
+
+  return { success: true };
+}
+
+export async function updateAffiliateLinkByAdmin(payload: {
+  linkId: string;
+  userId: string;
+  productId: number;
+  commissionRate: number;
+}) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'فقط الأدمن يمكنه تعديل روابط الإحالة' };
+  }
+
+  const linkId = String(payload.linkId || '').trim();
+  const userId = String(payload.userId || '').trim();
+  const productId = Number(payload.productId || 0);
+  const commissionRate = Number(payload.commissionRate || 0);
+
+  if (!linkId || !userId || Number.isNaN(productId) || productId <= 0) {
+    return { success: false, error: 'بيانات الرابط غير صالحة' };
+  }
+
+  if (Number.isNaN(commissionRate) || commissionRate < 0) {
+    return { success: false, error: 'نسبة العمولة غير صالحة' };
+  }
+
+  const existingLink = await prisma.affiliateLink.findUnique({
+    where: { id: linkId },
+    select: { id: true, uniqueCode: true },
+  });
+
+  if (!existingLink) {
+    return { success: false, error: 'الرابط المطلوب غير موجود' };
+  }
+
+  const affiliateUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      accountType: true,
+      isAffiliate: true,
+      affiliateApproved: true,
+    },
+  });
+
+  if (!affiliateUser) {
+    return { success: false, error: 'المستخدم غير موجود' };
+  }
+
+  if (!isAffiliateUser(affiliateUser)) {
+    return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
+  }
+
+  if (!affiliateUser.affiliateApproved) {
+    return { success: false, error: 'لا يمكن ربط الرابط بحساب أفلييت غير موافق عليه' };
+  }
+
+  const duplicateLink = await prisma.affiliateLink.findFirst({
+    where: {
+      userId,
+      productId,
+      id: { not: linkId },
+    },
+    select: { id: true },
+  });
+
+  if (duplicateLink) {
+    return { success: false, error: 'يوجد رابط آخر لهذا المستخدم مع نفس المنتج' };
+  }
+
+  const updatedLink = await prisma.affiliateLink.update({
+    where: { id: linkId },
+    data: {
+      userId,
+      productId,
+      commissionRate,
+    },
+    include: {
+      user: {
+        select: { id: true, username: true, email: true },
+      },
+      product: {
+        select: { id: true, name: true, seoSlug: true },
+      },
+    },
+  });
+
+  return {
+    success: true,
+    data: {
+      ...updatedLink,
+      uniqueCode: existingLink.uniqueCode,
+      fullUrl: buildAffiliateFullUrl(updatedLink.product?.seoSlug, existingLink.uniqueCode, updatedLink.product?.id),
+    },
+  };
+}
+
 export async function createPublicCustomerForAffiliateOrder(data: {
   name: string;
   phone: string;

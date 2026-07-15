@@ -3,7 +3,8 @@
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { createAffiliateLinkByAdmin, getAffiliateAdminDashboard, updateAffiliateCommissionStatus } from '@/server/affiliate';
+import { AppModal } from '@/components/ui/app-modal';
+import { createAffiliateLinkByAdmin, deleteAffiliateLinkByAdmin, getAffiliateAdminDashboard, updateAffiliateCommissionStatus, updateAffiliateLinkByAdmin } from '@/server/affiliate';
 
 type DashboardData = {
   users: Array<{ id: string; username: string; email: string }>;
@@ -33,6 +34,11 @@ export default function AffiliateDashboardPage() {
   const [data, setData] = React.useState<DashboardData>(defaultData);
   const [loading, setLoading] = React.useState(true);
   const [form, setForm] = React.useState({ userId: '', productId: '', commissionRate: '10' });
+  const [deletingLinkId, setDeletingLinkId] = React.useState<string | null>(null);
+  const [isEditLinkOpen, setIsEditLinkOpen] = React.useState(false);
+  const [editingLinkId, setEditingLinkId] = React.useState<string | null>(null);
+  const [editLinkForm, setEditLinkForm] = React.useState({ userId: '', productId: '', commissionRate: '0' });
+  const [updatingLink, setUpdatingLink] = React.useState(false);
 
   const loadData = React.useCallback(async () => {
     setLoading(true);
@@ -53,6 +59,7 @@ export default function AffiliateDashboardPage() {
   }, [loadData]);
 
   const selectedProduct = data.products.find((item) => String(item.id) === form.productId);
+  const selectedEditProduct = data.products.find((item) => String(item.id) === editLinkForm.productId);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -93,6 +100,74 @@ export default function AffiliateDashboardPage() {
     await loadData();
   };
 
+  const handleDeleteLink = async (linkId: string) => {
+    const confirmed = window.confirm('هل أنت متأكد من حذف هذا الرابط؟ سيتم حذف العمولات المرتبطة به أيضاً.');
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingLinkId(linkId);
+    try {
+      const result = await deleteAffiliateLinkByAdmin(linkId);
+      if (!result.success) {
+        toast.error(result.error || 'تعذر حذف الرابط');
+        return;
+      }
+
+      toast.success('تم حذف الرابط بنجاح');
+      await loadData();
+    } finally {
+      setDeletingLinkId(null);
+    }
+  };
+
+  const handleOpenEditLink = (link: any) => {
+    setEditingLinkId(String(link.id));
+    setEditLinkForm({
+      userId: String(link.user?.id || ''),
+      productId: String(link.product?.id || ''),
+      commissionRate: String(Number(link.commissionRate || 0)),
+    });
+    setIsEditLinkOpen(true);
+  };
+
+  const handleCloseEditLink = () => {
+    if (updatingLink) return;
+    setIsEditLinkOpen(false);
+    setEditingLinkId(null);
+    setEditLinkForm({ userId: '', productId: '', commissionRate: '0' });
+  };
+
+  const handleUpdateLink = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!editingLinkId || !editLinkForm.userId || !editLinkForm.productId) {
+      toast.error('اختر المستخدم والمنتج أولاً');
+      return;
+    }
+
+    setUpdatingLink(true);
+    try {
+      const result = await updateAffiliateLinkByAdmin({
+        linkId: editingLinkId,
+        userId: editLinkForm.userId,
+        productId: Number(editLinkForm.productId),
+        commissionRate: Number(editLinkForm.commissionRate || 0),
+      });
+
+      if (!result.success) {
+        toast.error(result.error || 'تعذر تعديل الرابط');
+        return;
+      }
+
+      toast.success('تم تعديل الرابط بنجاح');
+      handleCloseEditLink();
+      await loadData();
+    } finally {
+      setUpdatingLink(false);
+    }
+  };
+
   const getCommissionStatusLabel = (status: string) => {
     if (status === 'PAID') return 'مدفوعة';
     if (status === 'CANCELLED') return 'ملغاة';
@@ -116,8 +191,9 @@ export default function AffiliateDashboardPage() {
   }, [data.commissions]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white">Affiliate Dashboard</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">إدارة روابط الإحالة والعمولات من نفس الـ Workflow الحالي.</p>
@@ -207,16 +283,33 @@ export default function AffiliateDashboardPage() {
                     <div className="text-sm font-black text-slate-900 dark:text-white">{link.product?.name}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">{link.user?.username} - {link.uniqueCode}</div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await navigator.clipboard.writeText(link.fullUrl);
-                      toast.success('تم نسخ الرابط');
-                    }}
-                    className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                  >
-                    نسخ الرابط
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEditLink(link)}
+                      className="rounded-xl border border-amber-200 px-3 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-950/30"
+                    >
+                      تعديل الرابط
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(link.fullUrl);
+                        toast.success('تم نسخ الرابط');
+                      }}
+                      className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                    >
+                      نسخ الرابط
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteLink(String(link.id))}
+                      disabled={deletingLinkId === String(link.id)}
+                      className="rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-950/30"
+                    >
+                      {deletingLinkId === String(link.id) ? 'جار الحذف...' : 'حذف الرابط'}
+                    </button>
+                  </div>
                 </div>
                 <div className="mt-3 break-all rounded-xl bg-white px-3 py-2 text-xs text-slate-600 dark:bg-slate-900 dark:text-slate-300">{link.fullUrl}</div>
                 <div className="mt-3 grid grid-cols-3 gap-3 text-center text-xs font-bold text-slate-600 dark:text-slate-300">
@@ -332,6 +425,75 @@ export default function AffiliateDashboardPage() {
           </div>
         )}
       </section>
-    </div>
+      </div>
+
+      <AppModal title="تعديل رابط الإحالة" isOpen={isEditLinkOpen} onClose={handleCloseEditLink}>
+        <form onSubmit={handleUpdateLink} className="grid gap-4 p-2">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-200">المستخدم</label>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950"
+              value={editLinkForm.userId}
+              onChange={(e) => setEditLinkForm((prev) => ({ ...prev, userId: e.target.value }))}
+              disabled={updatingLink}
+            >
+              <option value="">اختر المستخدم</option>
+              {data.users.map((user) => (
+                <option key={user.id} value={user.id}>{user.username} - {user.email}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-200">المنتج</label>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950"
+              value={editLinkForm.productId}
+              onChange={(e) => setEditLinkForm((prev) => {
+                const nextProductId = e.target.value;
+                const nextRate = Number(data.products.find((item) => String(item.id) === nextProductId)?.affiliateCommissionRate || 0);
+
+                return {
+                  ...prev,
+                  productId: nextProductId,
+                  commissionRate: nextRate > 0 ? String(nextRate) : prev.commissionRate,
+                };
+              })}
+              disabled={updatingLink}
+            >
+              <option value="">اختر المنتج</option>
+              {data.products.map((product) => (
+                <option key={product.id} value={product.id}>{product.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-200">نسبة العمولة</label>
+            <input
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-950"
+              value={editLinkForm.commissionRate}
+              onChange={(e) => setEditLinkForm((prev) => ({ ...prev, commissionRate: e.target.value }))}
+              disabled={updatingLink}
+            />
+            {selectedEditProduct ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {Number(selectedEditProduct.affiliateCommissionRate || 0) > 0
+                  ? 'سيتم استخدام نسبة المنتج عند إنشاء العمولة الجديدة.'
+                  : 'إذا كانت نسبة المنتج فارغة أو 0 فسيتم استخدام نسبة الرابط.'}
+              </p>
+            ) : null}
+          </div>
+
+          <button
+            type="submit"
+            disabled={updatingLink}
+            className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-slate-900"
+          >
+            {updatingLink ? 'جار التحديث...' : 'حفظ التعديلات'}
+          </button>
+        </form>
+      </AppModal>
+    </>
   );
 }
