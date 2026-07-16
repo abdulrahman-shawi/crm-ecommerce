@@ -12,7 +12,7 @@ export default function InventoryPage() {
 
   // الفلاتر
   const [viewCountry, setViewCountry] = useState("الكل");
-  const [modalCountry, setModalCountry] = useState("تركيا");
+  const [modalCountry, setModalCountry] = useState("");
   const [movementType, setMovementType] = useState("IN");
   const [sourceWarehouseId, setSourceWarehouseId] = useState("");
 
@@ -21,6 +21,16 @@ export default function InventoryPage() {
 
 
   if (!data) return <div className="h-screen flex items-center justify-center dark:bg-slate-950 dark:text-white font-bold">جاري تحميل البيانات...</div>;
+
+  const countryOptions: string[] = Array.from(
+    new Set(
+      (Array.isArray(data.warehouses) ? data.warehouses : [])
+        .map((warehouse: any) => String(warehouse?.location || "").trim())
+        .filter(Boolean)
+    )
+  );
+
+  const resolvedModalCountry = modalCountry || countryOptions[0] || "";
 
   const filteredStocks = data.stocks.filter((s: any) => viewCountry === "الكل" || s.warehouse.location === viewCountry);
 
@@ -74,7 +84,7 @@ export default function InventoryPage() {
               <Package className="text-blue-600" size={32} /> إدارة المخزون
             </h1>
             <div className="flex gap-2 mt-4">
-              {["الكل", "تركيا", "سوريا"].map(c => (
+              {["الكل", ...countryOptions].map(c => (
                 <button key={c} onClick={() => setViewCountry(c)} className={`px-5 py-1.5 rounded-full text-sm font-bold border transition ${viewCountry === c ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800'}`}>{c}</button>
               ))}
             </div>
@@ -126,8 +136,8 @@ export default function InventoryPage() {
 
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
-                  {["تركيا", "سوريا"].map(c => (
-                    <button key={c} type="button" onClick={() => { setModalCountry(c); setSourceWarehouseId(""); }} className={`flex-1 py-3 rounded-xl font-bold transition ${modalCountry === c ? 'bg-white dark:bg-slate-700 dark:text-white shadow-md' : 'text-slate-400'}`}>{c}</button>
+                  {countryOptions.map(c => (
+                    <button key={c} type="button" onClick={() => { setModalCountry(c); setSourceWarehouseId(""); }} className={`flex-1 py-3 rounded-xl font-bold transition ${resolvedModalCountry === c ? 'bg-white dark:bg-slate-700 dark:text-white shadow-md' : 'text-slate-400'}`}>{c}</button>
                   ))}
                 </div>
 
@@ -149,7 +159,7 @@ export default function InventoryPage() {
                       className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none" required
                     >
                       <option value="">اختر المستودع...</option>
-                      {data.warehouses.filter((w: any) => w.location === modalCountry).map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
+                      {data.warehouses.filter((w: any) => w.location === resolvedModalCountry).map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
                     </select>
                   </div>
 
@@ -173,7 +183,7 @@ export default function InventoryPage() {
                       ? data.products // في التوريد نظهر كل المنتجات المسجلة في النظام
                       : Array.from(new Set(
                         data.stocks
-                          .filter((s: any) => s.warehouse.location === modalCountry)
+                          .filter((s: any) => s.warehouse.location === resolvedModalCountry)
                           .map((s: any) => s.product)
                       )) // في الصرف أو التحويل نظهر فقط المنتجات التي لها رصيد في هذا البلد
                     ).map((p: any) => (

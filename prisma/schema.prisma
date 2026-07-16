@@ -370,19 +370,35 @@ model Review {
 
 
 // ============================================
-// Warehouse (Existing — Unchanged)
+// Country
+// ============================================
+
+model Country {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  warehouses Warehouse[]
+}
+
+// ============================================
+// Warehouse
 // ============================================
 
 model Warehouse {
-  id        Int             @id @default(autoincrement())
-  name      String          @unique
-  location  String
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  stocks    ProductStock[]
-  orders    Order[]
-  movements StockMovement[]
+  id         Int             @id @default(autoincrement())
+  name       String          @unique
+  location   String
+  countryId  Int?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  country    Country?        @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  stocks     ProductStock[]
+  orders     Order[]
+  movements  StockMovement[]
   warranties Warranty[]
+
+  @@index([countryId])
 }
 
 // ============================================

@@ -5,6 +5,7 @@ type ExportPayload = {
   version: string;
   exportedAt: string;
   data: {
+    countries: any[];
     permissions: any[];
     users: any[];
     categories: any[];
@@ -36,6 +37,7 @@ async function resetSerialSequence(tx: any, tableName: string) {
 export async function GET() {
   try {
     const [
+      countries,
       permissions,
       users,
       categories,
@@ -54,6 +56,7 @@ export async function GET() {
       orderItems,
       customerLinkRows,
     ] = await Promise.all([
+      prisma.country.findMany(),
       prisma.permission.findMany(),
       prisma.user.findMany(),
       prisma.category.findMany(),
@@ -86,6 +89,7 @@ export async function GET() {
       version: "1.0.0",
       exportedAt: new Date().toISOString(),
       data: {
+        countries,
         permissions,
         users,
         categories,
@@ -147,11 +151,13 @@ export async function POST(req: NextRequest) {
         await tx.trakingCompany.deleteMany();
         await tx.generalSetting.deleteMany();
         await tx.warehouse.deleteMany();
+        await tx.country.deleteMany();
 
         await tx.user.deleteMany();
         await tx.permission.deleteMany();
       }
 
+      const countries = toArray(data?.countries);
       const permissions = toArray(data?.permissions);
       const users = toArray(data?.users);
       const categories = toArray(data?.categories);
@@ -170,6 +176,7 @@ export async function POST(req: NextRequest) {
       const orders = toArray(data?.orders);
       const orderItems = toArray(data?.orderItems);
 
+      if (countries.length) await tx.country.createMany({ data: countries, skipDuplicates: true });
       if (permissions.length) await tx.permission.createMany({ data: permissions, skipDuplicates: true });
       if (users.length) await tx.user.createMany({ data: users, skipDuplicates: true });
 
@@ -204,6 +211,7 @@ export async function POST(req: NextRequest) {
       if (orders.length) await tx.order.createMany({ data: orders, skipDuplicates: true });
       if (orderItems.length) await tx.orderItem.createMany({ data: orderItems, skipDuplicates: true });
 
+      await resetSerialSequence(tx, "Country");
       await resetSerialSequence(tx, "Category");
       await resetSerialSequence(tx, "Product");
       await resetSerialSequence(tx, "ProductImage");

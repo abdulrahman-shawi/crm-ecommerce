@@ -265,10 +265,18 @@ exports.Prisma.ReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CountryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WarehouseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   location: 'location',
+  countryId: 'countryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -758,6 +766,7 @@ exports.Prisma.ModelName = {
   AdPageVisit: 'AdPageVisit',
   ProductLandingPage: 'ProductLandingPage',
   Review: 'Review',
+  Country: 'Country',
   Warehouse: 'Warehouse',
   ProductStock: 'ProductStock',
   StockMovement: 'StockMovement',
