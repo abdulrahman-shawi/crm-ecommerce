@@ -138,6 +138,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Home, label: "لوحة التحكم", href: "/dashboard" },
         (user && hasAnyPermission(user, ["viewAnalytics"])) &&
         { icon: BarChart2, label: "التحليلات", href: "/dashboard/analytics" },
+        { icon: HelpCircle, label: "تيست", href: "/dashboard/test" },
       ].filter(Boolean) as MenuItem[]
     },
     {
