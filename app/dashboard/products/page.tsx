@@ -218,7 +218,9 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                             >
                                 <option value="">اختر المستودع</option>
                                 {warehouses.map((warehouse: any) => (
-                                    <option key={warehouse.id} value={warehouse.id}>{warehouse.name}</option>
+                                    <option key={warehouse.id} value={warehouse.id}>
+                                        {warehouse.location ? `${warehouse.name} - ${warehouse.location}` : warehouse.name}
+                                    </option>
                                 ))}
                             </select>
                             {errors?.warehouseStocks?.[index]?.warehouseId && (
@@ -1059,7 +1061,7 @@ const ProductLayout = () => {
                 />
             )}
 
-            <AppModal title={editId ? "تعديل منتج" : "منتج جديد"} isOpen={isOpen} onClose={handleClose}>
+            <AppModal title={editId ? "تعديل منتج" : "منتج جديد"} isOpen={isOpen} onClose={handleClose} size="lg">
                 <div className="p-4">
                     <DynamicForm
                         schema={productschama}
