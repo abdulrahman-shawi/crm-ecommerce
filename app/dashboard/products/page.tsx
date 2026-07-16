@@ -1061,7 +1061,7 @@ const ProductLayout = () => {
                 />
             )}
 
-            <AppModal title={editId ? "تعديل منتج" : "منتج جديد"} isOpen={isOpen} onClose={handleClose} size="lg">
+            <AppModal title={editId ? "تعديل منتج" : "منتج جديد"} isOpen={isOpen} onClose={handleClose} size="full">
                 <div className="p-4">
                     <DynamicForm
                         schema={productschama}
