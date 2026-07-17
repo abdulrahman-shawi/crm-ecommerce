@@ -52,6 +52,7 @@ const productschama = z.object({
             warehouseId: z.coerce.number().min(1, "يرجى اختيار مستودع"),
             quantity: z.coerce.number().min(0, "يرجى إدخال كمية صحيحة"),
             stockPrice: z.coerce.number().min(0, "يرجى إدخال سعر صحيح").optional().default(0),
+            wholesalePrice: z.coerce.number().min(0, "يرجى إدخال سعر جملة صحيح").optional().default(0),
             stockDiscount: z.coerce.number().min(0, "يرجى إدخال خصم صحيح").optional().default(0),
         })
     ).min(1, "يجب إضافة مستودع واحد على الأقل"),
@@ -202,7 +203,7 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => append({ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 })}
+                    onClick={() => append({ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 })}
                 >
                     إضافة مستودع
                 </Button>
@@ -210,7 +211,7 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
 
             <div className="grid gap-3">
                 {fields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
+                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-5 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
                         <div className="flex flex-col gap-1.5">
                             <label className="text-sm text-right font-medium text-slate-800 dark:text-slate-200">المستودع</label>
                             <select
@@ -244,6 +245,15 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
                             label="سعر المنتج"
                             {...register(`warehouseStocks.${index}.stockPrice`)}
                             error={errors?.warehouseStocks?.[index]?.stockPrice?.message as string}
+                        />
+
+                        <FormInput
+                            className='text-slate-900 dark:text-slate-100'
+                            type="number"
+                            step="0.01"
+                            label="سعر الجملة"
+                            {...register(`warehouseStocks.${index}.wholesalePrice`)}
+                            error={errors?.warehouseStocks?.[index]?.wholesalePrice?.message as string}
                         />
 
                         <FormInput
@@ -461,9 +471,10 @@ const ProductLayout = () => {
                     warehouseId: stock.warehouseId,
                     quantity: stock.quantity,
                     stockPrice: stock.price ?? 0,
+                    wholesalePrice: stock.wholesalePrice ?? 0,
                     stockDiscount: stock.discount ?? 0,
                 }))
-                : [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }],
+                : [{ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }],
             isActive: data.isActive ?? true,
             files: Array.isArray(data.images)
                 ? data.images.map((image: any, index: number) => ({
@@ -1070,7 +1081,7 @@ const ProductLayout = () => {
                     <DynamicForm
                         schema={productschama}
                         onSubmit={onSubmit}
-                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0, stockDiscount: 0 }] }}
+                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }] }}
                         submitLabel={editId ? "تعديل المنتج" : "حفظ المنتج"}
                     >
                         {({ register, control, formState: { errors } }) => (

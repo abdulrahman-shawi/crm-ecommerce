@@ -17977,6 +17977,7 @@ export namespace Prisma {
     warehouseId: number | null
     quantity: number | null
     price: number | null
+    wholesalePrice: number | null
     discount: number | null
   }
 
@@ -17986,6 +17987,7 @@ export namespace Prisma {
     warehouseId: number | null
     quantity: number | null
     price: number | null
+    wholesalePrice: number | null
     discount: number | null
   }
 
@@ -17995,6 +17997,7 @@ export namespace Prisma {
     warehouseId: number | null
     quantity: number | null
     price: number | null
+    wholesalePrice: number | null
     discount: number | null
   }
 
@@ -18004,6 +18007,7 @@ export namespace Prisma {
     warehouseId: number | null
     quantity: number | null
     price: number | null
+    wholesalePrice: number | null
     discount: number | null
   }
 
@@ -18013,6 +18017,7 @@ export namespace Prisma {
     warehouseId: number
     quantity: number
     price: number
+    wholesalePrice: number
     discount: number
     _all: number
   }
@@ -18024,6 +18029,7 @@ export namespace Prisma {
     warehouseId?: true
     quantity?: true
     price?: true
+    wholesalePrice?: true
     discount?: true
   }
 
@@ -18033,6 +18039,7 @@ export namespace Prisma {
     warehouseId?: true
     quantity?: true
     price?: true
+    wholesalePrice?: true
     discount?: true
   }
 
@@ -18042,6 +18049,7 @@ export namespace Prisma {
     warehouseId?: true
     quantity?: true
     price?: true
+    wholesalePrice?: true
     discount?: true
   }
 
@@ -18051,6 +18059,7 @@ export namespace Prisma {
     warehouseId?: true
     quantity?: true
     price?: true
+    wholesalePrice?: true
     discount?: true
   }
 
@@ -18060,6 +18069,7 @@ export namespace Prisma {
     warehouseId?: true
     quantity?: true
     price?: true
+    wholesalePrice?: true
     discount?: true
     _all?: true
   }
@@ -18156,6 +18166,7 @@ export namespace Prisma {
     warehouseId: number
     quantity: number
     price: number
+    wholesalePrice: number
     discount: number
     _count: ProductStockCountAggregateOutputType | null
     _avg: ProductStockAvgAggregateOutputType | null
@@ -18184,6 +18195,7 @@ export namespace Prisma {
     warehouseId?: boolean
     quantity?: boolean
     price?: boolean
+    wholesalePrice?: boolean
     discount?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
@@ -18195,6 +18207,7 @@ export namespace Prisma {
     warehouseId?: boolean
     quantity?: boolean
     price?: boolean
+    wholesalePrice?: boolean
     discount?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
@@ -18206,6 +18219,7 @@ export namespace Prisma {
     warehouseId?: boolean
     quantity?: boolean
     price?: boolean
+    wholesalePrice?: boolean
     discount?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
@@ -18217,10 +18231,11 @@ export namespace Prisma {
     warehouseId?: boolean
     quantity?: boolean
     price?: boolean
+    wholesalePrice?: boolean
     discount?: boolean
   }
 
-  export type ProductStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "warehouseId" | "quantity" | "price" | "discount", ExtArgs["result"]["productStock"]>
+  export type ProductStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "warehouseId" | "quantity" | "price" | "wholesalePrice" | "discount", ExtArgs["result"]["productStock"]>
   export type ProductStockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
@@ -18246,6 +18261,7 @@ export namespace Prisma {
       warehouseId: number
       quantity: number
       price: number
+      wholesalePrice: number
       discount: number
     }, ExtArgs["result"]["productStock"]>
     composites: {}
@@ -18677,6 +18693,7 @@ export namespace Prisma {
     readonly warehouseId: FieldRef<"ProductStock", 'Int'>
     readonly quantity: FieldRef<"ProductStock", 'Int'>
     readonly price: FieldRef<"ProductStock", 'Float'>
+    readonly wholesalePrice: FieldRef<"ProductStock", 'Float'>
     readonly discount: FieldRef<"ProductStock", 'Float'>
   }
     
@@ -48142,6 +48159,7 @@ export namespace Prisma {
     warehouseId: 'warehouseId',
     quantity: 'quantity',
     price: 'price',
+    wholesalePrice: 'wholesalePrice',
     discount: 'discount'
   };
 
@@ -50020,6 +50038,7 @@ export namespace Prisma {
     warehouseId?: IntFilter<"ProductStock"> | number
     quantity?: IntFilter<"ProductStock"> | number
     price?: FloatFilter<"ProductStock"> | number
+    wholesalePrice?: FloatFilter<"ProductStock"> | number
     discount?: FloatFilter<"ProductStock"> | number
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     warehouse?: XOR<WarehouseScalarRelationFilter, WarehouseWhereInput>
@@ -50031,6 +50050,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
     product?: ProductOrderByWithRelationInput
     warehouse?: WarehouseOrderByWithRelationInput
@@ -50046,6 +50066,7 @@ export namespace Prisma {
     warehouseId?: IntFilter<"ProductStock"> | number
     quantity?: IntFilter<"ProductStock"> | number
     price?: FloatFilter<"ProductStock"> | number
+    wholesalePrice?: FloatFilter<"ProductStock"> | number
     discount?: FloatFilter<"ProductStock"> | number
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     warehouse?: XOR<WarehouseScalarRelationFilter, WarehouseWhereInput>
@@ -50057,6 +50078,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
     _count?: ProductStockCountOrderByAggregateInput
     _avg?: ProductStockAvgOrderByAggregateInput
@@ -50074,6 +50096,7 @@ export namespace Prisma {
     warehouseId?: IntWithAggregatesFilter<"ProductStock"> | number
     quantity?: IntWithAggregatesFilter<"ProductStock"> | number
     price?: FloatWithAggregatesFilter<"ProductStock"> | number
+    wholesalePrice?: FloatWithAggregatesFilter<"ProductStock"> | number
     discount?: FloatWithAggregatesFilter<"ProductStock"> | number
   }
 
@@ -53612,6 +53635,7 @@ export namespace Prisma {
   export type ProductStockCreateInput = {
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
     product: ProductCreateNestedOneWithoutStocksInput
     warehouse: WarehouseCreateNestedOneWithoutStocksInput
@@ -53623,12 +53647,14 @@ export namespace Prisma {
     warehouseId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
   export type ProductStockUpdateInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutStocksNestedInput
     warehouse?: WarehouseUpdateOneRequiredWithoutStocksNestedInput
@@ -53640,6 +53666,7 @@ export namespace Prisma {
     warehouseId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -53649,12 +53676,14 @@ export namespace Prisma {
     warehouseId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
   export type ProductStockUpdateManyMutationInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -53664,6 +53693,7 @@ export namespace Prisma {
     warehouseId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -57322,6 +57352,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
   }
 
@@ -57331,6 +57362,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
   }
 
@@ -57340,6 +57372,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
   }
 
@@ -57349,6 +57382,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
   }
 
@@ -57358,6 +57392,7 @@ export namespace Prisma {
     warehouseId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
+    wholesalePrice?: SortOrder
     discount?: SortOrder
   }
 
@@ -64194,6 +64229,7 @@ export namespace Prisma {
   export type ProductStockCreateWithoutProductInput = {
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
     warehouse: WarehouseCreateNestedOneWithoutStocksInput
   }
@@ -64203,6 +64239,7 @@ export namespace Prisma {
     warehouseId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
@@ -64610,6 +64647,7 @@ export namespace Prisma {
     warehouseId?: IntFilter<"ProductStock"> | number
     quantity?: IntFilter<"ProductStock"> | number
     price?: FloatFilter<"ProductStock"> | number
+    wholesalePrice?: FloatFilter<"ProductStock"> | number
     discount?: FloatFilter<"ProductStock"> | number
   }
 
@@ -65511,6 +65549,7 @@ export namespace Prisma {
   export type ProductStockCreateWithoutWarehouseInput = {
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
     product: ProductCreateNestedOneWithoutStocksInput
   }
@@ -65520,6 +65559,7 @@ export namespace Prisma {
     productId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
@@ -72137,6 +72177,7 @@ export namespace Prisma {
     warehouseId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
@@ -72282,6 +72323,7 @@ export namespace Prisma {
   export type ProductStockUpdateWithoutProductInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     warehouse?: WarehouseUpdateOneRequiredWithoutStocksNestedInput
   }
@@ -72291,6 +72333,7 @@ export namespace Prisma {
     warehouseId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -72299,6 +72342,7 @@ export namespace Prisma {
     warehouseId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -72602,6 +72646,7 @@ export namespace Prisma {
     productId: number
     quantity?: number
     price?: number
+    wholesalePrice?: number
     discount?: number
   }
 
@@ -72669,6 +72714,7 @@ export namespace Prisma {
   export type ProductStockUpdateWithoutWarehouseInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutStocksNestedInput
   }
@@ -72678,6 +72724,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 
@@ -72686,6 +72733,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     discount?: FloatFieldUpdateOperationsInput | number
   }
 

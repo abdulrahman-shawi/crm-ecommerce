@@ -296,6 +296,7 @@ exports.Prisma.ProductStockScalarFieldEnum = {
   warehouseId: 'warehouseId',
   quantity: 'quantity',
   price: 'price',
+  wholesalePrice: 'wholesalePrice',
   discount: 'discount'
 };
 

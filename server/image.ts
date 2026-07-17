@@ -93,7 +93,7 @@ export async function saveProductWithFiles(formData: FormData) {
             ? null
             : Number(affiliateCommissionRateRaw);
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
-        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
+        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; wholesalePrice: number; stockDiscount: number }> = [];
 
         if (warehouseStocksRaw) {
             try {
@@ -103,6 +103,7 @@ export async function saveProductWithFiles(formData: FormData) {
                         warehouseId: Number(item?.warehouseId),
                         quantity: Number(item?.quantity ?? 0),
                         stockPrice: Number(item?.stockPrice ?? 0),
+                        wholesalePrice: Number(item?.wholesalePrice ?? 0),
                         stockDiscount: Number(item?.stockDiscount ?? 0),
                     }));
                 }
@@ -115,7 +116,7 @@ export async function saveProductWithFiles(formData: FormData) {
             const warehouseId = parseInt(formData.get('warehouseId') as string);
             const quantity = parseInt(formData.get('quantity') as string) || 0;
             if (Number.isInteger(warehouseId) && warehouseId > 0) {
-                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, stockDiscount: 0 }];
+                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }];
             }
         }
 
@@ -124,7 +125,7 @@ export async function saveProductWithFiles(formData: FormData) {
         }
 
         const hasInvalidWarehouseStock = warehouseStocks.some(
-            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
+            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.wholesalePrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
         );
 
         if (hasInvalidWarehouseStock) {
@@ -198,6 +199,7 @@ export async function saveProductWithFiles(formData: FormData) {
                         warehouseId: item.warehouseId,
                         quantity: item.quantity,
                         price: item.stockPrice,
+                        wholesalePrice: item.wholesalePrice,
                         discount: item.stockDiscount,
                     }))
                 },
@@ -240,7 +242,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             ? null
             : Number(affiliateCommissionRateRaw);
         const warehouseStocksRaw = formData.get('warehouseStocks') as string | null;
-        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; stockDiscount: number }> = [];
+        let warehouseStocks: Array<{ warehouseId: number; quantity: number; stockPrice: number; wholesalePrice: number; stockDiscount: number }> = [];
 
         if (warehouseStocksRaw) {
             try {
@@ -250,6 +252,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                         warehouseId: Number(item?.warehouseId),
                         quantity: Number(item?.quantity ?? 0),
                         stockPrice: Number(item?.stockPrice ?? 0),
+                        wholesalePrice: Number(item?.wholesalePrice ?? 0),
                         stockDiscount: Number(item?.stockDiscount ?? 0),
                     }));
                 }
@@ -262,7 +265,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             const warehouseId = parseInt(formData.get('warehouseId') as string);
             const quantity = parseInt(formData.get('quantity') as string) || 0;
             if (Number.isInteger(warehouseId) && warehouseId > 0) {
-                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, stockDiscount: 0 }];
+                warehouseStocks = [{ warehouseId, quantity, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }];
             }
         }
 
@@ -271,7 +274,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
         }
 
         const hasInvalidWarehouseStock = warehouseStocks.some(
-            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
+            (item) => !Number.isInteger(item.warehouseId) || item.warehouseId <= 0 || item.quantity < 0 || item.stockPrice < 0 || item.wholesalePrice < 0 || item.stockDiscount < 0 || item.stockDiscount > item.stockPrice
         );
 
         if (hasInvalidWarehouseStock) {
@@ -409,6 +412,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                         warehouseId: item.warehouseId,
                         quantity: item.quantity,
                         price: item.stockPrice,
+                        wholesalePrice: item.wholesalePrice,
                         discount: item.stockDiscount,
                     })),
                 },
