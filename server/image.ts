@@ -80,6 +80,7 @@ export async function saveProductWithFiles(formData: FormData) {
         // تحويل البيانات مع إضافة قيم افتراضية للحماية من null
         const name = formData.get('name') as string;
         const normalizedName = name.trim();
+        const modelNumber = String(formData.get('modelNumber') || '').trim() || null;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const metaTitle = String(formData.get('metaTitle') || '').trim() || null;
@@ -181,6 +182,7 @@ export async function saveProductWithFiles(formData: FormData) {
         const product = await prisma.product.create({
             data: {
                 name: normalizedName,
+                modelNumber,
                 description,
                 metaTitle,
                 metaDescription,
@@ -225,6 +227,7 @@ export async function saveProductWithFiles(formData: FormData) {
 export async function updateProductWithFiles(productId: number, formData: FormData) {
     try {
         const name = formData.get('name') as string;
+        const modelNumber = String(formData.get('modelNumber') || '').trim() || null;
         const categoryId = parseInt(formData.get('categoryId') as string);
         const description = (formData.get('description') as string) || null;
         const metaTitle = String(formData.get('metaTitle') || '').trim() || null;
@@ -391,6 +394,7 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             where: { id: productId },
             data: {
                 name,
+                modelNumber,
                 description,
                 metaTitle,
                 metaDescription,

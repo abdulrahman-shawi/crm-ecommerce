@@ -12,7 +12,7 @@ export async function getInventoryData() {
   const [stocks, products, warehouses, countries] = await Promise.all([
     prisma.productStock.findMany({
       include: {
-        product: { select: { id: true, name: true } },
+        product: { select: { id: true, name: true, modelNumber: true } },
         warehouse: {
           select: {
             id: true,
@@ -23,7 +23,7 @@ export async function getInventoryData() {
         }
       }
     }),
-    prisma.product.findMany({ select: { id: true, name: true } }),
+    prisma.product.findMany({ select: { id: true, name: true, modelNumber: true } }),
     prisma.warehouse.findMany({
       select: {
         id: true,

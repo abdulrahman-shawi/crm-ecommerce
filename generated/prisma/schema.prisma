@@ -250,6 +250,7 @@ model Category {
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
+  modelNumber String?
   description String?
   googleLink  String?
   categoryId  Int?
@@ -375,7 +376,20 @@ model Country {
   name       String      @unique
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  cities     City[]
   warehouses Warehouse[]
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  name      String
+  countryId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+
+  @@unique([name, countryId])
+  @@index([countryId])
 }
 
 // ============================================

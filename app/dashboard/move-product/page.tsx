@@ -44,8 +44,10 @@ export default function InventoryPage() {
     // تجهيز البيانات بشكل مقروء
     const excelData = filteredStocks.map((stock: any) => ({
       "اسم المنتج": stock.product.name,
+      "رقم الموديل": stock.product.modelNumber || "—",
       "المستودع": stock.warehouse.name,
       "البلد": stock.warehouse.location,
+      "سعر الجملة": stock.price,
       "الكمية الحالية": stock.quantity,
       "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
     }));
@@ -57,7 +59,7 @@ export default function InventoryPage() {
     // تحسين: ضبط عرض الأعمدة تلقائياً
     const maxWidth = 20;
     worksheet["!cols"] = [
-      { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
+      { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }, { wch: maxWidth }
     ];
 
     XLSX.writeFile(workbook, `inventory_${viewCountry}_${new Date().getTime()}.xlsx`);
@@ -109,8 +111,10 @@ export default function InventoryPage() {
             <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs text-center">
               <tr>
                 <th className="p-6 text-right">اسم المنتج</th>
+                <th className="p-6">رقم الموديل</th>
                 <th className="p-6 text-right">المستودع</th>
                 <th className="p-6">البلد</th>
+                <th className="p-6">سعر الجملة</th>
                 <th className="p-6">الكمية الحالية</th>
                 <th className="p-6">إجراء</th>
               </tr>
@@ -119,8 +123,10 @@ export default function InventoryPage() {
               {filteredStocks.map((stock: any) => (
                 <tr key={`${stock.productId}-${stock.warehouseId}`} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition text-center">
                   <td className="p-6 text-right font-bold dark:text-slate-200">{stock.product.name}</td>
+                  <td className="p-6 text-sm font-mono text-slate-500 dark:text-slate-300">{stock.product.modelNumber || "—"}</td>
                   <td className="p-6 text-right text-slate-500 dark:text-slate-400"><MapPin size={14} className="inline ml-1 opacity-50" /> {stock.warehouse.name}</td>
                   <td className="p-6"><span className={`px-3 py-1 rounded-lg text-[10px] font-black ${stock.warehouse.location === 'سوريا' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'}`}>{stock.warehouse.location}</span></td>
+                  <td className="p-6 text-lg font-bold text-slate-700 dark:text-slate-200">{Number(stock.price || 0).toLocaleString()} $</td>
                   <td className="p-6 text-2xl font-mono font-bold text-blue-600 dark:text-blue-400">{stock.quantity}</td>
                   <td className="p-6">
                     <button onClick={() => { setMovementType("ADJUSTMENT"); setModalCountry(stock.warehouse.location); setSourceWarehouseId(stock.warehouseId.toString()); setIsModalOpen(true); }} className="text-sm font-bold text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition underline underline-offset-4">الحركات</button>

@@ -10,6 +10,7 @@ export const getCountries = async () => {
         include: {
             _count: {
                 select: {
+                    cities: true,
                     warehouses: true,
                 },
             },
@@ -65,6 +66,7 @@ export const updateCountry = async (id: string, data: any) => {
                 include: {
                     _count: {
                         select: {
+                            cities: true,
                             warehouses: true,
                         },
                     },
@@ -98,8 +100,12 @@ export const deleteCountry = async (id: string) => {
             where: { countryId },
         });
 
-        if (linkedWarehouses > 0) {
-            return { success: false, error: "لا يمكن حذف البلد لوجود مستودعات مرتبطة به" };
+        const linkedCities = await prisma.city.count({
+            where: { countryId },
+        });
+
+        if (linkedWarehouses > 0 || linkedCities > 0) {
+            return { success: false, error: "لا يمكن حذف البلد لوجود مدن أو مستودعات مرتبطة به" };
         }
 
         await prisma.country.delete({

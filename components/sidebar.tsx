@@ -9,6 +9,7 @@ import {
   RollerCoasterIcon,
   Download,
   Warehouse,
+  Building2,
   Truck,
   Wallet,
   MessageCircle,
@@ -148,6 +149,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: Receipt, label: "الأقسام", href: "/dashboard/categories" },
         (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
         { icon: Warehouse, label: "المستودعات", href: "/dashboard/inventories" },
+        (user && hasAnyPermission(user, ["viewCategories", "addCategories", "editCategories", "deleteCategories"])) &&
+        { icon: Building2, label: "المدن", href: "/dashboard/cities" },
         (user && hasAnyPermission(user, ["viewProducts", "addProducts", "editProducts", "deleteProducts"])) &&
         { icon: Box, label: "المنتجات", href: "/dashboard/products" },
         (user && isAdmin(user)) &&
