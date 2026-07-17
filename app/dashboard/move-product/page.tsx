@@ -24,13 +24,19 @@ export default function InventoryPage() {
 
   const countryOptions: string[] = Array.from(
     new Set(
-      (Array.isArray(data.warehouses) ? data.warehouses : [])
-        .map((warehouse: any) => String(warehouse?.location || "").trim())
+      (
+        Array.isArray(data.countries) && data.countries.length > 0
+          ? data.countries.map((country: any) => String(country?.name || "").trim())
+          : (Array.isArray(data.warehouses) ? data.warehouses : []).map((warehouse: any) => String(warehouse?.location || "").trim())
+      )
         .filter(Boolean)
     )
   );
 
   const resolvedModalCountry = modalCountry || countryOptions[0] || "";
+  const warehousesForCountry = (Array.isArray(data.warehouses) ? data.warehouses : []).filter(
+    (warehouse: any) => String(warehouse?.location || "").trim() === resolvedModalCountry
+  );
 
   const filteredStocks = data.stocks.filter((s: any) => viewCountry === "الكل" || s.warehouse.location === viewCountry);
 
@@ -127,17 +133,18 @@ export default function InventoryPage() {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2.5rem] shadow-2xl border dark:border-slate-800 overflow-hidden animate-in zoom-in duration-200">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 overflow-y-auto p-4">
+            <div className="flex min-h-full items-start justify-center py-4 sm:items-center">
+              <div className="bg-white dark:bg-slate-900 w-full max-w-xl max-h-[calc(100vh-2rem)] overflow-y-auto rounded-[2.5rem] shadow-2xl border dark:border-slate-800 animate-in zoom-in duration-200">
               <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-b dark:border-slate-800 flex justify-between items-center">
                 <h3 className="font-black text-xl dark:text-white">إضافة حركة: {modalCountry}</h3>
                 <button onClick={() => setIsModalOpen(false)} className="dark:text-white hover:text-red-500"><X /></button>
               </div>
 
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
+                <div className="flex flex-wrap bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl gap-1">
                   {countryOptions.map(c => (
-                    <button key={c} type="button" onClick={() => { setModalCountry(c); setSourceWarehouseId(""); }} className={`flex-1 py-3 rounded-xl font-bold transition ${resolvedModalCountry === c ? 'bg-white dark:bg-slate-700 dark:text-white shadow-md' : 'text-slate-400'}`}>{c}</button>
+                    <button key={c} type="button" onClick={() => { setModalCountry(c); setSourceWarehouseId(""); }} className={`min-w-[140px] flex-1 py-3 rounded-xl font-bold transition ${resolvedModalCountry === c ? 'bg-white dark:bg-slate-700 dark:text-white shadow-md' : 'text-slate-400'}`}>{c}</button>
                   ))}
                 </div>
 
@@ -159,7 +166,7 @@ export default function InventoryPage() {
                       className="w-full p-4 bg-slate-50 dark:bg-slate-950 dark:text-white border dark:border-slate-800 rounded-2xl outline-none" required
                     >
                       <option value="">اختر المستودع...</option>
-                      {data.warehouses.filter((w: any) => w.location === resolvedModalCountry).map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
+                      {warehousesForCountry.map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
                     </select>
                   </div>
 
@@ -208,6 +215,7 @@ export default function InventoryPage() {
                 </button>
               </form>
             </div>
+          </div>
           </div>
         )}
       </div>

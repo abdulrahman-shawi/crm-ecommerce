@@ -3,18 +3,56 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+const resolveWarehouseLocation = (warehouse: {
+  location?: string | null;
+  country?: { name?: string | null } | null;
+}) => String(warehouse.country?.name || warehouse.location || "").trim();
+
 export async function getInventoryData() {
-  const [stocks, products, warehouses] = await Promise.all([
+  const [stocks, products, warehouses, countries] = await Promise.all([
     prisma.productStock.findMany({
       include: {
         product: { select: { id: true, name: true } },
-        warehouse: { select: { id: true, name: true, location: true } }
+        warehouse: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+            country: { select: { name: true } },
+          }
+        }
       }
     }),
     prisma.product.findMany({ select: { id: true, name: true } }),
-    prisma.warehouse.findMany({ select: { id: true, name: true, location: true } })
+    prisma.warehouse.findMany({
+      select: {
+        id: true,
+        name: true,
+        location: true,
+        country: { select: { name: true } },
+      }
+    }),
+    prisma.country.findMany({
+      select: { id: true, name: true },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
-  return { stocks, products, warehouses };
+
+  return {
+    stocks: stocks.map((stock) => ({
+      ...stock,
+      warehouse: {
+        ...stock.warehouse,
+        location: resolveWarehouseLocation(stock.warehouse),
+      },
+    })),
+    products,
+    warehouses: warehouses.map((warehouse) => ({
+      ...warehouse,
+      location: resolveWarehouseLocation(warehouse),
+    })),
+    countries,
+  };
 }
 
 export async function createMovementAction(data: any) {
