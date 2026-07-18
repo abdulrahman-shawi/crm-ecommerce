@@ -213,7 +213,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
 
     if (field === "productId") {
       const product = products.find(p => p.id === Number(value));
-      const pricing = getProductPricingByCountry(product, stockCountry);
+      const pricing = getProductPricingByWarehouse(product, stockWarehouseId);
       item.productId = value;
       item.name = product?.name || "";
       item.modelNumber = product?.modelNumber || "";
