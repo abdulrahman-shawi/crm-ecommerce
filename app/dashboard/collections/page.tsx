@@ -36,15 +36,13 @@ type UnifiedCollectionRow = {
 const paymentMethodOptions = ["الكل", "تحويل بنكي", "مختلطة", "عند الاستلام"] as const;
 const countryFilterOptions = ["الكل", "سوريا", "تركيا"] as const;
 const rowsPerPageOptions = [10, 25, 50, 100] as const;
-const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
-
 const formatMoney = (amount: number, currency: "$" | "₺" = "$") => {
   return `${Number(amount || 0).toLocaleString()} ${currency}`;
 };
 
 const getExchangeRate = (row: any) => {
   const rate = Number(row?.usdToTryRateAtOrder || 0);
-  return rate > 0 ? rate : DEFAULT_TURKEY_EXCHANGE_RATE;
+  return rate > 0 ? rate : 0;
 };
 
 const toTryAmount = (amountUsd: number, row: any) => {

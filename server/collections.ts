@@ -14,11 +14,9 @@ const normalizeNumber = (value: unknown) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
-
 const resolveOrderExchangeRate = (orderLike: any) => {
   const snapshotRate = Number(orderLike?.usdToTryRateAtOrder || 0);
-  return snapshotRate > 0 ? snapshotRate : DEFAULT_TURKEY_EXCHANGE_RATE;
+  return snapshotRate > 0 ? snapshotRate : 0;
 };
 
 const convertToUSD = (value: unknown, orderLike: any) => {

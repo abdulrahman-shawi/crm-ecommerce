@@ -52,8 +52,6 @@ type StatusSummary = {
 
 type WarrantyCardKey = "replacement" | "damaged" | "maintenance";
 
-const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
-
 const toInputDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -83,10 +81,10 @@ const formatUSD = (value: number | undefined | null) =>
 
 const formatPercent = (value: number | undefined | null) => `${Number(value || 0).toFixed(2)}%`;
 
-const normalizeToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
+const normalizeToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = 0) => {
   const numericAmount = Number(amount || 0);
-  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : DEFAULT_TURKEY_EXCHANGE_RATE;
-  return String(warehouseLocation || "").trim() === "تركيا" ? numericAmount / safeRate : numericAmount;
+  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : 0;
+  return String(warehouseLocation || "").trim() === "تركيا" && safeRate > 0 ? numericAmount / safeRate : numericAmount;
 };
 
 const COLORS = ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
@@ -141,7 +139,7 @@ const AnalyticPage: React.FC = () => {
   const [employeeCustomEndDate, setEmployeeCustomEndDate] = React.useState("");
   const [isEmployeeReportPdfExporting, setIsEmployeeReportPdfExporting] = React.useState(false);
   const [warehouseLocationFilter, setWarehouseLocationFilter] = React.useState<"all" | "سوريا" | "تركيا">("all");
-  const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState<number>(DEFAULT_TURKEY_EXCHANGE_RATE);
+  const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState<number>(0);
 
   const isInvalidCustomRange =
     orderFilterPreset === "custom" &&

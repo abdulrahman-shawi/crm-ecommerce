@@ -5,33 +5,24 @@ import { hasPermission, isAdmin } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/auth";
 
-const DEFAULT_TURKEY_EXCHANGE_RATE = 44;
-const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
+const normalizeOrderAmountToUSD = (amount: number, warehouseLocation?: string | null, exchangeRate: number = 0) => {
   const value = Number(amount || 0);
-  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : DEFAULT_TURKEY_EXCHANGE_RATE;
-  return String(warehouseLocation || "").trim() === "تركيا" ? value / safeRate : value;
+  const safeRate = Number(exchangeRate) > 0 ? Number(exchangeRate) : 0;
+  return String(warehouseLocation || "").trim() === "تركيا" && safeRate > 0 ? value / safeRate : value;
 };
 const NON_REVENUE_STATUSES = ["تم الغاء الطلب", "فشل التسليم مرتجع"];
 const DELIVERED_ORDER_STATUSES = ["تم تسليم الطلب", "تم التسليم", "تم استلام الطلب"];
 
 const resolveOrderExchangeRate = (
   orderLike: { usdToTryRateAtOrder?: number | null },
-  fallbackExchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE
+  fallbackExchangeRate: number = 0
 ) => {
   const snapshotRate = Number(orderLike?.usdToTryRateAtOrder || 0);
   if (snapshotRate > 0) return snapshotRate;
-  return DEFAULT_TURKEY_EXCHANGE_RATE;
+  return Number(fallbackExchangeRate) > 0 ? Number(fallbackExchangeRate) : 0;
 };
 
 const getTurkeyExchangeRateFromSettings = async () => {
-//  اشرح الكود بالتفصيل الممل وان احتوت الشرح على كلمة أجنبية أنزل سطر:
-// 1. هذا الكود هو دالة غير متزامنة (async function) تُستخدم لجلب سعر صرف الدولار الأمريكي مقابل الليرة التركية من قاعدة البيانات باستخدام Prisma.
-// 2. في البداية، يتم تعريف ثابت DEFAULT_TURKEY_EXCHANGE_RATE بقيمة 44، والذي يُستخدم كقيمة افتراضية في حال عدم وجود سعر صرف صالح في قاعدة البيانات.
-// 3. داخل الدالة، يتم استخدام Prisma للوصول إلى جدول generalSetting وجلب أول سجل (findFirst) مع ترتيب تصاعدي حسب id.
-// 4. يتم اختيار الحقل usdToTryRate فقط من السجل الذي تم جلبه.
-// 5. بعد جلب البيانات، يتم تحويل قيمة usdToTryRate إلى رقم باستخدام Number()، وإذا كانت القيمة غير موجودة أو غير صالحة، يتم تعيينها إلى 0.
-// 6. يتم التحقق مما إذا كانت القيمة المحولة أكبر من 0، فإذا كانت كذلك، يتم إرجاعها كسعر الصرف الحالي، وإلا يتم إرجاع القيمة الافتراضية DEFAULT_TURKEY_EXCHANGE_RATE.
-// 
   try {
     const settings = await prisma.generalSetting.findFirst({
       orderBy: { id: "asc" },
@@ -39,9 +30,9 @@ const getTurkeyExchangeRateFromSettings = async () => {
     });
 
     const rate = Number(settings?.usdToTryRate || 0);
-    return rate > 0 ? rate : DEFAULT_TURKEY_EXCHANGE_RATE;
+    return rate > 0 ? rate : 0;
   } catch (error) {
-    return DEFAULT_TURKEY_EXCHANGE_RATE;
+    return 0;
   }
 };
 
@@ -52,7 +43,7 @@ const getOrderAmountFromItemsInUSD = (order: {
   manualCreatedAt?: Date | null;
   warehouse?: { location?: string | null } | null;
   items?: Array<{ quantity?: number | null; price?: number | null; discount?: number | null }>;
-}, exchangeRate: number = DEFAULT_TURKEY_EXCHANGE_RATE) => {
+}, exchangeRate: number = 0) => {
   const effectiveRate = resolveOrderExchangeRate(order, exchangeRate);
   const items = Array.isArray(order.items) ? order.items : [];
 
