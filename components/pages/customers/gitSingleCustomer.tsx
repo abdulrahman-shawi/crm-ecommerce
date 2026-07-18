@@ -1,5 +1,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { formatPhoneForDisplay, hasPermission } from "@/lib/utils";
+import { getCities } from "@/server/city";
+import { getCountries } from "@/server/country";
 import { createmessage, updateCustomer } from "@/server/customer";
 import { MapPin, Phone, Send } from "lucide-react";
 import React from "react";
@@ -9,6 +11,8 @@ import ViewOrderCustomer from "./viewOrder";
 export default function GetCustomerSingle({ data, getdatas }: { data: any, getdatas: any }) {
   const [msg, setMsg] = React.useState("")
   const [activeTab, setActiveTab] = React.useState<"details" | "orders" | "messages">("details");
+  const [countryRows, setCountryRows] = React.useState<any[]>([]);
+  const [cityRows, setCityRows] = React.useState<any[]>([]);
   const [localFields, setLocalFields] = React.useState({
     age: "",
     gender: "",
@@ -50,92 +54,30 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
     { label: "4", value: "4" },
     { label: "5", value: "5" },
   ];
+  const selectedCountryRow = countryRows.find((row) => row.name === localFields.country);
+  const filteredCities = selectedCountryRow
+    ? cityRows.filter((row) => Number(row.countryId) === Number(selectedCountryRow.id))
+    : [];
 
-  const countries = [
-    "سوريا",
-    "لبنان",
-    "العراق",
-    "تركيا",
-    "ليبيا",
-  ];
+  React.useEffect(() => {
+    let isMounted = true;
 
-  const citiesByCountry: Record<string, string[]> = {
-    "سوريا": [
-      "دمشق",
-      "ريف دمشق",
-      "حلب",
-      "حمص",
-      "حماة",
-      "اللاذقية",
-      "طرطوس",
-      "إدلب",
-      "درعا",
-      "السويداء",
-      "القنيطرة",
-      "دير الزور",
-      "الرقة",
-      "الحسكة",
-    ],
-    "لبنان": [
-      "بيروت",
-      "طرابلس",
-      "صيدا",
-      "صور",
-      "زحلة",
-      "بعلبك",
-      "جونية",
-      "جبيل",
-      "البترون",
-      "النبطية",
-    ],
-    "العراق": [
-      "بغداد",
-      "البصرة",
-      "الموصل",
-      "أربيل",
-      "النجف",
-      "كربلاء",
-      "كركوك",
-      "السليمانية",
-      "دهوك",
-      "الرمادي",
-      "الفلوجة",
-      "سامراء",
-      "الحلة",
-      "الديوانية",
-      "الناصرية",
-      "الكوت",
-      "العمارة",
-    ],
-    "تركيا": [
-  "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin",
-  "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa",
-  "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan",
-  "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay",
-  "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli",
-  "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin",
-  "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt",
-  "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Uşak",
-  "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman",
-  "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"
-],
-    "ليبيا": [
-      "طرابلس",
-      "بنغازي",
-      "مصراتة",
-      "الزاوية",
-      "سبها",
-      "سرت",
-      "طبرق",
-      "درنة",
-      "زليتن",
-      "أجدابيا",
-      "البيضاء",
-      "غريان",
-      "الكفرة",
-      "مرزق",
-    ],
-  };
+    const loadReferenceData = async () => {
+      try {
+        const [countriesData, citiesData] = await Promise.all([getCountries(), getCities()]);
+        if (!isMounted) return;
+
+        setCountryRows(Array.isArray(countriesData) ? countriesData : []);
+        setCityRows(Array.isArray(citiesData) ? citiesData : []);
+      } catch (error) {
+      }
+    };
+
+    loadReferenceData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   React.useEffect(() => {
     setLocalFields({
@@ -178,7 +120,11 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
       return;
     }
 
-    setLocalFields((prev) => ({ ...prev, [field]: value }));
+    setLocalFields((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(field === "country" ? { city: "" } : {}),
+    }));
 
     const payload: any = { [field]: value || undefined };
     if (field === "rating") {
@@ -318,8 +264,8 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
                   className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
                 >
                   <option value="">غير محدد</option>
-                  {countries.map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  {countryRows.map((countryRow) => (
+                    <option key={countryRow.id} value={countryRow.name}>{countryRow.name}</option>
                   ))}
                 </select>
               </div>
@@ -335,8 +281,8 @@ export default function GetCustomerSingle({ data, getdatas }: { data: any, getda
                   className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 disabled:opacity-60"
                 >
                   <option value="">غير محدد</option>
-                  {(citiesByCountry[localFields.country] || []).map((city) => (
-                    <option key={city} value={city}>{city}</option>
+                  {filteredCities.map((cityRow) => (
+                    <option key={cityRow.id} value={cityRow.name}>{cityRow.name}</option>
                   ))}
                 </select>
               </div>
