@@ -16,7 +16,8 @@ import {
   ImageIcon,
   BadgePercent,
   Ticket,
-  ChevronDown
+  ChevronDown,
+  ArrowRightLeft
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -219,6 +220,8 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
             { icon: Ticket, label: "سفراء skynova", href: "/dashboard/affiliate" },
             (user && isAdmin(user)) &&
             { icon: Users2, label: "مستخدمو سفراء skynova", href: "/dashboard/affiliate/users" },
+            (user && isAdmin(user)) &&
+            { icon: ArrowRightLeft, label: "تحويلات المحفظة", href: "/dashboard/affiliate/wallet-transfers" },
           ].filter(Boolean) as MenuItem[],
         },
       ].filter(Boolean)

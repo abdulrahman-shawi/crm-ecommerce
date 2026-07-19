@@ -80,6 +80,19 @@ function isAffiliateApprovedUser(user: { isAffiliate?: boolean | null; affiliate
   return Boolean(user.affiliateApproved);
 }
 
+function normalizeWalletTransferDate(value: string | Date | null | undefined, fieldName: string) {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`تاريخ ${fieldName} غير صالح`);
+  }
+
+  return date;
+}
+
 export async function getAffiliateAdminDashboard() {
   const currentUser = await getCurrentSessionUser();
   if (!currentUser || currentUser.accountType !== 'ADMIN') {
@@ -1040,4 +1053,192 @@ export async function updateAffiliateCommissionStatus(
   });
 
   return { success: true, data: updatedCommission };
+}
+
+export async function getAffiliateWalletTransfersAdminList() {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بعرض تحويلات المحفظة' };
+  }
+
+  const [transfers, affiliateUsers] = await Promise.all([
+    prisma.affiliateWalletTransfer.findMany({
+      orderBy: [
+        { transferredAt: 'desc' },
+        { createdAt: 'desc' },
+      ],
+      select: {
+        id: true,
+        userId: true,
+        amount: true,
+        status: true,
+        reference: true,
+        notes: true,
+        transferredAt: true,
+        receivedAt: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            phone: true,
+            affiliateApproved: true,
+            accountType: true,
+            isAffiliate: true,
+          },
+        },
+      },
+    }),
+    prisma.user.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { isAffiliate: true },
+              { accountType: 'AFFILIATE' },
+            ],
+          },
+          {
+            accountType: { not: 'STAFF' },
+          },
+        ],
+      },
+      orderBy: { username: 'asc' },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        affiliateApproved: true,
+      },
+    }),
+  ]);
+
+  return {
+    success: true,
+    data: {
+      transfers,
+      affiliateUsers,
+      summary: {
+        total: transfers.length,
+        pending: transfers.filter((transfer) => transfer.status === 'PENDING').length,
+        received: transfers.filter((transfer) => transfer.status === 'RECEIVED').length,
+        totalAmount: Number(transfers.reduce((sum, transfer) => sum + Number(transfer.amount || 0), 0).toFixed(2)),
+      },
+    },
+  };
+}
+
+export async function updateAffiliateWalletTransferAdmin(
+  transferId: string,
+  data: {
+    userId: string;
+    amount: number;
+    status: 'PENDING' | 'RECEIVED';
+    reference?: string | null;
+    notes?: string | null;
+    transferredAt: string | Date;
+    receivedAt?: string | Date | null;
+  }
+) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بتعديل تحويلات المحفظة' };
+  }
+
+  const normalizedTransferId = String(transferId || '').trim();
+  if (!normalizedTransferId) {
+    return { success: false, error: 'معرف التحويلة غير صالح' };
+  }
+
+  const normalizedUserId = String(data?.userId || '').trim();
+  if (!normalizedUserId) {
+    return { success: false, error: 'يرجى اختيار مستخدم أفلييت' };
+  }
+
+  const amount = Number(data?.amount || 0);
+  if (!(amount > 0)) {
+    return { success: false, error: 'قيمة التحويلة يجب أن تكون أكبر من صفر' };
+  }
+
+  try {
+    const affiliateUser = await prisma.user.findUnique({
+      where: { id: normalizedUserId },
+      select: {
+        id: true,
+        accountType: true,
+        isAffiliate: true,
+      },
+    });
+
+    if (!isAffiliateUser(affiliateUser)) {
+      return { success: false, error: 'المستخدم المحدد ليس حساب أفلييت' };
+    }
+
+    const transferredAt = normalizeWalletTransferDate(data.transferredAt, 'التحويل');
+    if (!transferredAt) {
+      return { success: false, error: 'تاريخ التحويل مطلوب' };
+    }
+
+    const normalizedStatus = data.status === 'RECEIVED' ? 'RECEIVED' : 'PENDING';
+    const normalizedReceivedAt = normalizedStatus === 'RECEIVED'
+      ? normalizeWalletTransferDate(data.receivedAt, 'الاستلام') || transferredAt
+      : null;
+
+    const updatedTransfer = await prisma.affiliateWalletTransfer.update({
+      where: { id: normalizedTransferId },
+      data: {
+        userId: normalizedUserId,
+        amount,
+        status: normalizedStatus,
+        reference: String(data.reference || '').trim() || null,
+        notes: String(data.notes || '').trim() || null,
+        transferredAt,
+        receivedAt: normalizedReceivedAt,
+      },
+      select: {
+        id: true,
+        userId: true,
+        amount: true,
+        status: true,
+        reference: true,
+        notes: true,
+        transferredAt: true,
+        receivedAt: true,
+      },
+    });
+
+    return { success: true, data: updatedTransfer };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'تعذر تحديث تحويلة المحفظة',
+    };
+  }
+}
+
+export async function deleteAffiliateWalletTransferAdmin(transferId: string) {
+  const currentUser = await getCurrentSessionUser();
+  if (!currentUser || currentUser.accountType !== 'ADMIN') {
+    return { success: false, error: 'غير مصرح لك بحذف تحويلات المحفظة' };
+  }
+
+  const normalizedTransferId = String(transferId || '').trim();
+  if (!normalizedTransferId) {
+    return { success: false, error: 'معرف التحويلة غير صالح' };
+  }
+
+  try {
+    await prisma.affiliateWalletTransfer.delete({
+      where: { id: normalizedTransferId },
+    });
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'تعذر حذف تحويلة المحفظة',
+    };
+  }
 }
