@@ -433,9 +433,10 @@ export async function getWholesaleOrdersByCustomer(wholesaleCustomerId: string) 
 export async function createWholesaleOrder(data: any, items: any[]) {
   try {
     const currentUser = await getCurrentSessionUser();
-    if (!canAddWholesaleOrders(currentUser)) {
+    if (!currentUser || !canAddWholesaleOrders(currentUser)) {
       return { success: false, error: "لا تملك صلاحية إضافة طلب جملة" };
     }
+    const currentUserId = String(currentUser.id);
 
     const warehouseId = parseWarehouseId(data?.warehouseId);
     if (!warehouseId) {
@@ -497,7 +498,7 @@ export async function createWholesaleOrder(data: any, items: any[]) {
           status: String(data?.status || "طلب جديد"),
           manualCreatedAt,
           wholesaleCustomer: { connect: { id: wholesaleCustomerId } },
-          user: { connect: { id: String(currentUser.id) } },
+          user: { connect: { id: currentUserId } },
           warehouse: { connect: { id: warehouse.id } },
           items: {
             create: normalizedItems.map((item) => ({
@@ -531,9 +532,10 @@ export async function createWholesaleOrder(data: any, items: any[]) {
 export async function updateWholesaleOrder(data: any, orderId: string | number, items: any[]) {
   try {
     const currentUser = await getCurrentSessionUser();
-    if (!canEditWholesaleOrders(currentUser)) {
+    if (!currentUser || !canEditWholesaleOrders(currentUser)) {
       return { success: false, error: "لا تملك صلاحية تعديل طلب الجملة" };
     }
+    const currentUserId = String(currentUser.id);
 
     const normalizedOrderId = Number(orderId);
     if (!Number.isInteger(normalizedOrderId) || normalizedOrderId <= 0) {
@@ -628,7 +630,7 @@ export async function updateWholesaleOrder(data: any, orderId: string | number, 
           status: String(data?.status || oldOrder.status || "طلب جديد"),
           manualCreatedAt,
           wholesaleCustomer: { connect: { id: wholesaleCustomerId } },
-          user: { connect: { id: String(currentUser.id) } },
+          user: { connect: { id: currentUserId } },
           warehouse: { connect: { id: warehouse.id } },
           items: {
             deleteMany: {},
