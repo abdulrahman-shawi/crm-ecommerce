@@ -217,7 +217,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   isActive: 'isActive',
   showInAds: 'showInAds',
   affiliatePrice: 'affiliatePrice',
-  affiliateCommissionRate: 'affiliateCommissionRate'
+  affiliateCommissionRate: 'affiliateCommissionRate',
+  wholesalePrice: 'wholesalePrice'
 };
 
 exports.Prisma.AdPageVisitScalarFieldEnum = {
@@ -419,6 +420,50 @@ exports.Prisma.WholesaleVisitScalarFieldEnum = {
   syncedAt: 'syncedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductWholesalePriceTierScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  minQuantity: 'minQuantity',
+  maxQuantity: 'maxQuantity',
+  price: 'price',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WholesaleOrderScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  totalAmount: 'totalAmount',
+  discount: 'discount',
+  finalAmount: 'finalAmount',
+  paymentMethod: 'paymentMethod',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  country: 'country',
+  city: 'city',
+  municipality: 'municipality',
+  fullAddress: 'fullAddress',
+  deliveryNotes: 'deliveryNotes',
+  googleMapsLink: 'googleMapsLink',
+  additionalNotes: 'additionalNotes',
+  status: 'status',
+  wholesaleCustomerId: 'wholesaleCustomerId',
+  userId: 'userId',
+  warehouseId: 'warehouseId',
+  manualCreatedAt: 'manualCreatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WholesaleOrderItemScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  price: 'price',
+  discount: 'discount',
+  orderId: 'orderId',
+  productId: 'productId'
 };
 
 exports.Prisma.WarrantyScalarFieldEnum = {
@@ -788,6 +833,9 @@ exports.Prisma.ModelName = {
   Customer: 'Customer',
   WholesaleCustomer: 'WholesaleCustomer',
   WholesaleVisit: 'WholesaleVisit',
+  ProductWholesalePriceTier: 'ProductWholesalePriceTier',
+  WholesaleOrder: 'WholesaleOrder',
+  WholesaleOrderItem: 'WholesaleOrderItem',
   Warranty: 'Warranty',
   Message: 'Message',
   Order: 'Order',

@@ -760,11 +760,23 @@ export async function getProductCatalog() {
         select: {
             id: true,
             name: true,
+            modelNumber: true,
+            wholesalePrice: true,
+            wholesalePricingTiers: {
+                orderBy: { minQuantity: 'asc' },
+                select: {
+                    id: true,
+                    minQuantity: true,
+                    maxQuantity: true,
+                    price: true,
+                },
+            },
             stocks: {
                 select: {
                     id: true,
                     quantity: true,
                     price: true,
+                    wholesalePrice: true,
                     discount: true,
                     warehouse: {
                         select: {

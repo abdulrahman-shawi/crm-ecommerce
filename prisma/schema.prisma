@@ -157,6 +157,7 @@ model User {
   reviews                Review[]
   assignedWholesaleCustomers WholesaleCustomer[] @relation("WholesaleCustomerAssignedUser")
   wholesaleVisits           WholesaleVisit[]     @relation("WholesaleVisitUser")
+  wholesaleOrders          WholesaleOrder[]     @relation("WholesaleOrderUser")
 }
 
 // ============================================
@@ -267,6 +268,7 @@ model Product {
   showInAds             Boolean  @default(false)
   affiliatePrice        Float    @default(0)
   affiliateCommissionRate Float? @default(10.00)
+  wholesalePrice        Float    @default(0)
 
   // ─── Existing Relations ───
   orderItems     OrderItem[]
@@ -283,6 +285,8 @@ model Product {
   reviews        Review[]
   landingPage    ProductLandingPage?
   offerDiscounts OfferDiscount[]
+  wholesalePricingTiers ProductWholesalePriceTier[]
+  wholesaleOrderItems   WholesaleOrderItem[]
 }
 
 model AdPageVisit {
@@ -409,6 +413,7 @@ model Warehouse {
   country    Country?        @relation(fields: [countryId], references: [id], onDelete: SetNull)
   stocks     ProductStock[]
   orders     Order[]
+  wholesaleOrders WholesaleOrder[]
   movements  StockMovement[]
   warranties Warranty[]
 
@@ -576,6 +581,7 @@ model WholesaleCustomer {
 
   assignedUser User?            @relation("WholesaleCustomerAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
   visits       WholesaleVisit[]
+  orders       WholesaleOrder[]
 
   @@index([assignedUserId])
   @@index([city, area])
@@ -611,6 +617,76 @@ model WholesaleVisit {
   @@index([visitedAt])
   @@index([result])
   @@index([nextFollowUpAt])
+}
+
+model ProductWholesalePriceTier {
+  id          String   @id @default(uuid())
+  productId   Int
+  minQuantity Int
+  maxQuantity Int?
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([productId, minQuantity])
+  @@unique([productId, minQuantity])
+  @@map("product_wholesale_price_tiers")
+}
+
+model WholesaleOrder {
+  id                 Int       @id @default(autoincrement())
+  orderNumber        String    @unique
+  totalAmount        Float
+  discount           Float     @default(0)
+  finalAmount        Float
+  paymentMethod      String
+  receiverName       String?
+  receiverPhone      String[]
+  country            String?
+  city               String?
+  municipality       String?
+  fullAddress        String?
+  deliveryNotes      String?
+  googleMapsLink     String?
+  additionalNotes    String?
+  status             String    @default("طلب جديد")
+  wholesaleCustomerId String
+  userId             String?
+  warehouseId        Int?
+  manualCreatedAt    DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  wholesaleCustomer WholesaleCustomer @relation(fields: [wholesaleCustomerId], references: [id], onDelete: Cascade)
+  user              User?             @relation("WholesaleOrderUser", fields: [userId], references: [id], onDelete: SetNull)
+  warehouse         Warehouse?        @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+  items             WholesaleOrderItem[]
+
+  @@index([createdAt])
+  @@index([wholesaleCustomerId, createdAt])
+  @@index([userId, createdAt])
+  @@index([warehouseId, createdAt])
+  @@index([status, createdAt])
+  @@map("wholesale_orders")
+}
+
+model WholesaleOrderItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int     @default(1)
+  price     Float
+  discount  Float   @default(0)
+  orderId   Int
+  productId Int
+
+  order   WholesaleOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product        @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("wholesale_order_items")
 }
 
 // ============================================

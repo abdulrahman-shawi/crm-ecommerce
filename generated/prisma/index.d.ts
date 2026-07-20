@@ -109,6 +109,21 @@ export type WholesaleCustomer = $Result.DefaultSelection<Prisma.$WholesaleCustom
  */
 export type WholesaleVisit = $Result.DefaultSelection<Prisma.$WholesaleVisitPayload>
 /**
+ * Model ProductWholesalePriceTier
+ * 
+ */
+export type ProductWholesalePriceTier = $Result.DefaultSelection<Prisma.$ProductWholesalePriceTierPayload>
+/**
+ * Model WholesaleOrder
+ * 
+ */
+export type WholesaleOrder = $Result.DefaultSelection<Prisma.$WholesaleOrderPayload>
+/**
+ * Model WholesaleOrderItem
+ * 
+ */
+export type WholesaleOrderItem = $Result.DefaultSelection<Prisma.$WholesaleOrderItemPayload>
+/**
  * Model Warranty
  * 
  */
@@ -703,6 +718,36 @@ export class PrismaClient<
     * ```
     */
   get wholesaleVisit(): Prisma.WholesaleVisitDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.productWholesalePriceTier`: Exposes CRUD operations for the **ProductWholesalePriceTier** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductWholesalePriceTiers
+    * const productWholesalePriceTiers = await prisma.productWholesalePriceTier.findMany()
+    * ```
+    */
+  get productWholesalePriceTier(): Prisma.ProductWholesalePriceTierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wholesaleOrder`: Exposes CRUD operations for the **WholesaleOrder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WholesaleOrders
+    * const wholesaleOrders = await prisma.wholesaleOrder.findMany()
+    * ```
+    */
+  get wholesaleOrder(): Prisma.WholesaleOrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wholesaleOrderItem`: Exposes CRUD operations for the **WholesaleOrderItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WholesaleOrderItems
+    * const wholesaleOrderItems = await prisma.wholesaleOrderItem.findMany()
+    * ```
+    */
+  get wholesaleOrderItem(): Prisma.WholesaleOrderItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.warranty`: Exposes CRUD operations for the **Warranty** model.
@@ -1316,6 +1361,9 @@ export namespace Prisma {
     Customer: 'Customer',
     WholesaleCustomer: 'WholesaleCustomer',
     WholesaleVisit: 'WholesaleVisit',
+    ProductWholesalePriceTier: 'ProductWholesalePriceTier',
+    WholesaleOrder: 'WholesaleOrder',
+    WholesaleOrderItem: 'WholesaleOrderItem',
     Warranty: 'Warranty',
     Message: 'Message',
     Order: 'Order',
@@ -1347,7 +1395,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "country" | "city" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "wholesaleCustomer" | "wholesaleVisit" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
+      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "country" | "city" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "wholesaleCustomer" | "wholesaleVisit" | "productWholesalePriceTier" | "wholesaleOrder" | "wholesaleOrderItem" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2757,6 +2805,228 @@ export namespace Prisma {
           }
         }
       }
+      ProductWholesalePriceTier: {
+        payload: Prisma.$ProductWholesalePriceTierPayload<ExtArgs>
+        fields: Prisma.ProductWholesalePriceTierFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductWholesalePriceTierFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductWholesalePriceTierFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          findFirst: {
+            args: Prisma.ProductWholesalePriceTierFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductWholesalePriceTierFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          findMany: {
+            args: Prisma.ProductWholesalePriceTierFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>[]
+          }
+          create: {
+            args: Prisma.ProductWholesalePriceTierCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          createMany: {
+            args: Prisma.ProductWholesalePriceTierCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductWholesalePriceTierCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>[]
+          }
+          delete: {
+            args: Prisma.ProductWholesalePriceTierDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          update: {
+            args: Prisma.ProductWholesalePriceTierUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductWholesalePriceTierDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductWholesalePriceTierUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductWholesalePriceTierUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductWholesalePriceTierUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductWholesalePriceTierPayload>
+          }
+          aggregate: {
+            args: Prisma.ProductWholesalePriceTierAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductWholesalePriceTier>
+          }
+          groupBy: {
+            args: Prisma.ProductWholesalePriceTierGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductWholesalePriceTierGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductWholesalePriceTierCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductWholesalePriceTierCountAggregateOutputType> | number
+          }
+        }
+      }
+      WholesaleOrder: {
+        payload: Prisma.$WholesaleOrderPayload<ExtArgs>
+        fields: Prisma.WholesaleOrderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WholesaleOrderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WholesaleOrderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          findFirst: {
+            args: Prisma.WholesaleOrderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WholesaleOrderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          findMany: {
+            args: Prisma.WholesaleOrderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>[]
+          }
+          create: {
+            args: Prisma.WholesaleOrderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          createMany: {
+            args: Prisma.WholesaleOrderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WholesaleOrderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>[]
+          }
+          delete: {
+            args: Prisma.WholesaleOrderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          update: {
+            args: Prisma.WholesaleOrderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          deleteMany: {
+            args: Prisma.WholesaleOrderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WholesaleOrderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WholesaleOrderUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>[]
+          }
+          upsert: {
+            args: Prisma.WholesaleOrderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderPayload>
+          }
+          aggregate: {
+            args: Prisma.WholesaleOrderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWholesaleOrder>
+          }
+          groupBy: {
+            args: Prisma.WholesaleOrderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleOrderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WholesaleOrderCountArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleOrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      WholesaleOrderItem: {
+        payload: Prisma.$WholesaleOrderItemPayload<ExtArgs>
+        fields: Prisma.WholesaleOrderItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WholesaleOrderItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WholesaleOrderItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          findFirst: {
+            args: Prisma.WholesaleOrderItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WholesaleOrderItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          findMany: {
+            args: Prisma.WholesaleOrderItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>[]
+          }
+          create: {
+            args: Prisma.WholesaleOrderItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          createMany: {
+            args: Prisma.WholesaleOrderItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WholesaleOrderItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>[]
+          }
+          delete: {
+            args: Prisma.WholesaleOrderItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          update: {
+            args: Prisma.WholesaleOrderItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.WholesaleOrderItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WholesaleOrderItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WholesaleOrderItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.WholesaleOrderItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WholesaleOrderItemPayload>
+          }
+          aggregate: {
+            args: Prisma.WholesaleOrderItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWholesaleOrderItem>
+          }
+          groupBy: {
+            args: Prisma.WholesaleOrderItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleOrderItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WholesaleOrderItemCountArgs<ExtArgs>
+            result: $Utils.Optional<WholesaleOrderItemCountAggregateOutputType> | number
+          }
+        }
+      }
       Warranty: {
         payload: Prisma.$WarrantyPayload<ExtArgs>
         fields: Prisma.WarrantyFieldRefs
@@ -4068,6 +4338,9 @@ export namespace Prisma {
     customer?: CustomerOmit
     wholesaleCustomer?: WholesaleCustomerOmit
     wholesaleVisit?: WholesaleVisitOmit
+    productWholesalePriceTier?: ProductWholesalePriceTierOmit
+    wholesaleOrder?: WholesaleOrderOmit
+    wholesaleOrderItem?: WholesaleOrderItemOmit
     warranty?: WarrantyOmit
     message?: MessageOmit
     order?: OrderOmit
@@ -4178,6 +4451,7 @@ export namespace Prisma {
     reviews: number
     assignedWholesaleCustomers: number
     wholesaleVisits: number
+    wholesaleOrders: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4195,6 +4469,7 @@ export namespace Prisma {
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
     assignedWholesaleCustomers?: boolean | UserCountOutputTypeCountAssignedWholesaleCustomersArgs
     wholesaleVisits?: boolean | UserCountOutputTypeCountWholesaleVisitsArgs
+    wholesaleOrders?: boolean | UserCountOutputTypeCountWholesaleOrdersArgs
   }
 
   // Custom InputTypes
@@ -4306,6 +4581,13 @@ export namespace Prisma {
     where?: WholesaleVisitWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWholesaleOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderWhereInput
+  }
+
 
   /**
    * Count Type PermissionCountOutputType
@@ -4393,6 +4675,8 @@ export namespace Prisma {
     affiliateLinks: number
     reviews: number
     offerDiscounts: number
+    wholesalePricingTiers: number
+    wholesaleOrderItems: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4406,6 +4690,8 @@ export namespace Prisma {
     affiliateLinks?: boolean | ProductCountOutputTypeCountAffiliateLinksArgs
     reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
     offerDiscounts?: boolean | ProductCountOutputTypeCountOfferDiscountsArgs
+    wholesalePricingTiers?: boolean | ProductCountOutputTypeCountWholesalePricingTiersArgs
+    wholesaleOrderItems?: boolean | ProductCountOutputTypeCountWholesaleOrderItemsArgs
   }
 
   // Custom InputTypes
@@ -4489,6 +4775,20 @@ export namespace Prisma {
     where?: OfferDiscountWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountWholesalePricingTiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWholesalePriceTierWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountWholesaleOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderItemWhereInput
+  }
+
 
   /**
    * Count Type CountryCountOutputType
@@ -4537,6 +4837,7 @@ export namespace Prisma {
   export type WarehouseCountOutputType = {
     stocks: number
     orders: number
+    wholesaleOrders: number
     movements: number
     warranties: number
   }
@@ -4544,6 +4845,7 @@ export namespace Prisma {
   export type WarehouseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stocks?: boolean | WarehouseCountOutputTypeCountStocksArgs
     orders?: boolean | WarehouseCountOutputTypeCountOrdersArgs
+    wholesaleOrders?: boolean | WarehouseCountOutputTypeCountWholesaleOrdersArgs
     movements?: boolean | WarehouseCountOutputTypeCountMovementsArgs
     warranties?: boolean | WarehouseCountOutputTypeCountWarrantiesArgs
   }
@@ -4571,6 +4873,13 @@ export namespace Prisma {
    */
   export type WarehouseCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * WarehouseCountOutputType without action
+   */
+  export type WarehouseCountOutputTypeCountWholesaleOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderWhereInput
   }
 
   /**
@@ -4683,10 +4992,12 @@ export namespace Prisma {
 
   export type WholesaleCustomerCountOutputType = {
     visits: number
+    orders: number
   }
 
   export type WholesaleCustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     visits?: boolean | WholesaleCustomerCountOutputTypeCountVisitsArgs
+    orders?: boolean | WholesaleCustomerCountOutputTypeCountOrdersArgs
   }
 
   // Custom InputTypes
@@ -4705,6 +5016,44 @@ export namespace Prisma {
    */
   export type WholesaleCustomerCountOutputTypeCountVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WholesaleVisitWhereInput
+  }
+
+  /**
+   * WholesaleCustomerCountOutputType without action
+   */
+  export type WholesaleCustomerCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderWhereInput
+  }
+
+
+  /**
+   * Count Type WholesaleOrderCountOutputType
+   */
+
+  export type WholesaleOrderCountOutputType = {
+    items: number
+  }
+
+  export type WholesaleOrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | WholesaleOrderCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WholesaleOrderCountOutputType without action
+   */
+  export type WholesaleOrderCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderCountOutputType
+     */
+    select?: WholesaleOrderCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleOrderCountOutputType without action
+   */
+  export type WholesaleOrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderItemWhereInput
   }
 
 
@@ -5201,6 +5550,7 @@ export namespace Prisma {
     reviews?: boolean | User$reviewsArgs<ExtArgs>
     assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
     wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
+    wholesaleOrders?: boolean | User$wholesaleOrdersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5295,6 +5645,7 @@ export namespace Prisma {
     reviews?: boolean | User$reviewsArgs<ExtArgs>
     assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
     wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
+    wholesaleOrders?: boolean | User$wholesaleOrdersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5325,6 +5676,7 @@ export namespace Prisma {
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       assignedWholesaleCustomers: Prisma.$WholesaleCustomerPayload<ExtArgs>[]
       wholesaleVisits: Prisma.$WholesaleVisitPayload<ExtArgs>[]
+      wholesaleOrders: Prisma.$WholesaleOrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5757,6 +6109,7 @@ export namespace Prisma {
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedWholesaleCustomers<T extends User$assignedWholesaleCustomersArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedWholesaleCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wholesaleVisits<T extends User$wholesaleVisitsArgs<ExtArgs> = {}>(args?: Subset<T, User$wholesaleVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wholesaleOrders<T extends User$wholesaleOrdersArgs<ExtArgs> = {}>(args?: Subset<T, User$wholesaleOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6573,6 +6926,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * User.wholesaleOrders
+   */
+  export type User$wholesaleOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    where?: WholesaleOrderWhereInput
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    cursor?: WholesaleOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
   }
 
   /**
@@ -9372,6 +9749,7 @@ export namespace Prisma {
     categoryId: number | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
+    wholesalePrice: number | null
   }
 
   export type ProductSumAggregateOutputType = {
@@ -9379,6 +9757,7 @@ export namespace Prisma {
     categoryId: number | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
+    wholesalePrice: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -9397,6 +9776,7 @@ export namespace Prisma {
     showInAds: boolean | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
+    wholesalePrice: number | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -9415,6 +9795,7 @@ export namespace Prisma {
     showInAds: boolean | null
     affiliatePrice: number | null
     affiliateCommissionRate: number | null
+    wholesalePrice: number | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -9433,6 +9814,7 @@ export namespace Prisma {
     showInAds: number
     affiliatePrice: number
     affiliateCommissionRate: number
+    wholesalePrice: number
     _all: number
   }
 
@@ -9442,6 +9824,7 @@ export namespace Prisma {
     categoryId?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
+    wholesalePrice?: true
   }
 
   export type ProductSumAggregateInputType = {
@@ -9449,6 +9832,7 @@ export namespace Prisma {
     categoryId?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
+    wholesalePrice?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -9467,6 +9851,7 @@ export namespace Prisma {
     showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
+    wholesalePrice?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -9485,6 +9870,7 @@ export namespace Prisma {
     showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
+    wholesalePrice?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -9503,6 +9889,7 @@ export namespace Prisma {
     showInAds?: true
     affiliatePrice?: true
     affiliateCommissionRate?: true
+    wholesalePrice?: true
     _all?: true
   }
 
@@ -9608,6 +9995,7 @@ export namespace Prisma {
     showInAds: boolean
     affiliatePrice: number
     affiliateCommissionRate: number | null
+    wholesalePrice: number
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -9645,6 +10033,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
+    wholesalePrice?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -9657,6 +10046,8 @@ export namespace Prisma {
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
     offerDiscounts?: boolean | Product$offerDiscountsArgs<ExtArgs>
+    wholesalePricingTiers?: boolean | Product$wholesalePricingTiersArgs<ExtArgs>
+    wholesaleOrderItems?: boolean | Product$wholesaleOrderItemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -9676,6 +10067,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
+    wholesalePrice?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -9695,6 +10087,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
+    wholesalePrice?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -9714,9 +10107,10 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: boolean
     affiliateCommissionRate?: boolean
+    wholesalePrice?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "modelNumber" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "metaTitle" | "metaDescription" | "metaKeywords" | "isActive" | "showInAds" | "affiliatePrice" | "affiliateCommissionRate", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "modelNumber" | "description" | "googleLink" | "categoryId" | "createdAt" | "seoSlug" | "metaTitle" | "metaDescription" | "metaKeywords" | "isActive" | "showInAds" | "affiliatePrice" | "affiliateCommissionRate" | "wholesalePrice", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -9730,6 +10124,8 @@ export namespace Prisma {
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     landingPage?: boolean | Product$landingPageArgs<ExtArgs>
     offerDiscounts?: boolean | Product$offerDiscountsArgs<ExtArgs>
+    wholesalePricingTiers?: boolean | Product$wholesalePricingTiersArgs<ExtArgs>
+    wholesaleOrderItems?: boolean | Product$wholesaleOrderItemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9754,6 +10150,8 @@ export namespace Prisma {
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       landingPage: Prisma.$ProductLandingPagePayload<ExtArgs> | null
       offerDiscounts: Prisma.$OfferDiscountPayload<ExtArgs>[]
+      wholesalePricingTiers: Prisma.$ProductWholesalePriceTierPayload<ExtArgs>[]
+      wholesaleOrderItems: Prisma.$WholesaleOrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -9771,6 +10169,7 @@ export namespace Prisma {
       showInAds: boolean
       affiliatePrice: number
       affiliateCommissionRate: number | null
+      wholesalePrice: number
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -10177,6 +10576,8 @@ export namespace Prisma {
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     landingPage<T extends Product$landingPageArgs<ExtArgs> = {}>(args?: Subset<T, Product$landingPageArgs<ExtArgs>>): Prisma__ProductLandingPageClient<$Result.GetResult<Prisma.$ProductLandingPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     offerDiscounts<T extends Product$offerDiscountsArgs<ExtArgs> = {}>(args?: Subset<T, Product$offerDiscountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wholesalePricingTiers<T extends Product$wholesalePricingTiersArgs<ExtArgs> = {}>(args?: Subset<T, Product$wholesalePricingTiersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wholesaleOrderItems<T extends Product$wholesaleOrderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$wholesaleOrderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10221,6 +10622,7 @@ export namespace Prisma {
     readonly showInAds: FieldRef<"Product", 'Boolean'>
     readonly affiliatePrice: FieldRef<"Product", 'Float'>
     readonly affiliateCommissionRate: FieldRef<"Product", 'Float'>
+    readonly wholesalePrice: FieldRef<"Product", 'Float'>
   }
     
 
@@ -10892,6 +11294,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OfferDiscountScalarFieldEnum | OfferDiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Product.wholesalePricingTiers
+   */
+  export type Product$wholesalePricingTiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    where?: ProductWholesalePriceTierWhereInput
+    orderBy?: ProductWholesalePriceTierOrderByWithRelationInput | ProductWholesalePriceTierOrderByWithRelationInput[]
+    cursor?: ProductWholesalePriceTierWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductWholesalePriceTierScalarFieldEnum | ProductWholesalePriceTierScalarFieldEnum[]
+  }
+
+  /**
+   * Product.wholesaleOrderItems
+   */
+  export type Product$wholesaleOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    where?: WholesaleOrderItemWhereInput
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleOrderItemScalarFieldEnum | WholesaleOrderItemScalarFieldEnum[]
   }
 
   /**
@@ -16930,6 +17380,7 @@ export namespace Prisma {
     country?: boolean | Warehouse$countryArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
+    wholesaleOrders?: boolean | Warehouse$wholesaleOrdersArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
     warranties?: boolean | Warehouse$warrantiesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
@@ -16969,6 +17420,7 @@ export namespace Prisma {
     country?: boolean | Warehouse$countryArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
+    wholesaleOrders?: boolean | Warehouse$wholesaleOrdersArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
     warranties?: boolean | Warehouse$warrantiesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
@@ -16986,6 +17438,7 @@ export namespace Prisma {
       country: Prisma.$CountryPayload<ExtArgs> | null
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      wholesaleOrders: Prisma.$WholesaleOrderPayload<ExtArgs>[]
       movements: Prisma.$StockMovementPayload<ExtArgs>[]
       warranties: Prisma.$WarrantyPayload<ExtArgs>[]
     }
@@ -17393,6 +17846,7 @@ export namespace Prisma {
     country<T extends Warehouse$countryArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$countryArgs<ExtArgs>>): Prisma__CountryClient<$Result.GetResult<Prisma.$CountryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     stocks<T extends Warehouse$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Warehouse$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wholesaleOrders<T extends Warehouse$wholesaleOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$wholesaleOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movements<T extends Warehouse$movementsArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warranties<T extends Warehouse$warrantiesArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$warrantiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -17890,6 +18344,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * Warehouse.wholesaleOrders
+   */
+  export type Warehouse$wholesaleOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    where?: WholesaleOrderWhereInput
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    cursor?: WholesaleOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
   }
 
   /**
@@ -26522,6 +27000,7 @@ export namespace Prisma {
     updatedAt?: boolean
     assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
     visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
+    orders?: boolean | WholesaleCustomer$ordersArgs<ExtArgs>
     _count?: boolean | WholesaleCustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wholesaleCustomer"]>
 
@@ -26615,6 +27094,7 @@ export namespace Prisma {
   export type WholesaleCustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
     visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
+    orders?: boolean | WholesaleCustomer$ordersArgs<ExtArgs>
     _count?: boolean | WholesaleCustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WholesaleCustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -26629,6 +27109,7 @@ export namespace Prisma {
     objects: {
       assignedUser: Prisma.$UserPayload<ExtArgs> | null
       visits: Prisma.$WholesaleVisitPayload<ExtArgs>[]
+      orders: Prisma.$WholesaleOrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -27052,6 +27533,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     assignedUser<T extends WholesaleCustomer$assignedUserArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomer$assignedUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     visits<T extends WholesaleCustomer$visitsArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomer$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orders<T extends WholesaleCustomer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27542,6 +28024,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WholesaleVisitScalarFieldEnum | WholesaleVisitScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleCustomer.orders
+   */
+  export type WholesaleCustomer$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    where?: WholesaleOrderWhereInput
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    cursor?: WholesaleOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
   }
 
   /**
@@ -28848,6 +29354,3678 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: WholesaleVisitInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProductWholesalePriceTier
+   */
+
+  export type AggregateProductWholesalePriceTier = {
+    _count: ProductWholesalePriceTierCountAggregateOutputType | null
+    _avg: ProductWholesalePriceTierAvgAggregateOutputType | null
+    _sum: ProductWholesalePriceTierSumAggregateOutputType | null
+    _min: ProductWholesalePriceTierMinAggregateOutputType | null
+    _max: ProductWholesalePriceTierMaxAggregateOutputType | null
+  }
+
+  export type ProductWholesalePriceTierAvgAggregateOutputType = {
+    productId: number | null
+    minQuantity: number | null
+    maxQuantity: number | null
+    price: number | null
+  }
+
+  export type ProductWholesalePriceTierSumAggregateOutputType = {
+    productId: number | null
+    minQuantity: number | null
+    maxQuantity: number | null
+    price: number | null
+  }
+
+  export type ProductWholesalePriceTierMinAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    minQuantity: number | null
+    maxQuantity: number | null
+    price: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductWholesalePriceTierMaxAggregateOutputType = {
+    id: string | null
+    productId: number | null
+    minQuantity: number | null
+    maxQuantity: number | null
+    price: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductWholesalePriceTierCountAggregateOutputType = {
+    id: number
+    productId: number
+    minQuantity: number
+    maxQuantity: number
+    price: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProductWholesalePriceTierAvgAggregateInputType = {
+    productId?: true
+    minQuantity?: true
+    maxQuantity?: true
+    price?: true
+  }
+
+  export type ProductWholesalePriceTierSumAggregateInputType = {
+    productId?: true
+    minQuantity?: true
+    maxQuantity?: true
+    price?: true
+  }
+
+  export type ProductWholesalePriceTierMinAggregateInputType = {
+    id?: true
+    productId?: true
+    minQuantity?: true
+    maxQuantity?: true
+    price?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductWholesalePriceTierMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    minQuantity?: true
+    maxQuantity?: true
+    price?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductWholesalePriceTierCountAggregateInputType = {
+    id?: true
+    productId?: true
+    minQuantity?: true
+    maxQuantity?: true
+    price?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProductWholesalePriceTierAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductWholesalePriceTier to aggregate.
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductWholesalePriceTiers to fetch.
+     */
+    orderBy?: ProductWholesalePriceTierOrderByWithRelationInput | ProductWholesalePriceTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductWholesalePriceTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductWholesalePriceTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductWholesalePriceTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductWholesalePriceTiers
+    **/
+    _count?: true | ProductWholesalePriceTierCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductWholesalePriceTierAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductWholesalePriceTierSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductWholesalePriceTierMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductWholesalePriceTierMaxAggregateInputType
+  }
+
+  export type GetProductWholesalePriceTierAggregateType<T extends ProductWholesalePriceTierAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductWholesalePriceTier]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductWholesalePriceTier[P]>
+      : GetScalarType<T[P], AggregateProductWholesalePriceTier[P]>
+  }
+
+
+
+
+  export type ProductWholesalePriceTierGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWholesalePriceTierWhereInput
+    orderBy?: ProductWholesalePriceTierOrderByWithAggregationInput | ProductWholesalePriceTierOrderByWithAggregationInput[]
+    by: ProductWholesalePriceTierScalarFieldEnum[] | ProductWholesalePriceTierScalarFieldEnum
+    having?: ProductWholesalePriceTierScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductWholesalePriceTierCountAggregateInputType | true
+    _avg?: ProductWholesalePriceTierAvgAggregateInputType
+    _sum?: ProductWholesalePriceTierSumAggregateInputType
+    _min?: ProductWholesalePriceTierMinAggregateInputType
+    _max?: ProductWholesalePriceTierMaxAggregateInputType
+  }
+
+  export type ProductWholesalePriceTierGroupByOutputType = {
+    id: string
+    productId: number
+    minQuantity: number
+    maxQuantity: number | null
+    price: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ProductWholesalePriceTierCountAggregateOutputType | null
+    _avg: ProductWholesalePriceTierAvgAggregateOutputType | null
+    _sum: ProductWholesalePriceTierSumAggregateOutputType | null
+    _min: ProductWholesalePriceTierMinAggregateOutputType | null
+    _max: ProductWholesalePriceTierMaxAggregateOutputType | null
+  }
+
+  type GetProductWholesalePriceTierGroupByPayload<T extends ProductWholesalePriceTierGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductWholesalePriceTierGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductWholesalePriceTierGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductWholesalePriceTierGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductWholesalePriceTierGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductWholesalePriceTierSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    minQuantity?: boolean
+    maxQuantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productWholesalePriceTier"]>
+
+  export type ProductWholesalePriceTierSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    minQuantity?: boolean
+    maxQuantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productWholesalePriceTier"]>
+
+  export type ProductWholesalePriceTierSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    minQuantity?: boolean
+    maxQuantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productWholesalePriceTier"]>
+
+  export type ProductWholesalePriceTierSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    minQuantity?: boolean
+    maxQuantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProductWholesalePriceTierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "minQuantity" | "maxQuantity" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["productWholesalePriceTier"]>
+  export type ProductWholesalePriceTierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductWholesalePriceTierIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductWholesalePriceTierIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $ProductWholesalePriceTierPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductWholesalePriceTier"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: number
+      minQuantity: number
+      maxQuantity: number | null
+      price: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["productWholesalePriceTier"]>
+    composites: {}
+  }
+
+  type ProductWholesalePriceTierGetPayload<S extends boolean | null | undefined | ProductWholesalePriceTierDefaultArgs> = $Result.GetResult<Prisma.$ProductWholesalePriceTierPayload, S>
+
+  type ProductWholesalePriceTierCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductWholesalePriceTierFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductWholesalePriceTierCountAggregateInputType | true
+    }
+
+  export interface ProductWholesalePriceTierDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductWholesalePriceTier'], meta: { name: 'ProductWholesalePriceTier' } }
+    /**
+     * Find zero or one ProductWholesalePriceTier that matches the filter.
+     * @param {ProductWholesalePriceTierFindUniqueArgs} args - Arguments to find a ProductWholesalePriceTier
+     * @example
+     * // Get one ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductWholesalePriceTierFindUniqueArgs>(args: SelectSubset<T, ProductWholesalePriceTierFindUniqueArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProductWholesalePriceTier that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductWholesalePriceTierFindUniqueOrThrowArgs} args - Arguments to find a ProductWholesalePriceTier
+     * @example
+     * // Get one ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductWholesalePriceTierFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductWholesalePriceTierFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductWholesalePriceTier that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierFindFirstArgs} args - Arguments to find a ProductWholesalePriceTier
+     * @example
+     * // Get one ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductWholesalePriceTierFindFirstArgs>(args?: SelectSubset<T, ProductWholesalePriceTierFindFirstArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductWholesalePriceTier that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierFindFirstOrThrowArgs} args - Arguments to find a ProductWholesalePriceTier
+     * @example
+     * // Get one ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductWholesalePriceTierFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductWholesalePriceTierFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProductWholesalePriceTiers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductWholesalePriceTiers
+     * const productWholesalePriceTiers = await prisma.productWholesalePriceTier.findMany()
+     * 
+     * // Get first 10 ProductWholesalePriceTiers
+     * const productWholesalePriceTiers = await prisma.productWholesalePriceTier.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productWholesalePriceTierWithIdOnly = await prisma.productWholesalePriceTier.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductWholesalePriceTierFindManyArgs>(args?: SelectSubset<T, ProductWholesalePriceTierFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProductWholesalePriceTier.
+     * @param {ProductWholesalePriceTierCreateArgs} args - Arguments to create a ProductWholesalePriceTier.
+     * @example
+     * // Create one ProductWholesalePriceTier
+     * const ProductWholesalePriceTier = await prisma.productWholesalePriceTier.create({
+     *   data: {
+     *     // ... data to create a ProductWholesalePriceTier
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductWholesalePriceTierCreateArgs>(args: SelectSubset<T, ProductWholesalePriceTierCreateArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProductWholesalePriceTiers.
+     * @param {ProductWholesalePriceTierCreateManyArgs} args - Arguments to create many ProductWholesalePriceTiers.
+     * @example
+     * // Create many ProductWholesalePriceTiers
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductWholesalePriceTierCreateManyArgs>(args?: SelectSubset<T, ProductWholesalePriceTierCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProductWholesalePriceTiers and returns the data saved in the database.
+     * @param {ProductWholesalePriceTierCreateManyAndReturnArgs} args - Arguments to create many ProductWholesalePriceTiers.
+     * @example
+     * // Create many ProductWholesalePriceTiers
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProductWholesalePriceTiers and only return the `id`
+     * const productWholesalePriceTierWithIdOnly = await prisma.productWholesalePriceTier.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductWholesalePriceTierCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductWholesalePriceTierCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProductWholesalePriceTier.
+     * @param {ProductWholesalePriceTierDeleteArgs} args - Arguments to delete one ProductWholesalePriceTier.
+     * @example
+     * // Delete one ProductWholesalePriceTier
+     * const ProductWholesalePriceTier = await prisma.productWholesalePriceTier.delete({
+     *   where: {
+     *     // ... filter to delete one ProductWholesalePriceTier
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductWholesalePriceTierDeleteArgs>(args: SelectSubset<T, ProductWholesalePriceTierDeleteArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProductWholesalePriceTier.
+     * @param {ProductWholesalePriceTierUpdateArgs} args - Arguments to update one ProductWholesalePriceTier.
+     * @example
+     * // Update one ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductWholesalePriceTierUpdateArgs>(args: SelectSubset<T, ProductWholesalePriceTierUpdateArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProductWholesalePriceTiers.
+     * @param {ProductWholesalePriceTierDeleteManyArgs} args - Arguments to filter ProductWholesalePriceTiers to delete.
+     * @example
+     * // Delete a few ProductWholesalePriceTiers
+     * const { count } = await prisma.productWholesalePriceTier.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductWholesalePriceTierDeleteManyArgs>(args?: SelectSubset<T, ProductWholesalePriceTierDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductWholesalePriceTiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductWholesalePriceTiers
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductWholesalePriceTierUpdateManyArgs>(args: SelectSubset<T, ProductWholesalePriceTierUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductWholesalePriceTiers and returns the data updated in the database.
+     * @param {ProductWholesalePriceTierUpdateManyAndReturnArgs} args - Arguments to update many ProductWholesalePriceTiers.
+     * @example
+     * // Update many ProductWholesalePriceTiers
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProductWholesalePriceTiers and only return the `id`
+     * const productWholesalePriceTierWithIdOnly = await prisma.productWholesalePriceTier.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductWholesalePriceTierUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductWholesalePriceTierUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProductWholesalePriceTier.
+     * @param {ProductWholesalePriceTierUpsertArgs} args - Arguments to update or create a ProductWholesalePriceTier.
+     * @example
+     * // Update or create a ProductWholesalePriceTier
+     * const productWholesalePriceTier = await prisma.productWholesalePriceTier.upsert({
+     *   create: {
+     *     // ... data to create a ProductWholesalePriceTier
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductWholesalePriceTier we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductWholesalePriceTierUpsertArgs>(args: SelectSubset<T, ProductWholesalePriceTierUpsertArgs<ExtArgs>>): Prisma__ProductWholesalePriceTierClient<$Result.GetResult<Prisma.$ProductWholesalePriceTierPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProductWholesalePriceTiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierCountArgs} args - Arguments to filter ProductWholesalePriceTiers to count.
+     * @example
+     * // Count the number of ProductWholesalePriceTiers
+     * const count = await prisma.productWholesalePriceTier.count({
+     *   where: {
+     *     // ... the filter for the ProductWholesalePriceTiers we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductWholesalePriceTierCountArgs>(
+      args?: Subset<T, ProductWholesalePriceTierCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductWholesalePriceTierCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductWholesalePriceTier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductWholesalePriceTierAggregateArgs>(args: Subset<T, ProductWholesalePriceTierAggregateArgs>): Prisma.PrismaPromise<GetProductWholesalePriceTierAggregateType<T>>
+
+    /**
+     * Group by ProductWholesalePriceTier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductWholesalePriceTierGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductWholesalePriceTierGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductWholesalePriceTierGroupByArgs['orderBy'] }
+        : { orderBy?: ProductWholesalePriceTierGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductWholesalePriceTierGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductWholesalePriceTierGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProductWholesalePriceTier model
+   */
+  readonly fields: ProductWholesalePriceTierFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductWholesalePriceTier.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductWholesalePriceTierClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProductWholesalePriceTier model
+   */
+  interface ProductWholesalePriceTierFieldRefs {
+    readonly id: FieldRef<"ProductWholesalePriceTier", 'String'>
+    readonly productId: FieldRef<"ProductWholesalePriceTier", 'Int'>
+    readonly minQuantity: FieldRef<"ProductWholesalePriceTier", 'Int'>
+    readonly maxQuantity: FieldRef<"ProductWholesalePriceTier", 'Int'>
+    readonly price: FieldRef<"ProductWholesalePriceTier", 'Float'>
+    readonly createdAt: FieldRef<"ProductWholesalePriceTier", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProductWholesalePriceTier", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProductWholesalePriceTier findUnique
+   */
+  export type ProductWholesalePriceTierFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductWholesalePriceTier to fetch.
+     */
+    where: ProductWholesalePriceTierWhereUniqueInput
+  }
+
+  /**
+   * ProductWholesalePriceTier findUniqueOrThrow
+   */
+  export type ProductWholesalePriceTierFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductWholesalePriceTier to fetch.
+     */
+    where: ProductWholesalePriceTierWhereUniqueInput
+  }
+
+  /**
+   * ProductWholesalePriceTier findFirst
+   */
+  export type ProductWholesalePriceTierFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductWholesalePriceTier to fetch.
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductWholesalePriceTiers to fetch.
+     */
+    orderBy?: ProductWholesalePriceTierOrderByWithRelationInput | ProductWholesalePriceTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductWholesalePriceTiers.
+     */
+    cursor?: ProductWholesalePriceTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductWholesalePriceTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductWholesalePriceTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductWholesalePriceTiers.
+     */
+    distinct?: ProductWholesalePriceTierScalarFieldEnum | ProductWholesalePriceTierScalarFieldEnum[]
+  }
+
+  /**
+   * ProductWholesalePriceTier findFirstOrThrow
+   */
+  export type ProductWholesalePriceTierFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductWholesalePriceTier to fetch.
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductWholesalePriceTiers to fetch.
+     */
+    orderBy?: ProductWholesalePriceTierOrderByWithRelationInput | ProductWholesalePriceTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductWholesalePriceTiers.
+     */
+    cursor?: ProductWholesalePriceTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductWholesalePriceTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductWholesalePriceTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductWholesalePriceTiers.
+     */
+    distinct?: ProductWholesalePriceTierScalarFieldEnum | ProductWholesalePriceTierScalarFieldEnum[]
+  }
+
+  /**
+   * ProductWholesalePriceTier findMany
+   */
+  export type ProductWholesalePriceTierFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductWholesalePriceTiers to fetch.
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductWholesalePriceTiers to fetch.
+     */
+    orderBy?: ProductWholesalePriceTierOrderByWithRelationInput | ProductWholesalePriceTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductWholesalePriceTiers.
+     */
+    cursor?: ProductWholesalePriceTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductWholesalePriceTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductWholesalePriceTiers.
+     */
+    skip?: number
+    distinct?: ProductWholesalePriceTierScalarFieldEnum | ProductWholesalePriceTierScalarFieldEnum[]
+  }
+
+  /**
+   * ProductWholesalePriceTier create
+   */
+  export type ProductWholesalePriceTierCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProductWholesalePriceTier.
+     */
+    data: XOR<ProductWholesalePriceTierCreateInput, ProductWholesalePriceTierUncheckedCreateInput>
+  }
+
+  /**
+   * ProductWholesalePriceTier createMany
+   */
+  export type ProductWholesalePriceTierCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProductWholesalePriceTiers.
+     */
+    data: ProductWholesalePriceTierCreateManyInput | ProductWholesalePriceTierCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProductWholesalePriceTier createManyAndReturn
+   */
+  export type ProductWholesalePriceTierCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProductWholesalePriceTiers.
+     */
+    data: ProductWholesalePriceTierCreateManyInput | ProductWholesalePriceTierCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductWholesalePriceTier update
+   */
+  export type ProductWholesalePriceTierUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProductWholesalePriceTier.
+     */
+    data: XOR<ProductWholesalePriceTierUpdateInput, ProductWholesalePriceTierUncheckedUpdateInput>
+    /**
+     * Choose, which ProductWholesalePriceTier to update.
+     */
+    where: ProductWholesalePriceTierWhereUniqueInput
+  }
+
+  /**
+   * ProductWholesalePriceTier updateMany
+   */
+  export type ProductWholesalePriceTierUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProductWholesalePriceTiers.
+     */
+    data: XOR<ProductWholesalePriceTierUpdateManyMutationInput, ProductWholesalePriceTierUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductWholesalePriceTiers to update
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * Limit how many ProductWholesalePriceTiers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductWholesalePriceTier updateManyAndReturn
+   */
+  export type ProductWholesalePriceTierUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * The data used to update ProductWholesalePriceTiers.
+     */
+    data: XOR<ProductWholesalePriceTierUpdateManyMutationInput, ProductWholesalePriceTierUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductWholesalePriceTiers to update
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * Limit how many ProductWholesalePriceTiers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductWholesalePriceTier upsert
+   */
+  export type ProductWholesalePriceTierUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProductWholesalePriceTier to update in case it exists.
+     */
+    where: ProductWholesalePriceTierWhereUniqueInput
+    /**
+     * In case the ProductWholesalePriceTier found by the `where` argument doesn't exist, create a new ProductWholesalePriceTier with this data.
+     */
+    create: XOR<ProductWholesalePriceTierCreateInput, ProductWholesalePriceTierUncheckedCreateInput>
+    /**
+     * In case the ProductWholesalePriceTier was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductWholesalePriceTierUpdateInput, ProductWholesalePriceTierUncheckedUpdateInput>
+  }
+
+  /**
+   * ProductWholesalePriceTier delete
+   */
+  export type ProductWholesalePriceTierDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+    /**
+     * Filter which ProductWholesalePriceTier to delete.
+     */
+    where: ProductWholesalePriceTierWhereUniqueInput
+  }
+
+  /**
+   * ProductWholesalePriceTier deleteMany
+   */
+  export type ProductWholesalePriceTierDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductWholesalePriceTiers to delete
+     */
+    where?: ProductWholesalePriceTierWhereInput
+    /**
+     * Limit how many ProductWholesalePriceTiers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductWholesalePriceTier without action
+   */
+  export type ProductWholesalePriceTierDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductWholesalePriceTier
+     */
+    select?: ProductWholesalePriceTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductWholesalePriceTier
+     */
+    omit?: ProductWholesalePriceTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductWholesalePriceTierInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WholesaleOrder
+   */
+
+  export type AggregateWholesaleOrder = {
+    _count: WholesaleOrderCountAggregateOutputType | null
+    _avg: WholesaleOrderAvgAggregateOutputType | null
+    _sum: WholesaleOrderSumAggregateOutputType | null
+    _min: WholesaleOrderMinAggregateOutputType | null
+    _max: WholesaleOrderMaxAggregateOutputType | null
+  }
+
+  export type WholesaleOrderAvgAggregateOutputType = {
+    id: number | null
+    totalAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    warehouseId: number | null
+  }
+
+  export type WholesaleOrderSumAggregateOutputType = {
+    id: number | null
+    totalAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    warehouseId: number | null
+  }
+
+  export type WholesaleOrderMinAggregateOutputType = {
+    id: number | null
+    orderNumber: string | null
+    totalAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    paymentMethod: string | null
+    receiverName: string | null
+    country: string | null
+    city: string | null
+    municipality: string | null
+    fullAddress: string | null
+    deliveryNotes: string | null
+    googleMapsLink: string | null
+    additionalNotes: string | null
+    status: string | null
+    wholesaleCustomerId: string | null
+    userId: string | null
+    warehouseId: number | null
+    manualCreatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleOrderMaxAggregateOutputType = {
+    id: number | null
+    orderNumber: string | null
+    totalAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    paymentMethod: string | null
+    receiverName: string | null
+    country: string | null
+    city: string | null
+    municipality: string | null
+    fullAddress: string | null
+    deliveryNotes: string | null
+    googleMapsLink: string | null
+    additionalNotes: string | null
+    status: string | null
+    wholesaleCustomerId: string | null
+    userId: string | null
+    warehouseId: number | null
+    manualCreatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WholesaleOrderCountAggregateOutputType = {
+    id: number
+    orderNumber: number
+    totalAmount: number
+    discount: number
+    finalAmount: number
+    paymentMethod: number
+    receiverName: number
+    receiverPhone: number
+    country: number
+    city: number
+    municipality: number
+    fullAddress: number
+    deliveryNotes: number
+    googleMapsLink: number
+    additionalNotes: number
+    status: number
+    wholesaleCustomerId: number
+    userId: number
+    warehouseId: number
+    manualCreatedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WholesaleOrderAvgAggregateInputType = {
+    id?: true
+    totalAmount?: true
+    discount?: true
+    finalAmount?: true
+    warehouseId?: true
+  }
+
+  export type WholesaleOrderSumAggregateInputType = {
+    id?: true
+    totalAmount?: true
+    discount?: true
+    finalAmount?: true
+    warehouseId?: true
+  }
+
+  export type WholesaleOrderMinAggregateInputType = {
+    id?: true
+    orderNumber?: true
+    totalAmount?: true
+    discount?: true
+    finalAmount?: true
+    paymentMethod?: true
+    receiverName?: true
+    country?: true
+    city?: true
+    municipality?: true
+    fullAddress?: true
+    deliveryNotes?: true
+    googleMapsLink?: true
+    additionalNotes?: true
+    status?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    warehouseId?: true
+    manualCreatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleOrderMaxAggregateInputType = {
+    id?: true
+    orderNumber?: true
+    totalAmount?: true
+    discount?: true
+    finalAmount?: true
+    paymentMethod?: true
+    receiverName?: true
+    country?: true
+    city?: true
+    municipality?: true
+    fullAddress?: true
+    deliveryNotes?: true
+    googleMapsLink?: true
+    additionalNotes?: true
+    status?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    warehouseId?: true
+    manualCreatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WholesaleOrderCountAggregateInputType = {
+    id?: true
+    orderNumber?: true
+    totalAmount?: true
+    discount?: true
+    finalAmount?: true
+    paymentMethod?: true
+    receiverName?: true
+    receiverPhone?: true
+    country?: true
+    city?: true
+    municipality?: true
+    fullAddress?: true
+    deliveryNotes?: true
+    googleMapsLink?: true
+    additionalNotes?: true
+    status?: true
+    wholesaleCustomerId?: true
+    userId?: true
+    warehouseId?: true
+    manualCreatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WholesaleOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleOrder to aggregate.
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrders to fetch.
+     */
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WholesaleOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WholesaleOrders
+    **/
+    _count?: true | WholesaleOrderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WholesaleOrderAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WholesaleOrderSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WholesaleOrderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WholesaleOrderMaxAggregateInputType
+  }
+
+  export type GetWholesaleOrderAggregateType<T extends WholesaleOrderAggregateArgs> = {
+        [P in keyof T & keyof AggregateWholesaleOrder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWholesaleOrder[P]>
+      : GetScalarType<T[P], AggregateWholesaleOrder[P]>
+  }
+
+
+
+
+  export type WholesaleOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderWhereInput
+    orderBy?: WholesaleOrderOrderByWithAggregationInput | WholesaleOrderOrderByWithAggregationInput[]
+    by: WholesaleOrderScalarFieldEnum[] | WholesaleOrderScalarFieldEnum
+    having?: WholesaleOrderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WholesaleOrderCountAggregateInputType | true
+    _avg?: WholesaleOrderAvgAggregateInputType
+    _sum?: WholesaleOrderSumAggregateInputType
+    _min?: WholesaleOrderMinAggregateInputType
+    _max?: WholesaleOrderMaxAggregateInputType
+  }
+
+  export type WholesaleOrderGroupByOutputType = {
+    id: number
+    orderNumber: string
+    totalAmount: number
+    discount: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName: string | null
+    receiverPhone: string[]
+    country: string | null
+    city: string | null
+    municipality: string | null
+    fullAddress: string | null
+    deliveryNotes: string | null
+    googleMapsLink: string | null
+    additionalNotes: string | null
+    status: string
+    wholesaleCustomerId: string
+    userId: string | null
+    warehouseId: number | null
+    manualCreatedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WholesaleOrderCountAggregateOutputType | null
+    _avg: WholesaleOrderAvgAggregateOutputType | null
+    _sum: WholesaleOrderSumAggregateOutputType | null
+    _min: WholesaleOrderMinAggregateOutputType | null
+    _max: WholesaleOrderMaxAggregateOutputType | null
+  }
+
+  type GetWholesaleOrderGroupByPayload<T extends WholesaleOrderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WholesaleOrderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WholesaleOrderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WholesaleOrderGroupByOutputType[P]>
+            : GetScalarType<T[P], WholesaleOrderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WholesaleOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderNumber?: boolean
+    totalAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    paymentMethod?: boolean
+    receiverName?: boolean
+    receiverPhone?: boolean
+    country?: boolean
+    city?: boolean
+    municipality?: boolean
+    fullAddress?: boolean
+    deliveryNotes?: boolean
+    googleMapsLink?: boolean
+    additionalNotes?: boolean
+    status?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    warehouseId?: boolean
+    manualCreatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+    items?: boolean | WholesaleOrder$itemsArgs<ExtArgs>
+    _count?: boolean | WholesaleOrderCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrder"]>
+
+  export type WholesaleOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderNumber?: boolean
+    totalAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    paymentMethod?: boolean
+    receiverName?: boolean
+    receiverPhone?: boolean
+    country?: boolean
+    city?: boolean
+    municipality?: boolean
+    fullAddress?: boolean
+    deliveryNotes?: boolean
+    googleMapsLink?: boolean
+    additionalNotes?: boolean
+    status?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    warehouseId?: boolean
+    manualCreatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrder"]>
+
+  export type WholesaleOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderNumber?: boolean
+    totalAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    paymentMethod?: boolean
+    receiverName?: boolean
+    receiverPhone?: boolean
+    country?: boolean
+    city?: boolean
+    municipality?: boolean
+    fullAddress?: boolean
+    deliveryNotes?: boolean
+    googleMapsLink?: boolean
+    additionalNotes?: boolean
+    status?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    warehouseId?: boolean
+    manualCreatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrder"]>
+
+  export type WholesaleOrderSelectScalar = {
+    id?: boolean
+    orderNumber?: boolean
+    totalAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    paymentMethod?: boolean
+    receiverName?: boolean
+    receiverPhone?: boolean
+    country?: boolean
+    city?: boolean
+    municipality?: boolean
+    fullAddress?: boolean
+    deliveryNotes?: boolean
+    googleMapsLink?: boolean
+    additionalNotes?: boolean
+    status?: boolean
+    wholesaleCustomerId?: boolean
+    userId?: boolean
+    warehouseId?: boolean
+    manualCreatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WholesaleOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "receiverName" | "receiverPhone" | "country" | "city" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "additionalNotes" | "status" | "wholesaleCustomerId" | "userId" | "warehouseId" | "manualCreatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleOrder"]>
+  export type WholesaleOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+    items?: boolean | WholesaleOrder$itemsArgs<ExtArgs>
+    _count?: boolean | WholesaleOrderCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WholesaleOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+  }
+  export type WholesaleOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
+    user?: boolean | WholesaleOrder$userArgs<ExtArgs>
+    warehouse?: boolean | WholesaleOrder$warehouseArgs<ExtArgs>
+  }
+
+  export type $WholesaleOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WholesaleOrder"
+    objects: {
+      wholesaleCustomer: Prisma.$WholesaleCustomerPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
+      warehouse: Prisma.$WarehousePayload<ExtArgs> | null
+      items: Prisma.$WholesaleOrderItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      orderNumber: string
+      totalAmount: number
+      discount: number
+      finalAmount: number
+      paymentMethod: string
+      receiverName: string | null
+      receiverPhone: string[]
+      country: string | null
+      city: string | null
+      municipality: string | null
+      fullAddress: string | null
+      deliveryNotes: string | null
+      googleMapsLink: string | null
+      additionalNotes: string | null
+      status: string
+      wholesaleCustomerId: string
+      userId: string | null
+      warehouseId: number | null
+      manualCreatedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["wholesaleOrder"]>
+    composites: {}
+  }
+
+  type WholesaleOrderGetPayload<S extends boolean | null | undefined | WholesaleOrderDefaultArgs> = $Result.GetResult<Prisma.$WholesaleOrderPayload, S>
+
+  type WholesaleOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WholesaleOrderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WholesaleOrderCountAggregateInputType | true
+    }
+
+  export interface WholesaleOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WholesaleOrder'], meta: { name: 'WholesaleOrder' } }
+    /**
+     * Find zero or one WholesaleOrder that matches the filter.
+     * @param {WholesaleOrderFindUniqueArgs} args - Arguments to find a WholesaleOrder
+     * @example
+     * // Get one WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WholesaleOrderFindUniqueArgs>(args: SelectSubset<T, WholesaleOrderFindUniqueArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WholesaleOrder that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WholesaleOrderFindUniqueOrThrowArgs} args - Arguments to find a WholesaleOrder
+     * @example
+     * // Get one WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WholesaleOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, WholesaleOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleOrder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderFindFirstArgs} args - Arguments to find a WholesaleOrder
+     * @example
+     * // Get one WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WholesaleOrderFindFirstArgs>(args?: SelectSubset<T, WholesaleOrderFindFirstArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleOrder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderFindFirstOrThrowArgs} args - Arguments to find a WholesaleOrder
+     * @example
+     * // Get one WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WholesaleOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, WholesaleOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WholesaleOrders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WholesaleOrders
+     * const wholesaleOrders = await prisma.wholesaleOrder.findMany()
+     * 
+     * // Get first 10 WholesaleOrders
+     * const wholesaleOrders = await prisma.wholesaleOrder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wholesaleOrderWithIdOnly = await prisma.wholesaleOrder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WholesaleOrderFindManyArgs>(args?: SelectSubset<T, WholesaleOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WholesaleOrder.
+     * @param {WholesaleOrderCreateArgs} args - Arguments to create a WholesaleOrder.
+     * @example
+     * // Create one WholesaleOrder
+     * const WholesaleOrder = await prisma.wholesaleOrder.create({
+     *   data: {
+     *     // ... data to create a WholesaleOrder
+     *   }
+     * })
+     * 
+     */
+    create<T extends WholesaleOrderCreateArgs>(args: SelectSubset<T, WholesaleOrderCreateArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WholesaleOrders.
+     * @param {WholesaleOrderCreateManyArgs} args - Arguments to create many WholesaleOrders.
+     * @example
+     * // Create many WholesaleOrders
+     * const wholesaleOrder = await prisma.wholesaleOrder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WholesaleOrderCreateManyArgs>(args?: SelectSubset<T, WholesaleOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WholesaleOrders and returns the data saved in the database.
+     * @param {WholesaleOrderCreateManyAndReturnArgs} args - Arguments to create many WholesaleOrders.
+     * @example
+     * // Create many WholesaleOrders
+     * const wholesaleOrder = await prisma.wholesaleOrder.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WholesaleOrders and only return the `id`
+     * const wholesaleOrderWithIdOnly = await prisma.wholesaleOrder.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WholesaleOrderCreateManyAndReturnArgs>(args?: SelectSubset<T, WholesaleOrderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WholesaleOrder.
+     * @param {WholesaleOrderDeleteArgs} args - Arguments to delete one WholesaleOrder.
+     * @example
+     * // Delete one WholesaleOrder
+     * const WholesaleOrder = await prisma.wholesaleOrder.delete({
+     *   where: {
+     *     // ... filter to delete one WholesaleOrder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WholesaleOrderDeleteArgs>(args: SelectSubset<T, WholesaleOrderDeleteArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WholesaleOrder.
+     * @param {WholesaleOrderUpdateArgs} args - Arguments to update one WholesaleOrder.
+     * @example
+     * // Update one WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WholesaleOrderUpdateArgs>(args: SelectSubset<T, WholesaleOrderUpdateArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WholesaleOrders.
+     * @param {WholesaleOrderDeleteManyArgs} args - Arguments to filter WholesaleOrders to delete.
+     * @example
+     * // Delete a few WholesaleOrders
+     * const { count } = await prisma.wholesaleOrder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WholesaleOrderDeleteManyArgs>(args?: SelectSubset<T, WholesaleOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WholesaleOrders
+     * const wholesaleOrder = await prisma.wholesaleOrder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WholesaleOrderUpdateManyArgs>(args: SelectSubset<T, WholesaleOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleOrders and returns the data updated in the database.
+     * @param {WholesaleOrderUpdateManyAndReturnArgs} args - Arguments to update many WholesaleOrders.
+     * @example
+     * // Update many WholesaleOrders
+     * const wholesaleOrder = await prisma.wholesaleOrder.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WholesaleOrders and only return the `id`
+     * const wholesaleOrderWithIdOnly = await prisma.wholesaleOrder.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WholesaleOrderUpdateManyAndReturnArgs>(args: SelectSubset<T, WholesaleOrderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WholesaleOrder.
+     * @param {WholesaleOrderUpsertArgs} args - Arguments to update or create a WholesaleOrder.
+     * @example
+     * // Update or create a WholesaleOrder
+     * const wholesaleOrder = await prisma.wholesaleOrder.upsert({
+     *   create: {
+     *     // ... data to create a WholesaleOrder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WholesaleOrder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WholesaleOrderUpsertArgs>(args: SelectSubset<T, WholesaleOrderUpsertArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WholesaleOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderCountArgs} args - Arguments to filter WholesaleOrders to count.
+     * @example
+     * // Count the number of WholesaleOrders
+     * const count = await prisma.wholesaleOrder.count({
+     *   where: {
+     *     // ... the filter for the WholesaleOrders we want to count
+     *   }
+     * })
+    **/
+    count<T extends WholesaleOrderCountArgs>(
+      args?: Subset<T, WholesaleOrderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WholesaleOrderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WholesaleOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WholesaleOrderAggregateArgs>(args: Subset<T, WholesaleOrderAggregateArgs>): Prisma.PrismaPromise<GetWholesaleOrderAggregateType<T>>
+
+    /**
+     * Group by WholesaleOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WholesaleOrderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WholesaleOrderGroupByArgs['orderBy'] }
+        : { orderBy?: WholesaleOrderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WholesaleOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWholesaleOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WholesaleOrder model
+   */
+  readonly fields: WholesaleOrderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WholesaleOrder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WholesaleOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    wholesaleCustomer<T extends WholesaleCustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleCustomerDefaultArgs<ExtArgs>>): Prisma__WholesaleCustomerClient<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends WholesaleOrder$userArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleOrder$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    warehouse<T extends WholesaleOrder$warehouseArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleOrder$warehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    items<T extends WholesaleOrder$itemsArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleOrder$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WholesaleOrder model
+   */
+  interface WholesaleOrderFieldRefs {
+    readonly id: FieldRef<"WholesaleOrder", 'Int'>
+    readonly orderNumber: FieldRef<"WholesaleOrder", 'String'>
+    readonly totalAmount: FieldRef<"WholesaleOrder", 'Float'>
+    readonly discount: FieldRef<"WholesaleOrder", 'Float'>
+    readonly finalAmount: FieldRef<"WholesaleOrder", 'Float'>
+    readonly paymentMethod: FieldRef<"WholesaleOrder", 'String'>
+    readonly receiverName: FieldRef<"WholesaleOrder", 'String'>
+    readonly receiverPhone: FieldRef<"WholesaleOrder", 'String[]'>
+    readonly country: FieldRef<"WholesaleOrder", 'String'>
+    readonly city: FieldRef<"WholesaleOrder", 'String'>
+    readonly municipality: FieldRef<"WholesaleOrder", 'String'>
+    readonly fullAddress: FieldRef<"WholesaleOrder", 'String'>
+    readonly deliveryNotes: FieldRef<"WholesaleOrder", 'String'>
+    readonly googleMapsLink: FieldRef<"WholesaleOrder", 'String'>
+    readonly additionalNotes: FieldRef<"WholesaleOrder", 'String'>
+    readonly status: FieldRef<"WholesaleOrder", 'String'>
+    readonly wholesaleCustomerId: FieldRef<"WholesaleOrder", 'String'>
+    readonly userId: FieldRef<"WholesaleOrder", 'String'>
+    readonly warehouseId: FieldRef<"WholesaleOrder", 'Int'>
+    readonly manualCreatedAt: FieldRef<"WholesaleOrder", 'DateTime'>
+    readonly createdAt: FieldRef<"WholesaleOrder", 'DateTime'>
+    readonly updatedAt: FieldRef<"WholesaleOrder", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WholesaleOrder findUnique
+   */
+  export type WholesaleOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrder to fetch.
+     */
+    where: WholesaleOrderWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrder findUniqueOrThrow
+   */
+  export type WholesaleOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrder to fetch.
+     */
+    where: WholesaleOrderWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrder findFirst
+   */
+  export type WholesaleOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrder to fetch.
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrders to fetch.
+     */
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleOrders.
+     */
+    cursor?: WholesaleOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleOrders.
+     */
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrder findFirstOrThrow
+   */
+  export type WholesaleOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrder to fetch.
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrders to fetch.
+     */
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleOrders.
+     */
+    cursor?: WholesaleOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleOrders.
+     */
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrder findMany
+   */
+  export type WholesaleOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrders to fetch.
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrders to fetch.
+     */
+    orderBy?: WholesaleOrderOrderByWithRelationInput | WholesaleOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WholesaleOrders.
+     */
+    cursor?: WholesaleOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrders.
+     */
+    skip?: number
+    distinct?: WholesaleOrderScalarFieldEnum | WholesaleOrderScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrder create
+   */
+  export type WholesaleOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WholesaleOrder.
+     */
+    data: XOR<WholesaleOrderCreateInput, WholesaleOrderUncheckedCreateInput>
+  }
+
+  /**
+   * WholesaleOrder createMany
+   */
+  export type WholesaleOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WholesaleOrders.
+     */
+    data: WholesaleOrderCreateManyInput | WholesaleOrderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WholesaleOrder createManyAndReturn
+   */
+  export type WholesaleOrderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * The data used to create many WholesaleOrders.
+     */
+    data: WholesaleOrderCreateManyInput | WholesaleOrderCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleOrder update
+   */
+  export type WholesaleOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WholesaleOrder.
+     */
+    data: XOR<WholesaleOrderUpdateInput, WholesaleOrderUncheckedUpdateInput>
+    /**
+     * Choose, which WholesaleOrder to update.
+     */
+    where: WholesaleOrderWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrder updateMany
+   */
+  export type WholesaleOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WholesaleOrders.
+     */
+    data: XOR<WholesaleOrderUpdateManyMutationInput, WholesaleOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleOrders to update
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * Limit how many WholesaleOrders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleOrder updateManyAndReturn
+   */
+  export type WholesaleOrderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * The data used to update WholesaleOrders.
+     */
+    data: XOR<WholesaleOrderUpdateManyMutationInput, WholesaleOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleOrders to update
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * Limit how many WholesaleOrders to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleOrder upsert
+   */
+  export type WholesaleOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WholesaleOrder to update in case it exists.
+     */
+    where: WholesaleOrderWhereUniqueInput
+    /**
+     * In case the WholesaleOrder found by the `where` argument doesn't exist, create a new WholesaleOrder with this data.
+     */
+    create: XOR<WholesaleOrderCreateInput, WholesaleOrderUncheckedCreateInput>
+    /**
+     * In case the WholesaleOrder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WholesaleOrderUpdateInput, WholesaleOrderUncheckedUpdateInput>
+  }
+
+  /**
+   * WholesaleOrder delete
+   */
+  export type WholesaleOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+    /**
+     * Filter which WholesaleOrder to delete.
+     */
+    where: WholesaleOrderWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrder deleteMany
+   */
+  export type WholesaleOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleOrders to delete
+     */
+    where?: WholesaleOrderWhereInput
+    /**
+     * Limit how many WholesaleOrders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleOrder.user
+   */
+  export type WholesaleOrder$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * WholesaleOrder.warehouse
+   */
+  export type WholesaleOrder$warehouseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warehouse
+     */
+    select?: WarehouseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warehouse
+     */
+    omit?: WarehouseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarehouseInclude<ExtArgs> | null
+    where?: WarehouseWhereInput
+  }
+
+  /**
+   * WholesaleOrder.items
+   */
+  export type WholesaleOrder$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    where?: WholesaleOrderItemWhereInput
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WholesaleOrderItemScalarFieldEnum | WholesaleOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrder without action
+   */
+  export type WholesaleOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrder
+     */
+    select?: WholesaleOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrder
+     */
+    omit?: WholesaleOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WholesaleOrderItem
+   */
+
+  export type AggregateWholesaleOrderItem = {
+    _count: WholesaleOrderItemCountAggregateOutputType | null
+    _avg: WholesaleOrderItemAvgAggregateOutputType | null
+    _sum: WholesaleOrderItemSumAggregateOutputType | null
+    _min: WholesaleOrderItemMinAggregateOutputType | null
+    _max: WholesaleOrderItemMaxAggregateOutputType | null
+  }
+
+  export type WholesaleOrderItemAvgAggregateOutputType = {
+    id: number | null
+    quantity: number | null
+    price: number | null
+    discount: number | null
+    orderId: number | null
+    productId: number | null
+  }
+
+  export type WholesaleOrderItemSumAggregateOutputType = {
+    id: number | null
+    quantity: number | null
+    price: number | null
+    discount: number | null
+    orderId: number | null
+    productId: number | null
+  }
+
+  export type WholesaleOrderItemMinAggregateOutputType = {
+    id: number | null
+    quantity: number | null
+    price: number | null
+    discount: number | null
+    orderId: number | null
+    productId: number | null
+  }
+
+  export type WholesaleOrderItemMaxAggregateOutputType = {
+    id: number | null
+    quantity: number | null
+    price: number | null
+    discount: number | null
+    orderId: number | null
+    productId: number | null
+  }
+
+  export type WholesaleOrderItemCountAggregateOutputType = {
+    id: number
+    quantity: number
+    price: number
+    discount: number
+    orderId: number
+    productId: number
+    _all: number
+  }
+
+
+  export type WholesaleOrderItemAvgAggregateInputType = {
+    id?: true
+    quantity?: true
+    price?: true
+    discount?: true
+    orderId?: true
+    productId?: true
+  }
+
+  export type WholesaleOrderItemSumAggregateInputType = {
+    id?: true
+    quantity?: true
+    price?: true
+    discount?: true
+    orderId?: true
+    productId?: true
+  }
+
+  export type WholesaleOrderItemMinAggregateInputType = {
+    id?: true
+    quantity?: true
+    price?: true
+    discount?: true
+    orderId?: true
+    productId?: true
+  }
+
+  export type WholesaleOrderItemMaxAggregateInputType = {
+    id?: true
+    quantity?: true
+    price?: true
+    discount?: true
+    orderId?: true
+    productId?: true
+  }
+
+  export type WholesaleOrderItemCountAggregateInputType = {
+    id?: true
+    quantity?: true
+    price?: true
+    discount?: true
+    orderId?: true
+    productId?: true
+    _all?: true
+  }
+
+  export type WholesaleOrderItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleOrderItem to aggregate.
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrderItems to fetch.
+     */
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WholesaleOrderItems
+    **/
+    _count?: true | WholesaleOrderItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WholesaleOrderItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WholesaleOrderItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WholesaleOrderItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WholesaleOrderItemMaxAggregateInputType
+  }
+
+  export type GetWholesaleOrderItemAggregateType<T extends WholesaleOrderItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateWholesaleOrderItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWholesaleOrderItem[P]>
+      : GetScalarType<T[P], AggregateWholesaleOrderItem[P]>
+  }
+
+
+
+
+  export type WholesaleOrderItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WholesaleOrderItemWhereInput
+    orderBy?: WholesaleOrderItemOrderByWithAggregationInput | WholesaleOrderItemOrderByWithAggregationInput[]
+    by: WholesaleOrderItemScalarFieldEnum[] | WholesaleOrderItemScalarFieldEnum
+    having?: WholesaleOrderItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WholesaleOrderItemCountAggregateInputType | true
+    _avg?: WholesaleOrderItemAvgAggregateInputType
+    _sum?: WholesaleOrderItemSumAggregateInputType
+    _min?: WholesaleOrderItemMinAggregateInputType
+    _max?: WholesaleOrderItemMaxAggregateInputType
+  }
+
+  export type WholesaleOrderItemGroupByOutputType = {
+    id: number
+    quantity: number
+    price: number
+    discount: number
+    orderId: number
+    productId: number
+    _count: WholesaleOrderItemCountAggregateOutputType | null
+    _avg: WholesaleOrderItemAvgAggregateOutputType | null
+    _sum: WholesaleOrderItemSumAggregateOutputType | null
+    _min: WholesaleOrderItemMinAggregateOutputType | null
+    _max: WholesaleOrderItemMaxAggregateOutputType | null
+  }
+
+  type GetWholesaleOrderItemGroupByPayload<T extends WholesaleOrderItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WholesaleOrderItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WholesaleOrderItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WholesaleOrderItemGroupByOutputType[P]>
+            : GetScalarType<T[P], WholesaleOrderItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WholesaleOrderItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quantity?: boolean
+    price?: boolean
+    discount?: boolean
+    orderId?: boolean
+    productId?: boolean
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrderItem"]>
+
+  export type WholesaleOrderItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quantity?: boolean
+    price?: boolean
+    discount?: boolean
+    orderId?: boolean
+    productId?: boolean
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrderItem"]>
+
+  export type WholesaleOrderItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quantity?: boolean
+    price?: boolean
+    discount?: boolean
+    orderId?: boolean
+    productId?: boolean
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wholesaleOrderItem"]>
+
+  export type WholesaleOrderItemSelectScalar = {
+    id?: boolean
+    quantity?: boolean
+    price?: boolean
+    discount?: boolean
+    orderId?: boolean
+    productId?: boolean
+  }
+
+  export type WholesaleOrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quantity" | "price" | "discount" | "orderId" | "productId", ExtArgs["result"]["wholesaleOrderItem"]>
+  export type WholesaleOrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type WholesaleOrderItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type WholesaleOrderItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | WholesaleOrderDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $WholesaleOrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WholesaleOrderItem"
+    objects: {
+      order: Prisma.$WholesaleOrderPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      quantity: number
+      price: number
+      discount: number
+      orderId: number
+      productId: number
+    }, ExtArgs["result"]["wholesaleOrderItem"]>
+    composites: {}
+  }
+
+  type WholesaleOrderItemGetPayload<S extends boolean | null | undefined | WholesaleOrderItemDefaultArgs> = $Result.GetResult<Prisma.$WholesaleOrderItemPayload, S>
+
+  type WholesaleOrderItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WholesaleOrderItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WholesaleOrderItemCountAggregateInputType | true
+    }
+
+  export interface WholesaleOrderItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WholesaleOrderItem'], meta: { name: 'WholesaleOrderItem' } }
+    /**
+     * Find zero or one WholesaleOrderItem that matches the filter.
+     * @param {WholesaleOrderItemFindUniqueArgs} args - Arguments to find a WholesaleOrderItem
+     * @example
+     * // Get one WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WholesaleOrderItemFindUniqueArgs>(args: SelectSubset<T, WholesaleOrderItemFindUniqueArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WholesaleOrderItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WholesaleOrderItemFindUniqueOrThrowArgs} args - Arguments to find a WholesaleOrderItem
+     * @example
+     * // Get one WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WholesaleOrderItemFindUniqueOrThrowArgs>(args: SelectSubset<T, WholesaleOrderItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleOrderItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemFindFirstArgs} args - Arguments to find a WholesaleOrderItem
+     * @example
+     * // Get one WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WholesaleOrderItemFindFirstArgs>(args?: SelectSubset<T, WholesaleOrderItemFindFirstArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WholesaleOrderItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemFindFirstOrThrowArgs} args - Arguments to find a WholesaleOrderItem
+     * @example
+     * // Get one WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WholesaleOrderItemFindFirstOrThrowArgs>(args?: SelectSubset<T, WholesaleOrderItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WholesaleOrderItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WholesaleOrderItems
+     * const wholesaleOrderItems = await prisma.wholesaleOrderItem.findMany()
+     * 
+     * // Get first 10 WholesaleOrderItems
+     * const wholesaleOrderItems = await prisma.wholesaleOrderItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wholesaleOrderItemWithIdOnly = await prisma.wholesaleOrderItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WholesaleOrderItemFindManyArgs>(args?: SelectSubset<T, WholesaleOrderItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WholesaleOrderItem.
+     * @param {WholesaleOrderItemCreateArgs} args - Arguments to create a WholesaleOrderItem.
+     * @example
+     * // Create one WholesaleOrderItem
+     * const WholesaleOrderItem = await prisma.wholesaleOrderItem.create({
+     *   data: {
+     *     // ... data to create a WholesaleOrderItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends WholesaleOrderItemCreateArgs>(args: SelectSubset<T, WholesaleOrderItemCreateArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WholesaleOrderItems.
+     * @param {WholesaleOrderItemCreateManyArgs} args - Arguments to create many WholesaleOrderItems.
+     * @example
+     * // Create many WholesaleOrderItems
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WholesaleOrderItemCreateManyArgs>(args?: SelectSubset<T, WholesaleOrderItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WholesaleOrderItems and returns the data saved in the database.
+     * @param {WholesaleOrderItemCreateManyAndReturnArgs} args - Arguments to create many WholesaleOrderItems.
+     * @example
+     * // Create many WholesaleOrderItems
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WholesaleOrderItems and only return the `id`
+     * const wholesaleOrderItemWithIdOnly = await prisma.wholesaleOrderItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WholesaleOrderItemCreateManyAndReturnArgs>(args?: SelectSubset<T, WholesaleOrderItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WholesaleOrderItem.
+     * @param {WholesaleOrderItemDeleteArgs} args - Arguments to delete one WholesaleOrderItem.
+     * @example
+     * // Delete one WholesaleOrderItem
+     * const WholesaleOrderItem = await prisma.wholesaleOrderItem.delete({
+     *   where: {
+     *     // ... filter to delete one WholesaleOrderItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WholesaleOrderItemDeleteArgs>(args: SelectSubset<T, WholesaleOrderItemDeleteArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WholesaleOrderItem.
+     * @param {WholesaleOrderItemUpdateArgs} args - Arguments to update one WholesaleOrderItem.
+     * @example
+     * // Update one WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WholesaleOrderItemUpdateArgs>(args: SelectSubset<T, WholesaleOrderItemUpdateArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WholesaleOrderItems.
+     * @param {WholesaleOrderItemDeleteManyArgs} args - Arguments to filter WholesaleOrderItems to delete.
+     * @example
+     * // Delete a few WholesaleOrderItems
+     * const { count } = await prisma.wholesaleOrderItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WholesaleOrderItemDeleteManyArgs>(args?: SelectSubset<T, WholesaleOrderItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WholesaleOrderItems
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WholesaleOrderItemUpdateManyArgs>(args: SelectSubset<T, WholesaleOrderItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WholesaleOrderItems and returns the data updated in the database.
+     * @param {WholesaleOrderItemUpdateManyAndReturnArgs} args - Arguments to update many WholesaleOrderItems.
+     * @example
+     * // Update many WholesaleOrderItems
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WholesaleOrderItems and only return the `id`
+     * const wholesaleOrderItemWithIdOnly = await prisma.wholesaleOrderItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WholesaleOrderItemUpdateManyAndReturnArgs>(args: SelectSubset<T, WholesaleOrderItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WholesaleOrderItem.
+     * @param {WholesaleOrderItemUpsertArgs} args - Arguments to update or create a WholesaleOrderItem.
+     * @example
+     * // Update or create a WholesaleOrderItem
+     * const wholesaleOrderItem = await prisma.wholesaleOrderItem.upsert({
+     *   create: {
+     *     // ... data to create a WholesaleOrderItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WholesaleOrderItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WholesaleOrderItemUpsertArgs>(args: SelectSubset<T, WholesaleOrderItemUpsertArgs<ExtArgs>>): Prisma__WholesaleOrderItemClient<$Result.GetResult<Prisma.$WholesaleOrderItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WholesaleOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemCountArgs} args - Arguments to filter WholesaleOrderItems to count.
+     * @example
+     * // Count the number of WholesaleOrderItems
+     * const count = await prisma.wholesaleOrderItem.count({
+     *   where: {
+     *     // ... the filter for the WholesaleOrderItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends WholesaleOrderItemCountArgs>(
+      args?: Subset<T, WholesaleOrderItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WholesaleOrderItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WholesaleOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WholesaleOrderItemAggregateArgs>(args: Subset<T, WholesaleOrderItemAggregateArgs>): Prisma.PrismaPromise<GetWholesaleOrderItemAggregateType<T>>
+
+    /**
+     * Group by WholesaleOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WholesaleOrderItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WholesaleOrderItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WholesaleOrderItemGroupByArgs['orderBy'] }
+        : { orderBy?: WholesaleOrderItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WholesaleOrderItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWholesaleOrderItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WholesaleOrderItem model
+   */
+  readonly fields: WholesaleOrderItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WholesaleOrderItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WholesaleOrderItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends WholesaleOrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WholesaleOrderDefaultArgs<ExtArgs>>): Prisma__WholesaleOrderClient<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WholesaleOrderItem model
+   */
+  interface WholesaleOrderItemFieldRefs {
+    readonly id: FieldRef<"WholesaleOrderItem", 'Int'>
+    readonly quantity: FieldRef<"WholesaleOrderItem", 'Int'>
+    readonly price: FieldRef<"WholesaleOrderItem", 'Float'>
+    readonly discount: FieldRef<"WholesaleOrderItem", 'Float'>
+    readonly orderId: FieldRef<"WholesaleOrderItem", 'Int'>
+    readonly productId: FieldRef<"WholesaleOrderItem", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WholesaleOrderItem findUnique
+   */
+  export type WholesaleOrderItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrderItem to fetch.
+     */
+    where: WholesaleOrderItemWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrderItem findUniqueOrThrow
+   */
+  export type WholesaleOrderItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrderItem to fetch.
+     */
+    where: WholesaleOrderItemWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrderItem findFirst
+   */
+  export type WholesaleOrderItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrderItem to fetch.
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrderItems to fetch.
+     */
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleOrderItems.
+     */
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleOrderItems.
+     */
+    distinct?: WholesaleOrderItemScalarFieldEnum | WholesaleOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrderItem findFirstOrThrow
+   */
+  export type WholesaleOrderItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrderItem to fetch.
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrderItems to fetch.
+     */
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WholesaleOrderItems.
+     */
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WholesaleOrderItems.
+     */
+    distinct?: WholesaleOrderItemScalarFieldEnum | WholesaleOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrderItem findMany
+   */
+  export type WholesaleOrderItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which WholesaleOrderItems to fetch.
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WholesaleOrderItems to fetch.
+     */
+    orderBy?: WholesaleOrderItemOrderByWithRelationInput | WholesaleOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WholesaleOrderItems.
+     */
+    cursor?: WholesaleOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WholesaleOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WholesaleOrderItems.
+     */
+    skip?: number
+    distinct?: WholesaleOrderItemScalarFieldEnum | WholesaleOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * WholesaleOrderItem create
+   */
+  export type WholesaleOrderItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WholesaleOrderItem.
+     */
+    data: XOR<WholesaleOrderItemCreateInput, WholesaleOrderItemUncheckedCreateInput>
+  }
+
+  /**
+   * WholesaleOrderItem createMany
+   */
+  export type WholesaleOrderItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WholesaleOrderItems.
+     */
+    data: WholesaleOrderItemCreateManyInput | WholesaleOrderItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WholesaleOrderItem createManyAndReturn
+   */
+  export type WholesaleOrderItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many WholesaleOrderItems.
+     */
+    data: WholesaleOrderItemCreateManyInput | WholesaleOrderItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleOrderItem update
+   */
+  export type WholesaleOrderItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WholesaleOrderItem.
+     */
+    data: XOR<WholesaleOrderItemUpdateInput, WholesaleOrderItemUncheckedUpdateInput>
+    /**
+     * Choose, which WholesaleOrderItem to update.
+     */
+    where: WholesaleOrderItemWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrderItem updateMany
+   */
+  export type WholesaleOrderItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WholesaleOrderItems.
+     */
+    data: XOR<WholesaleOrderItemUpdateManyMutationInput, WholesaleOrderItemUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleOrderItems to update
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * Limit how many WholesaleOrderItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleOrderItem updateManyAndReturn
+   */
+  export type WholesaleOrderItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * The data used to update WholesaleOrderItems.
+     */
+    data: XOR<WholesaleOrderItemUpdateManyMutationInput, WholesaleOrderItemUncheckedUpdateManyInput>
+    /**
+     * Filter which WholesaleOrderItems to update
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * Limit how many WholesaleOrderItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WholesaleOrderItem upsert
+   */
+  export type WholesaleOrderItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WholesaleOrderItem to update in case it exists.
+     */
+    where: WholesaleOrderItemWhereUniqueInput
+    /**
+     * In case the WholesaleOrderItem found by the `where` argument doesn't exist, create a new WholesaleOrderItem with this data.
+     */
+    create: XOR<WholesaleOrderItemCreateInput, WholesaleOrderItemUncheckedCreateInput>
+    /**
+     * In case the WholesaleOrderItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WholesaleOrderItemUpdateInput, WholesaleOrderItemUncheckedUpdateInput>
+  }
+
+  /**
+   * WholesaleOrderItem delete
+   */
+  export type WholesaleOrderItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter which WholesaleOrderItem to delete.
+     */
+    where: WholesaleOrderItemWhereUniqueInput
+  }
+
+  /**
+   * WholesaleOrderItem deleteMany
+   */
+  export type WholesaleOrderItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WholesaleOrderItems to delete
+     */
+    where?: WholesaleOrderItemWhereInput
+    /**
+     * Limit how many WholesaleOrderItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WholesaleOrderItem without action
+   */
+  export type WholesaleOrderItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WholesaleOrderItem
+     */
+    select?: WholesaleOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WholesaleOrderItem
+     */
+    omit?: WholesaleOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WholesaleOrderItemInclude<ExtArgs> | null
   }
 
 
@@ -48059,7 +52237,8 @@ export namespace Prisma {
     isActive: 'isActive',
     showInAds: 'showInAds',
     affiliatePrice: 'affiliatePrice',
-    affiliateCommissionRate: 'affiliateCommissionRate'
+    affiliateCommissionRate: 'affiliateCommissionRate',
+    wholesalePrice: 'wholesalePrice'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -48309,6 +52488,59 @@ export namespace Prisma {
   };
 
   export type WholesaleVisitScalarFieldEnum = (typeof WholesaleVisitScalarFieldEnum)[keyof typeof WholesaleVisitScalarFieldEnum]
+
+
+  export const ProductWholesalePriceTierScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    minQuantity: 'minQuantity',
+    maxQuantity: 'maxQuantity',
+    price: 'price',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProductWholesalePriceTierScalarFieldEnum = (typeof ProductWholesalePriceTierScalarFieldEnum)[keyof typeof ProductWholesalePriceTierScalarFieldEnum]
+
+
+  export const WholesaleOrderScalarFieldEnum: {
+    id: 'id',
+    orderNumber: 'orderNumber',
+    totalAmount: 'totalAmount',
+    discount: 'discount',
+    finalAmount: 'finalAmount',
+    paymentMethod: 'paymentMethod',
+    receiverName: 'receiverName',
+    receiverPhone: 'receiverPhone',
+    country: 'country',
+    city: 'city',
+    municipality: 'municipality',
+    fullAddress: 'fullAddress',
+    deliveryNotes: 'deliveryNotes',
+    googleMapsLink: 'googleMapsLink',
+    additionalNotes: 'additionalNotes',
+    status: 'status',
+    wholesaleCustomerId: 'wholesaleCustomerId',
+    userId: 'userId',
+    warehouseId: 'warehouseId',
+    manualCreatedAt: 'manualCreatedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WholesaleOrderScalarFieldEnum = (typeof WholesaleOrderScalarFieldEnum)[keyof typeof WholesaleOrderScalarFieldEnum]
+
+
+  export const WholesaleOrderItemScalarFieldEnum: {
+    id: 'id',
+    quantity: 'quantity',
+    price: 'price',
+    discount: 'discount',
+    orderId: 'orderId',
+    productId: 'productId'
+  };
+
+  export type WholesaleOrderItemScalarFieldEnum = (typeof WholesaleOrderItemScalarFieldEnum)[keyof typeof WholesaleOrderItemScalarFieldEnum]
 
 
   export const WarrantyScalarFieldEnum: {
@@ -48951,6 +53183,7 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
     wholesaleVisits?: WholesaleVisitListRelationFilter
+    wholesaleOrders?: WholesaleOrderListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -48990,6 +53223,7 @@ export namespace Prisma {
     reviews?: ReviewOrderByRelationAggregateInput
     assignedWholesaleCustomers?: WholesaleCustomerOrderByRelationAggregateInput
     wholesaleVisits?: WholesaleVisitOrderByRelationAggregateInput
+    wholesaleOrders?: WholesaleOrderOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -49032,6 +53266,7 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
     wholesaleVisits?: WholesaleVisitListRelationFilter
+    wholesaleOrders?: WholesaleOrderListRelationFilter
   }, "id" | "email" | "affiliateCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -49437,6 +53672,7 @@ export namespace Prisma {
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
+    wholesalePrice?: FloatFilter<"Product"> | number
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -49449,6 +53685,8 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
     offerDiscounts?: OfferDiscountListRelationFilter
+    wholesalePricingTiers?: ProductWholesalePriceTierListRelationFilter
+    wholesaleOrderItems?: WholesaleOrderItemListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -49467,6 +53705,7 @@ export namespace Prisma {
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrderInput | SortOrder
+    wholesalePrice?: SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     images?: ProductImageOrderByRelationAggregateInput
@@ -49479,6 +53718,8 @@ export namespace Prisma {
     reviews?: ReviewOrderByRelationAggregateInput
     landingPage?: ProductLandingPageOrderByWithRelationInput
     offerDiscounts?: OfferDiscountOrderByRelationAggregateInput
+    wholesalePricingTiers?: ProductWholesalePriceTierOrderByRelationAggregateInput
+    wholesaleOrderItems?: WholesaleOrderItemOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -49500,6 +53741,7 @@ export namespace Prisma {
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
+    wholesalePrice?: FloatFilter<"Product"> | number
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     images?: ProductImageListRelationFilter
@@ -49512,6 +53754,8 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     landingPage?: XOR<ProductLandingPageNullableScalarRelationFilter, ProductLandingPageWhereInput> | null
     offerDiscounts?: OfferDiscountListRelationFilter
+    wholesalePricingTiers?: ProductWholesalePriceTierListRelationFilter
+    wholesaleOrderItems?: WholesaleOrderItemListRelationFilter
   }, "id" | "seoSlug">
 
   export type ProductOrderByWithAggregationInput = {
@@ -49530,6 +53774,7 @@ export namespace Prisma {
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrderInput | SortOrder
+    wholesalePrice?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -49556,6 +53801,7 @@ export namespace Prisma {
     showInAds?: BoolWithAggregatesFilter<"Product"> | boolean
     affiliatePrice?: FloatWithAggregatesFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    wholesalePrice?: FloatWithAggregatesFilter<"Product"> | number
   }
 
   export type AdPageVisitWhereInput = {
@@ -49968,6 +54214,7 @@ export namespace Prisma {
     country?: XOR<CountryNullableScalarRelationFilter, CountryWhereInput> | null
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
+    wholesaleOrders?: WholesaleOrderListRelationFilter
     movements?: StockMovementListRelationFilter
     warranties?: WarrantyListRelationFilter
   }
@@ -49982,6 +54229,7 @@ export namespace Prisma {
     country?: CountryOrderByWithRelationInput
     stocks?: ProductStockOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
+    wholesaleOrders?: WholesaleOrderOrderByRelationAggregateInput
     movements?: StockMovementOrderByRelationAggregateInput
     warranties?: WarrantyOrderByRelationAggregateInput
   }
@@ -49999,6 +54247,7 @@ export namespace Prisma {
     country?: XOR<CountryNullableScalarRelationFilter, CountryWhereInput> | null
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
+    wholesaleOrders?: WholesaleOrderListRelationFilter
     movements?: StockMovementListRelationFilter
     warranties?: WarrantyListRelationFilter
   }, "id" | "name">
@@ -50615,6 +54864,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
     assignedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     visits?: WholesaleVisitListRelationFilter
+    orders?: WholesaleOrderListRelationFilter
   }
 
   export type WholesaleCustomerOrderByWithRelationInput = {
@@ -50645,6 +54895,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     assignedUser?: UserOrderByWithRelationInput
     visits?: WholesaleVisitOrderByRelationAggregateInput
+    orders?: WholesaleOrderOrderByRelationAggregateInput
   }
 
   export type WholesaleCustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -50678,6 +54929,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"WholesaleCustomer"> | Date | string
     assignedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     visits?: WholesaleVisitListRelationFilter
+    orders?: WholesaleOrderListRelationFilter
   }, "id">
 
   export type WholesaleCustomerOrderByWithAggregationInput = {
@@ -50867,6 +55119,290 @@ export namespace Prisma {
     syncedAt?: DateTimeNullableWithAggregatesFilter<"WholesaleVisit"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"WholesaleVisit"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WholesaleVisit"> | Date | string
+  }
+
+  export type ProductWholesalePriceTierWhereInput = {
+    AND?: ProductWholesalePriceTierWhereInput | ProductWholesalePriceTierWhereInput[]
+    OR?: ProductWholesalePriceTierWhereInput[]
+    NOT?: ProductWholesalePriceTierWhereInput | ProductWholesalePriceTierWhereInput[]
+    id?: StringFilter<"ProductWholesalePriceTier"> | string
+    productId?: IntFilter<"ProductWholesalePriceTier"> | number
+    minQuantity?: IntFilter<"ProductWholesalePriceTier"> | number
+    maxQuantity?: IntNullableFilter<"ProductWholesalePriceTier"> | number | null
+    price?: FloatFilter<"ProductWholesalePriceTier"> | number
+    createdAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type ProductWholesalePriceTierOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrderInput | SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type ProductWholesalePriceTierWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    productId_minQuantity?: ProductWholesalePriceTierProductIdMinQuantityCompoundUniqueInput
+    AND?: ProductWholesalePriceTierWhereInput | ProductWholesalePriceTierWhereInput[]
+    OR?: ProductWholesalePriceTierWhereInput[]
+    NOT?: ProductWholesalePriceTierWhereInput | ProductWholesalePriceTierWhereInput[]
+    productId?: IntFilter<"ProductWholesalePriceTier"> | number
+    minQuantity?: IntFilter<"ProductWholesalePriceTier"> | number
+    maxQuantity?: IntNullableFilter<"ProductWholesalePriceTier"> | number | null
+    price?: FloatFilter<"ProductWholesalePriceTier"> | number
+    createdAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id" | "productId_minQuantity">
+
+  export type ProductWholesalePriceTierOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrderInput | SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProductWholesalePriceTierCountOrderByAggregateInput
+    _avg?: ProductWholesalePriceTierAvgOrderByAggregateInput
+    _max?: ProductWholesalePriceTierMaxOrderByAggregateInput
+    _min?: ProductWholesalePriceTierMinOrderByAggregateInput
+    _sum?: ProductWholesalePriceTierSumOrderByAggregateInput
+  }
+
+  export type ProductWholesalePriceTierScalarWhereWithAggregatesInput = {
+    AND?: ProductWholesalePriceTierScalarWhereWithAggregatesInput | ProductWholesalePriceTierScalarWhereWithAggregatesInput[]
+    OR?: ProductWholesalePriceTierScalarWhereWithAggregatesInput[]
+    NOT?: ProductWholesalePriceTierScalarWhereWithAggregatesInput | ProductWholesalePriceTierScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProductWholesalePriceTier"> | string
+    productId?: IntWithAggregatesFilter<"ProductWholesalePriceTier"> | number
+    minQuantity?: IntWithAggregatesFilter<"ProductWholesalePriceTier"> | number
+    maxQuantity?: IntNullableWithAggregatesFilter<"ProductWholesalePriceTier"> | number | null
+    price?: FloatWithAggregatesFilter<"ProductWholesalePriceTier"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ProductWholesalePriceTier"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProductWholesalePriceTier"> | Date | string
+  }
+
+  export type WholesaleOrderWhereInput = {
+    AND?: WholesaleOrderWhereInput | WholesaleOrderWhereInput[]
+    OR?: WholesaleOrderWhereInput[]
+    NOT?: WholesaleOrderWhereInput | WholesaleOrderWhereInput[]
+    id?: IntFilter<"WholesaleOrder"> | number
+    orderNumber?: StringFilter<"WholesaleOrder"> | string
+    totalAmount?: FloatFilter<"WholesaleOrder"> | number
+    discount?: FloatFilter<"WholesaleOrder"> | number
+    finalAmount?: FloatFilter<"WholesaleOrder"> | number
+    paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
+    receiverPhone?: StringNullableListFilter<"WholesaleOrder">
+    country?: StringNullableFilter<"WholesaleOrder"> | string | null
+    city?: StringNullableFilter<"WholesaleOrder"> | string | null
+    municipality?: StringNullableFilter<"WholesaleOrder"> | string | null
+    fullAddress?: StringNullableFilter<"WholesaleOrder"> | string | null
+    deliveryNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    googleMapsLink?: StringNullableFilter<"WholesaleOrder"> | string | null
+    additionalNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    status?: StringFilter<"WholesaleOrder"> | string
+    wholesaleCustomerId?: StringFilter<"WholesaleOrder"> | string
+    userId?: StringNullableFilter<"WholesaleOrder"> | string | null
+    warehouseId?: IntNullableFilter<"WholesaleOrder"> | number | null
+    manualCreatedAt?: DateTimeNullableFilter<"WholesaleOrder"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+    wholesaleCustomer?: XOR<WholesaleCustomerScalarRelationFilter, WholesaleCustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    items?: WholesaleOrderItemListRelationFilter
+  }
+
+  export type WholesaleOrderOrderByWithRelationInput = {
+    id?: SortOrder
+    orderNumber?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    paymentMethod?: SortOrder
+    receiverName?: SortOrderInput | SortOrder
+    receiverPhone?: SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    municipality?: SortOrderInput | SortOrder
+    fullAddress?: SortOrderInput | SortOrder
+    deliveryNotes?: SortOrderInput | SortOrder
+    googleMapsLink?: SortOrderInput | SortOrder
+    additionalNotes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    warehouseId?: SortOrderInput | SortOrder
+    manualCreatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    wholesaleCustomer?: WholesaleCustomerOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    warehouse?: WarehouseOrderByWithRelationInput
+    items?: WholesaleOrderItemOrderByRelationAggregateInput
+  }
+
+  export type WholesaleOrderWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    orderNumber?: string
+    AND?: WholesaleOrderWhereInput | WholesaleOrderWhereInput[]
+    OR?: WholesaleOrderWhereInput[]
+    NOT?: WholesaleOrderWhereInput | WholesaleOrderWhereInput[]
+    totalAmount?: FloatFilter<"WholesaleOrder"> | number
+    discount?: FloatFilter<"WholesaleOrder"> | number
+    finalAmount?: FloatFilter<"WholesaleOrder"> | number
+    paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
+    receiverPhone?: StringNullableListFilter<"WholesaleOrder">
+    country?: StringNullableFilter<"WholesaleOrder"> | string | null
+    city?: StringNullableFilter<"WholesaleOrder"> | string | null
+    municipality?: StringNullableFilter<"WholesaleOrder"> | string | null
+    fullAddress?: StringNullableFilter<"WholesaleOrder"> | string | null
+    deliveryNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    googleMapsLink?: StringNullableFilter<"WholesaleOrder"> | string | null
+    additionalNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    status?: StringFilter<"WholesaleOrder"> | string
+    wholesaleCustomerId?: StringFilter<"WholesaleOrder"> | string
+    userId?: StringNullableFilter<"WholesaleOrder"> | string | null
+    warehouseId?: IntNullableFilter<"WholesaleOrder"> | number | null
+    manualCreatedAt?: DateTimeNullableFilter<"WholesaleOrder"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+    wholesaleCustomer?: XOR<WholesaleCustomerScalarRelationFilter, WholesaleCustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    warehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    items?: WholesaleOrderItemListRelationFilter
+  }, "id" | "orderNumber">
+
+  export type WholesaleOrderOrderByWithAggregationInput = {
+    id?: SortOrder
+    orderNumber?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    paymentMethod?: SortOrder
+    receiverName?: SortOrderInput | SortOrder
+    receiverPhone?: SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    municipality?: SortOrderInput | SortOrder
+    fullAddress?: SortOrderInput | SortOrder
+    deliveryNotes?: SortOrderInput | SortOrder
+    googleMapsLink?: SortOrderInput | SortOrder
+    additionalNotes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    warehouseId?: SortOrderInput | SortOrder
+    manualCreatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WholesaleOrderCountOrderByAggregateInput
+    _avg?: WholesaleOrderAvgOrderByAggregateInput
+    _max?: WholesaleOrderMaxOrderByAggregateInput
+    _min?: WholesaleOrderMinOrderByAggregateInput
+    _sum?: WholesaleOrderSumOrderByAggregateInput
+  }
+
+  export type WholesaleOrderScalarWhereWithAggregatesInput = {
+    AND?: WholesaleOrderScalarWhereWithAggregatesInput | WholesaleOrderScalarWhereWithAggregatesInput[]
+    OR?: WholesaleOrderScalarWhereWithAggregatesInput[]
+    NOT?: WholesaleOrderScalarWhereWithAggregatesInput | WholesaleOrderScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"WholesaleOrder"> | number
+    orderNumber?: StringWithAggregatesFilter<"WholesaleOrder"> | string
+    totalAmount?: FloatWithAggregatesFilter<"WholesaleOrder"> | number
+    discount?: FloatWithAggregatesFilter<"WholesaleOrder"> | number
+    finalAmount?: FloatWithAggregatesFilter<"WholesaleOrder"> | number
+    paymentMethod?: StringWithAggregatesFilter<"WholesaleOrder"> | string
+    receiverName?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    receiverPhone?: StringNullableListFilter<"WholesaleOrder">
+    country?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    city?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    municipality?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    fullAddress?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    deliveryNotes?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    googleMapsLink?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    additionalNotes?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    status?: StringWithAggregatesFilter<"WholesaleOrder"> | string
+    wholesaleCustomerId?: StringWithAggregatesFilter<"WholesaleOrder"> | string
+    userId?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    warehouseId?: IntNullableWithAggregatesFilter<"WholesaleOrder"> | number | null
+    manualCreatedAt?: DateTimeNullableWithAggregatesFilter<"WholesaleOrder"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WholesaleOrder"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WholesaleOrder"> | Date | string
+  }
+
+  export type WholesaleOrderItemWhereInput = {
+    AND?: WholesaleOrderItemWhereInput | WholesaleOrderItemWhereInput[]
+    OR?: WholesaleOrderItemWhereInput[]
+    NOT?: WholesaleOrderItemWhereInput | WholesaleOrderItemWhereInput[]
+    id?: IntFilter<"WholesaleOrderItem"> | number
+    quantity?: IntFilter<"WholesaleOrderItem"> | number
+    price?: FloatFilter<"WholesaleOrderItem"> | number
+    discount?: FloatFilter<"WholesaleOrderItem"> | number
+    orderId?: IntFilter<"WholesaleOrderItem"> | number
+    productId?: IntFilter<"WholesaleOrderItem"> | number
+    order?: XOR<WholesaleOrderScalarRelationFilter, WholesaleOrderWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type WholesaleOrderItemOrderByWithRelationInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    order?: WholesaleOrderOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type WholesaleOrderItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: WholesaleOrderItemWhereInput | WholesaleOrderItemWhereInput[]
+    OR?: WholesaleOrderItemWhereInput[]
+    NOT?: WholesaleOrderItemWhereInput | WholesaleOrderItemWhereInput[]
+    quantity?: IntFilter<"WholesaleOrderItem"> | number
+    price?: FloatFilter<"WholesaleOrderItem"> | number
+    discount?: FloatFilter<"WholesaleOrderItem"> | number
+    orderId?: IntFilter<"WholesaleOrderItem"> | number
+    productId?: IntFilter<"WholesaleOrderItem"> | number
+    order?: XOR<WholesaleOrderScalarRelationFilter, WholesaleOrderWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id">
+
+  export type WholesaleOrderItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    _count?: WholesaleOrderItemCountOrderByAggregateInput
+    _avg?: WholesaleOrderItemAvgOrderByAggregateInput
+    _max?: WholesaleOrderItemMaxOrderByAggregateInput
+    _min?: WholesaleOrderItemMinOrderByAggregateInput
+    _sum?: WholesaleOrderItemSumOrderByAggregateInput
+  }
+
+  export type WholesaleOrderItemScalarWhereWithAggregatesInput = {
+    AND?: WholesaleOrderItemScalarWhereWithAggregatesInput | WholesaleOrderItemScalarWhereWithAggregatesInput[]
+    OR?: WholesaleOrderItemScalarWhereWithAggregatesInput[]
+    NOT?: WholesaleOrderItemScalarWhereWithAggregatesInput | WholesaleOrderItemScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"WholesaleOrderItem"> | number
+    quantity?: IntWithAggregatesFilter<"WholesaleOrderItem"> | number
+    price?: FloatWithAggregatesFilter<"WholesaleOrderItem"> | number
+    discount?: FloatWithAggregatesFilter<"WholesaleOrderItem"> | number
+    orderId?: IntWithAggregatesFilter<"WholesaleOrderItem"> | number
+    productId?: IntWithAggregatesFilter<"WholesaleOrderItem"> | number
   }
 
   export type WarrantyWhereInput = {
@@ -52365,6 +56901,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -52402,6 +56939,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -52439,6 +56977,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -52476,6 +57015,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -52981,6 +57521,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -52993,6 +57534,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -53011,6 +57554,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -53022,6 +57566,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -53038,6 +57584,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -53050,6 +57597,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -53068,6 +57617,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -53079,6 +57629,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -53097,6 +57649,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -53113,6 +57666,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -53131,6 +57685,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type AdPageVisitCreateInput = {
@@ -53565,6 +58120,7 @@ export namespace Prisma {
     country?: CountryCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
@@ -53578,6 +58134,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
@@ -53590,6 +58147,7 @@ export namespace Prisma {
     country?: CountryUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
@@ -53603,6 +58161,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
@@ -54237,6 +58796,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedUser?: UserCreateNestedOneWithoutAssignedWholesaleCustomersInput
     visits?: WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput
+    orders?: WholesaleOrderCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerUncheckedCreateInput = {
@@ -54266,6 +58826,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     visits?: WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput
+    orders?: WholesaleOrderUncheckedCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerUpdateInput = {
@@ -54295,6 +58856,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedUser?: UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput
     visits?: WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput
+    orders?: WholesaleOrderUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type WholesaleCustomerUncheckedUpdateInput = {
@@ -54324,6 +58886,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visits?: WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
+    orders?: WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type WholesaleCustomerCreateManyInput = {
@@ -54552,6 +59115,306 @@ export namespace Prisma {
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductWholesalePriceTierCreateInput = {
+    id?: string
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutWholesalePricingTiersInput
+  }
+
+  export type ProductWholesalePriceTierUncheckedCreateInput = {
+    id?: string
+    productId: number
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductWholesalePriceTierUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutWholesalePricingTiersNestedInput
+  }
+
+  export type ProductWholesalePriceTierUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductWholesalePriceTierCreateManyInput = {
+    id?: string
+    productId: number
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductWholesalePriceTierUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductWholesalePriceTierUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: IntFieldUpdateOperationsInput | number
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderCreateInput = {
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutOrdersInput
+    user?: UserCreateNestedOneWithoutWholesaleOrdersInput
+    warehouse?: WarehouseCreateNestedOneWithoutWholesaleOrdersInput
+    items?: WholesaleOrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderUncheckedCreateInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: WholesaleOrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderUpdateInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneWithoutWholesaleOrdersNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWholesaleOrdersNestedInput
+    items?: WholesaleOrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: WholesaleOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderCreateManyInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleOrderUpdateManyMutationInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderItemCreateInput = {
+    quantity?: number
+    price: number
+    discount?: number
+    order: WholesaleOrderCreateNestedOneWithoutItemsInput
+    product: ProductCreateNestedOneWithoutWholesaleOrderItemsInput
+  }
+
+  export type WholesaleOrderItemUncheckedCreateInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    orderId: number
+    productId: number
+  }
+
+  export type WholesaleOrderItemUpdateInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    order?: WholesaleOrderUpdateOneRequiredWithoutItemsNestedInput
+    product?: ProductUpdateOneRequiredWithoutWholesaleOrderItemsNestedInput
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WholesaleOrderItemCreateManyInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    orderId: number
+    productId: number
+  }
+
+  export type WholesaleOrderItemUpdateManyMutationInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
   }
 
   export type WarrantyCreateInput = {
@@ -56334,6 +61197,12 @@ export namespace Prisma {
     none?: WholesaleVisitWhereInput
   }
 
+  export type WholesaleOrderListRelationFilter = {
+    every?: WholesaleOrderWhereInput
+    some?: WholesaleOrderWhereInput
+    none?: WholesaleOrderWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -56392,6 +61261,10 @@ export namespace Prisma {
   }
 
   export type WholesaleVisitOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WholesaleOrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56861,6 +61734,18 @@ export namespace Prisma {
     isNot?: ProductLandingPageWhereInput | null
   }
 
+  export type ProductWholesalePriceTierListRelationFilter = {
+    every?: ProductWholesalePriceTierWhereInput
+    some?: ProductWholesalePriceTierWhereInput
+    none?: ProductWholesalePriceTierWhereInput
+  }
+
+  export type WholesaleOrderItemListRelationFilter = {
+    every?: WholesaleOrderItemWhereInput
+    some?: WholesaleOrderItemWhereInput
+    none?: WholesaleOrderItemWhereInput
+  }
+
   export type OrderItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -56885,6 +61770,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ProductWholesalePriceTierOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WholesaleOrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProductCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -56901,6 +61794,7 @@ export namespace Prisma {
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
+    wholesalePrice?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -56908,6 +61802,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
+    wholesalePrice?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -56926,6 +61821,7 @@ export namespace Prisma {
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
+    wholesalePrice?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -56944,6 +61840,7 @@ export namespace Prisma {
     showInAds?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
+    wholesalePrice?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -56951,6 +61848,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     affiliatePrice?: SortOrder
     affiliateCommissionRate?: SortOrder
+    wholesalePrice?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -57979,6 +62877,199 @@ export namespace Prisma {
     _max?: NestedEnumWholesaleVisitResultFilter<$PrismaModel>
   }
 
+  export type ProductWholesalePriceTierProductIdMinQuantityCompoundUniqueInput = {
+    productId: number
+    minQuantity: number
+  }
+
+  export type ProductWholesalePriceTierCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductWholesalePriceTierAvgOrderByAggregateInput = {
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type ProductWholesalePriceTierMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductWholesalePriceTierMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductWholesalePriceTierSumOrderByAggregateInput = {
+    productId?: SortOrder
+    minQuantity?: SortOrder
+    maxQuantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type WarehouseNullableScalarRelationFilter = {
+    is?: WarehouseWhereInput | null
+    isNot?: WarehouseWhereInput | null
+  }
+
+  export type WholesaleOrderCountOrderByAggregateInput = {
+    id?: SortOrder
+    orderNumber?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    paymentMethod?: SortOrder
+    receiverName?: SortOrder
+    receiverPhone?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    municipality?: SortOrder
+    fullAddress?: SortOrder
+    deliveryNotes?: SortOrder
+    googleMapsLink?: SortOrder
+    additionalNotes?: SortOrder
+    status?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    warehouseId?: SortOrder
+    manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleOrderAvgOrderByAggregateInput = {
+    id?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    warehouseId?: SortOrder
+  }
+
+  export type WholesaleOrderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orderNumber?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    paymentMethod?: SortOrder
+    receiverName?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    municipality?: SortOrder
+    fullAddress?: SortOrder
+    deliveryNotes?: SortOrder
+    googleMapsLink?: SortOrder
+    additionalNotes?: SortOrder
+    status?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    warehouseId?: SortOrder
+    manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleOrderMinOrderByAggregateInput = {
+    id?: SortOrder
+    orderNumber?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    paymentMethod?: SortOrder
+    receiverName?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    municipality?: SortOrder
+    fullAddress?: SortOrder
+    deliveryNotes?: SortOrder
+    googleMapsLink?: SortOrder
+    additionalNotes?: SortOrder
+    status?: SortOrder
+    wholesaleCustomerId?: SortOrder
+    userId?: SortOrder
+    warehouseId?: SortOrder
+    manualCreatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WholesaleOrderSumOrderByAggregateInput = {
+    id?: SortOrder
+    totalAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    warehouseId?: SortOrder
+  }
+
+  export type WholesaleOrderScalarRelationFilter = {
+    is?: WholesaleOrderWhereInput
+    isNot?: WholesaleOrderWhereInput
+  }
+
+  export type WholesaleOrderItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type WholesaleOrderItemAvgOrderByAggregateInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type WholesaleOrderItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type WholesaleOrderItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type WholesaleOrderItemSumOrderByAggregateInput = {
+    id?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    discount?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+  }
+
   export type EnumWarrantyTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.WarrantyType | EnumWarrantyTypeFieldRefInput<$PrismaModel>
     in?: $Enums.WarrantyType[] | ListEnumWarrantyTypeFieldRefInput<$PrismaModel>
@@ -57989,11 +63080,6 @@ export namespace Prisma {
   export type CustomerNullableScalarRelationFilter = {
     is?: CustomerWhereInput | null
     isNot?: CustomerWhereInput | null
-  }
-
-  export type WarehouseNullableScalarRelationFilter = {
-    is?: WarehouseWhereInput | null
-    isNot?: WarehouseWhereInput | null
   }
 
   export type OrderNullableScalarRelationFilter = {
@@ -59148,6 +64234,13 @@ export namespace Prisma {
     connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
   }
 
+  export type WholesaleOrderCreateNestedManyWithoutUserInput = {
+    create?: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput> | WholesaleOrderCreateWithoutUserInput[] | WholesaleOrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutUserInput | WholesaleOrderCreateOrConnectWithoutUserInput[]
+    createMany?: WholesaleOrderCreateManyUserInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutParentInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -59243,6 +64336,13 @@ export namespace Prisma {
     connectOrCreate?: WholesaleVisitCreateOrConnectWithoutUserInput | WholesaleVisitCreateOrConnectWithoutUserInput[]
     createMany?: WholesaleVisitCreateManyUserInputEnvelope
     connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput> | WholesaleOrderCreateWithoutUserInput[] | WholesaleOrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutUserInput | WholesaleOrderCreateOrConnectWithoutUserInput[]
+    createMany?: WholesaleOrderCreateManyUserInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -59500,6 +64600,20 @@ export namespace Prisma {
     deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
   }
 
+  export type WholesaleOrderUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput> | WholesaleOrderCreateWithoutUserInput[] | WholesaleOrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutUserInput | WholesaleOrderCreateOrConnectWithoutUserInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutUserInput | WholesaleOrderUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WholesaleOrderCreateManyUserInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutUserInput | WholesaleOrderUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutUserInput | WholesaleOrderUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutParentNestedInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -59693,6 +64807,20 @@ export namespace Prisma {
     update?: WholesaleVisitUpdateWithWhereUniqueWithoutUserInput | WholesaleVisitUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: WholesaleVisitUpdateManyWithWhereWithoutUserInput | WholesaleVisitUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput> | WholesaleOrderCreateWithoutUserInput[] | WholesaleOrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutUserInput | WholesaleOrderCreateOrConnectWithoutUserInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutUserInput | WholesaleOrderUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WholesaleOrderCreateManyUserInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutUserInput | WholesaleOrderUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutUserInput | WholesaleOrderUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
   }
 
   export type UserCreateNestedManyWithoutPermissionInput = {
@@ -59903,6 +65031,20 @@ export namespace Prisma {
     connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
   }
 
+  export type ProductWholesalePriceTierCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput> | ProductWholesalePriceTierCreateWithoutProductInput[] | ProductWholesalePriceTierUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductWholesalePriceTierCreateOrConnectWithoutProductInput | ProductWholesalePriceTierCreateOrConnectWithoutProductInput[]
+    createMany?: ProductWholesalePriceTierCreateManyProductInputEnvelope
+    connect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderItemCreateNestedManyWithoutProductInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput> | WholesaleOrderItemCreateWithoutProductInput[] | WholesaleOrderItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutProductInput | WholesaleOrderItemCreateOrConnectWithoutProductInput[]
+    createMany?: WholesaleOrderItemCreateManyProductInputEnvelope
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -59977,6 +65119,20 @@ export namespace Prisma {
     connectOrCreate?: OfferDiscountCreateOrConnectWithoutProductInput | OfferDiscountCreateOrConnectWithoutProductInput[]
     createMany?: OfferDiscountCreateManyProductInputEnvelope
     connect?: OfferDiscountWhereUniqueInput | OfferDiscountWhereUniqueInput[]
+  }
+
+  export type ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput> | ProductWholesalePriceTierCreateWithoutProductInput[] | ProductWholesalePriceTierUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductWholesalePriceTierCreateOrConnectWithoutProductInput | ProductWholesalePriceTierCreateOrConnectWithoutProductInput[]
+    createMany?: ProductWholesalePriceTierCreateManyProductInputEnvelope
+    connect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput> | WholesaleOrderItemCreateWithoutProductInput[] | WholesaleOrderItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutProductInput | WholesaleOrderItemCreateOrConnectWithoutProductInput[]
+    createMany?: WholesaleOrderItemCreateManyProductInputEnvelope
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -60147,6 +65303,34 @@ export namespace Prisma {
     deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
   }
 
+  export type ProductWholesalePriceTierUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput> | ProductWholesalePriceTierCreateWithoutProductInput[] | ProductWholesalePriceTierUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductWholesalePriceTierCreateOrConnectWithoutProductInput | ProductWholesalePriceTierCreateOrConnectWithoutProductInput[]
+    upsert?: ProductWholesalePriceTierUpsertWithWhereUniqueWithoutProductInput | ProductWholesalePriceTierUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductWholesalePriceTierCreateManyProductInputEnvelope
+    set?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    disconnect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    delete?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    connect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    update?: ProductWholesalePriceTierUpdateWithWhereUniqueWithoutProductInput | ProductWholesalePriceTierUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductWholesalePriceTierUpdateManyWithWhereWithoutProductInput | ProductWholesalePriceTierUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductWholesalePriceTierScalarWhereInput | ProductWholesalePriceTierScalarWhereInput[]
+  }
+
+  export type WholesaleOrderItemUpdateManyWithoutProductNestedInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput> | WholesaleOrderItemCreateWithoutProductInput[] | WholesaleOrderItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutProductInput | WholesaleOrderItemCreateOrConnectWithoutProductInput[]
+    upsert?: WholesaleOrderItemUpsertWithWhereUniqueWithoutProductInput | WholesaleOrderItemUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: WholesaleOrderItemCreateManyProductInputEnvelope
+    set?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    disconnect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    delete?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    update?: WholesaleOrderItemUpdateWithWhereUniqueWithoutProductInput | WholesaleOrderItemUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: WholesaleOrderItemUpdateManyWithWhereWithoutProductInput | WholesaleOrderItemUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -60303,6 +65487,34 @@ export namespace Prisma {
     update?: OfferDiscountUpdateWithWhereUniqueWithoutProductInput | OfferDiscountUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OfferDiscountUpdateManyWithWhereWithoutProductInput | OfferDiscountUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OfferDiscountScalarWhereInput | OfferDiscountScalarWhereInput[]
+  }
+
+  export type ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput> | ProductWholesalePriceTierCreateWithoutProductInput[] | ProductWholesalePriceTierUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductWholesalePriceTierCreateOrConnectWithoutProductInput | ProductWholesalePriceTierCreateOrConnectWithoutProductInput[]
+    upsert?: ProductWholesalePriceTierUpsertWithWhereUniqueWithoutProductInput | ProductWholesalePriceTierUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductWholesalePriceTierCreateManyProductInputEnvelope
+    set?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    disconnect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    delete?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    connect?: ProductWholesalePriceTierWhereUniqueInput | ProductWholesalePriceTierWhereUniqueInput[]
+    update?: ProductWholesalePriceTierUpdateWithWhereUniqueWithoutProductInput | ProductWholesalePriceTierUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductWholesalePriceTierUpdateManyWithWhereWithoutProductInput | ProductWholesalePriceTierUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductWholesalePriceTierScalarWhereInput | ProductWholesalePriceTierScalarWhereInput[]
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput> | WholesaleOrderItemCreateWithoutProductInput[] | WholesaleOrderItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutProductInput | WholesaleOrderItemCreateOrConnectWithoutProductInput[]
+    upsert?: WholesaleOrderItemUpsertWithWhereUniqueWithoutProductInput | WholesaleOrderItemUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: WholesaleOrderItemCreateManyProductInputEnvelope
+    set?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    disconnect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    delete?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    update?: WholesaleOrderItemUpdateWithWhereUniqueWithoutProductInput | WholesaleOrderItemUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: WholesaleOrderItemUpdateManyWithWhereWithoutProductInput | WholesaleOrderItemUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutAdPageVisitsInput = {
@@ -60481,6 +65693,13 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type WholesaleOrderCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput> | WholesaleOrderCreateWithoutWarehouseInput[] | WholesaleOrderUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWarehouseInput | WholesaleOrderCreateOrConnectWithoutWarehouseInput[]
+    createMany?: WholesaleOrderCreateManyWarehouseInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+  }
+
   export type StockMovementCreateNestedManyWithoutWarehouseInput = {
     create?: XOR<StockMovementCreateWithoutWarehouseInput, StockMovementUncheckedCreateWithoutWarehouseInput> | StockMovementCreateWithoutWarehouseInput[] | StockMovementUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: StockMovementCreateOrConnectWithoutWarehouseInput | StockMovementCreateOrConnectWithoutWarehouseInput[]
@@ -60507,6 +65726,13 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutWarehouseInput | OrderCreateOrConnectWithoutWarehouseInput[]
     createMany?: OrderCreateManyWarehouseInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput> | WholesaleOrderCreateWithoutWarehouseInput[] | WholesaleOrderUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWarehouseInput | WholesaleOrderCreateOrConnectWithoutWarehouseInput[]
+    createMany?: WholesaleOrderCreateManyWarehouseInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
   }
 
   export type StockMovementUncheckedCreateNestedManyWithoutWarehouseInput = {
@@ -60559,6 +65785,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutWarehouseInput | OrderUpdateWithWhereUniqueWithoutWarehouseInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutWarehouseInput | OrderUpdateManyWithWhereWithoutWarehouseInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type WholesaleOrderUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput> | WholesaleOrderCreateWithoutWarehouseInput[] | WholesaleOrderUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWarehouseInput | WholesaleOrderCreateOrConnectWithoutWarehouseInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutWarehouseInput | WholesaleOrderUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: WholesaleOrderCreateManyWarehouseInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutWarehouseInput | WholesaleOrderUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutWarehouseInput | WholesaleOrderUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
   }
 
   export type StockMovementUpdateManyWithoutWarehouseNestedInput = {
@@ -60615,6 +65855,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutWarehouseInput | OrderUpdateWithWhereUniqueWithoutWarehouseInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutWarehouseInput | OrderUpdateManyWithWhereWithoutWarehouseInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput> | WholesaleOrderCreateWithoutWarehouseInput[] | WholesaleOrderUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWarehouseInput | WholesaleOrderCreateOrConnectWithoutWarehouseInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutWarehouseInput | WholesaleOrderUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: WholesaleOrderCreateManyWarehouseInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutWarehouseInput | WholesaleOrderUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutWarehouseInput | WholesaleOrderUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
   }
 
   export type StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput = {
@@ -61072,11 +66326,25 @@ export namespace Prisma {
     connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
   }
 
+  export type WholesaleOrderCreateNestedManyWithoutWholesaleCustomerInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleOrderCreateWithoutWholesaleCustomerInput[] | WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput | WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleOrderCreateManyWholesaleCustomerInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+  }
+
   export type WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput = {
     create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
     connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
     createMany?: WholesaleVisitCreateManyWholesaleCustomerInputEnvelope
     connect?: WholesaleVisitWhereUniqueInput | WholesaleVisitWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderUncheckedCreateNestedManyWithoutWholesaleCustomerInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleOrderCreateWithoutWholesaleCustomerInput[] | WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput | WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleOrderCreateManyWholesaleCustomerInputEnvelope
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
   }
 
   export type EnumWholesaleCustomerCategoryFieldUpdateOperationsInput = {
@@ -61120,6 +66388,20 @@ export namespace Prisma {
     deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
   }
 
+  export type WholesaleOrderUpdateManyWithoutWholesaleCustomerNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleOrderCreateWithoutWholesaleCustomerInput[] | WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput | WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleOrderUpsertWithWhereUniqueWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleOrderCreateManyWholesaleCustomerInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleOrderUpdateWithWhereUniqueWithoutWholesaleCustomerInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutWholesaleCustomerInput | WholesaleOrderUpdateManyWithWhereWithoutWholesaleCustomerInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
+  }
+
   export type WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput = {
     create?: XOR<WholesaleVisitCreateWithoutWholesaleCustomerInput, WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleVisitCreateWithoutWholesaleCustomerInput[] | WholesaleVisitUncheckedCreateWithoutWholesaleCustomerInput[]
     connectOrCreate?: WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput | WholesaleVisitCreateOrConnectWithoutWholesaleCustomerInput[]
@@ -61132,6 +66414,20 @@ export namespace Prisma {
     update?: WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleVisitUpdateWithWhereUniqueWithoutWholesaleCustomerInput[]
     updateMany?: WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput | WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput[]
     deleteMany?: WholesaleVisitScalarWhereInput | WholesaleVisitScalarWhereInput[]
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput> | WholesaleOrderCreateWithoutWholesaleCustomerInput[] | WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput[]
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput | WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput[]
+    upsert?: WholesaleOrderUpsertWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleOrderUpsertWithWhereUniqueWithoutWholesaleCustomerInput[]
+    createMany?: WholesaleOrderCreateManyWholesaleCustomerInputEnvelope
+    set?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    disconnect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    delete?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+    update?: WholesaleOrderUpdateWithWhereUniqueWithoutWholesaleCustomerInput | WholesaleOrderUpdateWithWhereUniqueWithoutWholesaleCustomerInput[]
+    updateMany?: WholesaleOrderUpdateManyWithWhereWithoutWholesaleCustomerInput | WholesaleOrderUpdateManyWithWhereWithoutWholesaleCustomerInput[]
+    deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
   }
 
   export type WholesaleVisitCreatephotoUrlsInput = {
@@ -61175,6 +66471,145 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWholesaleVisitsInput, UserUpdateWithoutWholesaleVisitsInput>, UserUncheckedUpdateWithoutWholesaleVisitsInput>
+  }
+
+  export type ProductCreateNestedOneWithoutWholesalePricingTiersInput = {
+    create?: XOR<ProductCreateWithoutWholesalePricingTiersInput, ProductUncheckedCreateWithoutWholesalePricingTiersInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWholesalePricingTiersInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutWholesalePricingTiersNestedInput = {
+    create?: XOR<ProductCreateWithoutWholesalePricingTiersInput, ProductUncheckedCreateWithoutWholesalePricingTiersInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWholesalePricingTiersInput
+    upsert?: ProductUpsertWithoutWholesalePricingTiersInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutWholesalePricingTiersInput, ProductUpdateWithoutWholesalePricingTiersInput>, ProductUncheckedUpdateWithoutWholesalePricingTiersInput>
+  }
+
+  export type WholesaleOrderCreatereceiverPhoneInput = {
+    set: string[]
+  }
+
+  export type WholesaleCustomerCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutOrdersInput, WholesaleCustomerUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutOrdersInput
+    connect?: WholesaleCustomerWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutWholesaleOrdersInput = {
+    create?: XOR<UserCreateWithoutWholesaleOrdersInput, UserUncheckedCreateWithoutWholesaleOrdersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWholesaleOrdersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WarehouseCreateNestedOneWithoutWholesaleOrdersInput = {
+    create?: XOR<WarehouseCreateWithoutWholesaleOrdersInput, WarehouseUncheckedCreateWithoutWholesaleOrdersInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWholesaleOrdersInput
+    connect?: WarehouseWhereUniqueInput
+  }
+
+  export type WholesaleOrderItemCreateNestedManyWithoutOrderInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput> | WholesaleOrderItemCreateWithoutOrderInput[] | WholesaleOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutOrderInput | WholesaleOrderItemCreateOrConnectWithoutOrderInput[]
+    createMany?: WholesaleOrderItemCreateManyOrderInputEnvelope
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderItemUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput> | WholesaleOrderItemCreateWithoutOrderInput[] | WholesaleOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutOrderInput | WholesaleOrderItemCreateOrConnectWithoutOrderInput[]
+    createMany?: WholesaleOrderItemCreateManyOrderInputEnvelope
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+  }
+
+  export type WholesaleOrderUpdatereceiverPhoneInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type WholesaleCustomerUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<WholesaleCustomerCreateWithoutOrdersInput, WholesaleCustomerUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: WholesaleCustomerCreateOrConnectWithoutOrdersInput
+    upsert?: WholesaleCustomerUpsertWithoutOrdersInput
+    connect?: WholesaleCustomerWhereUniqueInput
+    update?: XOR<XOR<WholesaleCustomerUpdateToOneWithWhereWithoutOrdersInput, WholesaleCustomerUpdateWithoutOrdersInput>, WholesaleCustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type UserUpdateOneWithoutWholesaleOrdersNestedInput = {
+    create?: XOR<UserCreateWithoutWholesaleOrdersInput, UserUncheckedCreateWithoutWholesaleOrdersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWholesaleOrdersInput
+    upsert?: UserUpsertWithoutWholesaleOrdersInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWholesaleOrdersInput, UserUpdateWithoutWholesaleOrdersInput>, UserUncheckedUpdateWithoutWholesaleOrdersInput>
+  }
+
+  export type WarehouseUpdateOneWithoutWholesaleOrdersNestedInput = {
+    create?: XOR<WarehouseCreateWithoutWholesaleOrdersInput, WarehouseUncheckedCreateWithoutWholesaleOrdersInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWholesaleOrdersInput
+    upsert?: WarehouseUpsertWithoutWholesaleOrdersInput
+    disconnect?: WarehouseWhereInput | boolean
+    delete?: WarehouseWhereInput | boolean
+    connect?: WarehouseWhereUniqueInput
+    update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutWholesaleOrdersInput, WarehouseUpdateWithoutWholesaleOrdersInput>, WarehouseUncheckedUpdateWithoutWholesaleOrdersInput>
+  }
+
+  export type WholesaleOrderItemUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput> | WholesaleOrderItemCreateWithoutOrderInput[] | WholesaleOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutOrderInput | WholesaleOrderItemCreateOrConnectWithoutOrderInput[]
+    upsert?: WholesaleOrderItemUpsertWithWhereUniqueWithoutOrderInput | WholesaleOrderItemUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: WholesaleOrderItemCreateManyOrderInputEnvelope
+    set?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    disconnect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    delete?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    update?: WholesaleOrderItemUpdateWithWhereUniqueWithoutOrderInput | WholesaleOrderItemUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: WholesaleOrderItemUpdateManyWithWhereWithoutOrderInput | WholesaleOrderItemUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput> | WholesaleOrderItemCreateWithoutOrderInput[] | WholesaleOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: WholesaleOrderItemCreateOrConnectWithoutOrderInput | WholesaleOrderItemCreateOrConnectWithoutOrderInput[]
+    upsert?: WholesaleOrderItemUpsertWithWhereUniqueWithoutOrderInput | WholesaleOrderItemUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: WholesaleOrderItemCreateManyOrderInputEnvelope
+    set?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    disconnect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    delete?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    connect?: WholesaleOrderItemWhereUniqueInput | WholesaleOrderItemWhereUniqueInput[]
+    update?: WholesaleOrderItemUpdateWithWhereUniqueWithoutOrderInput | WholesaleOrderItemUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: WholesaleOrderItemUpdateManyWithWhereWithoutOrderInput | WholesaleOrderItemUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
+  }
+
+  export type WholesaleOrderCreateNestedOneWithoutItemsInput = {
+    create?: XOR<WholesaleOrderCreateWithoutItemsInput, WholesaleOrderUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutItemsInput
+    connect?: WholesaleOrderWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutWholesaleOrderItemsInput = {
+    create?: XOR<ProductCreateWithoutWholesaleOrderItemsInput, ProductUncheckedCreateWithoutWholesaleOrderItemsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWholesaleOrderItemsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type WholesaleOrderUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<WholesaleOrderCreateWithoutItemsInput, WholesaleOrderUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: WholesaleOrderCreateOrConnectWithoutItemsInput
+    upsert?: WholesaleOrderUpsertWithoutItemsInput
+    connect?: WholesaleOrderWhereUniqueInput
+    update?: XOR<XOR<WholesaleOrderUpdateToOneWithWhereWithoutItemsInput, WholesaleOrderUpdateWithoutItemsInput>, WholesaleOrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutWholesaleOrderItemsNestedInput = {
+    create?: XOR<ProductCreateWithoutWholesaleOrderItemsInput, ProductUncheckedCreateWithoutWholesaleOrderItemsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWholesaleOrderItemsInput
+    upsert?: ProductUpsertWithoutWholesaleOrderItemsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutWholesaleOrderItemsInput, ProductUpdateWithoutWholesaleOrderItemsInput>, ProductUncheckedUpdateWithoutWholesaleOrderItemsInput>
   }
 
   export type ProductCreateNestedOneWithoutWarrantiesAsProductInput = {
@@ -62378,6 +67813,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -62414,6 +67850,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -62455,6 +67892,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutParentInput = {
@@ -62491,6 +67929,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutParentInput = {
@@ -63063,6 +68502,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     visits?: WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput
+    orders?: WholesaleOrderCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerUncheckedCreateWithoutAssignedUserInput = {
@@ -63091,6 +68531,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     visits?: WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput
+    orders?: WholesaleOrderUncheckedCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerCreateOrConnectWithoutAssignedUserInput = {
@@ -63153,6 +68594,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WholesaleOrderCreateWithoutUserInput = {
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutOrdersInput
+    warehouse?: WarehouseCreateNestedOneWithoutWholesaleOrdersInput
+    items?: WholesaleOrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderUncheckedCreateWithoutUserInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: WholesaleOrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderCreateOrConnectWithoutUserInput = {
+    where: WholesaleOrderWhereUniqueInput
+    create: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput>
+  }
+
+  export type WholesaleOrderCreateManyUserInputEnvelope = {
+    data: WholesaleOrderCreateManyUserInput | WholesaleOrderCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutSubordinatesInput = {
     update: XOR<UserUpdateWithoutSubordinatesInput, UserUncheckedUpdateWithoutSubordinatesInput>
     create: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
@@ -63198,6 +68698,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -63234,6 +68735,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutParentInput = {
@@ -63849,6 +69351,50 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"WholesaleVisit"> | Date | string
   }
 
+  export type WholesaleOrderUpsertWithWhereUniqueWithoutUserInput = {
+    where: WholesaleOrderWhereUniqueInput
+    update: XOR<WholesaleOrderUpdateWithoutUserInput, WholesaleOrderUncheckedUpdateWithoutUserInput>
+    create: XOR<WholesaleOrderCreateWithoutUserInput, WholesaleOrderUncheckedCreateWithoutUserInput>
+  }
+
+  export type WholesaleOrderUpdateWithWhereUniqueWithoutUserInput = {
+    where: WholesaleOrderWhereUniqueInput
+    data: XOR<WholesaleOrderUpdateWithoutUserInput, WholesaleOrderUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WholesaleOrderUpdateManyWithWhereWithoutUserInput = {
+    where: WholesaleOrderScalarWhereInput
+    data: XOR<WholesaleOrderUpdateManyMutationInput, WholesaleOrderUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type WholesaleOrderScalarWhereInput = {
+    AND?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
+    OR?: WholesaleOrderScalarWhereInput[]
+    NOT?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
+    id?: IntFilter<"WholesaleOrder"> | number
+    orderNumber?: StringFilter<"WholesaleOrder"> | string
+    totalAmount?: FloatFilter<"WholesaleOrder"> | number
+    discount?: FloatFilter<"WholesaleOrder"> | number
+    finalAmount?: FloatFilter<"WholesaleOrder"> | number
+    paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
+    receiverPhone?: StringNullableListFilter<"WholesaleOrder">
+    country?: StringNullableFilter<"WholesaleOrder"> | string | null
+    city?: StringNullableFilter<"WholesaleOrder"> | string | null
+    municipality?: StringNullableFilter<"WholesaleOrder"> | string | null
+    fullAddress?: StringNullableFilter<"WholesaleOrder"> | string | null
+    deliveryNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    googleMapsLink?: StringNullableFilter<"WholesaleOrder"> | string | null
+    additionalNotes?: StringNullableFilter<"WholesaleOrder"> | string | null
+    status?: StringFilter<"WholesaleOrder"> | string
+    wholesaleCustomerId?: StringFilter<"WholesaleOrder"> | string
+    userId?: StringNullableFilter<"WholesaleOrder"> | string | null
+    warehouseId?: IntNullableFilter<"WholesaleOrder"> | number | null
+    manualCreatedAt?: DateTimeNullableFilter<"WholesaleOrder"> | Date | string | null
+    createdAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+  }
+
   export type UserCreateWithoutPermissionInput = {
     id?: string
     username: string
@@ -63883,6 +69429,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPermissionInput = {
@@ -63919,6 +69466,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPermissionInput = {
@@ -63961,6 +69509,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -63972,6 +69521,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -63989,6 +69540,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -64000,6 +69552,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -64091,6 +69645,7 @@ export namespace Prisma {
     showInAds?: BoolFilter<"Product"> | boolean
     affiliatePrice?: FloatFilter<"Product"> | number
     affiliateCommissionRate?: FloatNullableFilter<"Product"> | number | null
+    wholesalePrice?: FloatFilter<"Product"> | number
   }
 
   export type OfferDiscountUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -64510,6 +70065,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductWholesalePriceTierCreateWithoutProductInput = {
+    id?: string
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductWholesalePriceTierUncheckedCreateWithoutProductInput = {
+    id?: string
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductWholesalePriceTierCreateOrConnectWithoutProductInput = {
+    where: ProductWholesalePriceTierWhereUniqueInput
+    create: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductWholesalePriceTierCreateManyProductInputEnvelope = {
+    data: ProductWholesalePriceTierCreateManyProductInput | ProductWholesalePriceTierCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WholesaleOrderItemCreateWithoutProductInput = {
+    quantity?: number
+    price: number
+    discount?: number
+    order: WholesaleOrderCreateNestedOneWithoutItemsInput
+  }
+
+  export type WholesaleOrderItemUncheckedCreateWithoutProductInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    orderId: number
+  }
+
+  export type WholesaleOrderItemCreateOrConnectWithoutProductInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    create: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput>
+  }
+
+  export type WholesaleOrderItemCreateManyProductInputEnvelope = {
+    data: WholesaleOrderItemCreateManyProductInput | WholesaleOrderItemCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -64831,6 +70439,63 @@ export namespace Prisma {
     data: XOR<OfferDiscountUpdateManyMutationInput, OfferDiscountUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type ProductWholesalePriceTierUpsertWithWhereUniqueWithoutProductInput = {
+    where: ProductWholesalePriceTierWhereUniqueInput
+    update: XOR<ProductWholesalePriceTierUpdateWithoutProductInput, ProductWholesalePriceTierUncheckedUpdateWithoutProductInput>
+    create: XOR<ProductWholesalePriceTierCreateWithoutProductInput, ProductWholesalePriceTierUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductWholesalePriceTierUpdateWithWhereUniqueWithoutProductInput = {
+    where: ProductWholesalePriceTierWhereUniqueInput
+    data: XOR<ProductWholesalePriceTierUpdateWithoutProductInput, ProductWholesalePriceTierUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductWholesalePriceTierUpdateManyWithWhereWithoutProductInput = {
+    where: ProductWholesalePriceTierScalarWhereInput
+    data: XOR<ProductWholesalePriceTierUpdateManyMutationInput, ProductWholesalePriceTierUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type ProductWholesalePriceTierScalarWhereInput = {
+    AND?: ProductWholesalePriceTierScalarWhereInput | ProductWholesalePriceTierScalarWhereInput[]
+    OR?: ProductWholesalePriceTierScalarWhereInput[]
+    NOT?: ProductWholesalePriceTierScalarWhereInput | ProductWholesalePriceTierScalarWhereInput[]
+    id?: StringFilter<"ProductWholesalePriceTier"> | string
+    productId?: IntFilter<"ProductWholesalePriceTier"> | number
+    minQuantity?: IntFilter<"ProductWholesalePriceTier"> | number
+    maxQuantity?: IntNullableFilter<"ProductWholesalePriceTier"> | number | null
+    price?: FloatFilter<"ProductWholesalePriceTier"> | number
+    createdAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductWholesalePriceTier"> | Date | string
+  }
+
+  export type WholesaleOrderItemUpsertWithWhereUniqueWithoutProductInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    update: XOR<WholesaleOrderItemUpdateWithoutProductInput, WholesaleOrderItemUncheckedUpdateWithoutProductInput>
+    create: XOR<WholesaleOrderItemCreateWithoutProductInput, WholesaleOrderItemUncheckedCreateWithoutProductInput>
+  }
+
+  export type WholesaleOrderItemUpdateWithWhereUniqueWithoutProductInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    data: XOR<WholesaleOrderItemUpdateWithoutProductInput, WholesaleOrderItemUncheckedUpdateWithoutProductInput>
+  }
+
+  export type WholesaleOrderItemUpdateManyWithWhereWithoutProductInput = {
+    where: WholesaleOrderItemScalarWhereInput
+    data: XOR<WholesaleOrderItemUpdateManyMutationInput, WholesaleOrderItemUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type WholesaleOrderItemScalarWhereInput = {
+    AND?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
+    OR?: WholesaleOrderItemScalarWhereInput[]
+    NOT?: WholesaleOrderItemScalarWhereInput | WholesaleOrderItemScalarWhereInput[]
+    id?: IntFilter<"WholesaleOrderItem"> | number
+    quantity?: IntFilter<"WholesaleOrderItem"> | number
+    price?: FloatFilter<"WholesaleOrderItem"> | number
+    discount?: FloatFilter<"WholesaleOrderItem"> | number
+    orderId?: IntFilter<"WholesaleOrderItem"> | number
+    productId?: IntFilter<"WholesaleOrderItem"> | number
+  }
+
   export type ProductCreateWithoutAdPageVisitsInput = {
     name: string
     modelNumber?: string | null
@@ -64845,6 +70510,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -64856,6 +70522,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutAdPageVisitsInput = {
@@ -64874,6 +70542,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -64884,6 +70553,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutAdPageVisitsInput = {
@@ -64916,6 +70587,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -64927,6 +70599,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutAdPageVisitsInput = {
@@ -64945,6 +70619,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -64955,6 +70630,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutLandingPageInput = {
@@ -64971,6 +70648,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -64982,6 +70660,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutLandingPageInput = {
@@ -65000,6 +70680,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -65010,6 +70691,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutLandingPageInput = {
@@ -65042,6 +70725,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -65053,6 +70737,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutLandingPageInput = {
@@ -65071,6 +70757,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -65081,6 +70768,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutReviewsInput = {
@@ -65097,6 +70786,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -65108,6 +70798,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -65126,6 +70818,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -65136,6 +70829,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -65177,6 +70872,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -65213,6 +70909,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -65245,6 +70942,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -65256,6 +70954,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -65274,6 +70974,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -65284,6 +70985,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -65331,6 +71034,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -65367,6 +71071,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CityCreateWithoutCountryInput = {
@@ -65399,6 +71104,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
@@ -65411,6 +71117,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
@@ -65662,6 +71369,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WholesaleOrderCreateWithoutWarehouseInput = {
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutOrdersInput
+    user?: UserCreateNestedOneWithoutWholesaleOrdersInput
+    items?: WholesaleOrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderUncheckedCreateWithoutWarehouseInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: WholesaleOrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderCreateOrConnectWithoutWarehouseInput = {
+    where: WholesaleOrderWhereUniqueInput
+    create: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type WholesaleOrderCreateManyWarehouseInputEnvelope = {
+    data: WholesaleOrderCreateManyWarehouseInput | WholesaleOrderCreateManyWarehouseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StockMovementCreateWithoutWarehouseInput = {
     id?: string
     quantity: number
@@ -65788,6 +71554,22 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutWarehouseInput>
   }
 
+  export type WholesaleOrderUpsertWithWhereUniqueWithoutWarehouseInput = {
+    where: WholesaleOrderWhereUniqueInput
+    update: XOR<WholesaleOrderUpdateWithoutWarehouseInput, WholesaleOrderUncheckedUpdateWithoutWarehouseInput>
+    create: XOR<WholesaleOrderCreateWithoutWarehouseInput, WholesaleOrderUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type WholesaleOrderUpdateWithWhereUniqueWithoutWarehouseInput = {
+    where: WholesaleOrderWhereUniqueInput
+    data: XOR<WholesaleOrderUpdateWithoutWarehouseInput, WholesaleOrderUncheckedUpdateWithoutWarehouseInput>
+  }
+
+  export type WholesaleOrderUpdateManyWithWhereWithoutWarehouseInput = {
+    where: WholesaleOrderScalarWhereInput
+    data: XOR<WholesaleOrderUpdateManyMutationInput, WholesaleOrderUncheckedUpdateManyWithoutWarehouseInput>
+  }
+
   export type StockMovementUpsertWithWhereUniqueWithoutWarehouseInput = {
     where: StockMovementWhereUniqueInput
     update: XOR<StockMovementUpdateWithoutWarehouseInput, StockMovementUncheckedUpdateWithoutWarehouseInput>
@@ -65834,6 +71616,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -65845,6 +71628,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -65863,6 +71648,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -65873,6 +71659,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -65887,6 +71675,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
@@ -65899,6 +71688,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
@@ -65933,6 +71723,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -65944,6 +71735,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -65962,6 +71755,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -65972,6 +71766,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -65992,6 +71788,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
@@ -66004,6 +71801,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
@@ -66022,6 +71820,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -66033,6 +71832,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockMovementsInput = {
@@ -66051,6 +71852,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -66061,6 +71863,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockMovementsInput = {
@@ -66076,6 +71880,7 @@ export namespace Prisma {
     country?: CountryCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
 
@@ -66088,6 +71893,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
@@ -66130,6 +71936,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -66166,6 +71973,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -66198,6 +72006,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -66209,6 +72018,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockMovementsInput = {
@@ -66227,6 +72038,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -66237,6 +72049,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -66258,6 +72072,7 @@ export namespace Prisma {
     country?: CountryUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
 
@@ -66270,6 +72085,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
@@ -66318,6 +72134,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -66354,6 +72171,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -66390,6 +72208,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTargetsInput = {
@@ -66426,6 +72245,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTargetsInput = {
@@ -66502,6 +72322,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTargetsInput = {
@@ -66538,6 +72359,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TargetProductUpsertWithWhereUniqueWithoutTargetInput = {
@@ -66590,6 +72412,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutActivityTargetsInput = {
@@ -66626,6 +72449,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutActivityTargetsInput = {
@@ -66678,6 +72502,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityTargetsInput = {
@@ -66714,6 +72539,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserTargetCreateWithoutProductsInput = {
@@ -66757,6 +72583,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -66768,6 +72595,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductsInput = {
@@ -66786,6 +72615,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -66796,6 +72626,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductsInput = {
@@ -66861,6 +72693,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -66872,6 +72705,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductsInput = {
@@ -66890,6 +72725,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -66900,6 +72736,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -66916,6 +72754,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -66927,6 +72766,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -66945,6 +72786,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -66955,6 +72797,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -66987,6 +72831,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -66998,6 +72843,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -67016,6 +72863,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -67026,6 +72874,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutCustomerInput = {
@@ -67151,6 +73001,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCustomersInput = {
@@ -67187,6 +73038,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCustomersInput = {
@@ -67356,6 +73208,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignedWholesaleCustomersInput = {
@@ -67392,6 +73245,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignedWholesaleCustomersInput = {
@@ -67449,6 +73303,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WholesaleOrderCreateWithoutWholesaleCustomerInput = {
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutWholesaleOrdersInput
+    warehouse?: WarehouseCreateNestedOneWithoutWholesaleOrdersInput
+    items?: WholesaleOrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    userId?: string | null
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: WholesaleOrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type WholesaleOrderCreateOrConnectWithoutWholesaleCustomerInput = {
+    where: WholesaleOrderWhereUniqueInput
+    create: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleOrderCreateManyWholesaleCustomerInputEnvelope = {
+    data: WholesaleOrderCreateManyWholesaleCustomerInput | WholesaleOrderCreateManyWholesaleCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutAssignedWholesaleCustomersInput = {
     update: XOR<UserUpdateWithoutAssignedWholesaleCustomersInput, UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput>
     create: XOR<UserCreateWithoutAssignedWholesaleCustomersInput, UserUncheckedCreateWithoutAssignedWholesaleCustomersInput>
@@ -67494,6 +73407,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput = {
@@ -67530,6 +73444,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput = {
@@ -67546,6 +73461,22 @@ export namespace Prisma {
   export type WholesaleVisitUpdateManyWithWhereWithoutWholesaleCustomerInput = {
     where: WholesaleVisitScalarWhereInput
     data: XOR<WholesaleVisitUpdateManyMutationInput, WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleOrderUpsertWithWhereUniqueWithoutWholesaleCustomerInput = {
+    where: WholesaleOrderWhereUniqueInput
+    update: XOR<WholesaleOrderUpdateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedUpdateWithoutWholesaleCustomerInput>
+    create: XOR<WholesaleOrderCreateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedCreateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleOrderUpdateWithWhereUniqueWithoutWholesaleCustomerInput = {
+    where: WholesaleOrderWhereUniqueInput
+    data: XOR<WholesaleOrderUpdateWithoutWholesaleCustomerInput, WholesaleOrderUncheckedUpdateWithoutWholesaleCustomerInput>
+  }
+
+  export type WholesaleOrderUpdateManyWithWhereWithoutWholesaleCustomerInput = {
+    where: WholesaleOrderScalarWhereInput
+    data: XOR<WholesaleOrderUpdateManyMutationInput, WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerInput>
   }
 
   export type WholesaleCustomerCreateWithoutVisitsInput = {
@@ -67574,6 +73505,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedUser?: UserCreateNestedOneWithoutAssignedWholesaleCustomersInput
+    orders?: WholesaleOrderCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerUncheckedCreateWithoutVisitsInput = {
@@ -67602,6 +73534,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    orders?: WholesaleOrderUncheckedCreateNestedManyWithoutWholesaleCustomerInput
   }
 
   export type WholesaleCustomerCreateOrConnectWithoutVisitsInput = {
@@ -67643,6 +73576,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWholesaleVisitsInput = {
@@ -67679,6 +73613,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWholesaleVisitsInput = {
@@ -67723,6 +73658,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedUser?: UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput
+    orders?: WholesaleOrderUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type WholesaleCustomerUncheckedUpdateWithoutVisitsInput = {
@@ -67751,6 +73687,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type UserUpsertWithoutWholesaleVisitsInput = {
@@ -67798,6 +73735,7 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWholesaleVisitsInput = {
@@ -67834,6 +73772,800 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProductCreateWithoutWholesalePricingTiersInput = {
+    name: string
+    modelNumber?: string | null
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    wholesalePrice?: number
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutWholesalePricingTiersInput = {
+    id?: number
+    name: string
+    modelNumber?: string | null
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    wholesalePrice?: number
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutWholesalePricingTiersInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutWholesalePricingTiersInput, ProductUncheckedCreateWithoutWholesalePricingTiersInput>
+  }
+
+  export type ProductUpsertWithoutWholesalePricingTiersInput = {
+    update: XOR<ProductUpdateWithoutWholesalePricingTiersInput, ProductUncheckedUpdateWithoutWholesalePricingTiersInput>
+    create: XOR<ProductCreateWithoutWholesalePricingTiersInput, ProductUncheckedCreateWithoutWholesalePricingTiersInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutWholesalePricingTiersInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutWholesalePricingTiersInput, ProductUncheckedUpdateWithoutWholesalePricingTiersInput>
+  }
+
+  export type ProductUpdateWithoutWholesalePricingTiersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    modelNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutWholesalePricingTiersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    modelNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type WholesaleCustomerCreateWithoutOrdersInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedUser?: UserCreateNestedOneWithoutAssignedWholesaleCustomersInput
+    visits?: WholesaleVisitCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    name: string
+    category?: $Enums.WholesaleCustomerCategory
+    contactName?: string | null
+    contactRole?: string | null
+    contactRoleOther?: string | null
+    phone?: WholesaleCustomerCreatephoneInput | string[]
+    whatsappPhone?: string | null
+    country?: string | null
+    city?: string | null
+    area?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    googleMapsLink?: string | null
+    assignedUserId?: string | null
+    notes?: string | null
+    preferredVisitAt?: Date | string | null
+    lastVisitAt?: Date | string | null
+    nextFollowUpAt?: Date | string | null
+    lastVisitResult?: $Enums.WholesaleVisitResult | null
+    visitStatus?: $Enums.WholesaleVisitStatus
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    visits?: WholesaleVisitUncheckedCreateNestedManyWithoutWholesaleCustomerInput
+  }
+
+  export type WholesaleCustomerCreateOrConnectWithoutOrdersInput = {
+    where: WholesaleCustomerWhereUniqueInput
+    create: XOR<WholesaleCustomerCreateWithoutOrdersInput, WholesaleCustomerUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type UserCreateWithoutWholesaleOrdersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutWholesaleOrdersInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutWholesaleOrdersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWholesaleOrdersInput, UserUncheckedCreateWithoutWholesaleOrdersInput>
+  }
+
+  export type WarehouseCreateWithoutWholesaleOrdersInput = {
+    name: string
+    location: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    country?: CountryCreateNestedOneWithoutWarehousesInput
+    stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
+    orders?: OrderCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseUncheckedCreateWithoutWholesaleOrdersInput = {
+    id?: number
+    name: string
+    location: string
+    countryId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
+    orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseCreateOrConnectWithoutWholesaleOrdersInput = {
+    where: WarehouseWhereUniqueInput
+    create: XOR<WarehouseCreateWithoutWholesaleOrdersInput, WarehouseUncheckedCreateWithoutWholesaleOrdersInput>
+  }
+
+  export type WholesaleOrderItemCreateWithoutOrderInput = {
+    quantity?: number
+    price: number
+    discount?: number
+    product: ProductCreateNestedOneWithoutWholesaleOrderItemsInput
+  }
+
+  export type WholesaleOrderItemUncheckedCreateWithoutOrderInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    productId: number
+  }
+
+  export type WholesaleOrderItemCreateOrConnectWithoutOrderInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    create: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput>
+  }
+
+  export type WholesaleOrderItemCreateManyOrderInputEnvelope = {
+    data: WholesaleOrderItemCreateManyOrderInput | WholesaleOrderItemCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WholesaleCustomerUpsertWithoutOrdersInput = {
+    update: XOR<WholesaleCustomerUpdateWithoutOrdersInput, WholesaleCustomerUncheckedUpdateWithoutOrdersInput>
+    create: XOR<WholesaleCustomerCreateWithoutOrdersInput, WholesaleCustomerUncheckedCreateWithoutOrdersInput>
+    where?: WholesaleCustomerWhereInput
+  }
+
+  export type WholesaleCustomerUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: WholesaleCustomerWhereInput
+    data: XOR<WholesaleCustomerUpdateWithoutOrdersInput, WholesaleCustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type WholesaleCustomerUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedUser?: UserUpdateOneWithoutAssignedWholesaleCustomersNestedInput
+    visits?: WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type WholesaleCustomerUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumWholesaleCustomerCategoryFieldUpdateOperationsInput | $Enums.WholesaleCustomerCategory
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRole?: NullableStringFieldUpdateOperationsInput | string | null
+    contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: WholesaleCustomerUpdatephoneInput | string[]
+    whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    area?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextFollowUpAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVisitResult?: NullableEnumWholesaleVisitResultFieldUpdateOperationsInput | $Enums.WholesaleVisitResult | null
+    visitStatus?: EnumWholesaleVisitStatusFieldUpdateOperationsInput | $Enums.WholesaleVisitStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
+  }
+
+  export type UserUpsertWithoutWholesaleOrdersInput = {
+    update: XOR<UserUpdateWithoutWholesaleOrdersInput, UserUncheckedUpdateWithoutWholesaleOrdersInput>
+    create: XOR<UserCreateWithoutWholesaleOrdersInput, UserUncheckedCreateWithoutWholesaleOrdersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWholesaleOrdersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWholesaleOrdersInput, UserUncheckedUpdateWithoutWholesaleOrdersInput>
+  }
+
+  export type UserUpdateWithoutWholesaleOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWholesaleOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type WarehouseUpsertWithoutWholesaleOrdersInput = {
+    update: XOR<WarehouseUpdateWithoutWholesaleOrdersInput, WarehouseUncheckedUpdateWithoutWholesaleOrdersInput>
+    create: XOR<WarehouseCreateWithoutWholesaleOrdersInput, WarehouseUncheckedCreateWithoutWholesaleOrdersInput>
+    where?: WarehouseWhereInput
+  }
+
+  export type WarehouseUpdateToOneWithWhereWithoutWholesaleOrdersInput = {
+    where?: WarehouseWhereInput
+    data: XOR<WarehouseUpdateWithoutWholesaleOrdersInput, WarehouseUncheckedUpdateWithoutWholesaleOrdersInput>
+  }
+
+  export type WarehouseUpdateWithoutWholesaleOrdersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    country?: CountryUpdateOneWithoutWarehousesNestedInput
+    stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateWithoutWholesaleOrdersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WholesaleOrderItemUpsertWithWhereUniqueWithoutOrderInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    update: XOR<WholesaleOrderItemUpdateWithoutOrderInput, WholesaleOrderItemUncheckedUpdateWithoutOrderInput>
+    create: XOR<WholesaleOrderItemCreateWithoutOrderInput, WholesaleOrderItemUncheckedCreateWithoutOrderInput>
+  }
+
+  export type WholesaleOrderItemUpdateWithWhereUniqueWithoutOrderInput = {
+    where: WholesaleOrderItemWhereUniqueInput
+    data: XOR<WholesaleOrderItemUpdateWithoutOrderInput, WholesaleOrderItemUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type WholesaleOrderItemUpdateManyWithWhereWithoutOrderInput = {
+    where: WholesaleOrderItemScalarWhereInput
+    data: XOR<WholesaleOrderItemUpdateManyMutationInput, WholesaleOrderItemUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type WholesaleOrderCreateWithoutItemsInput = {
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wholesaleCustomer: WholesaleCustomerCreateNestedOneWithoutOrdersInput
+    user?: UserCreateNestedOneWithoutWholesaleOrdersInput
+    warehouse?: WarehouseCreateNestedOneWithoutWholesaleOrdersInput
+  }
+
+  export type WholesaleOrderUncheckedCreateWithoutItemsInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    userId?: string | null
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleOrderCreateOrConnectWithoutItemsInput = {
+    where: WholesaleOrderWhereUniqueInput
+    create: XOR<WholesaleOrderCreateWithoutItemsInput, WholesaleOrderUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ProductCreateWithoutWholesaleOrderItemsInput = {
+    name: string
+    modelNumber?: string | null
+    description?: string | null
+    googleLink?: string | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    wholesalePrice?: number
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductCreateNestedManyWithoutProductInput
+    stocks?: ProductStockCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutWholesaleOrderItemsInput = {
+    id?: number
+    name: string
+    modelNumber?: string | null
+    description?: string | null
+    googleLink?: string | null
+    categoryId?: number | null
+    createdAt?: Date | string
+    seoSlug?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    isActive?: boolean
+    showInAds?: boolean
+    affiliatePrice?: number
+    affiliateCommissionRate?: number | null
+    wholesalePrice?: number
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    warrantiesAsProduct?: WarrantyUncheckedCreateNestedManyWithoutProductInput
+    adPageVisits?: AdPageVisitUncheckedCreateNestedManyWithoutProductInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutWholesaleOrderItemsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutWholesaleOrderItemsInput, ProductUncheckedCreateWithoutWholesaleOrderItemsInput>
+  }
+
+  export type WholesaleOrderUpsertWithoutItemsInput = {
+    update: XOR<WholesaleOrderUpdateWithoutItemsInput, WholesaleOrderUncheckedUpdateWithoutItemsInput>
+    create: XOR<WholesaleOrderCreateWithoutItemsInput, WholesaleOrderUncheckedCreateWithoutItemsInput>
+    where?: WholesaleOrderWhereInput
+  }
+
+  export type WholesaleOrderUpdateToOneWithWhereWithoutItemsInput = {
+    where?: WholesaleOrderWhereInput
+    data: XOR<WholesaleOrderUpdateWithoutItemsInput, WholesaleOrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type WholesaleOrderUpdateWithoutItemsInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneWithoutWholesaleOrdersNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWholesaleOrdersNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateWithoutItemsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductUpsertWithoutWholesaleOrderItemsInput = {
+    update: XOR<ProductUpdateWithoutWholesaleOrderItemsInput, ProductUncheckedUpdateWithoutWholesaleOrderItemsInput>
+    create: XOR<ProductCreateWithoutWholesaleOrderItemsInput, ProductUncheckedCreateWithoutWholesaleOrderItemsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutWholesaleOrderItemsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutWholesaleOrderItemsInput, ProductUncheckedUpdateWithoutWholesaleOrderItemsInput>
+  }
+
+  export type ProductUpdateWithoutWholesaleOrderItemsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    modelNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutWholesaleOrderItemsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    modelNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLink?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seoSlug?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    showInAds?: BoolFieldUpdateOperationsInput | boolean
+    affiliatePrice?: FloatFieldUpdateOperationsInput | number
+    affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    warrantiesAsProduct?: WarrantyUncheckedUpdateManyWithoutProductNestedInput
+    adPageVisits?: AdPageVisitUncheckedUpdateManyWithoutProductNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutWarrantiesAsProductInput = {
@@ -67850,6 +74582,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -67861,6 +74594,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWarrantiesAsProductInput = {
@@ -67879,6 +74614,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -67889,6 +74625,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWarrantiesAsProductInput = {
@@ -67949,6 +74687,7 @@ export namespace Prisma {
     country?: CountryCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
   }
 
@@ -67961,6 +74700,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
@@ -68078,6 +74818,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -68089,6 +74830,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWarrantiesAsProductInput = {
@@ -68107,6 +74850,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -68117,6 +74861,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CustomerUpsertWithoutWarrantiesInput = {
@@ -68189,6 +74935,7 @@ export namespace Prisma {
     country?: CountryUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
   }
 
@@ -68201,6 +74948,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
@@ -68373,6 +75121,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageInput = {
@@ -68409,6 +75158,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageInput = {
@@ -68512,6 +75262,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageInput = {
@@ -68548,6 +75299,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -68629,6 +75381,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -68665,6 +75418,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -68706,6 +75460,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
   }
@@ -68718,6 +75473,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
   }
@@ -68909,6 +75665,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -68945,6 +75702,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -68981,6 +75739,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
@@ -68993,6 +75752,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
@@ -69102,6 +75862,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutExpensesInput = {
@@ -69138,6 +75899,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutExpensesInput = {
@@ -69190,6 +75952,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -69226,6 +75989,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingInput = {
@@ -69431,6 +76195,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductCreateNestedManyWithoutProductInput
@@ -69442,6 +76207,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -69460,6 +76227,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
     stocks?: ProductStockUncheckedCreateNestedManyWithoutProductInput
@@ -69470,6 +76238,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -69621,6 +76391,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -69632,6 +76403,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -69650,6 +76423,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
     stocks?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
@@ -69660,6 +76434,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type AffiliateLinkUpsertWithoutOrderItemsInput = {
@@ -69731,6 +76507,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
@@ -69767,6 +76544,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSalaryAdjustmentsInput = {
@@ -69819,6 +76597,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
@@ -69855,6 +76634,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateLinksInput = {
@@ -69891,6 +76671,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateLinksInput = {
@@ -69927,6 +76708,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateLinksInput = {
@@ -69948,6 +76730,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -69959,6 +76742,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutAffiliateLinksInput = {
@@ -69977,6 +76762,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -69987,6 +76773,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
     offerDiscounts?: OfferDiscountUncheckedCreateNestedManyWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutAffiliateLinksInput = {
@@ -70094,6 +76882,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -70130,6 +76919,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutAffiliateLinksInput = {
@@ -70157,6 +76947,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -70168,6 +76959,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -70186,6 +76979,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -70196,6 +76990,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutAffiliateLinkInput = {
@@ -70345,6 +77141,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     images?: ProductImageCreateNestedManyWithoutProductInput
@@ -70356,6 +77153,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageCreateNestedOneWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOfferDiscountsInput = {
@@ -70374,6 +77173,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
     targetProducts?: TargetProductUncheckedCreateNestedManyWithoutProductInput
@@ -70384,6 +77184,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     landingPage?: ProductLandingPageUncheckedCreateNestedOneWithoutProductInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedCreateNestedManyWithoutProductInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOfferDiscountsInput = {
@@ -70487,6 +77289,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
@@ -70498,6 +77301,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOfferDiscountsInput = {
@@ -70516,6 +77321,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -70526,6 +77332,8 @@ export namespace Prisma {
     affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CategoryUpsertWithoutOfferDiscountsInput = {
@@ -70830,6 +77638,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWalletTransfersInput = {
@@ -70866,6 +77675,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWalletTransfersInput = {
@@ -70918,6 +77728,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWalletTransfersInput = {
@@ -70954,6 +77765,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyParentInput = {
@@ -71162,6 +77974,30 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type WholesaleOrderCreateManyUserInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
@@ -71196,6 +78032,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutParentInput = {
@@ -71232,6 +78069,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutParentInput = {
@@ -71760,6 +78598,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visits?: WholesaleVisitUpdateManyWithoutWholesaleCustomerNestedInput
+    orders?: WholesaleOrderUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type WholesaleCustomerUncheckedUpdateWithoutAssignedUserInput = {
@@ -71788,6 +78627,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visits?: WholesaleVisitUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
+    orders?: WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerNestedInput
   }
 
   export type WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserInput = {
@@ -71877,6 +78717,79 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WholesaleOrderUpdateWithoutUserInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutOrdersNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWholesaleOrdersNestedInput
+    items?: WholesaleOrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: WholesaleOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyPermissionInput = {
     id?: string
     username: string
@@ -71933,6 +78846,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPermissionInput = {
@@ -71969,6 +78883,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPermissionInput = {
@@ -72008,6 +78923,7 @@ export namespace Prisma {
     showInAds?: boolean
     affiliatePrice?: number
     affiliateCommissionRate?: number | null
+    wholesalePrice?: number
   }
 
   export type OfferDiscountCreateManyCategoryInput = {
@@ -72041,6 +78957,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     images?: ProductImageUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUpdateManyWithoutProductNestedInput
@@ -72052,6 +78969,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -72069,6 +78988,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
     targetProducts?: TargetProductUncheckedUpdateManyWithoutProductNestedInput
@@ -72080,6 +79000,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     landingPage?: ProductLandingPageUncheckedUpdateOneWithoutProductNestedInput
     offerDiscounts?: OfferDiscountUncheckedUpdateManyWithoutProductNestedInput
+    wholesalePricingTiers?: ProductWholesalePriceTierUncheckedUpdateManyWithoutProductNestedInput
+    wholesaleOrderItems?: WholesaleOrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -72097,6 +79019,7 @@ export namespace Prisma {
     showInAds?: BoolFieldUpdateOperationsInput | boolean
     affiliatePrice?: FloatFieldUpdateOperationsInput | number
     affiliateCommissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    wholesalePrice?: FloatFieldUpdateOperationsInput | number
   }
 
   export type OfferDiscountUpdateWithoutCategoryInput = {
@@ -72254,6 +79177,23 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type ProductWholesalePriceTierCreateManyProductInput = {
+    id?: string
+    minQuantity: number
+    maxQuantity?: number | null
+    price: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleOrderItemCreateManyProductInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    orderId: number
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -72575,6 +79515,56 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProductWholesalePriceTierUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductWholesalePriceTierUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductWholesalePriceTierUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderItemUpdateWithoutProductInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    order?: WholesaleOrderUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateManyWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+  }
+
   export type CityCreateManyCountryInput = {
     id?: number
     name: string
@@ -72617,6 +79607,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
   }
@@ -72629,6 +79620,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
   }
@@ -72682,6 +79674,30 @@ export namespace Prisma {
     customerId: string
     userId?: string | null
     shippingId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WholesaleOrderCreateManyWarehouseInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    wholesaleCustomerId: string
+    userId?: string | null
     manualCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72848,6 +79864,79 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderUpdateWithoutWarehouseInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wholesaleCustomer?: WholesaleCustomerUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneWithoutWholesaleOrdersNestedInput
+    items?: WholesaleOrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateWithoutWarehouseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: WholesaleOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutWarehouseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73162,6 +80251,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomersInput = {
@@ -73198,6 +80288,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCustomersInput = {
@@ -73309,6 +80400,30 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type WholesaleOrderCreateManyWholesaleCustomerInput = {
+    id?: number
+    orderNumber: string
+    totalAmount: number
+    discount?: number
+    finalAmount: number
+    paymentMethod: string
+    receiverName?: string | null
+    receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
+    country?: string | null
+    city?: string | null
+    municipality?: string | null
+    fullAddress?: string | null
+    deliveryNotes?: string | null
+    googleMapsLink?: string | null
+    additionalNotes?: string | null
+    status?: string
+    userId?: string | null
+    warehouseId?: number | null
+    manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type WholesaleVisitUpdateWithoutWholesaleCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     visitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73367,6 +80482,110 @@ export namespace Prisma {
     syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderUpdateWithoutWholesaleCustomerInput = {
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutWholesaleOrdersNestedInput
+    warehouse?: WarehouseUpdateOneWithoutWholesaleOrdersNestedInput
+    items?: WholesaleOrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateWithoutWholesaleCustomerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: WholesaleOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type WholesaleOrderUncheckedUpdateManyWithoutWholesaleCustomerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    receiverName?: NullableStringFieldUpdateOperationsInput | string | null
+    receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    additionalNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
+    manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WholesaleOrderItemCreateManyOrderInput = {
+    id?: number
+    quantity?: number
+    price: number
+    discount?: number
+    productId: number
+  }
+
+  export type WholesaleOrderItemUpdateWithoutOrderInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    product?: ProductUpdateOneRequiredWithoutWholesaleOrderItemsNestedInput
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WholesaleOrderItemUncheckedUpdateManyWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
   }
 
   export type OrderItemCreateManyOrderInput = {
