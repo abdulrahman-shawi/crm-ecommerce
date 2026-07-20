@@ -54,6 +54,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
                 addWholesaleCustomers: wholesalePermissions.addWholesaleCustomers,
                 editWholesaleCustomers: wholesalePermissions.editWholesaleCustomers,
                 deleteWholesaleCustomers: wholesalePermissions.deleteWholesaleCustomers,
+                viewWholesaleOrders: wholesalePermissions.viewWholesaleOrders,
+                addWholesaleOrders: wholesalePermissions.addWholesaleOrders,
+                editWholesaleOrders: wholesalePermissions.editWholesaleOrders,
+                deleteWholesaleOrders: wholesalePermissions.deleteWholesaleOrders,
 
                 // الموظفين
                 viewEmployees: Boolean(data.viewEmployees),

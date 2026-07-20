@@ -53,26 +53,26 @@ async function getCurrentSessionUser() {
 function canViewWholesaleOrders(user: any) {
   if (!user) return false;
   return hasAnyPermission(user, [
-    "viewWholesaleCustomers",
-    "addWholesaleCustomers",
-    "editWholesaleCustomers",
-    "deleteWholesaleCustomers",
+    "viewWholesaleOrders",
+    "addWholesaleOrders",
+    "editWholesaleOrders",
+    "deleteWholesaleOrders",
   ]);
 }
 
 function canAddWholesaleOrders(user: any) {
   if (!user) return false;
-  return isAdmin(user) || hasPermission(user, "addWholesaleCustomers");
+  return isAdmin(user) || hasPermission(user, "addWholesaleOrders");
 }
 
 function canEditWholesaleOrders(user: any) {
   if (!user) return false;
-  return isAdmin(user) || hasPermission(user, "editWholesaleCustomers");
+  return isAdmin(user) || hasPermission(user, "editWholesaleOrders");
 }
 
 function canDeleteWholesaleOrders(user: any) {
   if (!user) return false;
-  return isAdmin(user) || hasPermission(user, "deleteWholesaleCustomers");
+  return isAdmin(user) || hasPermission(user, "deleteWholesaleOrders");
 }
 
 async function getScopedUserIds(userId: string) {

@@ -15,6 +15,10 @@ export function decoratePermission<T extends Partial<Permission> | null | undefi
     addWholesaleCustomers: Boolean(permission.addWholesaleCustomers),
     editWholesaleCustomers: Boolean(permission.editWholesaleCustomers),
     deleteWholesaleCustomers: Boolean(permission.deleteWholesaleCustomers),
+    viewWholesaleOrders: Boolean(permission.viewWholesaleOrders),
+    addWholesaleOrders: Boolean(permission.addWholesaleOrders),
+    editWholesaleOrders: Boolean(permission.editWholesaleOrders),
+    deleteWholesaleOrders: Boolean(permission.deleteWholesaleOrders),
   } as T;
 }
 
@@ -34,11 +38,19 @@ export function getWholesalePermissionMirror(input: Record<string, unknown>) {
   const addWholesaleCustomers = Boolean(input.addWholesaleCustomers);
   const editWholesaleCustomers = Boolean(input.editWholesaleCustomers);
   const deleteWholesaleCustomers = Boolean(input.deleteWholesaleCustomers);
+  const viewWholesaleOrders = Boolean(input.viewWholesaleOrders);
+  const addWholesaleOrders = Boolean(input.addWholesaleOrders);
+  const editWholesaleOrders = Boolean(input.editWholesaleOrders);
+  const deleteWholesaleOrders = Boolean(input.deleteWholesaleOrders);
 
   return {
     viewWholesaleCustomers,
     addWholesaleCustomers,
     editWholesaleCustomers,
     deleteWholesaleCustomers,
+    viewWholesaleOrders,
+    addWholesaleOrders,
+    editWholesaleOrders,
+    deleteWholesaleOrders,
   };
 }

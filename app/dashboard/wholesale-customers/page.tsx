@@ -1,12 +1,14 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import PhoneInput from "react-phone-number-input";
 import toast from "react-hot-toast";
 import {
   Building2,
   CalendarClock,
   CheckCircle2,
+  FilePlus2,
   MapPin,
   Pencil,
   Phone,
@@ -547,6 +549,7 @@ export default function WholesaleCustomersPage() {
   const canAddWholesale = Boolean(user && hasPermission(user, "addWholesaleCustomers"));
   const canEditWholesale = Boolean(user && hasPermission(user, "editWholesaleCustomers"));
   const canDeleteWholesale = Boolean(user && hasPermission(user, "deleteWholesaleCustomers"));
+  const canCreateWholesaleOrder = Boolean(user && hasPermission(user, "addWholesaleOrders"));
   const canRegisterVisit = canEditWholesale || canAddWholesale;
 
   const loadData = React.useCallback(async () => {
@@ -1145,6 +1148,16 @@ export default function WholesaleCustomersPage() {
       });
     }
 
+    if (canCreateWholesaleOrder) {
+      actions.push({
+        label: "طلب جملة",
+        icon: <FilePlus2 className="h-4 w-4" />,
+        onClick: (customer) => {
+          window.location.href = `/dashboard/wholesale-orders?customerId=${customer.id}`;
+        },
+      });
+    }
+
     if (canDeleteWholesale) {
       actions.push({
         label: "حذف",
@@ -1155,7 +1168,7 @@ export default function WholesaleCustomersPage() {
     }
 
     return actions;
-  }, [canDeleteWholesale, canEditWholesale, canRegisterVisit, handleDeleteCustomer, openEditCustomerModal, openVisitModal]);
+  }, [canCreateWholesaleOrder, canDeleteWholesale, canEditWholesale, canRegisterVisit, handleDeleteCustomer, openEditCustomerModal, openVisitModal]);
 
   if (loading || isLoading) {
     return (
@@ -1198,6 +1211,15 @@ export default function WholesaleCustomersPage() {
             <Button variant="secondary" size="md" onClick={() => selectedCustomer && openVisitModal(selectedCustomer)} leftIcon={<ClipboardList className="h-4 w-4" />} disabled={!selectedCustomer}>
               تسجيل زيارة
             </Button>
+            {selectedCustomer && canCreateWholesaleOrder ? (
+              <Link
+                href={`/dashboard/wholesale-orders?customerId=${selectedCustomer.id}`}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-white/15 px-4 text-sm font-black text-white backdrop-blur transition hover:bg-white/25"
+              >
+                <FilePlus2 className="h-4 w-4" />
+                إنشاء طلب جملة
+              </Link>
+            ) : null}
             <Button variant="primary" size="md" onClick={openCreateCustomerModal} leftIcon={<Plus className="h-4 w-4" />} className="bg-white text-blue-700 hover:bg-blue-50" disabled={!canAddWholesale}>
               إضافة عميل جديد
             </Button>

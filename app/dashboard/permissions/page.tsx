@@ -25,6 +25,10 @@ export default function PermissionsPage() {
             addWholesaleCustomers: Boolean(role.addWholesaleCustomers),
             editWholesaleCustomers: Boolean(role.editWholesaleCustomers),
             deleteWholesaleCustomers: Boolean(role.deleteWholesaleCustomers),
+            viewWholesaleOrders: Boolean(role.viewWholesaleOrders),
+            addWholesaleOrders: Boolean(role.addWholesaleOrders),
+            editWholesaleOrders: Boolean(role.editWholesaleOrders),
+            deleteWholesaleOrders: Boolean(role.deleteWholesaleOrders),
         };
     };
 
@@ -203,6 +207,7 @@ export default function PermissionsPage() {
                                         <PermissionRow title="الكفالة" suffix="Warranty" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="إدارة العملاء" suffix="Customers" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="عملاء الجملة" suffix="WholesaleCustomers" role={selectedRole} onToggle={togglePermission} />
+                                        <PermissionRow title="طلبات الجملة" suffix="WholesaleOrders" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الموظفين" suffix="Employees" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الصلاحيات" suffix="Permissions" role={selectedRole} onToggle={togglePermission} />
                                         <PermissionRow title="الصفحات الثابتة" suffix="Pages" role={selectedRole} onToggle={togglePermission} />

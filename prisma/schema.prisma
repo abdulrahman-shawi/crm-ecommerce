@@ -198,6 +198,11 @@ model Permission {
   editWholesaleCustomers   Boolean @default(false)
   deleteWholesaleCustomers Boolean @default(false)
 
+  viewWholesaleOrders      Boolean @default(false)
+  addWholesaleOrders       Boolean @default(false)
+  editWholesaleOrders      Boolean @default(false)
+  deleteWholesaleOrders    Boolean @default(false)
+
   viewEmployees   Boolean @default(false)
   addEmployees    Boolean @default(false)
   editEmployees   Boolean @default(false)

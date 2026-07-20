@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { Eye, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { Eye, FileText, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, hasPermission } from "@/lib/utils";
@@ -29,6 +30,7 @@ import {
 } from "@/server/wholesale-order";
 import { getProductCatalog } from "@/server/product";
 import { getWarehouse } from "@/server/warehouse";
+import { downloadWholesaleOrderPdf, exportWholesaleOrdersToExcel } from "@/orders/wholesaleOrderExport";
 
 type WholesaleOrderFormItem = {
   productId: string;
@@ -134,7 +136,9 @@ function resolveWholesaleUnitPrice(product: any, quantity: number, warehouseId: 
   return stockRegularPrice;
 }
 
-export default function WholesaleOrdersPage() {
+function WholesaleOrdersPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, loading } = useAuth();
   const [orders, setOrders] = React.useState<any[]>([]);
   const [customers, setCustomers] = React.useState<any[]>([]);
@@ -153,28 +157,53 @@ export default function WholesaleOrdersPage() {
   const [editingOrderId, setEditingOrderId] = React.useState<number | null>(null);
   const [selectedOrder, setSelectedOrder] = React.useState<any>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isExporting, setIsExporting] = React.useState(false);
   const [formState, setFormState] = React.useState<WholesaleOrderFormState>(createEmptyForm());
   const [items, setItems] = React.useState<WholesaleOrderFormItem[]>([createEmptyItem()]);
+  const pendingCustomerId = searchParams.get("customerId") || "";
 
   const canAccessWholesaleOrders = React.useMemo(() => {
     if (!user) return false;
     return hasAnyPermission(user, [
-      "viewWholesaleCustomers",
-      "addWholesaleCustomers",
-      "editWholesaleCustomers",
-      "deleteWholesaleCustomers",
+      "viewWholesaleOrders",
+      "addWholesaleOrders",
+      "editWholesaleOrders",
+      "deleteWholesaleOrders",
     ]);
   }, [user]);
 
-  const canAddOrder = Boolean(user && hasPermission(user, "addWholesaleCustomers"));
-  const canEditOrder = Boolean(user && hasPermission(user, "editWholesaleCustomers"));
-  const canDeleteOrder = Boolean(user && hasPermission(user, "deleteWholesaleCustomers"));
+  const canAddOrder = Boolean(user && hasPermission(user, "addWholesaleOrders"));
+  const canEditOrder = Boolean(user && hasPermission(user, "editWholesaleOrders"));
+  const canDeleteOrder = Boolean(user && hasPermission(user, "deleteWholesaleOrders"));
 
   const resetForm = React.useCallback(() => {
     setEditingOrderId(null);
     setFormState(createEmptyForm());
     setItems([createEmptyItem()]);
   }, []);
+
+  const openCreateModalForCustomer = React.useCallback((customerId: string) => {
+    const customer = customers.find((currentCustomer: any) => String(currentCustomer.id) === String(customerId));
+    resetForm();
+    setFormState({
+      wholesaleCustomerId: String(customer?.id || customerId || ""),
+      warehouseId: "",
+      receiverName: String(customer?.contactName || customer?.name || ""),
+      receiverPhone: Array.isArray(customer?.phone) && customer.phone.length > 0 ? customer.phone : [""],
+      country: String(customer?.country || ""),
+      city: String(customer?.city || ""),
+      municipality: String(customer?.area || ""),
+      fullAddress: String(customer?.address || ""),
+      paymentMethod: "عند الاستلام",
+      status: "طلب جديد",
+      overallDiscount: 0,
+      deliveryNotes: "",
+      additionalNotes: String(customer?.notes || ""),
+      googleMapsLink: String(customer?.googleMapsLink || ""),
+      manualCreatedAt: "",
+    });
+    setIsFormOpen(true);
+  }, [customers, resetForm]);
 
   const loadData = React.useCallback(async () => {
     setIsLoading(true);
@@ -219,6 +248,12 @@ export default function WholesaleOrdersPage() {
   React.useEffect(() => {
     setPage(1);
   }, [deferredSearch, warehouseLocation, monthFilterType, customMonth, statusFilter]);
+
+  React.useEffect(() => {
+    if (!pendingCustomerId || !canAddOrder || customers.length === 0) return;
+    openCreateModalForCustomer(pendingCustomerId);
+    router.replace("/dashboard/wholesale-orders");
+  }, [canAddOrder, customers, openCreateModalForCustomer, pendingCustomerId, router]);
 
   const updateItemPrice = React.useCallback((draftItems: WholesaleOrderFormItem[], nextWarehouseId?: string) => {
     const warehouseId = String(nextWarehouseId ?? formState.warehouseId ?? "");
@@ -355,7 +390,7 @@ export default function WholesaleOrdersPage() {
     }
   };
 
-  const handleDelete = async (orderId: number) => {
+  const handleDelete = React.useCallback(async (orderId: number) => {
     if (!window.confirm("هل أنت متأكد من حذف طلب الجملة هذا؟")) {
       return;
     }
@@ -373,7 +408,31 @@ export default function WholesaleOrdersPage() {
     } finally {
       toast.dismiss(loadingToast);
     }
-  };
+  }, [loadData]);
+
+  const handleExportExcel = React.useCallback(async () => {
+    setIsExporting(true);
+    try {
+      await exportWholesaleOrdersToExcel(filteredOrders);
+    } finally {
+      setIsExporting(false);
+    }
+  }, [filteredOrders]);
+
+  const handleExportPdf = React.useCallback(async (orderId: number) => {
+    const loadingToast = toast.loading("جاري تجهيز ملف PDF...");
+    try {
+      const response = await getWholesaleOrderById(orderId);
+      if (!response.success || !response.data) {
+        toast.error(response.error || "تعذر تحميل بيانات الطلب");
+        return;
+      }
+
+      await downloadWholesaleOrderPdf(response.data);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  }, []);
 
   const handleStatusChange = async (nextStatus: string, orderId: number) => {
     const response = await updateWholesaleOrderStatus(nextStatus, orderId);
@@ -542,6 +601,11 @@ export default function WholesaleOrdersPage() {
         icon: <Eye size={16} />,
         onClick: (item) => void openViewModal(Number(item.id)),
       },
+      {
+        label: "PDF",
+        icon: <FileText size={16} />,
+        onClick: (item) => void handleExportPdf(Number(item.id)),
+      },
     ];
 
     if (canEditOrder) {
@@ -562,7 +626,7 @@ export default function WholesaleOrdersPage() {
     }
 
     return nextActions;
-  }, [canDeleteOrder, canEditOrder]);
+  }, [canDeleteOrder, canEditOrder, handleDelete, handleExportPdf, openEditModal, openViewModal]);
 
   const columns = React.useMemo(() => ([
     {
@@ -667,6 +731,8 @@ export default function WholesaleOrdersPage() {
         customMonth={customMonth}
         onCustomMonthChange={setCustomMonth}
         warehouseOptions={warehouseOptions}
+        onExport={() => void handleExportExcel()}
+        isExporting={isExporting}
       />
 
       <DataTable
@@ -1097,5 +1163,19 @@ export default function WholesaleOrdersPage() {
         ) : null}
       </AppModal>
     </div>
+  );
+}
+
+export default function WholesaleOrdersPage() {
+  return (
+    <React.Suspense
+      fallback={(
+        <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-lg font-black text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+          جاري تحميل طلبات الجملة...
+        </div>
+      )}
+    >
+      <WholesaleOrdersPageContent />
+    </React.Suspense>
   );
 }

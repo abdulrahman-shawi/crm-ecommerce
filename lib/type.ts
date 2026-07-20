@@ -32,6 +32,11 @@ export interface Permission {
   editWholesaleCustomers: boolean;
   deleteWholesaleCustomers: boolean;
 
+  viewWholesaleOrders: boolean;
+  addWholesaleOrders: boolean;
+  editWholesaleOrders: boolean;
+  deleteWholesaleOrders: boolean;
+
   viewEmployees: boolean;
   addEmployees: boolean;
   editEmployees: boolean;
