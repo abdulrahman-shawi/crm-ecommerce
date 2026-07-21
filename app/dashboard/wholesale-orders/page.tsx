@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { Eye, FileText, Pencil, Save, Trash2, X } from "lucide-react";
+import { Eye, FileText, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, hasPermission } from "@/lib/utils";
