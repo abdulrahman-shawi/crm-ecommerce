@@ -527,6 +527,8 @@ export default function WholesaleCustomersPage() {
   const [isVisitModalOpen, setIsVisitModalOpen] = React.useState(false);
   const [isWholesaleOrderModalOpen, setIsWholesaleOrderModalOpen] = React.useState(false);
   const [selectedCustomerForOrder, setSelectedCustomerForOrder] = React.useState<WholesaleCustomer | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
+  const [detailCustomer, setDetailCustomer] = React.useState<WholesaleCustomer | null>(null);
   const [editingCustomerId, setEditingCustomerId] = React.useState<string | null>(null);
   const [customerForm, setCustomerForm] = React.useState<CustomerFormState>(createEmptyCustomerForm());
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
@@ -867,6 +869,16 @@ export default function WholesaleCustomersPage() {
     setSelectedCustomerForOrder(null);
   }
 
+  function openDetailModal(customer: WholesaleCustomer) {
+    setDetailCustomer(customer);
+    setIsDetailModalOpen(true);
+  }
+
+  function closeDetailModal() {
+    setIsDetailModalOpen(false);
+    setDetailCustomer(null);
+  }
+
   function handleVisitResultChange(value: string) {
     setVisitForm((current) => ({
       ...current,
@@ -1097,10 +1109,13 @@ export default function WholesaleCustomersPage() {
         return (
           <button
             type="button"
-            onClick={() => setSelectedCustomerId(customer.id)}
+            onClick={() => {
+              setSelectedCustomerId(customer.id);
+              openDetailModal(customer);
+            }}
             className={`inline-flex max-w-full items-center gap-2 rounded-xl px-2 py-1 text-right transition ${isSelected ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200" : "text-slate-900 dark:text-slate-100"}`}
           >
-            <span className="font-bold">{customer.name}</span>
+            <span className="truncate font-bold" title={customer.name}>{customer.name}</span>
             <span className="truncate text-xs text-slate-500 dark:text-slate-400">{getCategoryLabel(customer.category, customer.categoryOther)}</span>
           </button>
         );
@@ -1222,16 +1237,6 @@ export default function WholesaleCustomersPage() {
             <Button variant="secondary" size="md" onClick={() => selectedCustomer && openVisitModal(selectedCustomer)} leftIcon={<ClipboardList className="h-4 w-4" />} disabled={!selectedCustomer}>
               تسجيل زيارة
             </Button>
-            {selectedCustomer && canCreateWholesaleOrder ? (
-              <button
-                type="button"
-                onClick={() => openWholesaleOrderModal(selectedCustomer)}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-white/15 px-4 text-sm font-black text-white backdrop-blur transition hover:bg-white/25"
-              >
-                <FilePlus2 className="h-4 w-4" />
-                إنشاء طلب جملة
-              </button>
-            ) : null}
             <Button variant="primary" size="md" onClick={openCreateCustomerModal} leftIcon={<Plus className="h-4 w-4" />} className="bg-white text-blue-700 hover:bg-blue-50" disabled={!canAddWholesale}>
               إضافة عميل جديد
             </Button>
@@ -1339,7 +1344,7 @@ export default function WholesaleCustomersPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.3fr,0.9fr]">
+      <section className="grid gap-6">
         <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800">
             <div>
@@ -1352,6 +1357,7 @@ export default function WholesaleCustomersPage() {
             data={visibleCustomers}
             columns={tableColumns}
             actions={tableActions.length > 0 ? tableActions : undefined}
+            actindir={true}
             totalCount={visibleCustomers.length}
             pageSize={PAGE_SIZE}
             currentPage={page}
@@ -1359,78 +1365,79 @@ export default function WholesaleCustomersPage() {
             isLoading={isLoading || isPending}
           />
         </div>
-
-        <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-          {selectedCustomer ? (
-            <div className="space-y-5">
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{selectedCustomer.name}</h2>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{getCategoryLabel(selectedCustomer.category, selectedCustomer.categoryOther)}</p>
-                </div>
-                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                  {getVisitStatusLabel(selectedCustomer.visitStatus)}
-                </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <InfoCard icon={<Building2 className="h-4 w-4" />} label="نوع النشاط" value={getCategoryLabel(selectedCustomer.category, selectedCustomer.categoryOther)} />
-                <InfoCard icon={<UserRound className="h-4 w-4" />} label="المندوب" value={selectedCustomer.assignedUser?.username || "غير مسند"} />
-                <InfoCard icon={<Phone className="h-4 w-4" />} label="هاتف" value={selectedCustomer.phone.map(formatPhoneForDisplay).join(" - ") || "-"} />
-                <InfoCard icon={<MapPin className="h-4 w-4" />} label="المنطقة" value={[selectedCustomer.city, selectedCustomer.area].filter(Boolean).join(" - ") || "-"} />
-                <InfoCard icon={<CalendarClock className="h-4 w-4" />} label="المتابعة القادمة" value={formatDateLabel(selectedCustomer.nextFollowUpAt)} />
-              </div>
-
-              <div className="rounded-3xl bg-slate-50 p-4 dark:bg-slate-900">
-                <div className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">ملاحظات العميل</div>
-                <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{selectedCustomer.notes || "لا توجد ملاحظات مسجلة"}</p>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-black text-slate-900 dark:text-slate-100">سجل الزيارات</h3>
-                <Button variant="outline" size="sm" onClick={() => openVisitModal(selectedCustomer)} leftIcon={<Plus className="h-3.5 w-3.5" />} disabled={!canRegisterVisit}>
-                  إضافة زيارة
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                {selectedCustomer.visits.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                    لا توجد زيارات مسجلة لهذا العميل بعد.
-                  </div>
-                )}
-
-                {selectedCustomer.visits.map((visit) => (
-                  <div key={visit.id} className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <div className="font-bold text-slate-900 dark:text-slate-100">{getVisitResultLabel(visit.result)}</div>
-                        <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{formatDateLabel(visit.visitedAt)}</div>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{getVisitStatusLabel(visit.status)}</span>
-                        {visit.orderPlaced && <span className="rounded-full bg-emerald-100 px-3 py-1 font-bold text-emerald-700">تم الشراء</span>}
-                      </div>
-                    </div>
-                    <div className="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-300">
-                      <div>المندوب: {visit.user?.username || "غير محدد"}</div>
-                      <div>المتابعة التالية: {formatDateLabel(visit.nextFollowUpAt)}</div>
-                      <div>نوع المتابعة: {getFollowUpTypeLabel(visit.followUpType)}</div>
-                      <div>الملاحظات: {visit.notes || "-"}</div>
-                      <div>الإجراء القادم: {visit.followUpNotes || "-"}</div>
-                      {visit.rejectionReasonCode && <div>سبب عدم التعاون: {getRejectionReasonLabel(visit.rejectionReasonCode, visit.rejectionReasonOther)}</div>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="flex min-h-[300px] items-center justify-center text-center text-slate-500 dark:text-slate-400">
-              اختر عميل جملة من القائمة لعرض التفاصيل.
-            </div>
-          )}
-        </div>
       </section>
+
+      <AppModal
+        isOpen={isDetailModalOpen}
+        onClose={closeDetailModal}
+        title={detailCustomer ? detailCustomer.name : "تفاصيل العميل"}
+        size="xl"
+      >
+        {detailCustomer && (
+          <div className="space-y-5" dir="rtl">
+            <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4 dark:border-slate-800">
+              <div>
+                <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{detailCustomer.name}</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{getCategoryLabel(detailCustomer.category, detailCustomer.categoryOther)}</p>
+              </div>
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                {getVisitStatusLabel(detailCustomer.visitStatus)}
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoCard icon={<Building2 className="h-4 w-4" />} label="نوع النشاط" value={getCategoryLabel(detailCustomer.category, detailCustomer.categoryOther)} />
+              <InfoCard icon={<UserRound className="h-4 w-4" />} label="المندوب" value={detailCustomer.assignedUser?.username || "غير مسند"} />
+              <InfoCard icon={<Phone className="h-4 w-4" />} label="هاتف" value={detailCustomer.phone.map(formatPhoneForDisplay).join(" - ") || "-"} />
+              <InfoCard icon={<MapPin className="h-4 w-4" />} label="المنطقة" value={[detailCustomer.country, detailCustomer.city, detailCustomer.area].filter(Boolean).join(" - ") || "-"} />
+              <InfoCard icon={<CalendarClock className="h-4 w-4" />} label="المتابعة القادمة" value={formatDateLabel(detailCustomer.nextFollowUpAt)} />
+            </div>
+
+            <div className="rounded-3xl bg-slate-50 p-4 dark:bg-slate-900">
+              <div className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">ملاحظات العميل</div>
+              <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{detailCustomer.notes || "لا توجد ملاحظات مسجلة"}</p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-black text-slate-900 dark:text-slate-100">سجل الزيارات</h3>
+              <Button variant="outline" size="sm" onClick={() => { closeDetailModal(); openVisitModal(detailCustomer); }} leftIcon={<Plus className="h-3.5 w-3.5" />} disabled={!canRegisterVisit}>
+                إضافة زيارة
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {detailCustomer.visits.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                  لا توجد زيارات مسجلة لهذا العميل بعد.
+                </div>
+              )}
+
+              {detailCustomer.visits.map((visit) => (
+                <div key={visit.id} className="rounded-3xl border border-slate-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="font-bold text-slate-900 dark:text-slate-100">{getVisitResultLabel(visit.result)}</div>
+                      <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{formatDateLabel(visit.visitedAt)}</div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{getVisitStatusLabel(visit.status)}</span>
+                      {visit.orderPlaced && <span className="rounded-full bg-emerald-100 px-3 py-1 font-bold text-emerald-700">تم الشراء</span>}
+                    </div>
+                  </div>
+                  <div className="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-300">
+                    <div>المندوب: {visit.user?.username || "غير محدد"}</div>
+                    <div>المتابعة التالية: {formatDateLabel(visit.nextFollowUpAt)}</div>
+                    <div>نوع المتابعة: {getFollowUpTypeLabel(visit.followUpType)}</div>
+                    <div>الملاحظات: {visit.notes || "-"}</div>
+                    <div>الإجراء القادم: {visit.followUpNotes || "-"}</div>
+                    {visit.rejectionReasonCode && <div>سبب عدم التعاون: {getRejectionReasonLabel(visit.rejectionReasonCode, visit.rejectionReasonOther)}</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </AppModal>
 
       <AppModal
         isOpen={isCustomerModalOpen}
