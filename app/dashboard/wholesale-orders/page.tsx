@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { Eye, FileText, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { Eye, FileText, Pencil, Save, Trash2, X } from "lucide-react";
 import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
 import { hasAnyPermission, hasPermission } from "@/lib/utils";
@@ -188,7 +188,7 @@ function WholesaleOrdersPageContent() {
     setFormState({
       wholesaleCustomerId: String(customer?.id || customerId || ""),
       warehouseId: "",
-      receiverName: String(customer?.contactName || customer?.name || ""),
+      receiverName: String(customer?.contactName || ""),
       receiverPhone: Array.isArray(customer?.phone) && customer.phone.length > 0 ? customer.phone : [""],
       country: String(customer?.country || ""),
       city: String(customer?.city || ""),
@@ -322,11 +322,6 @@ function WholesaleOrdersPageContent() {
     () => Array.from(new Set(warehouses.map((warehouse) => String(warehouse?.location || "").trim()).filter(Boolean))),
     [warehouses]
   );
-
-  const openCreateModal = () => {
-    resetForm();
-    setIsFormOpen(true);
-  };
 
   const openViewModal = async (orderId: number) => {
     const loadingToast = toast.loading("جاري تحميل تفاصيل طلب الجملة...");
@@ -699,17 +694,6 @@ function WholesaleOrdersPageContent() {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">طلبات الجملة</h1>
           <p className="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">إدارة طلبات عملاء الجملة مع تسعير تلقائي حسب الكمية.</p>
         </div>
-
-        {canAddOrder && (
-          <button
-            type="button"
-            onClick={openCreateModal}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-blue-700"
-          >
-            <Plus size={18} />
-            إضافة طلب جملة
-          </button>
-        )}
       </div>
 
       <StatusCards

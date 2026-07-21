@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import PhoneInput from "react-phone-number-input";
 import toast from "react-hot-toast";
 import {
@@ -22,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { DataTable, type Column, type TableAction } from "@/components/shared/DataTable";
 import { useAuth } from "@/context/AuthContext";
 import { formatPhoneForDisplay, hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
+import WholesaleOrderCustomer from "@/orders/WholesaleOrderCustomer";
+
 import {
   createWholesaleCustomer,
   createWholesaleVisit,
@@ -524,6 +525,8 @@ export default function WholesaleCustomersPage() {
   const [selectedCustomerId, setSelectedCustomerId] = React.useState<string | null>(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = React.useState(false);
   const [isVisitModalOpen, setIsVisitModalOpen] = React.useState(false);
+  const [isWholesaleOrderModalOpen, setIsWholesaleOrderModalOpen] = React.useState(false);
+  const [selectedCustomerForOrder, setSelectedCustomerForOrder] = React.useState<WholesaleCustomer | null>(null);
   const [editingCustomerId, setEditingCustomerId] = React.useState<string | null>(null);
   const [customerForm, setCustomerForm] = React.useState<CustomerFormState>(createEmptyCustomerForm());
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
@@ -854,6 +857,16 @@ export default function WholesaleCustomersPage() {
     setIsVisitModalOpen(true);
   }
 
+  function openWholesaleOrderModal(customer: WholesaleCustomer) {
+    setSelectedCustomerForOrder(customer);
+    setIsWholesaleOrderModalOpen(true);
+  }
+
+  function closeWholesaleOrderModal() {
+    setIsWholesaleOrderModalOpen(false);
+    setSelectedCustomerForOrder(null);
+  }
+
   function handleVisitResultChange(value: string) {
     setVisitForm((current) => ({
       ...current,
@@ -1152,9 +1165,7 @@ export default function WholesaleCustomersPage() {
       actions.push({
         label: "طلب جملة",
         icon: <FilePlus2 className="h-4 w-4" />,
-        onClick: (customer) => {
-          window.location.href = `/dashboard/wholesale-orders?customerId=${customer.id}`;
-        },
+        onClick: (customer) => openWholesaleOrderModal(customer),
       });
     }
 
@@ -1212,13 +1223,14 @@ export default function WholesaleCustomersPage() {
               تسجيل زيارة
             </Button>
             {selectedCustomer && canCreateWholesaleOrder ? (
-              <Link
-                href={`/dashboard/wholesale-orders?customerId=${selectedCustomer.id}`}
+              <button
+                type="button"
+                onClick={() => openWholesaleOrderModal(selectedCustomer)}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-white/15 px-4 text-sm font-black text-white backdrop-blur transition hover:bg-white/25"
               >
                 <FilePlus2 className="h-4 w-4" />
                 إنشاء طلب جملة
-              </Link>
+              </button>
             ) : null}
             <Button variant="primary" size="md" onClick={openCreateCustomerModal} leftIcon={<Plus className="h-4 w-4" />} className="bg-white text-blue-700 hover:bg-blue-50" disabled={!canAddWholesale}>
               إضافة عميل جديد
@@ -1767,6 +1779,15 @@ export default function WholesaleCustomersPage() {
           )}
         </div>
       </AppModal>
+
+      {selectedCustomerForOrder && (
+        <WholesaleOrderCustomer
+          customer={selectedCustomerForOrder}
+          isOpen={isWholesaleOrderModalOpen}
+          onClose={closeWholesaleOrderModal}
+          onSuccess={loadData}
+        />
+      )}
 
       <style jsx>{`
         .field-input {
