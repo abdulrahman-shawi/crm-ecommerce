@@ -79,6 +79,9 @@ export async function getProduct() {
                 },
             },
             landingPage: true,
+            wholesalePricingTiers: {
+                orderBy: { minQuantity: 'asc' },
+            },
             affiliateLinks: {
                 include: {
                     user: {

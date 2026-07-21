@@ -694,6 +694,19 @@ function WholesaleOrdersPageContent() {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">طلبات الجملة</h1>
           <p className="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">إدارة طلبات عملاء الجملة مع تسعير تلقائي حسب الكمية.</p>
         </div>
+        {canAddOrder && (
+          <button
+            type="button"
+            onClick={() => {
+              resetForm();
+              setIsFormOpen(true);
+            }}
+            className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 dark:shadow-none"
+          >
+            <Plus size={18} />
+            إضافة طلب جملة
+          </button>
+        )}
       </div>
 
       <StatusCards

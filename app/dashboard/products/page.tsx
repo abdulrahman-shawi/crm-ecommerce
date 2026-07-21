@@ -56,6 +56,16 @@ const productschama = z.object({
             stockDiscount: z.coerce.number().min(0, "يرجى إدخال خصم صحيح").optional().default(0),
         })
     ).min(1, "يجب إضافة مستودع واحد على الأقل"),
+    wholesalePricingTiers: z.array(
+        z.object({
+            minQuantity: z.coerce.number().int().min(1, "الحد الأدنى للكمية يجب أن يكون 1 أو أكثر"),
+            maxQuantity: z.preprocess(
+                (value) => value === '' || value == null ? null : Number(value),
+                z.number().int().min(1, "الحد الأقصى يجب أن يكون 1 أو أكثر").nullable().optional()
+            ),
+            price: z.coerce.number().min(0, "سعر الشريحة يجب أن يكون صفر أو أكثر"),
+        })
+    ).optional().default([]),
     isActive: z.boolean().optional().default(true),
     files: z.array(z.any()).optional().default([]), // استخدام any هنا لتسهيل التعامل مع File objects
 });
@@ -280,6 +290,67 @@ const WarehouseStocksFields = ({ control, register, errors, warehouses }: any) =
     );
 };
 
+const WholesalePricingTiersFields = ({ control, register, errors }: any) => {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'wholesalePricingTiers'
+    });
+
+    return (
+        <div className="md:col-span-2 border rounded-lg p-3 border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-3">
+                <div>
+                    <h3 className="font-medium text-slate-800 dark:text-slate-200">شرائح أسعار الجملة</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">حدد السعر لكل شريحة كمية (مثلاً 1-5 بسعر 10، 6-10 بسعر 9).</p>
+                </div>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => append({ minQuantity: 1, maxQuantity: '', price: 0 })}
+                >
+                    إضافة شريحة
+                </Button>
+            </div>
+
+            <div className="grid gap-3">
+                {fields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-md p-2">
+                        <FormInput
+                            type="number"
+                            label="من كمية"
+                            {...register(`wholesalePricingTiers.${index}.minQuantity`)}
+                            error={errors?.wholesalePricingTiers?.[index]?.minQuantity?.message as string}
+                        />
+                        <FormInput
+                            type="number"
+                            label="إلى كمية (اختياري)"
+                            {...register(`wholesalePricingTiers.${index}.maxQuantity`)}
+                            error={errors?.wholesalePricingTiers?.[index]?.maxQuantity?.message as string}
+                        />
+                        <FormInput
+                            type="number"
+                            step="0.01"
+                            label="سعر الجملة"
+                            {...register(`wholesalePricingTiers.${index}.price`)}
+                            error={errors?.wholesalePricingTiers?.[index]?.price?.message as string}
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => remove(index)}
+                        >
+                            حذف
+                        </Button>
+                    </div>
+                ))}
+                {fields.length === 0 && (
+                    <p className="text-sm text-slate-500 dark:text-slate-400">لا توجد شرائح أسعار جملة مضافة.</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
 
 const ProductLayout = () => {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -375,6 +446,7 @@ const ProductLayout = () => {
                 formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
                 formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
+                formData.append('wholesalePricingTiers', JSON.stringify(data.wholesalePricingTiers || []));
 
                 const fileManifest = Array.isArray(data.files)
                     ? data.files.map((fileItem: any) => ({
@@ -420,6 +492,7 @@ const ProductLayout = () => {
                 formData.append('affiliatePrice', String(data.affiliatePrice ?? 0));
                 formData.append('affiliateCommissionRate', data.affiliateCommissionRate == null ? '' : String(data.affiliateCommissionRate));
                 formData.append('warehouseStocks', JSON.stringify(data.warehouseStocks || []));
+                formData.append('wholesalePricingTiers', JSON.stringify(data.wholesalePricingTiers || []));
 
                 // معالجة الملفات - استخراج الملف الحقيقي rawFile
                 if (data.files && data.files.length > 0) {
@@ -475,6 +548,13 @@ const ProductLayout = () => {
                     stockDiscount: stock.discount ?? 0,
                 }))
                 : [{ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }],
+            wholesalePricingTiers: Array.isArray(data.wholesalePricingTiers)
+                ? data.wholesalePricingTiers.map((tier: any) => ({
+                    minQuantity: Number(tier?.minQuantity ?? 1),
+                    maxQuantity: tier?.maxQuantity == null ? '' : Number(tier.maxQuantity),
+                    price: Number(tier?.price ?? 0),
+                }))
+                : [],
             isActive: data.isActive ?? true,
             files: Array.isArray(data.images)
                 ? data.images.map((image: any, index: number) => ({
@@ -1081,7 +1161,7 @@ const ProductLayout = () => {
                     <DynamicForm
                         schema={productschama}
                         onSubmit={onSubmit}
-                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }] }}
+                        defaultValues={forData || { warehouseStocks: [{ warehouseId: '', quantity: 0, stockPrice: 0, wholesalePrice: 0, stockDiscount: 0 }], wholesalePricingTiers: [] }}
                         submitLabel={editId ? "تعديل المنتج" : "حفظ المنتج"}
                     >
                         {({ register, control, formState: { errors } }) => (
@@ -1122,6 +1202,11 @@ const ProductLayout = () => {
                                     register={register}
                                     errors={errors}
                                     warehouses={warehouses}
+                                />
+                                <WholesalePricingTiersFields
+                                    control={control}
+                                    register={register}
+                                    errors={errors}
                                 />
                                 <div className="col-span-2">
                                     <Controller

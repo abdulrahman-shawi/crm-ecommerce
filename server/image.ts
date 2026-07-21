@@ -62,6 +62,44 @@ async function uploadSingleFile(file: File) {
     };
 }
 
+function parseWholesalePricingTiers(formData: FormData) {
+    const raw = formData.get('wholesalePricingTiers') as string | null;
+    if (!raw) {
+        return { tiers: [], error: null };
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+            return { tiers: [], error: "تنسيق شرائح أسعار الجملة غير صالح" };
+        }
+
+        const tiers = parsed
+            .map((item: any) => {
+                const minQuantity = Number(item?.minQuantity ?? 0);
+                const maxQuantityRaw = item?.maxQuantity;
+                const maxQuantity = maxQuantityRaw === '' || maxQuantityRaw == null ? null : Number(maxQuantityRaw);
+                const price = Number(item?.price ?? 0);
+                return { minQuantity, maxQuantity, price };
+            })
+            .filter((tier: any) => Number.isInteger(tier.minQuantity) && tier.minQuantity >= 1 && tier.price >= 0);
+
+        const hasInvalidMax = tiers.some((tier: any) => tier.maxQuantity != null && (!Number.isInteger(tier.maxQuantity) || tier.maxQuantity < tier.minQuantity));
+        if (hasInvalidMax) {
+            return { tiers: [], error: "الحد الأقصى للكمية يجب أن يكون أكبر من أو يساوي الحد الأدنى" };
+        }
+
+        const minQuantities = tiers.map((tier: any) => tier.minQuantity);
+        if (new Set(minQuantities).size !== minQuantities.length) {
+            return { tiers: [], error: "لا يمكن تكرار الحد الأدنى للكمية في نفس المنتج" };
+        }
+
+        return { tiers, error: null };
+    } catch {
+        return { tiers: [], error: "تنسيق شرائح أسعار الجملة غير صالح" };
+    }
+}
+
 export async function uploadUserAvatar(file: File) {
     const fileName = `users/${Date.now()}-${sanitizeFileName(file.name)}`;
     
@@ -110,6 +148,11 @@ export async function saveProductWithFiles(formData: FormData) {
             } catch {
                 return { success: false, error: "تنسيق بيانات المخزون غير صالح" };
             }
+        }
+
+        const { tiers: wholesalePricingTiers, error: tiersError } = parseWholesalePricingTiers(formData);
+        if (tiersError) {
+            return { success: false, error: tiersError };
         }
 
         if (!warehouseStocks.length) {
@@ -203,6 +246,13 @@ export async function saveProductWithFiles(formData: FormData) {
                         discount: item.stockDiscount,
                     }))
                 },
+                wholesalePricingTiers: {
+                    create: wholesalePricingTiers.map((tier) => ({
+                        minQuantity: tier.minQuantity,
+                        maxQuantity: tier.maxQuantity,
+                        price: tier.price,
+                    })),
+                },
                 images: {
                     create: fileDataArray.map(file => ({
                         url: file.url,
@@ -259,6 +309,11 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
             } catch {
                 return { success: false, error: "تنسيق بيانات المخزون غير صالح" };
             }
+        }
+
+        const { tiers: wholesalePricingTiers, error: tiersError } = parseWholesalePricingTiers(formData);
+        if (tiersError) {
+            return { success: false, error: tiersError };
         }
 
         if (!warehouseStocks.length) {
@@ -414,6 +469,14 @@ export async function updateProductWithFiles(productId: number, formData: FormDa
                         price: item.stockPrice,
                         wholesalePrice: item.wholesalePrice,
                         discount: item.stockDiscount,
+                    })),
+                },
+                wholesalePricingTiers: {
+                    deleteMany: {},
+                    create: wholesalePricingTiers.map((tier) => ({
+                        minQuantity: tier.minQuantity,
+                        maxQuantity: tier.maxQuantity,
+                        price: tier.price,
                     })),
                 },
                 images: {
