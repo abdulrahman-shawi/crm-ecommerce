@@ -450,6 +450,3 @@ export async function getMarketingAnalytics() {
 export async function getMarketingCampaignsByType(type: CampaignType) {
   return getCampaigns();
 }
-
-export { CAMPAIGN_TYPES, CAMPAIGN_STATUSES, CAMPAIGN_AUDIENCES, METRIC_KEYS };
-export type { CampaignType, CampaignStatus, CampaignAudience, MetricKey };
