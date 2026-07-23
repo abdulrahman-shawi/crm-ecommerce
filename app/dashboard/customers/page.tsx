@@ -8,6 +8,7 @@ import { FormInput } from "@/components/ui/form-input";
 import PhoneInput from 'react-phone-number-input'
 import { AppModal } from "@/components/ui/app-modal";
 import { AssignUsers, createCustomerAction, deleteCustomer, getCustomerDetails, getCustomerList, updateCustomer, UpdateStusa } from "@/server/customer";
+import { getCampaigns } from "@/server/marketing";
 import { useAuth } from "@/context/AuthContext";
 import { formatPhoneForDisplay, hasPermission, isAdmin } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -89,6 +90,11 @@ const CustomrLayout: React.FC = () => {
   const [search, setSearch] = React.useState("")
   const [isOpenordercustomer, setisOpenordercustomer] = React.useState(false)
   const [OpenAssignModal, setOpenAssignModal] = React.useState(false)
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = React.useState(false);
+  const [whatsAppCustomer, setWhatsAppCustomer] = React.useState<any>(null);
+  const [whatsAppCampaigns, setWhatsAppCampaigns] = React.useState<any[]>([]);
+  const [selectedWhatsAppCampaignId, setSelectedWhatsAppCampaignId] = React.useState<number | null>(null);
+  const [isLoadingWhatsAppCampaigns, setIsLoadingWhatsAppCampaigns] = React.useState(false);
   const [isBulkAssignOpen, setIsBulkAssignOpen] = React.useState(false)
   const [isCustomerDetailsLoading, setIsCustomerDetailsLoading] = React.useState(false)
   const [viewMode, setViewMode] = React.useState<"cards" | "table">("table");
