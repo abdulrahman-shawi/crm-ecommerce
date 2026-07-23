@@ -11,7 +11,6 @@ import {
   Warehouse,
   Building2,
   Truck,
-  Wallet,
   MessageCircle,
   ImageIcon,
   BadgePercent,
@@ -170,9 +169,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         { icon: FileText, label: "الطلبات", href: "/dashboard/orders" },
         (user && hasAnyPermission(user, ["viewWholesaleOrders", "addWholesaleOrders", "editWholesaleOrders", "deleteWholesaleOrders"])) &&
         { icon: FileText, label: "طلبات الجملة", href: "/dashboard/wholesale-orders" },
-        // 
-        (user && isAdmin(user)) &&
-        { icon: Wallet, label: "التحصيلات", href: "/dashboard/collections" },
         (user && hasPermission(user, "viewWarranty")) &&
         { icon: ShieldCheck, label: "الكفالة", href: "/dashboard/warranty" },
         (user && isAdmin(user)) &&
