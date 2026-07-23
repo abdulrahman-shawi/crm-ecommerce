@@ -73,7 +73,8 @@ export default function MarketingAnalyticsPage() {
         if (campaignsResponse.success) {
           setCampaigns(Array.isArray(campaignsResponse.data) ? campaignsResponse.data : []);
         }
-      } catch {
+      } catch (error) {
+        console.error("Load marketing analytics error:", error);
         toast.error("حدث خطأ أثناء تحميل التحليلات");
       } finally {
         setIsLoading(false);
@@ -150,48 +151,52 @@ export default function MarketingAnalyticsPage() {
             <div className="rounded-[2rem] border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
               <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">توزيع الحملات حسب القناة</h2>
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={typeChartData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      label
-                    >
-                      {typeChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+                <ClientOnlyChart>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={typeChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        label
+                      >
+                        {typeChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ClientOnlyChart>
               </div>
             </div>
 
             <div className="rounded-[2rem] border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
               <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">توزيع الحملات حسب الحالة</h2>
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={statusChartData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      label
-                    >
-                      {statusChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+                <ClientOnlyChart>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={statusChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        label
+                      >
+                        {statusChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ClientOnlyChart>
               </div>
             </div>
           </div>
@@ -199,15 +204,17 @@ export default function MarketingAnalyticsPage() {
           <div className="rounded-[2rem] border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
             <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">قمع التحويلات</h2>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={funnelData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <ClientOnlyChart>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={funnelData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ClientOnlyChart>
             </div>
           </div>
 
@@ -278,4 +285,17 @@ function translateStatus(status: string) {
     CANCELLED: "ملغاة",
   };
   return map[status] || status;
+}
+
+function ClientOnlyChart({ children, heightClass }: { children: React.ReactNode; heightClass?: string }) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  if (!mounted) {
+    return (
+      <div className={`${heightClass || "h-full"} flex items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-900`}>
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" />
+      </div>
+    );
+  }
+  return <>{children}</>;
 }

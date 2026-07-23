@@ -136,7 +136,8 @@ function CampaignsPageContent() {
       } else {
         setCampaigns(Array.isArray(response.data) ? response.data : []);
       }
-    } catch {
+    } catch (error) {
+      console.error("Load campaigns error:", error);
       toast.error("حدث خطأ أثناء تحميل الحملات");
     } finally {
       setIsLoading(false);
