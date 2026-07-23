@@ -34,11 +34,11 @@ export function formatSiteCurrency(
   settings?: SiteCurrencySettings | null
 ) {
   const value = Number(amountInUsd || 0);
-  if (!settings || settings.code === "USD" || settings.exchangeRate <= 0) {
+  if (!settings || settings.code === "USD") {
     return `${value.toLocaleString()} $`;
   }
-  const converted = value * settings.exchangeRate;
   const symbol = getCurrencySymbol(settings.code);
+  const converted = settings.exchangeRate > 0 ? value * settings.exchangeRate : value;
   return `${converted.toLocaleString()} ${symbol ? symbol + " " : ""}${settings.code}`;
 }
 

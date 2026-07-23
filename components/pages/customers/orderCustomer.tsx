@@ -2,7 +2,7 @@ import { AppModal } from "@/components/ui/app-modal";
 import { useAuth } from "@/context/AuthContext";
 import { getCities } from "@/server/city";
 import { getCountries } from "@/server/country";
-import { getGeneralSettings } from "@/server/general-settings";
+import { formatSiteCurrency, getCurrencySymbol, useSiteCurrency } from "@/lib/currency";
 import { createOrder } from "@/server/order";
 import { getshipping } from "@/server/shipping";
 import { getWarehouse } from "@/server/warehouse";
@@ -19,26 +19,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
   ]);
   const [paymentMethod, setPaymentMethod] = React.useState("عند الاستلام");
-  const [turkeyExchangeRate, setTurkeyExchangeRate] = React.useState(0);
-
-  React.useEffect(() => {
-    let isMounted = true;
-
-    const loadExchangeRate = async () => {
-      try {
-        const res = await getGeneralSettings();
-        if (isMounted) {
-          setTurkeyExchangeRate(Number(res?.data?.usdToTryRate || 0));
-        }
-      } catch (error) {
-      }
-    };
-
-    loadExchangeRate();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { settings } = useSiteCurrency();
 
   React.useEffect(() => {
     let isMounted = true;
@@ -94,11 +75,10 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     ? cityRows.filter((row) => Number(row.countryId) === Number(selectedCountryRow.id))
     : [];
 
-  const isTurkeyStock = stockCountry === "تركيا";
-  const currencySymbol = isTurkeyStock ? "₺" : "$";
+  const currencySymbol = settings?.code === "USD" ? "$" : getCurrencySymbol(settings?.code) || settings?.code || "$";
   const convertUsdToOrderCurrency = (value: number) => {
     const normalized = Number(value || 0);
-    return isTurkeyStock && turkeyExchangeRate > 0 ? normalized * turkeyExchangeRate : normalized;
+    return settings && settings.exchangeRate > 0 ? normalized * settings.exchangeRate : normalized;
   };
 
   const getProductAvailableStockByWarehouse = (product: any, selectedWarehouseValue: string) => {
@@ -299,7 +279,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
       receiverPhone,
       warehouseId: Number(stockWarehouseId),
       stockCountry,
-      usdToTryRateAtOrder: stockCountry === "تركيا" ? Number(turkeyExchangeRate) : 0,
+      usdToTryRateAtOrder: settings && settings.code !== "USD" && settings.exchangeRate > 0 ? Number(settings.exchangeRate) : 0,
       country,
       city,
       municipality,
@@ -363,7 +343,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
             </div>
             <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 rounded-3xl">
               <p className="text-[10px] font-bold text-blue-600 uppercase mb-1">الإجمالي النهائي</p>
-              <h3 className="text-3xl font-black font-sans text-blue-600 italic"> {currencySymbol}{grandTotal.toLocaleString()}</h3>
+              <h3 className="text-3xl font-black font-sans text-blue-600 italic"> {formatSiteCurrency(grandTotal, settings)}</h3>
             </div>
           </div>
           <div className="flex gap-4">
@@ -469,7 +449,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                                 {product.modelNumber}
                               </span>
                             </div>
-                            <div className="text-blue-500 text-xs mt-1"> {currencySymbol} {getEffectivePrice(pricing.price, pricing.discount)}</div>
+                            <div className="text-blue-500 text-xs mt-1"> {formatSiteCurrency(getEffectivePrice(pricing.price, pricing.discount), settings)}</div>
                           </div>
                         )})}
                       </motion.div>
@@ -482,7 +462,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                 </div>
                 <div className="md:col-span-1 text-center">
                   <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                  <div className="p-3 text-sm font-bold"> {currencySymbol}{getEffectivePrice(item.price, item.discount)}</div>
+                  <div className="p-3 text-sm font-bold"> {formatSiteCurrency(getEffectivePrice(item.price, item.discount), settings)}</div>
                 </div>
                 <div className="md:col-span-1">
                   <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
@@ -492,7 +472,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
                   <label className="text-[10px] font-bold text-slate-400 mb-1">ملاحظات المنتج</label>
                   <input type="text" value={item.note} onChange={(e) => updateItem(index, "note", e.target.value, products)} className="w-full bg-white dark:bg-slate-900 p-3 rounded-xl outline-none text-xs shadow-sm" placeholder="إضافة ملاحظة..." />
                 </div>
-                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> {currencySymbol}{item.total}</div>
+                <div className="md:col-span-1 text-center font-black text-blue-600 italic"> {formatSiteCurrency(item.total, settings)}</div>
                 <div className="md:col-span-1 flex justify-center">
                   <button
                     onClick={() => {
