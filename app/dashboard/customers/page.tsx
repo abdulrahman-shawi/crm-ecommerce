@@ -143,7 +143,7 @@ const CustomrLayout: React.FC = () => {
           toast.success("تم الحذف بنجاح")
           getData()
         } else {
-          toast.error("حدث خطأ")
+          toast.error(res.error || "حدث خطأ")
         }
       } catch (error) {
         toast.error("حدث خطأ")
@@ -522,7 +522,7 @@ const CustomrLayout: React.FC = () => {
           setIsOpen(false);
           getData();
         } else {
-          toast.error("خطأ");
+          toast.error(res.error || "خطأ");
         }
       } catch (err) {
         toast.error("حدث خطأ غير متوقع");

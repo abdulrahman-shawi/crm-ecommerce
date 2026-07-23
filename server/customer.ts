@@ -311,6 +311,14 @@ export async function createCustomerAction(data: any, id: string) {
     else {
       // 2. إذا لم يكن موجوداً، نقوم بالإضافة
       const createdAtFromImport = parseOptionalDate(data?.createdAt || data?.manualCreatedAt);
+
+      const existingName = await prisma.customer.findUnique({
+        where: { name: data.name },
+      });
+      if (existingName) {
+        return { success: false, error: "عذراً، اسم العميل مسجل مسبقاً" };
+      }
+
     const newCustomer = await prisma.customer.create({
       data: {
         name: data.name,
@@ -332,7 +340,7 @@ export async function createCustomerAction(data: any, id: string) {
       },
     });
 
-    revalidatePath("/customers");
+    revalidatePath("/dashboard/customers");
     return { success: true, data: newCustomer };
 
     // 2. إذا لم يكن موجوداً، نقوم بالإضافة
@@ -346,31 +354,43 @@ export async function createCustomerAction(data: any, id: string) {
   }
 }
 
-export async function updateCustomer(data:any , customer:any) {
+export async function updateCustomer(data: any, customer: string) {
   try {
+    if (data.name) {
+      const existingName = await prisma.customer.findFirst({
+        where: {
+          name: data.name,
+          id: { not: customer },
+        },
+      });
+      if (existingName) {
+        return { success: false, error: "عذراً، اسم العميل مسجل مسبقاً" };
+      }
+    }
+
     const res = await prisma.customer.update({
-    where:{
-      id:customer
-    },
-    data:{
-      name: data.name,
-      email: data.email,
-      phone: data.phone, // مصفوفة مثل ["05xxxx"]
-      countryCode: data.countryCode,
+      where: {
+        id: customer,
+      },
+      data: {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        countryCode: data.countryCode,
         country: data.country,
         city: data.city,
         age: data.age,
         gender: data.gender,
         source: data.source,
         rating: data.rating,
-    }
-  })
+      },
+    });
 
-  return {success:true , data:res}
-  } catch (error) {
-    return {success:false , error:error}
+    return { success: true, data: res };
+  } catch (error: any) {
+    console.error("Update customer error:", error);
+    return { success: false, error: error?.message || "حدث خطأ أثناء تحديث البيانات" };
   }
-
 }
 
 export async function UpdateStusa(customer:any , status:any) {
@@ -424,14 +444,14 @@ export async function deleteCustomer(data: any) {
     });
 
     if (!customerWithOrders) {
-      return { success: false, message: "العميل غير موجود" };
+      return { success: false, error: "العميل غير موجود" };
     }
 
     // 2. إذا كان عدد الطلبات أكبر من صفر، امنع الحذف
     if (customerWithOrders._count.orders > 0) {
       return { 
         success: false, 
-        message: "لا يمكن حذف العميل لوجود طلبات مرتبطة به. يجب حذف الطلبات أولاً." 
+        error: "لا يمكن حذف العميل لوجود طلبات مرتبطة به. يجب حذف الطلبات أولاً." 
       };
     }
 
