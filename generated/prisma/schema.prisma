@@ -571,6 +571,7 @@ model ProductImage {
 model Customer {
   id          String     @id @default(uuid())
   name        String     @unique
+  email       String?
   phone       String[]
   countryCode String?
   phonestatus String?
@@ -597,6 +598,7 @@ model WholesaleCustomer {
   contactRole      String?
   contactRoleOther String?
   phone            String[]
+  email            String?
   whatsappPhone    String?
   country          String?
   city             String?

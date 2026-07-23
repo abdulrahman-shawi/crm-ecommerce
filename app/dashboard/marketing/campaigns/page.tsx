@@ -270,7 +270,12 @@ function CampaignsPageContent() {
         toast.error(response.error || "فشل في إطلاق الحملة");
         return;
       }
-      toast.success("تم إطلاق الحملة بنجاح");
+      if (response.warning) {
+        toast.success("تم إطلاق الحملة بنجاح", { duration: 4000 });
+        toast.error(response.warning, { duration: 6000 });
+      } else {
+        toast.success("تم إطلاق الحملة وإرسال البريد بنجاح");
+      }
       await loadData();
     } finally {
       toast.dismiss(loading);

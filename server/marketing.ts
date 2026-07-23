@@ -3,6 +3,7 @@
 import { decrypt } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
+import { getTrackingBaseUrl, isValidEmail, sendCampaignEmail } from "@/lib/email";
 import { cookies } from "next/headers";
 
 const CAMPAIGN_TYPES = ["EMAIL", "SOCIAL", "SMS", "CONTENT"] as const;
@@ -60,7 +61,7 @@ function parseOptionalDate(value: any) {
 }
 
 function normalizeMetrics(value: any) {
-  const base = { sent: 0, opened: 0, clicked: 0, converted: 0 };
+  const base = { sent: 0, opened: 0, clicked: 0, converted: 0, _openedRecipients: [] as string[], _clickedRecipients: [] as string[] };
   if (!value || typeof value !== "object") return base;
   const metrics = value as Record<string, any>;
   return {
@@ -68,6 +69,8 @@ function normalizeMetrics(value: any) {
     opened: Math.max(0, Number(metrics.opened || 0)),
     clicked: Math.max(0, Number(metrics.clicked || 0)),
     converted: Math.max(0, Number(metrics.converted || 0)),
+    _openedRecipients: Array.isArray(metrics._openedRecipients) ? metrics._openedRecipients : [],
+    _clickedRecipients: Array.isArray(metrics._clickedRecipients) ? metrics._clickedRecipients : [],
   };
 }
 
@@ -96,6 +99,60 @@ function parseCampaignStatus(value: any): CampaignStatus | null {
 function parseCampaignAudience(value: any): CampaignAudience | null {
   const normalized = String(value || "").toUpperCase() as CampaignAudience;
   return CAMPAIGN_AUDIENCES.includes(normalized) ? normalized : null;
+}
+
+async function resolveCustomRecipients(ids: string[]) {
+  const recipients: { id: string; email: string; name: string | null; type: "customer" | "wholesale" }[] = [];
+  const seen = new Set<string>();
+
+  for (const rawId of ids) {
+    const id = rawId.trim();
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+
+    const customer = await prisma.customer.findUnique({
+      where: { id },
+      select: { id: true, email: true, name: true },
+    });
+    if (customer?.email && isValidEmail(customer.email)) {
+      recipients.push({ id: customer.id, email: customer.email, name: customer.name, type: "customer" });
+      continue;
+    }
+
+    const wholesale = await prisma.wholesaleCustomer.findUnique({
+      where: { id },
+      select: { id: true, email: true, name: true },
+    });
+    if (wholesale?.email && isValidEmail(wholesale.email)) {
+      recipients.push({ id: wholesale.id, email: wholesale.email, name: wholesale.name, type: "wholesale" });
+    }
+  }
+
+  return recipients;
+}
+
+async function getCampaignRecipients(audience: CampaignAudience, targetIds: any) {
+  if (audience === "ALL_CUSTOMERS") {
+    const customers = await prisma.customer.findMany({
+      where: { email: { not: null } },
+      select: { id: true, email: true, name: true },
+    });
+    return customers
+      .filter((c): c is typeof c & { email: string } => Boolean(c.email) && isValidEmail(c.email))
+      .map((c) => ({ id: c.id, email: c.email, name: c.name, type: "customer" as const }));
+  }
+
+  if (audience === "ALL_WHOLESALE") {
+    const wholesale = await prisma.wholesaleCustomer.findMany({
+      where: { email: { not: null } },
+      select: { id: true, email: true, name: true },
+    });
+    return wholesale
+      .filter((c): c is typeof c & { email: string } => Boolean(c.email) && isValidEmail(c.email))
+      .map((c) => ({ id: c.id, email: c.email, name: c.name, type: "wholesale" as const }));
+  }
+
+  return resolveCustomRecipients(parseTargetIds(targetIds));
 }
 
 const campaignSelect = {
@@ -313,7 +370,7 @@ export async function launchCampaign(id: string | number) {
 
     const campaign = await prisma.campaign.findUnique({
       where: { id: campaignId },
-      select: { id: true, status: true, scheduledAt: true },
+      select: { id: true, title: true, subject: true, content: true, type: true, status: true, scheduledAt: true, audience: true, targetIds: true },
     });
 
     if (!campaign) {
@@ -324,14 +381,61 @@ export async function launchCampaign(id: string | number) {
     const scheduledAt = campaign.scheduledAt ? new Date(campaign.scheduledAt) : null;
     const nextStatus = scheduledAt && scheduledAt > now ? "SCHEDULED" : "RUNNING";
 
+    let metrics = normalizeMetrics(null);
+    let sentCount = 0;
+    let sendError: string | null = null;
+
+    if (campaign.type === "EMAIL" && nextStatus === "RUNNING") {
+      const baseUrl = getTrackingBaseUrl();
+      if (!baseUrl) {
+        return { success: false, error: "NEXT_PUBLIC_APP_URL غير مضبوط في متغيرات البيئة" };
+      }
+      if (!process.env.RESEND_API_KEY) {
+        return { success: false, error: "RESEND_API_KEY غير مضبوط في متغيرات البيئة" };
+      }
+
+      const recipients = await getCampaignRecipients(campaign.audience as CampaignAudience, campaign.targetIds);
+
+      if (recipients.length === 0) {
+        sendError = "لا يوجد مستلمون بريد إلكتروني صالحون لهذه الحملة";
+      } else {
+        const results = await Promise.allSettled(
+          recipients.map((recipient) =>
+            sendCampaignEmail(
+              { id: campaign.id, title: campaign.title, subject: campaign.subject || campaign.title, content: campaign.content },
+              recipient,
+              baseUrl
+            )
+          )
+        );
+
+        sentCount = results.filter((r) => r.status === "fulfilled").length;
+        const failures = results.filter((r) => r.status === "rejected");
+        if (failures.length > 0) {
+          console.error("Campaign email failures:", failures);
+          sendError = `فشل إرسال ${failures.length} رسائل من ${recipients.length}`;
+        }
+      }
+
+      metrics.sent = sentCount;
+      metrics.opened = 0;
+      metrics.clicked = 0;
+      metrics.converted = 0;
+    }
+
     const updated = await prisma.campaign.update({
       where: { id: campaignId },
       data: {
         status: nextStatus,
         sentAt: nextStatus === "RUNNING" ? now : null,
+        metrics,
       },
       select: campaignSelect,
     });
+
+    if (sendError) {
+      return { success: true, data: updated, warning: sendError };
+    }
 
     return { success: true, data: updated };
   } catch (error: any) {

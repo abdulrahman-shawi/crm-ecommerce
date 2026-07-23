@@ -70,6 +70,7 @@ const customerMessageSelect = {
 const customerListSelect = {
   id: true,
   name: true,
+  email: true,
   phone: true,
   countryCode: true,
   phonestatus: true,
@@ -107,6 +108,7 @@ const customerListSelect = {
 const customerDetailsSelect = {
   id: true,
   name: true,
+  email: true,
   phone: true,
   countryCode: true,
   phonestatus: true,
@@ -167,6 +169,7 @@ export async function getCustomer() {
     select:{
       id: true,
       name: true,
+      email: true,
       phone: true,
       countryCode: true,
       phonestatus: true,
@@ -297,7 +300,8 @@ export async function createCustomerAction(data: any, id: string) {
         await prisma.customer.update({
           where: { id: existingCustomer.id },
           data: {
-            name:existingCustomer.name, // نحتفظ بالاسم القديم
+            name: existingCustomer.name, // نحتفظ بالاسم القديم
+            email: data.email ?? existingCustomer.email,
             users: {
               connect: { id }
             }
@@ -311,6 +315,7 @@ export async function createCustomerAction(data: any, id: string) {
     const newCustomer = await prisma.customer.create({
       data: {
         name: data.name,
+        email: data.email,
         status: "فرصة جديدة",
         phonestatus: "معلق",
         phone: data.phone, // مصفوفة مثل ["05xxxx"]
@@ -350,8 +355,9 @@ export async function updateCustomer(data:any , customer:any) {
     },
     data:{
       name: data.name,
-        phone: data.phone, // مصفوفة مثل ["05xxxx"]
-        countryCode: data.countryCode,
+      email: data.email,
+      phone: data.phone, // مصفوفة مثل ["05xxxx"]
+      countryCode: data.countryCode,
         country: data.country,
         city: data.city,
         age: data.age,

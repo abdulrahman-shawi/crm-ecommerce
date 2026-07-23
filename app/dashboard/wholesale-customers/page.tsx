@@ -73,6 +73,7 @@ type WholesaleCustomer = {
   contactName: string | null;
   contactRole?: string | null;
   contactRoleOther?: string | null;
+  email: string | null;
   phone: string[];
   whatsappPhone: string | null;
   country: string | null;
@@ -106,6 +107,7 @@ type CustomerFormState = {
   contactName: string;
   contactRole: string;
   contactRoleOther: string;
+  email: string;
   phoneNumbers: string[];
   country: string;
   city: string;
@@ -255,6 +257,7 @@ function createEmptyCustomerForm(): CustomerFormState {
     contactName: "",
     contactRole: "OWNER",
     contactRoleOther: "",
+    email: "",
     phoneNumbers: [""],
     country: "سوريا",
     city: "",
@@ -821,6 +824,7 @@ export default function WholesaleCustomersPage() {
       contactName: customer.contactName || "",
       contactRole: customer.contactRole || "OWNER",
       contactRoleOther: customer.contactRoleOther || "",
+      email: customer.email || "",
       phoneNumbers: customer.phone.length > 0 ? customer.phone : [""],
       country: isWholesaleCountry(customer.country || "") ? customer.country || "سوريا" : "سوريا",
       city: customer.city || "",
@@ -983,6 +987,7 @@ export default function WholesaleCustomersPage() {
         contactName: formState.contactName,
         contactRole: formState.contactRole,
         contactRoleOther: formState.contactRole === "OTHER" ? formState.contactRoleOther : "",
+        email: formState.email,
         phone: normalizedPhones,
         country: resolvedCustomerCountry,
         city: formState.city,
@@ -1473,6 +1478,9 @@ export default function WholesaleCustomersPage() {
           )}
           <Field label="اسم جهة التواصل">
             <input value={customerForm.contactName} onChange={(event) => setCustomerForm((current) => ({ ...current, contactName: event.target.value }))} className="field-input" />
+          </Field>
+          <Field label="البريد الإلكتروني">
+            <input type="email" value={customerForm.email} onChange={(event) => setCustomerForm((current) => ({ ...current, email: event.target.value }))} className="field-input" placeholder="example@email.com" />
           </Field>
           <Field label="صفة جهة الاتصال">
             <select value={customerForm.contactRole} onChange={(event) => setCustomerForm((current) => ({ ...current, contactRole: event.target.value, contactRoleOther: event.target.value === "OTHER" ? current.contactRoleOther : "" }))} className="field-input">

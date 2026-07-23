@@ -14,6 +14,7 @@ type WholesaleCustomerPayload = {
   contactName?: string;
   contactRole?: string;
   contactRoleOther?: string;
+  email?: string;
   phone?: string[];
   country?: string;
   city?: string;
@@ -52,6 +53,7 @@ type WholesaleVisitPayload = {
 const wholesaleCustomerSelect = {
   id: true,
   name: true,
+  email: true,
   category: true,
   contactName: true,
   contactRole: true,
@@ -483,6 +485,7 @@ export async function createWholesaleCustomer(payload: WholesaleCustomerPayload)
         name,
         category: normalizeActivityCategory(payload.category),
         contactName: normalizeString(payload.contactName),
+        email: normalizeString(payload.email),
         phone: normalizePhoneList(payload.phone),
         country,
         city: normalizeString(payload.city),
@@ -557,6 +560,7 @@ export async function updateWholesaleCustomer(id: string, payload: WholesaleCust
         name,
         category: normalizeActivityCategory(payload.category),
         contactName: normalizeString(payload.contactName),
+        email: normalizeString(payload.email),
         phone: normalizePhoneList(payload.phone),
         country,
         city: normalizeString(payload.city),

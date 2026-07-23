@@ -25741,6 +25741,7 @@ export namespace Prisma {
   export type CustomerMinAggregateOutputType = {
     id: string | null
     name: string | null
+    email: string | null
     countryCode: string | null
     phonestatus: string | null
     country: string | null
@@ -25757,6 +25758,7 @@ export namespace Prisma {
   export type CustomerMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    email: string | null
     countryCode: string | null
     phonestatus: string | null
     country: string | null
@@ -25773,6 +25775,7 @@ export namespace Prisma {
   export type CustomerCountAggregateOutputType = {
     id: number
     name: number
+    email: number
     phone: number
     countryCode: number
     phonestatus: number
@@ -25800,6 +25803,7 @@ export namespace Prisma {
   export type CustomerMinAggregateInputType = {
     id?: true
     name?: true
+    email?: true
     countryCode?: true
     phonestatus?: true
     country?: true
@@ -25816,6 +25820,7 @@ export namespace Prisma {
   export type CustomerMaxAggregateInputType = {
     id?: true
     name?: true
+    email?: true
     countryCode?: true
     phonestatus?: true
     country?: true
@@ -25832,6 +25837,7 @@ export namespace Prisma {
   export type CustomerCountAggregateInputType = {
     id?: true
     name?: true
+    email?: true
     phone?: true
     countryCode?: true
     phonestatus?: true
@@ -25936,6 +25942,7 @@ export namespace Prisma {
   export type CustomerGroupByOutputType = {
     id: string
     name: string
+    email: string | null
     phone: string[]
     countryCode: string | null
     phonestatus: string | null
@@ -25972,6 +25979,7 @@ export namespace Prisma {
   export type CustomerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    email?: boolean
     phone?: boolean
     countryCode?: boolean
     phonestatus?: boolean
@@ -25994,6 +26002,7 @@ export namespace Prisma {
   export type CustomerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    email?: boolean
     phone?: boolean
     countryCode?: boolean
     phonestatus?: boolean
@@ -26011,6 +26020,7 @@ export namespace Prisma {
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    email?: boolean
     phone?: boolean
     countryCode?: boolean
     phonestatus?: boolean
@@ -26028,6 +26038,7 @@ export namespace Prisma {
   export type CustomerSelectScalar = {
     id?: boolean
     name?: boolean
+    email?: boolean
     phone?: boolean
     countryCode?: boolean
     phonestatus?: boolean
@@ -26042,7 +26053,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "countryCode" | "phonestatus" | "country" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "countryCode" | "phonestatus" | "country" | "gender" | "age" | "source" | "city" | "rating" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     users?: boolean | Customer$usersArgs<ExtArgs>
@@ -26064,6 +26075,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      email: string | null
       phone: string[]
       countryCode: string | null
       phonestatus: string | null
@@ -26505,6 +26517,7 @@ export namespace Prisma {
   interface CustomerFieldRefs {
     readonly id: FieldRef<"Customer", 'String'>
     readonly name: FieldRef<"Customer", 'String'>
+    readonly email: FieldRef<"Customer", 'String'>
     readonly phone: FieldRef<"Customer", 'String[]'>
     readonly countryCode: FieldRef<"Customer", 'String'>
     readonly phonestatus: FieldRef<"Customer", 'String'>
@@ -27048,6 +27061,7 @@ export namespace Prisma {
     contactName: string | null
     contactRole: string | null
     contactRoleOther: string | null
+    email: string | null
     whatsappPhone: string | null
     country: string | null
     city: string | null
@@ -27075,6 +27089,7 @@ export namespace Prisma {
     contactName: string | null
     contactRole: string | null
     contactRoleOther: string | null
+    email: string | null
     whatsappPhone: string | null
     country: string | null
     city: string | null
@@ -27103,6 +27118,7 @@ export namespace Prisma {
     contactRole: number
     contactRoleOther: number
     phone: number
+    email: number
     whatsappPhone: number
     country: number
     city: number
@@ -27142,6 +27158,7 @@ export namespace Prisma {
     contactName?: true
     contactRole?: true
     contactRoleOther?: true
+    email?: true
     whatsappPhone?: true
     country?: true
     city?: true
@@ -27169,6 +27186,7 @@ export namespace Prisma {
     contactName?: true
     contactRole?: true
     contactRoleOther?: true
+    email?: true
     whatsappPhone?: true
     country?: true
     city?: true
@@ -27197,6 +27215,7 @@ export namespace Prisma {
     contactRole?: true
     contactRoleOther?: true
     phone?: true
+    email?: true
     whatsappPhone?: true
     country?: true
     city?: true
@@ -27312,6 +27331,7 @@ export namespace Prisma {
     contactRole: string | null
     contactRoleOther: string | null
     phone: string[]
+    email: string | null
     whatsappPhone: string | null
     country: string | null
     city: string | null
@@ -27359,6 +27379,7 @@ export namespace Prisma {
     contactRole?: boolean
     contactRoleOther?: boolean
     phone?: boolean
+    email?: boolean
     whatsappPhone?: boolean
     country?: boolean
     city?: boolean
@@ -27391,6 +27412,7 @@ export namespace Prisma {
     contactRole?: boolean
     contactRoleOther?: boolean
     phone?: boolean
+    email?: boolean
     whatsappPhone?: boolean
     country?: boolean
     city?: boolean
@@ -27420,6 +27442,7 @@ export namespace Prisma {
     contactRole?: boolean
     contactRoleOther?: boolean
     phone?: boolean
+    email?: boolean
     whatsappPhone?: boolean
     country?: boolean
     city?: boolean
@@ -27449,6 +27472,7 @@ export namespace Prisma {
     contactRole?: boolean
     contactRoleOther?: boolean
     phone?: boolean
+    email?: boolean
     whatsappPhone?: boolean
     country?: boolean
     city?: boolean
@@ -27469,7 +27493,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WholesaleCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "contactName" | "contactRole" | "contactRoleOther" | "phone" | "whatsappPhone" | "country" | "city" | "area" | "address" | "latitude" | "longitude" | "googleMapsLink" | "assignedUserId" | "notes" | "preferredVisitAt" | "lastVisitAt" | "nextFollowUpAt" | "lastVisitResult" | "visitStatus" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleCustomer"]>
+  export type WholesaleCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "contactName" | "contactRole" | "contactRoleOther" | "phone" | "email" | "whatsappPhone" | "country" | "city" | "area" | "address" | "latitude" | "longitude" | "googleMapsLink" | "assignedUserId" | "notes" | "preferredVisitAt" | "lastVisitAt" | "nextFollowUpAt" | "lastVisitResult" | "visitStatus" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleCustomer"]>
   export type WholesaleCustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedUser?: boolean | WholesaleCustomer$assignedUserArgs<ExtArgs>
     visits?: boolean | WholesaleCustomer$visitsArgs<ExtArgs>
@@ -27498,6 +27522,7 @@ export namespace Prisma {
       contactRole: string | null
       contactRoleOther: string | null
       phone: string[]
+      email: string | null
       whatsappPhone: string | null
       country: string | null
       city: string | null
@@ -27949,6 +27974,7 @@ export namespace Prisma {
     readonly contactRole: FieldRef<"WholesaleCustomer", 'String'>
     readonly contactRoleOther: FieldRef<"WholesaleCustomer", 'String'>
     readonly phone: FieldRef<"WholesaleCustomer", 'String[]'>
+    readonly email: FieldRef<"WholesaleCustomer", 'String'>
     readonly whatsappPhone: FieldRef<"WholesaleCustomer", 'String'>
     readonly country: FieldRef<"WholesaleCustomer", 'String'>
     readonly city: FieldRef<"WholesaleCustomer", 'String'>
@@ -54042,6 +54068,7 @@ export namespace Prisma {
   export const CustomerScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    email: 'email',
     phone: 'phone',
     countryCode: 'countryCode',
     phonestatus: 'phonestatus',
@@ -54067,6 +54094,7 @@ export namespace Prisma {
     contactRole: 'contactRole',
     contactRoleOther: 'contactRoleOther',
     phone: 'phone',
+    email: 'email',
     whatsappPhone: 'whatsappPhone',
     country: 'country',
     city: 'city',
@@ -56471,6 +56499,7 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: StringFilter<"Customer"> | string
     name?: StringFilter<"Customer"> | string
+    email?: StringNullableFilter<"Customer"> | string | null
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
     phonestatus?: StringNullableFilter<"Customer"> | string | null
@@ -56492,6 +56521,7 @@ export namespace Prisma {
   export type CustomerOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrder
     countryCode?: SortOrderInput | SortOrder
     phonestatus?: SortOrderInput | SortOrder
@@ -56516,6 +56546,7 @@ export namespace Prisma {
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
+    email?: StringNullableFilter<"Customer"> | string | null
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
     phonestatus?: StringNullableFilter<"Customer"> | string | null
@@ -56537,6 +56568,7 @@ export namespace Prisma {
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrder
     countryCode?: SortOrderInput | SortOrder
     phonestatus?: SortOrderInput | SortOrder
@@ -56562,6 +56594,7 @@ export namespace Prisma {
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Customer"> | string
     name?: StringWithAggregatesFilter<"Customer"> | string
+    email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     phonestatus?: StringNullableWithAggregatesFilter<"Customer"> | string | null
@@ -56587,6 +56620,7 @@ export namespace Prisma {
     contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
     contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
+    email?: StringNullableFilter<"WholesaleCustomer"> | string | null
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
     city?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -56618,6 +56652,7 @@ export namespace Prisma {
     contactRole?: SortOrderInput | SortOrder
     contactRoleOther?: SortOrderInput | SortOrder
     phone?: SortOrder
+    email?: SortOrderInput | SortOrder
     whatsappPhone?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -56652,6 +56687,7 @@ export namespace Prisma {
     contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
     contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
+    email?: StringNullableFilter<"WholesaleCustomer"> | string | null
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
     city?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -56683,6 +56719,7 @@ export namespace Prisma {
     contactRole?: SortOrderInput | SortOrder
     contactRoleOther?: SortOrderInput | SortOrder
     phone?: SortOrder
+    email?: SortOrderInput | SortOrder
     whatsappPhone?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -56719,6 +56756,7 @@ export namespace Prisma {
     contactRole?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     contactRoleOther?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
+    email?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     whatsappPhone?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
     city?: StringNullableWithAggregatesFilter<"WholesaleCustomer"> | string | null
@@ -60567,6 +60605,7 @@ export namespace Prisma {
   export type CustomerCreateInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -60588,6 +60627,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -60609,6 +60649,7 @@ export namespace Prisma {
   export type CustomerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60630,6 +60671,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60651,6 +60693,7 @@ export namespace Prisma {
   export type CustomerCreateManyInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -60668,6 +60711,7 @@ export namespace Prisma {
   export type CustomerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60685,6 +60729,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60707,6 +60752,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -60737,6 +60783,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -60767,6 +60814,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60797,6 +60845,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60827,6 +60876,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -60855,6 +60905,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60882,6 +60933,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64697,6 +64749,7 @@ export namespace Prisma {
   export type CustomerCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    email?: SortOrder
     phone?: SortOrder
     countryCode?: SortOrder
     phonestatus?: SortOrder
@@ -64718,6 +64771,7 @@ export namespace Prisma {
   export type CustomerMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    email?: SortOrder
     countryCode?: SortOrder
     phonestatus?: SortOrder
     country?: SortOrder
@@ -64734,6 +64788,7 @@ export namespace Prisma {
   export type CustomerMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    email?: SortOrder
     countryCode?: SortOrder
     phonestatus?: SortOrder
     country?: SortOrder
@@ -64780,6 +64835,7 @@ export namespace Prisma {
     contactRole?: SortOrder
     contactRoleOther?: SortOrder
     phone?: SortOrder
+    email?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -64812,6 +64868,7 @@ export namespace Prisma {
     contactName?: SortOrder
     contactRole?: SortOrder
     contactRoleOther?: SortOrder
+    email?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -64839,6 +64896,7 @@ export namespace Prisma {
     contactName?: SortOrder
     contactRole?: SortOrder
     contactRoleOther?: SortOrder
+    email?: SortOrder
     whatsappPhone?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -70593,6 +70651,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutUsersInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -70613,6 +70672,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutUsersInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -70904,6 +70964,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -70933,6 +70994,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -71487,6 +71549,7 @@ export namespace Prisma {
     NOT?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
     id?: StringFilter<"Customer"> | string
     name?: StringFilter<"Customer"> | string
+    email?: StringNullableFilter<"Customer"> | string | null
     phone?: StringNullableListFilter<"Customer">
     countryCode?: StringNullableFilter<"Customer"> | string | null
     phonestatus?: StringNullableFilter<"Customer"> | string | null
@@ -71776,6 +71839,7 @@ export namespace Prisma {
     contactRole?: StringNullableFilter<"WholesaleCustomer"> | string | null
     contactRoleOther?: StringNullableFilter<"WholesaleCustomer"> | string | null
     phone?: StringNullableListFilter<"WholesaleCustomer">
+    email?: StringNullableFilter<"WholesaleCustomer"> | string | null
     whatsappPhone?: StringNullableFilter<"WholesaleCustomer"> | string | null
     country?: StringNullableFilter<"WholesaleCustomer"> | string | null
     city?: StringNullableFilter<"WholesaleCustomer"> | string | null
@@ -76155,6 +76219,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -76184,6 +76249,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -76310,6 +76376,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76339,6 +76406,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76593,6 +76661,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -76622,6 +76691,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -76805,6 +76875,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76834,6 +76905,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77325,6 +77397,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutWarrantiesInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -77345,6 +77418,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutWarrantiesInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -77569,6 +77643,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutWarrantiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77589,6 +77664,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutWarrantiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77737,6 +77813,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutMessageInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -77757,6 +77834,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutMessageInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -77874,6 +77952,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77894,6 +77973,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78001,6 +78081,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutOrdersInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -78021,6 +78102,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutOrdersInput = {
     id?: string
     name: string
+    email?: string | null
     phone?: CustomerCreatephoneInput | string[]
     countryCode?: string | null
     phonestatus?: string | null
@@ -78283,6 +78365,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78303,6 +78386,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80823,6 +80907,7 @@ export namespace Prisma {
     contactRole?: string | null
     contactRoleOther?: string | null
     phone?: WholesaleCustomerCreatephoneInput | string[]
+    email?: string | null
     whatsappPhone?: string | null
     country?: string | null
     city?: string | null
@@ -81158,6 +81243,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81178,6 +81264,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81198,6 +81285,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateManyWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: CustomerUpdatephoneInput | string[]
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     phonestatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81489,6 +81577,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81518,6 +81607,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81547,6 +81637,7 @@ export namespace Prisma {
     contactRole?: NullableStringFieldUpdateOperationsInput | string | null
     contactRoleOther?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: WholesaleCustomerUpdatephoneInput | string[]
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappPhone?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null

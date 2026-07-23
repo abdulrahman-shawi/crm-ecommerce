@@ -368,6 +368,7 @@ exports.Prisma.ProductImageScalarFieldEnum = {
 exports.Prisma.CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  email: 'email',
   phone: 'phone',
   countryCode: 'countryCode',
   phonestatus: 'phonestatus',
@@ -390,6 +391,7 @@ exports.Prisma.WholesaleCustomerScalarFieldEnum = {
   contactRole: 'contactRole',
   contactRoleOther: 'contactRoleOther',
   phone: 'phone',
+  email: 'email',
   whatsappPhone: 'whatsappPhone',
   country: 'country',
   city: 'city',
