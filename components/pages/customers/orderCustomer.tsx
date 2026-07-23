@@ -76,10 +76,7 @@ export default function OrderCustomer({ customers, customerId, products, isOpenO
     : [];
 
   const currencySymbol = settings?.code === "USD" ? "$" : getCurrencySymbol(settings?.code) || settings?.code || "$";
-  const convertUsdToOrderCurrency = (value: number) => {
-    const normalized = Number(value || 0);
-    return settings && settings.exchangeRate > 0 ? normalized * settings.exchangeRate : normalized;
-  };
+  const convertUsdToOrderCurrency = (value: number) => Number(value || 0);
 
   const getProductAvailableStockByWarehouse = (product: any, selectedWarehouseValue: string) => {
     if (!Array.isArray(product?.stocks)) return 0;

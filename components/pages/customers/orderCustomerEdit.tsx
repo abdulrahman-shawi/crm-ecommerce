@@ -91,10 +91,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     : [];
 
   const currencySymbol = settings?.code === "USD" ? "$" : getCurrencySymbol(settings?.code) || settings?.code || "$";
-  const convertUsdToOrderCurrency = (value: number) => {
-    const normalized = Number(value || 0);
-    return settings && settings.exchangeRate > 0 ? normalized * settings.exchangeRate : normalized;
-  };
+  const convertUsdToOrderCurrency = (value: number) => Number(value || 0);
 
   const getProductAvailableStockByWarehouse = (product: any, selectedWarehouseValue: string) => {
     if (!Array.isArray(product?.stocks)) return 0;
@@ -166,7 +163,6 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setamountBank(initialData?.amountBank)
     setShippingId(initialData?.shippingId ? String(initialData.shippingId) : "");
     setDeliveryMethod(initialData?.deliveryMethod || "");
-    setTurkeyExchangeRate(Number(initialData?.usdToTryRateAtOrder || 0));
     setMunicipality(initialData.municipality || "");
     setFullAddress(initialData.fullAddress || "");
     setPaymentMethod(initialData.paymentMethod || "عند الاستلام");
