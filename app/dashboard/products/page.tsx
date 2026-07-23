@@ -10,6 +10,7 @@ import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { MultiFileUpload, FileItem } from '@/components/ui/ImageUpload';
 import { useAuth } from '@/context/AuthContext';
 import { buildAdFullUrl } from '@/lib/affiliate';
+import { formatSiteCurrency, useSiteCurrency } from '@/lib/currency';
 import { getallcategory } from '@/server/category';
 import { deleteProductFromWarehouse, saveProductWithFiles, updateProductWithFiles } from '@/server/image';
 import { getProduct, toggleProductActive, toggleProductShowInAds, upsertProductLandingPage, LandingPageInput } from '@/server/product';
@@ -353,6 +354,7 @@ const WholesalePricingTiersFields = ({ control, register, errors }: any) => {
 
 
 const ProductLayout = () => {
+    const { settings } = useSiteCurrency();
     const [isOpen, setIsOpen] = React.useState(false);
     const [editId, setEditId] = React.useState<string | number | null>(null);
     const [categories, setCategories] = React.useState<any[]>([]);
@@ -608,8 +610,8 @@ const ProductLayout = () => {
             "المستودع": stock.__stock.warehouse.name,
             "التصنيف": stock.categoryId ? (categories.find(c => c.id === stock.categoryId)?.name || "غير محدد") : "غير محدد",
             "الكمية الحالية": stock.__stock.quantity,
-            "السعر": stock.__stock.price,
-            "الخصم": stock.__stock.discount,
+            "السعر": formatSiteCurrency(Number(stock.__stock.price || 0), settings),
+            "الخصم": formatSiteCurrency(Number(stock.__stock.discount || 0), settings),
             "تاريخ الجرد": new Date().toLocaleDateString('ar-EG')
         }));
         const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -772,7 +774,7 @@ const ProductLayout = () => {
                                 )}
                                 {Number(product?.__stock?.discount || 0) > 0 && (
                                     <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                        خصم {Number(product?.__stock?.discount || 0)} $
+                                        خصم {formatSiteCurrency(Number(product?.__stock?.discount || 0), settings)}
                                     </span>
                                 )}
                             </div>
@@ -796,15 +798,15 @@ const ProductLayout = () => {
                                         {Number(product?.__stock?.discount || 0) > 0 ? (
                                             <div className="flex flex-col">
                                                 <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                                    {Number(product?.__stock?.price || 0) - Number(product?.__stock?.discount || 0)} <span className="text-xs font-normal">$</span>
+                                                    {formatSiteCurrency(Number(product?.__stock?.price || 0) - Number(product?.__stock?.discount || 0), settings)}
                                                 </p>
                                                 <span className="text-xs text-slate-400 line-through">
-                                                    {Number(product?.__stock?.price || 0)} $
+                                                    {formatSiteCurrency(Number(product?.__stock?.price || 0), settings)}
                                                 </span>
                                             </div>
                                         ) : (
                                             <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                                {Number(product?.__stock?.price || 0)} <span className="text-xs font-normal">$</span>
+                                                {formatSiteCurrency(Number(product?.__stock?.price || 0), settings)}
                                             </p>
                                         )}
                                     </div>
@@ -885,19 +887,19 @@ const ProductLayout = () => {
                                     <div className="flex justify-between">
                                         <span className="text-slate-500 dark:text-slate-400">سعر القطعة</span>
                                         <span className="font-medium text-slate-800 dark:text-slate-100">
-                                            {Number(selectedProduct?.__stock?.price || 0).toFixed(2)} $
+                                            {formatSiteCurrency(Number(selectedProduct?.__stock?.price || 0), settings)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-slate-500 dark:text-slate-400">الخصم</span>
                                         <span className="font-medium text-red-500">
-                                            {Number(selectedProduct?.__stock?.discount || 0).toFixed(2)} $
+                                            {formatSiteCurrency(Number(selectedProduct?.__stock?.discount || 0), settings)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between border-t pt-3 dark:border-slate-800">
                                         <span className="text-slate-500 dark:text-slate-400">السعر النهائي</span>
                                         <span className="font-bold text-blue-600">
-                                            {(Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0)).toFixed(2)} $
+                                            {formatSiteCurrency(Number(selectedProduct?.__stock?.price || 0) - Number(selectedProduct?.__stock?.discount || 0), settings)}
                                         </span>
                                     </div>
                                 </div>
@@ -1060,20 +1062,20 @@ const ProductLayout = () => {
                                 Number(row?.__stock?.discount || 0) > 0 ? (
                                     <div className="flex flex-col">
                                         <span className="font-bold text-slate-800 dark:text-slate-100">
-                                            {Number(row?.__stock?.price || 0) - Number(row?.__stock?.discount || 0)} $
+                                            {formatSiteCurrency(Number(row?.__stock?.price || 0) - Number(row?.__stock?.discount || 0), settings)}
                                         </span>
                                         <span className="text-xs text-slate-400 line-through">
-                                            {Number(row?.__stock?.price || 0)} $
+                                            {formatSiteCurrency(Number(row?.__stock?.price || 0), settings)}
                                         </span>
                                     </div>
                                 ) : (
-                                    `${Number(row?.__stock?.price || 0)} $`
+                                    formatSiteCurrency(Number(row?.__stock?.price || 0), settings)
                                 )
                             )
                         },
                         {
                             header: "الخصم",
-                            accessor: (row: any) => Number(row?.__stock?.discount || 0) > 0 ? `${Number(row?.__stock?.discount || 0)} $` : "—"
+                            accessor: (row: any) => Number(row?.__stock?.discount || 0) > 0 ? formatSiteCurrency(Number(row?.__stock?.discount || 0), settings) : "—"
                         },
                         {
                             header: "المخزون",

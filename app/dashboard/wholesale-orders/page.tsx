@@ -14,11 +14,11 @@ import {
   getCurrentMonthKey,
   getEffectivePrice,
   getMonthKey,
-  getOrderCurrencySymbol,
   getOrderDisplayDate,
   getPreviousMonthKey,
   statusColors,
 } from "@/orders/orderHelpers";
+import { useSiteCurrency, formatSiteCurrency } from "@/lib/currency";
 import { getWholesaleCustomers } from "@/server/wholesale-customer";
 import {
   createWholesaleOrder,
@@ -144,6 +144,7 @@ function WholesaleOrdersPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading } = useAuth();
+  const { settings } = useSiteCurrency();
   const [orders, setOrders] = React.useState<any[]>([]);
   const [customers, setCustomers] = React.useState<any[]>([]);
   const [products, setProducts] = React.useState<any[]>([]);
@@ -697,7 +698,7 @@ function WholesaleOrdersPageContent() {
       header: "المبلغ النهائي",
       accessor: (order: any) => (
         <span className="font-black text-blue-600">
-          {Number(order?.finalAmount || 0).toLocaleString()} {getOrderCurrencySymbol(order)}
+          {formatSiteCurrency(Number(order?.finalAmount || 0), settings)}
         </span>
       ),
     },
@@ -729,7 +730,7 @@ function WholesaleOrdersPageContent() {
       header: "تاريخ الإنشاء",
       accessor: (order: any) => new Date(getOrderDisplayDate(order)).toLocaleDateString("ar-EG"),
     },
-  ]), [canEditOrder]);
+  ]), [canEditOrder, settings]);
 
   if (!loading && !canAccessWholesaleOrders) {
     return (
@@ -904,7 +905,7 @@ function WholesaleOrdersPageContent() {
 
                     <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                       <div className="text-sm font-bold text-slate-600 dark:text-slate-300">
-                        الإجمالي: <span className="font-black text-slate-900 dark:text-white">{Number(item.total || 0).toLocaleString()} {formState.warehouseId ? getOrderCurrencySymbol({ warehouse: warehouses.find((warehouse) => String(warehouse.id) === String(formState.warehouseId)) }) : "$"}</span>
+                        الإجمالي: <span className="font-black text-slate-900 dark:text-white">{formatSiteCurrency(Number(item.total || 0), settings)}</span>
                       </div>
 
                       <button
@@ -922,7 +923,7 @@ function WholesaleOrdersPageContent() {
                         شرائح الجملة: {tiers.map((tier: any) => {
                           const min = Number(tier?.minQuantity || 0);
                           const max = tier?.maxQuantity == null ? "+" : Number(tier.maxQuantity);
-                          return `${min}-${max}: ${Number(tier?.price || 0)}`;
+                          return `${min}-${max}: ${formatSiteCurrency(Number(tier?.price || 0), settings)}`;
                         }).join(" | ")}
                       </div>
                     )}
@@ -1181,15 +1182,15 @@ function WholesaleOrdersPageContent() {
               <div className="rounded-[1.5rem] bg-slate-50 p-4 dark:bg-slate-900/40">
                 <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
                   <span>المجموع الفرعي</span>
-                  <span>{subtotal.toLocaleString()}</span>
+                  <span>{formatSiteCurrency(subtotal, settings)}</span>
                 </div>
                 <div className="mt-2 flex items-center justify-between text-sm font-bold text-rose-600">
                   <span>الخصم العام</span>
-                  <span>-{Number(formState.overallDiscount || 0).toLocaleString()}</span>
+                  <span>-{formatSiteCurrency(Number(formState.overallDiscount || 0), settings)}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-lg font-black text-slate-900 dark:text-white">
                   <span>الإجمالي النهائي</span>
-                  <span>{grandTotal.toLocaleString()} {formState.warehouseId ? getOrderCurrencySymbol({ warehouse: warehouses.find((warehouse) => String(warehouse.id) === String(formState.warehouseId)) }) : "$"}</span>
+                  <span>{formatSiteCurrency(grandTotal, settings)}</span>
                 </div>
               </div>
             </div>
@@ -1219,7 +1220,7 @@ function WholesaleOrdersPageContent() {
               </div>
               <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/40">
                 <p className="text-xs font-black text-slate-500 dark:text-slate-400">الإجمالي النهائي</p>
-                <p className="mt-2 text-lg font-black text-blue-600">{Number(selectedOrder?.finalAmount || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</p>
+                <p className="mt-2 text-lg font-black text-blue-600">{formatSiteCurrency(Number(selectedOrder?.finalAmount || 0), settings)}</p>
               </div>
             </div>
 
@@ -1238,8 +1239,8 @@ function WholesaleOrdersPageContent() {
                     <tr key={item.id} className="border-b border-slate-100 dark:border-slate-800">
                       <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">{item?.product?.name || "-"}</td>
                       <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{Number(item?.quantity || 0)}</td>
-                      <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{Number(item?.price || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</td>
-                      <td className="px-4 py-3 font-black text-slate-900 dark:text-white">{(getEffectivePrice(Number(item?.price || 0), Number(item?.discount || 0)) * Number(item?.quantity || 0)).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</td>
+                      <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{formatSiteCurrency(Number(item?.price || 0), settings)}</td>
+                      <td className="px-4 py-3 font-black text-slate-900 dark:text-white">{formatSiteCurrency(getEffectivePrice(Number(item?.price || 0), Number(item?.discount || 0)) * Number(item?.quantity || 0), settings)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1265,8 +1266,8 @@ function WholesaleOrdersPageContent() {
                   <p>طريقة الدفع: {selectedOrder?.paymentMethod || "-"}</p>
                   {selectedOrder?.paymentMethod === "مختلطة" && (
                     <>
-                      <p>المبلغ المستلم: {Number(selectedOrder?.amount || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</p>
-                      <p>المبلغ المتبقي: {Number(selectedOrder?.amountBank || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</p>
+                      <p>المبلغ المستلم: {formatSiteCurrency(Number(selectedOrder?.amount || 0), settings)}</p>
+                      <p>المبلغ المتبقي: {formatSiteCurrency(Number(selectedOrder?.amountBank || 0), settings)}</p>
                     </>
                   )}
                   <p>الحالة: {selectedOrder?.status || "-"}</p>

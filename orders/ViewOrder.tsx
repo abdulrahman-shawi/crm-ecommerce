@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Printer } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import { formatPhoneForDisplay } from '@/lib/utils';
+import { useSiteCurrency, formatSiteCurrency } from '@/lib/currency';
 import {
-  getOrderCurrencySymbol,
   getOrderShippingPrice,
   getOrderShippingCommissions,
   getOrderTotalShippingExpenses,
@@ -20,7 +20,7 @@ export default function ViewOrder({
   products: any;
 }) {
   const componentRef = React.useRef<HTMLDivElement>(null);
-  const currencySymbol = getOrderCurrencySymbol(data);
+  const { settings } = useSiteCurrency();
   const rawGoogleMapsLink = String(data?.googleMapsLink || '').trim();
   const normalizedGoogleMapsLink = rawGoogleMapsLink
     ? /^https?:\/\//i.test(rawGoogleMapsLink)
@@ -165,10 +165,10 @@ export default function ViewOrder({
                     </td>
                     <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600 italic">x{item.quantity}</td>
                     <td className="px-4 md:px-8 py-2 text-center font-bold text-slate-600">
-                      {getEffectivePrice(item.price, item.discount || 0).toLocaleString()} {currencySymbol}
+                      {formatSiteCurrency(getEffectivePrice(item.price, item.discount || 0), settings)}
                     </td>
                     <td className="px-4 md:px-8 py-2 text-left font-black text-slate-900 dark:text-white">
-                      {(getEffectivePrice(item.price, item.discount || 0) * item.quantity).toLocaleString()} {currencySymbol}
+                      {formatSiteCurrency(getEffectivePrice(item.price, item.discount || 0) * item.quantity, settings)}
                     </td>
                   </tr>
                 ))}
@@ -185,13 +185,13 @@ export default function ViewOrder({
             <div className="w-full md:w-96 space-y-3">
               <div className="flex justify-between px-4 md:px-6 text-slate-500 font-bold text-sm">
                 <span>المجموع الفرعي:</span>
-                <span>{subtotal.toLocaleString()} {currencySymbol}</span>
+                <span>{formatSiteCurrency(subtotal, settings)}</span>
               </div>
 
               {totalDiscount > 0 && (
                 <div className="flex justify-between px-4 md:px-6 text-rose-500 font-bold text-sm">
                   <span>الخصم الممنوح:</span>
-                  <span>-{totalDiscount.toLocaleString()} {currencySymbol}</span>
+                  <span>-{formatSiteCurrency(totalDiscount, settings)}</span>
                 </div>
               )}
 
@@ -199,11 +199,11 @@ export default function ViewOrder({
                 <div className="border-t border-b border-dashed border-slate-200 py-3 space-y-2">
                   <div className="flex justify-between px-4 md:px-6 text-blue-600 font-bold text-sm">
                     <span>القيمة المستلمة (حوالة):</span>
-                    <span>{Number(data.amount).toLocaleString()} {currencySymbol}</span>
+                    <span>{formatSiteCurrency(Number(data.amount), settings)}</span>
                   </div>
                   <div className="flex justify-between px-4 md:px-6 text-purple-600 font-bold text-sm">
                     <span>القيمة المتبقية (عند الباب):</span>
-                    <span>{Number(data.amountBank).toLocaleString()} {currencySymbol}</span>
+                    <span>{formatSiteCurrency(Number(data.amountBank), settings)}</span>
                   </div>
                 </div>
               )}
@@ -211,8 +211,7 @@ export default function ViewOrder({
               <div className="flex justify-between items-center p-4 md:p-6 bg-blue-600 rounded-[2rem] text-white shadow-xl">
                 <span className="text-lg md:text-xl font-black">الإجمالي النهائي</span>
                 <div className="text-right">
-                  <span className="text-2xl md:text-3xl font-black italic tracking-tighter">{invoiceGrandTotal.toLocaleString()}</span>
-                  <span className="text-sm font-bold mr-1"> {currencySymbol}</span>
+                  <span className="text-2xl md:text-3xl font-black italic tracking-tighter">{formatSiteCurrency(invoiceGrandTotal, settings)}</span>
                 </div>
               </div>
               <div className="flex justify-between px-4 md:px-6 text-slate-700 dark:text-slate-200 font-bold text-sm">

@@ -27,6 +27,7 @@ import { useOrderData } from '@/orders/useOrderData';
 import ViewOrder from '@/orders/ViewOrder';
 import ViewOrderCustomer from '@/orders/ViewOrderCustomer';
 import { shareOrderPdfToCustomerWhatsApp } from '@/orders/orderPdf';
+import { useSiteCurrency, formatSiteCurrency } from '@/lib/currency';
 import {
     getCellValueByAliases,
     parseItemsFromSummary,
@@ -34,7 +35,6 @@ import {
     parseImportedDateValue,
     getEffectivePrice,
     openWhatsAppByPhone,
-    getOrderCurrencySymbol,
     getOrderShippingName,
     getOrderShippingPrice,
     getOrderShippingCommissions,
@@ -91,6 +91,7 @@ interface OrderCustomerProps {
 
 const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const { user } = useAuth();
+    const { settings } = useSiteCurrency();
     const {
         products,
         customers,

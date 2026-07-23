@@ -1,9 +1,9 @@
 import React from 'react';
 import { DataTable, TableAction } from '@/components/shared/DataTable';
+import { useSiteCurrency, formatSiteCurrency } from '@/lib/currency';
 import {
   statusColors,
   getOrderAmountToCollect,
-  getOrderCurrencySymbol,
   getOrderNetAmountAfterShipping,
   getOrderShippingName,
   getOrderTotalShippingExpenses,
@@ -32,6 +32,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   onPageChange,
   isLoading = false,
 }) => {
+  const { settings } = useSiteCurrency();
   return (
     <DataTable
       data={orders}
@@ -95,7 +96,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           header: "المبلغ اللازم استلامه",
           accessor: (e: any) => (
             <span className="font-black text-blue-600">
-              {getOrderAmountToCollect(e).toLocaleString()} {getOrderCurrencySymbol(e)}
+              {formatSiteCurrency(getOrderAmountToCollect(e), settings)}
             </span>
           ),
         },
@@ -103,7 +104,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           header: "الصافي بعد طرح الشحن",
           accessor: (e: any) => (
             <span className="font-black text-emerald-600">
-              {getOrderNetAmountAfterShipping(e).toLocaleString()} {getOrderCurrencySymbol(e)}
+              {formatSiteCurrency(getOrderNetAmountAfterShipping(e), settings)}
             </span>
           ),
         },
@@ -119,7 +120,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           header: "مصاريف الشحن",
           accessor: (e: any) => (
             <span className="font-black text-amber-600">
-              {getOrderTotalShippingExpenses(e).toLocaleString()} {getOrderCurrencySymbol(e)}
+              {formatSiteCurrency(getOrderTotalShippingExpenses(e), settings)}
             </span>
           ),
         },
