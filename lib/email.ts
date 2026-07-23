@@ -74,12 +74,18 @@ export async function sendCampaignEmail(
 
   const html = buildCampaignEmailHtml(campaign, recipient, baseUrl);
 
-  return resend.emails.send({
+  const result = await resend.emails.send({
     from: FROM_EMAIL,
     to: recipient.email,
     subject: campaign.subject || campaign.title,
     html,
   });
+
+  if (result.error) {
+    throw new Error(result.error.message || "Resend: فشل إرسال البريد");
+  }
+
+  return result;
 }
 
 export function isValidEmail(value: string) {

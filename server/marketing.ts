@@ -410,10 +410,13 @@ export async function launchCampaign(id: string | number) {
         );
 
         sentCount = results.filter((r) => r.status === "fulfilled").length;
-        const failures = results.filter((r) => r.status === "rejected");
+        const failures = results.filter((r) => r.status === "rejected") as PromiseRejectedResult[];
         if (failures.length > 0) {
           console.error("Campaign email failures:", failures);
-          sendError = `فشل إرسال ${failures.length} رسائل من ${recipients.length}`;
+          const messages = failures
+            .map((f, idx) => `${idx + 1}. ${f.reason?.message || "خطأ"}`)
+            .join(" ");
+          sendError = `فشل إرسال ${failures.length} رسائل من ${recipients.length}: ${messages}`;
         }
       }
 

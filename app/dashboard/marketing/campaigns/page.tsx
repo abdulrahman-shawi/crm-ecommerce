@@ -6,6 +6,7 @@ import {
   BarChart2,
   Eye,
   Megaphone,
+  MessageCircle,
   Pencil,
   Play,
   Plus,
@@ -120,7 +121,9 @@ function CampaignsPageContent() {
     clicked: 0,
     converted: 0,
   });
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isWhatsAppOpen, setIsWhatsAppOpen] = React.useState(false);
+  const [whatsAppCampaign, setWhatsAppCampaign] = React.useState<Campaign | null>(null);
+  const [whatsAppPhone, setWhatsAppPhone] = React.useState("");
 
   const canView = React.useMemo(() => {
     if (!user) return false;
@@ -293,6 +296,24 @@ function CampaignsPageContent() {
     setIsMetricsOpen(true);
   };
 
+  function buildWhatsAppMessage(campaign: Campaign) {
+    return `*${campaign.title}*\n\n${campaign.content}`;
+  }
+
+  function openWhatsAppShare(campaign: Campaign) {
+    setWhatsAppCampaign(campaign);
+    setWhatsAppPhone("");
+    setIsWhatsAppOpen(true);
+  }
+
+  function getWhatsAppShareUrl(text: string, phone?: string) {
+    const encoded = encodeURIComponent(text);
+    if (phone) {
+      return `https://wa.me/${phone}?text=${encoded}`;
+    }
+    return `https://wa.me/?text=${encoded}`;
+  }
+
   const handleRecordMetrics = async () => {
     if (!selectedCampaign) return;
     const loading = toast.loading("جاري تسجيل المقاييس...");
@@ -384,6 +405,11 @@ function CampaignsPageContent() {
         label: "مقاييس",
         icon: <BarChart2 size={16} />,
         onClick: (campaign) => openMetrics(campaign),
+      },
+      {
+        label: "واتساب",
+        icon: <MessageCircle size={16} />,
+        onClick: (campaign) => openWhatsAppShare(campaign),
       },
     ];
     if (canEdit) {
@@ -659,6 +685,59 @@ function CampaignsPageContent() {
               />
             </label>
           ))}
+        </div>
+      </AppModal>
+
+      <AppModal
+        isOpen={isWhatsAppOpen}
+        onClose={() => setIsWhatsAppOpen(false)}
+        title={`مشاركة عبر واتساب: ${whatsAppCampaign?.title || ""}`}
+        size="md"
+        footer={
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setIsWhatsAppOpen(false)}
+              className="rounded-2xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+            >
+              إغلاق
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!whatsAppCampaign) return;
+                const message = buildWhatsAppMessage(whatsAppCampaign);
+                const normalizedPhone = whatsAppPhone.replace(/\D/g, "");
+                window.open(getWhatsAppShareUrl(message, normalizedPhone), "_blank", "noopener,noreferrer");
+              }}
+              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-black text-white transition-colors hover:bg-emerald-700"
+            >
+              <MessageCircle size={16} />
+              فتح واتساب
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <label className="space-y-2">
+            <span className="text-xs font-black text-slate-600 dark:text-slate-300">رقم الهاتف (اختياري)</span>
+            <input
+              type="tel"
+              value={whatsAppPhone}
+              onChange={(e) => setWhatsAppPhone(e.target.value)}
+              placeholder="مثال: 9639xxxxxxxx"
+              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+            />
+          </label>
+          <label className="space-y-2">
+            <span className="text-xs font-black text-slate-600 dark:text-slate-300">الرسالة</span>
+            <textarea
+              rows={5}
+              readOnly
+              value={whatsAppCampaign ? buildWhatsAppMessage(whatsAppCampaign) : ""}
+              className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            />
+          </label>
         </div>
       </AppModal>
     </div>
