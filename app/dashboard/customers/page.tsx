@@ -1138,6 +1138,12 @@ const CustomrLayout: React.FC = () => {
       });
     }
 
+    actions.push({
+      label: "واتساب",
+      icon: <MessageCircle size={16} />,
+      onClick: (customer: any) => openCustomerWhatsAppModal(customer),
+    });
+
     return actions;
   })();
 
@@ -1406,6 +1412,61 @@ const CustomrLayout: React.FC = () => {
       </AppModal>
       <AppModal size='lg' isOpen={isOpenordercustomer} onClose={() => setisOpenordercustomer(false)} title='طلبات العميل'>
         <ViewOrderCustomer orders={customerorder} />
+      </AppModal>
+
+      <AppModal
+        isOpen={isWhatsAppModalOpen}
+        onClose={() => setIsWhatsAppModalOpen(false)}
+        title={`إرسال حملة عبر واتساب: ${whatsAppCustomer?.name || ""}`}
+        size="md"
+        footer={
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setIsWhatsAppModalOpen(false)}
+              className="rounded-2xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+            >
+              إلغاء
+            </button>
+            <button
+              type="button"
+              disabled={!selectedWhatsAppCampaignId}
+              onClick={sendWhatsAppCampaignToCustomer}
+              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-black text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
+            >
+              <MessageCircle size={16} />
+              فتح واتساب
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          {isLoadingWhatsAppCampaigns ? (
+            <div className="flex justify-center p-6">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-600" />
+            </div>
+          ) : whatsAppCampaigns.length === 0 ? (
+            <p className="text-center text-sm font-bold text-slate-500">لا توجد حملات متاحة</p>
+          ) : (
+            <div className="max-h-64 space-y-2 overflow-y-auto">
+              {whatsAppCampaigns.map((campaign) => (
+                <button
+                  key={campaign.id}
+                  type="button"
+                  onClick={() => setSelectedWhatsAppCampaignId(campaign.id)}
+                  className={`w-full rounded-2xl border p-4 text-right transition-colors ${
+                    selectedWhatsAppCampaignId === campaign.id
+                      ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                      : "border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900"
+                  }`}
+                >
+                  <p className="font-black text-slate-900 dark:text-white">{campaign.title}</p>
+                  <p className="mt-1 line-clamp-2 text-xs font-bold text-slate-500">{campaign.content}</p>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </AppModal>
     </div>
   );
