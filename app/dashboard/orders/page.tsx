@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { formatPhoneForDisplay, hasPermission, isAdmin } from '@/lib/utils';
 import { createOrder, deleteOrder, getOrderById, getOrdersByIds, getOrdersByUser, updateOrder, updateOrderShippingFromTable, updateStaus } from '@/server/order';
+import { getCities } from '@/server/city';
+import { getWarehouse } from '@/server/warehouse';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BarChart2, Download, Eye, Pencil, Plus, Save, Search, Trash, Trash2, Upload, X } from 'lucide-react';
 import * as React from 'react';
@@ -107,6 +109,8 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [items, setItems] = React.useState([
         { productId: "", name: "", price: 0, quantity: 1, discount: 0, note: "", total: 0, modelNumber: "" }
     ]);
+    const [cities, setCities] = React.useState<any[]>([]);
+    const [warehouses, setWarehouses] = React.useState<any[]>([]);
     
     const [searchQueries, setSearchQueries] = React.useState<Record<number, string>>({});
     const [showDropdown, setShowDropdown] = React.useState<Record<number, boolean>>({});
@@ -132,6 +136,11 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const [showCustomerDropdown, setShowCustomerDropdown] = React.useState(false);
     const [deliveryNotes, setDeliveryNotes] = React.useState("");
     const [additionalNotes, setAdditionalNotes] = React.useState("");
+
+    React.useEffect(() => {
+        getCities().then(setCities).catch(console.error);
+        getWarehouse().then(setWarehouses).catch(console.error);
+    }, []);
     const [isShippingModalOpen, setIsShippingModalOpen] = React.useState(false);
     const [shippingModalSaving, setShippingModalSaving] = React.useState(false);
     const [shippingTargetOrder, setShippingTargetOrder] = React.useState<any>(null);
@@ -598,8 +607,10 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
     const {
         searchQuery,
         setSearchQuery,
-        warehouseLocation,
-        setWarehouseLocation,
+        cityId,
+        setCityId,
+        warehouseId,
+        setWarehouseId,
         shippingCompany,
         setShippingCompany,
         monthFilterType,
@@ -954,8 +965,14 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
             <SearchAndFilter
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
-                warehouseLocation={warehouseLocation}
-                onWarehouseChange={setWarehouseLocation}
+                cityId={cityId}
+                onCityChange={setCityId}
+                warehouseId={warehouseId}
+                onWarehouseChange={setWarehouseId}
+                cityOptions={cities.map((city) => ({ value: String(city.id), label: city.name }))}
+                warehouseOptions={warehouses
+                    .filter((warehouse) => !cityId || String(warehouse.cityId) === cityId)
+                    .map((warehouse) => ({ value: String(warehouse.id), label: warehouse.name }))}
                 shippingCompany={shippingCompany}
                 onShippingCompanyChange={setShippingCompany}
                 shippingCompanyOptions={shippingCompanyOptions}
@@ -963,7 +980,6 @@ const OrderLayout: React.FunctionComponent<IOrderLayoutProps> = (props) => {
                 onMonthFilterChange={(type) => setMonthFilterType(type as "all" | "previous" | "current" | "custom")}
                 customMonth={customMonth}
                 onCustomMonthChange={setCustomMonth}
-                warehouseOptions={["سوريا", "تركيا"]}
             />
             <StatusCards
                 statusOptions={statusOptions}

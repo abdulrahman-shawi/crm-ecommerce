@@ -13,7 +13,8 @@ interface User {
 
 export const useOrderFilters = (orders: any[], user?: User) => {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [warehouseLocation, setWarehouseLocation] = React.useState("");
+  const [cityId, setCityId] = React.useState("");
+  const [warehouseId, setWarehouseId] = React.useState("");
   const [shippingCompany, setShippingCompany] = React.useState("");
   const [monthFilterType, setMonthFilterType] = React.useState<"all" | "current" | "previous" | "custom">("current");
   const [customMonth, setCustomMonth] = React.useState("");
@@ -62,9 +63,17 @@ export const useOrderFilters = (orders: any[], user?: User) => {
 
       if (!matchesText) return false;
 
+      // فلتر المدينة
+      if (cityId) {
+        const orderCityId = order.warehouse?.city?.id ?? order.warehouse?.cityId;
+        if (String(orderCityId || "") !== String(cityId)) return false;
+      }
+
       // فلتر المستودع
-      const matchesLocation = !warehouseLocation || order.warehouse?.location === warehouseLocation;
-      if (!matchesLocation) return false;
+      if (warehouseId) {
+        const orderWarehouseId = order.warehouse?.id ?? order.warehouseId;
+        if (String(orderWarehouseId || "") !== String(warehouseId)) return false;
+      }
 
       // فلتر شركة الشحن
       const normalizedShippingFilter = String(shippingCompany || "").trim().toLowerCase();
@@ -85,7 +94,7 @@ export const useOrderFilters = (orders: any[], user?: User) => {
 
       return true;
     });
-  }, [orders, user, searchQuery, warehouseLocation, shippingCompany, monthFilterType, customMonth]);
+  }, [orders, user, searchQuery, cityId, warehouseId, shippingCompany, monthFilterType, customMonth]);
 
   const statusOptions = [
     "طلب جديد",
@@ -122,14 +131,20 @@ export const useOrderFilters = (orders: any[], user?: User) => {
 
   React.useEffect(() => {
     setPage(1);
-  }, [statusFilter]);
+  }, [statusFilter, cityId, warehouseId]);
+
+  React.useEffect(() => {
+    setWarehouseId("");
+  }, [cityId]);
 
   return {
     // الحالات
     searchQuery,
     setSearchQuery,
-    warehouseLocation,
-    setWarehouseLocation,
+    cityId,
+    setCityId,
+    warehouseId,
+    setWarehouseId,
     shippingCompany,
     setShippingCompany,
     monthFilterType,

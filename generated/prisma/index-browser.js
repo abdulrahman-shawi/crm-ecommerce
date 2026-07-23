@@ -194,7 +194,11 @@ exports.Prisma.PermissionScalarFieldEnum = {
   viewPages: 'viewPages',
   addPages: 'addPages',
   editPages: 'editPages',
-  deletePages: 'deletePages'
+  deletePages: 'deletePages',
+  viewMarketing: 'viewMarketing',
+  addMarketing: 'addMarketing',
+  editMarketing: 'editMarketing',
+  deleteMarketing: 'deleteMarketing'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -291,6 +295,7 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   name: 'name',
   location: 'location',
   countryId: 'countryId',
+  cityId: 'cityId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -443,6 +448,8 @@ exports.Prisma.WholesaleOrderScalarFieldEnum = {
   discount: 'discount',
   finalAmount: 'finalAmount',
   paymentMethod: 'paymentMethod',
+  amount: 'amount',
+  amountBank: 'amountBank',
   receiverName: 'receiverName',
   receiverPhone: 'receiverPhone',
   country: 'country',
@@ -700,6 +707,24 @@ exports.Prisma.AffiliateWalletTransferScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CampaignScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  type: 'type',
+  status: 'status',
+  subject: 'subject',
+  content: 'content',
+  channelDetails: 'channelDetails',
+  audience: 'audience',
+  targetIds: 'targetIds',
+  scheduledAt: 'scheduledAt',
+  sentAt: 'sentAt',
+  metrics: 'metrics',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -817,6 +842,27 @@ exports.WalletTransferStatus = exports.$Enums.WalletTransferStatus = {
   RECEIVED: 'RECEIVED'
 };
 
+exports.CampaignType = exports.$Enums.CampaignType = {
+  EMAIL: 'EMAIL',
+  SOCIAL: 'SOCIAL',
+  SMS: 'SMS',
+  CONTENT: 'CONTENT'
+};
+
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.CampaignAudience = exports.$Enums.CampaignAudience = {
+  ALL_CUSTOMERS: 'ALL_CUSTOMERS',
+  ALL_WHOLESALE: 'ALL_WHOLESALE',
+  CUSTOM: 'CUSTOM'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Permission: 'Permission',
@@ -855,7 +901,8 @@ exports.Prisma.ModelName = {
   Offer: 'Offer',
   OfferDiscount: 'OfferDiscount',
   Commission: 'Commission',
-  AffiliateWalletTransfer: 'AffiliateWalletTransfer'
+  AffiliateWalletTransfer: 'AffiliateWalletTransfer',
+  Campaign: 'Campaign'
 };
 
 /**

@@ -35,6 +35,8 @@ export async function exportWholesaleOrdersToExcel(orders: any[], filename?: str
         'المستودع': order?.warehouse?.name || '',
         'بلد المخزون': order?.warehouse?.location || '',
         'طريقة الدفع': order?.paymentMethod || '',
+        'المبلغ المستلم': order?.paymentMethod === 'مختلطة' ? Number(order?.amount || 0) : '',
+        'المبلغ المتبقي': order?.paymentMethod === 'مختلطة' ? Number(order?.amountBank || 0) : '',
         'المجموع': Number(order?.totalAmount || 0),
         'الخصم': Number(order?.discount || 0),
         'الإجمالي النهائي': Number(order?.finalAmount || 0),
@@ -66,6 +68,8 @@ export async function downloadWholesaleOrderPdf(data: any) {
       : '-';
     const customerName = data?.wholesaleCustomer?.name || 'غير محدد';
     const paymentMethodText = data?.paymentMethod || '-';
+    const mixedPaymentAmount = data?.paymentMethod === 'مختلطة' ? Number(data?.amount || 0) : 0;
+    const mixedPaymentRemaining = data?.paymentMethod === 'مختلطة' ? Number(data?.amountBank || 0) : 0;
     const receiverName = data?.receiverName || 'غير محدد';
     const receiverPhone = Array.isArray(data?.receiverPhone)
       ? data.receiverPhone.filter(Boolean).map((phone: string) => formatPhoneForDisplay(phone)).join(' - ') || 'لم يسجل'
@@ -133,6 +137,10 @@ export async function downloadWholesaleOrderPdf(data: any) {
         <div style="background:#eff6ff;border:1px solid #dbeafe;border-radius:18px;padding:16px;">
           <div style="font-size:18px;font-weight:900;color:#0f172a;">${customerName}</div>
           <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:6px;">طريقة الدفع: ${paymentMethodText}</div>
+          ${data?.paymentMethod === 'مختلطة' ? `
+          <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:4px;">المبلغ المستلم: ${mixedPaymentAmount.toLocaleString('en-US')} ${currencySymbol}</div>
+          <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:4px;">المبلغ المتبقي: ${mixedPaymentRemaining.toLocaleString('en-US')} ${currencySymbol}</div>
+          ` : ''}
         </div>
         <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:16px;">
           <div style="font-size:12px;font-weight:900;color:#94a3b8;letter-spacing:1px;">تفاصيل التوصيل</div>

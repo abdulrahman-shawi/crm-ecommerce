@@ -203,6 +203,11 @@ export type Commission = $Result.DefaultSelection<Prisma.$CommissionPayload>
  * 
  */
 export type AffiliateWalletTransfer = $Result.DefaultSelection<Prisma.$AffiliateWalletTransferPayload>
+/**
+ * Model Campaign
+ * 
+ */
+export type Campaign = $Result.DefaultSelection<Prisma.$CampaignPayload>
 
 /**
  * Enums
@@ -350,6 +355,36 @@ export const WholesaleVisitStatus: {
 
 export type WholesaleVisitStatus = (typeof WholesaleVisitStatus)[keyof typeof WholesaleVisitStatus]
 
+
+export const CampaignType: {
+  EMAIL: 'EMAIL',
+  SOCIAL: 'SOCIAL',
+  SMS: 'SMS',
+  CONTENT: 'CONTENT'
+};
+
+export type CampaignType = (typeof CampaignType)[keyof typeof CampaignType]
+
+
+export const CampaignStatus: {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type CampaignStatus = (typeof CampaignStatus)[keyof typeof CampaignStatus]
+
+
+export const CampaignAudience: {
+  ALL_CUSTOMERS: 'ALL_CUSTOMERS',
+  ALL_WHOLESALE: 'ALL_WHOLESALE',
+  CUSTOM: 'CUSTOM'
+};
+
+export type CampaignAudience = (typeof CampaignAudience)[keyof typeof CampaignAudience]
+
 }
 
 export type ActivityTargetCycle = $Enums.ActivityTargetCycle
@@ -411,6 +446,18 @@ export const WholesaleVisitResult: typeof $Enums.WholesaleVisitResult
 export type WholesaleVisitStatus = $Enums.WholesaleVisitStatus
 
 export const WholesaleVisitStatus: typeof $Enums.WholesaleVisitStatus
+
+export type CampaignType = $Enums.CampaignType
+
+export const CampaignType: typeof $Enums.CampaignType
+
+export type CampaignStatus = $Enums.CampaignStatus
+
+export const CampaignStatus: typeof $Enums.CampaignStatus
+
+export type CampaignAudience = $Enums.CampaignAudience
+
+export const CampaignAudience: typeof $Enums.CampaignAudience
 
 /**
  * ##  Prisma Client ʲˢ
@@ -908,6 +955,16 @@ export class PrismaClient<
     * ```
     */
   get affiliateWalletTransfer(): Prisma.AffiliateWalletTransferDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.campaign`: Exposes CRUD operations for the **Campaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Campaigns
+    * const campaigns = await prisma.campaign.findMany()
+    * ```
+    */
+  get campaign(): Prisma.CampaignDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1379,7 +1436,8 @@ export namespace Prisma {
     Offer: 'Offer',
     OfferDiscount: 'OfferDiscount',
     Commission: 'Commission',
-    AffiliateWalletTransfer: 'AffiliateWalletTransfer'
+    AffiliateWalletTransfer: 'AffiliateWalletTransfer',
+    Campaign: 'Campaign'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1395,7 +1453,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "country" | "city" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "wholesaleCustomer" | "wholesaleVisit" | "productWholesalePriceTier" | "wholesaleOrder" | "wholesaleOrderItem" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer"
+      modelProps: "user" | "permission" | "category" | "product" | "adPageVisit" | "productLandingPage" | "review" | "country" | "city" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "wholesaleCustomer" | "wholesaleVisit" | "productWholesalePriceTier" | "wholesaleOrder" | "wholesaleOrderItem" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "generalSetting" | "employeeSalaryAdjustment" | "page" | "heroSlide" | "affiliateLink" | "offer" | "offerDiscount" | "commission" | "affiliateWalletTransfer" | "campaign"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4211,6 +4269,80 @@ export namespace Prisma {
           }
         }
       }
+      Campaign: {
+        payload: Prisma.$CampaignPayload<ExtArgs>
+        fields: Prisma.CampaignFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CampaignFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CampaignFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          findFirst: {
+            args: Prisma.CampaignFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CampaignFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          findMany: {
+            args: Prisma.CampaignFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>[]
+          }
+          create: {
+            args: Prisma.CampaignCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          createMany: {
+            args: Prisma.CampaignCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CampaignCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>[]
+          }
+          delete: {
+            args: Prisma.CampaignDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          update: {
+            args: Prisma.CampaignUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          deleteMany: {
+            args: Prisma.CampaignDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CampaignUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CampaignUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>[]
+          }
+          upsert: {
+            args: Prisma.CampaignUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CampaignPayload>
+          }
+          aggregate: {
+            args: Prisma.CampaignAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCampaign>
+          }
+          groupBy: {
+            args: Prisma.CampaignGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CampaignGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CampaignCountArgs<ExtArgs>
+            result: $Utils.Optional<CampaignCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4357,6 +4489,7 @@ export namespace Prisma {
     offerDiscount?: OfferDiscountOmit
     commission?: CommissionOmit
     affiliateWalletTransfer?: AffiliateWalletTransferOmit
+    campaign?: CampaignOmit
   }
 
   /* Types for Logging */
@@ -4452,6 +4585,7 @@ export namespace Prisma {
     assignedWholesaleCustomers: number
     wholesaleVisits: number
     wholesaleOrders: number
+    campaigns: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4470,6 +4604,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: boolean | UserCountOutputTypeCountAssignedWholesaleCustomersArgs
     wholesaleVisits?: boolean | UserCountOutputTypeCountWholesaleVisitsArgs
     wholesaleOrders?: boolean | UserCountOutputTypeCountWholesaleOrdersArgs
+    campaigns?: boolean | UserCountOutputTypeCountCampaignsArgs
   }
 
   // Custom InputTypes
@@ -4586,6 +4721,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountWholesaleOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WholesaleOrderWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CampaignWhereInput
   }
 
 
@@ -4826,6 +4968,37 @@ export namespace Prisma {
    * CountryCountOutputType without action
    */
   export type CountryCountOutputTypeCountWarehousesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WarehouseWhereInput
+  }
+
+
+  /**
+   * Count Type CityCountOutputType
+   */
+
+  export type CityCountOutputType = {
+    warehouses: number
+  }
+
+  export type CityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    warehouses?: boolean | CityCountOutputTypeCountWarehousesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CityCountOutputType without action
+   */
+  export type CityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CityCountOutputType
+     */
+    select?: CityCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CityCountOutputType without action
+   */
+  export type CityCountOutputTypeCountWarehousesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WarehouseWhereInput
   }
 
@@ -5551,6 +5724,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
     wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
     wholesaleOrders?: boolean | User$wholesaleOrdersArgs<ExtArgs>
+    campaigns?: boolean | User$campaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5646,6 +5820,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: boolean | User$assignedWholesaleCustomersArgs<ExtArgs>
     wholesaleVisits?: boolean | User$wholesaleVisitsArgs<ExtArgs>
     wholesaleOrders?: boolean | User$wholesaleOrdersArgs<ExtArgs>
+    campaigns?: boolean | User$campaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5677,6 +5852,7 @@ export namespace Prisma {
       assignedWholesaleCustomers: Prisma.$WholesaleCustomerPayload<ExtArgs>[]
       wholesaleVisits: Prisma.$WholesaleVisitPayload<ExtArgs>[]
       wholesaleOrders: Prisma.$WholesaleOrderPayload<ExtArgs>[]
+      campaigns: Prisma.$CampaignPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6110,6 +6286,7 @@ export namespace Prisma {
     assignedWholesaleCustomers<T extends User$assignedWholesaleCustomersArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedWholesaleCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wholesaleVisits<T extends User$wholesaleVisitsArgs<ExtArgs> = {}>(args?: Subset<T, User$wholesaleVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wholesaleOrders<T extends User$wholesaleOrdersArgs<ExtArgs> = {}>(args?: Subset<T, User$wholesaleOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    campaigns<T extends User$campaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6953,6 +7130,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.campaigns
+   */
+  export type User$campaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    where?: CampaignWhereInput
+    orderBy?: CampaignOrderByWithRelationInput | CampaignOrderByWithRelationInput[]
+    cursor?: CampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CampaignScalarFieldEnum | CampaignScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7033,6 +7234,10 @@ export namespace Prisma {
     addPages: boolean | null
     editPages: boolean | null
     deletePages: boolean | null
+    viewMarketing: boolean | null
+    addMarketing: boolean | null
+    editMarketing: boolean | null
+    deleteMarketing: boolean | null
   }
 
   export type PermissionMaxAggregateOutputType = {
@@ -7087,6 +7292,10 @@ export namespace Prisma {
     addPages: boolean | null
     editPages: boolean | null
     deletePages: boolean | null
+    viewMarketing: boolean | null
+    addMarketing: boolean | null
+    editMarketing: boolean | null
+    deleteMarketing: boolean | null
   }
 
   export type PermissionCountAggregateOutputType = {
@@ -7141,6 +7350,10 @@ export namespace Prisma {
     addPages: number
     editPages: number
     deletePages: number
+    viewMarketing: number
+    addMarketing: number
+    editMarketing: number
+    deleteMarketing: number
     _all: number
   }
 
@@ -7197,6 +7410,10 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
+    viewMarketing?: true
+    addMarketing?: true
+    editMarketing?: true
+    deleteMarketing?: true
   }
 
   export type PermissionMaxAggregateInputType = {
@@ -7251,6 +7468,10 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
+    viewMarketing?: true
+    addMarketing?: true
+    editMarketing?: true
+    deleteMarketing?: true
   }
 
   export type PermissionCountAggregateInputType = {
@@ -7305,6 +7526,10 @@ export namespace Prisma {
     addPages?: true
     editPages?: true
     deletePages?: true
+    viewMarketing?: true
+    addMarketing?: true
+    editMarketing?: true
+    deleteMarketing?: true
     _all?: true
   }
 
@@ -7432,6 +7657,10 @@ export namespace Prisma {
     addPages: boolean
     editPages: boolean
     deletePages: boolean
+    viewMarketing: boolean
+    addMarketing: boolean
+    editMarketing: boolean
+    deleteMarketing: boolean
     _count: PermissionCountAggregateOutputType | null
     _min: PermissionMinAggregateOutputType | null
     _max: PermissionMaxAggregateOutputType | null
@@ -7503,6 +7732,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["permission"]>
@@ -7559,6 +7792,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }, ExtArgs["result"]["permission"]>
 
   export type PermissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7613,6 +7850,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }, ExtArgs["result"]["permission"]>
 
   export type PermissionSelectScalar = {
@@ -7667,9 +7908,13 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }
 
-  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewWholesaleCustomers" | "addWholesaleCustomers" | "editWholesaleCustomers" | "deleteWholesaleCustomers" | "viewWholesaleOrders" | "addWholesaleOrders" | "editWholesaleOrders" | "deleteWholesaleOrders" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages", ExtArgs["result"]["permission"]>
+  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "viewProducts" | "addProducts" | "editProducts" | "deleteProducts" | "viewReports" | "addReports" | "editReports" | "deleteReports" | "viewOrders" | "addOrders" | "editOrders" | "deleteOrders" | "viewWarranty" | "addWarranty" | "editWarranty" | "deleteWarranty" | "viewCustomers" | "addCustomers" | "editCustomers" | "deleteCustomers" | "viewWholesaleCustomers" | "addWholesaleCustomers" | "editWholesaleCustomers" | "deleteWholesaleCustomers" | "viewWholesaleOrders" | "addWholesaleOrders" | "editWholesaleOrders" | "deleteWholesaleOrders" | "viewEmployees" | "addEmployees" | "editEmployees" | "deleteEmployees" | "viewExpenses" | "addExpenses" | "editExpenses" | "deleteExpenses" | "viewAnalytics" | "viewCategories" | "addCategories" | "editCategories" | "deleteCategories" | "viewPermissions" | "editPermissions" | "addPermissions" | "deletePermissions" | "viewPages" | "addPages" | "editPages" | "deletePages" | "viewMarketing" | "addMarketing" | "editMarketing" | "deleteMarketing", ExtArgs["result"]["permission"]>
   export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Permission$usersArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
@@ -7734,6 +7979,10 @@ export namespace Prisma {
       addPages: boolean
       editPages: boolean
       deletePages: boolean
+      viewMarketing: boolean
+      addMarketing: boolean
+      editMarketing: boolean
+      deleteMarketing: boolean
     }, ExtArgs["result"]["permission"]>
     composites: {}
   }
@@ -8209,6 +8458,10 @@ export namespace Prisma {
     readonly addPages: FieldRef<"Permission", 'Boolean'>
     readonly editPages: FieldRef<"Permission", 'Boolean'>
     readonly deletePages: FieldRef<"Permission", 'Boolean'>
+    readonly viewMarketing: FieldRef<"Permission", 'Boolean'>
+    readonly addMarketing: FieldRef<"Permission", 'Boolean'>
+    readonly editMarketing: FieldRef<"Permission", 'Boolean'>
+    readonly deleteMarketing: FieldRef<"Permission", 'Boolean'>
   }
     
 
@@ -16326,6 +16579,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     country?: boolean | CountryDefaultArgs<ExtArgs>
+    warehouses?: boolean | City$warehousesArgs<ExtArgs>
+    _count?: boolean | CityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["city"]>
 
   export type CitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16357,6 +16612,8 @@ export namespace Prisma {
   export type CityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "countryId" | "createdAt" | "updatedAt", ExtArgs["result"]["city"]>
   export type CityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     country?: boolean | CountryDefaultArgs<ExtArgs>
+    warehouses?: boolean | City$warehousesArgs<ExtArgs>
+    _count?: boolean | CityCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     country?: boolean | CountryDefaultArgs<ExtArgs>
@@ -16369,6 +16626,7 @@ export namespace Prisma {
     name: "City"
     objects: {
       country: Prisma.$CountryPayload<ExtArgs>
+      warehouses: Prisma.$WarehousePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -16771,6 +17029,7 @@ export namespace Prisma {
   export interface Prisma__CityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     country<T extends CountryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CountryDefaultArgs<ExtArgs>>): Prisma__CountryClient<$Result.GetResult<Prisma.$CountryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    warehouses<T extends City$warehousesArgs<ExtArgs> = {}>(args?: Subset<T, City$warehousesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17201,6 +17460,30 @@ export namespace Prisma {
   }
 
   /**
+   * City.warehouses
+   */
+  export type City$warehousesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warehouse
+     */
+    select?: WarehouseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warehouse
+     */
+    omit?: WarehouseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarehouseInclude<ExtArgs> | null
+    where?: WarehouseWhereInput
+    orderBy?: WarehouseOrderByWithRelationInput | WarehouseOrderByWithRelationInput[]
+    cursor?: WarehouseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WarehouseScalarFieldEnum | WarehouseScalarFieldEnum[]
+  }
+
+  /**
    * City without action
    */
   export type CityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17234,11 +17517,13 @@ export namespace Prisma {
   export type WarehouseAvgAggregateOutputType = {
     id: number | null
     countryId: number | null
+    cityId: number | null
   }
 
   export type WarehouseSumAggregateOutputType = {
     id: number | null
     countryId: number | null
+    cityId: number | null
   }
 
   export type WarehouseMinAggregateOutputType = {
@@ -17246,6 +17531,7 @@ export namespace Prisma {
     name: string | null
     location: string | null
     countryId: number | null
+    cityId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17255,6 +17541,7 @@ export namespace Prisma {
     name: string | null
     location: string | null
     countryId: number | null
+    cityId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17264,6 +17551,7 @@ export namespace Prisma {
     name: number
     location: number
     countryId: number
+    cityId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -17273,11 +17561,13 @@ export namespace Prisma {
   export type WarehouseAvgAggregateInputType = {
     id?: true
     countryId?: true
+    cityId?: true
   }
 
   export type WarehouseSumAggregateInputType = {
     id?: true
     countryId?: true
+    cityId?: true
   }
 
   export type WarehouseMinAggregateInputType = {
@@ -17285,6 +17575,7 @@ export namespace Prisma {
     name?: true
     location?: true
     countryId?: true
+    cityId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17294,6 +17585,7 @@ export namespace Prisma {
     name?: true
     location?: true
     countryId?: true
+    cityId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17303,6 +17595,7 @@ export namespace Prisma {
     name?: true
     location?: true
     countryId?: true
+    cityId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -17399,6 +17692,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId: number | null
+    cityId: number | null
     createdAt: Date
     updatedAt: Date
     _count: WarehouseCountAggregateOutputType | null
@@ -17427,9 +17721,11 @@ export namespace Prisma {
     name?: boolean
     location?: boolean
     countryId?: boolean
+    cityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
     wholesaleOrders?: boolean | Warehouse$wholesaleOrdersArgs<ExtArgs>
@@ -17443,9 +17739,11 @@ export namespace Prisma {
     name?: boolean
     location?: boolean
     countryId?: boolean
+    cityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
   export type WarehouseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17453,9 +17751,11 @@ export namespace Prisma {
     name?: boolean
     location?: boolean
     countryId?: boolean
+    cityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
   export type WarehouseSelectScalar = {
@@ -17463,13 +17763,15 @@ export namespace Prisma {
     name?: boolean
     location?: boolean
     countryId?: boolean
+    cityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "location" | "countryId" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
+  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "location" | "countryId" | "cityId" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
   export type WarehouseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     orders?: boolean | Warehouse$ordersArgs<ExtArgs>
     wholesaleOrders?: boolean | Warehouse$wholesaleOrdersArgs<ExtArgs>
@@ -17479,15 +17781,18 @@ export namespace Prisma {
   }
   export type WarehouseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
   }
   export type WarehouseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     country?: boolean | Warehouse$countryArgs<ExtArgs>
+    city?: boolean | Warehouse$cityArgs<ExtArgs>
   }
 
   export type $WarehousePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Warehouse"
     objects: {
       country: Prisma.$CountryPayload<ExtArgs> | null
+      city: Prisma.$CityPayload<ExtArgs> | null
       stocks: Prisma.$ProductStockPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       wholesaleOrders: Prisma.$WholesaleOrderPayload<ExtArgs>[]
@@ -17499,6 +17804,7 @@ export namespace Prisma {
       name: string
       location: string
       countryId: number | null
+      cityId: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["warehouse"]>
@@ -17896,6 +18202,7 @@ export namespace Prisma {
   export interface Prisma__WarehouseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     country<T extends Warehouse$countryArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$countryArgs<ExtArgs>>): Prisma__CountryClient<$Result.GetResult<Prisma.$CountryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    city<T extends Warehouse$cityArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$cityArgs<ExtArgs>>): Prisma__CityClient<$Result.GetResult<Prisma.$CityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     stocks<T extends Warehouse$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Warehouse$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wholesaleOrders<T extends Warehouse$wholesaleOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$wholesaleOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WholesaleOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -17934,6 +18241,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Warehouse", 'String'>
     readonly location: FieldRef<"Warehouse", 'String'>
     readonly countryId: FieldRef<"Warehouse", 'Int'>
+    readonly cityId: FieldRef<"Warehouse", 'Int'>
     readonly createdAt: FieldRef<"Warehouse", 'DateTime'>
     readonly updatedAt: FieldRef<"Warehouse", 'DateTime'>
   }
@@ -18348,6 +18656,25 @@ export namespace Prisma {
      */
     include?: CountryInclude<ExtArgs> | null
     where?: CountryWhereInput
+  }
+
+  /**
+   * Warehouse.city
+   */
+  export type Warehouse$cityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the City
+     */
+    select?: CitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the City
+     */
+    omit?: CityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CityInclude<ExtArgs> | null
+    where?: CityWhereInput
   }
 
   /**
@@ -30574,6 +30901,8 @@ export namespace Prisma {
     discount: number | null
     finalAmount: number | null
     paymentMethod: string | null
+    amount: string | null
+    amountBank: string | null
     receiverName: string | null
     country: string | null
     city: string | null
@@ -30598,6 +30927,8 @@ export namespace Prisma {
     discount: number | null
     finalAmount: number | null
     paymentMethod: string | null
+    amount: string | null
+    amountBank: string | null
     receiverName: string | null
     country: string | null
     city: string | null
@@ -30622,6 +30953,8 @@ export namespace Prisma {
     discount: number
     finalAmount: number
     paymentMethod: number
+    amount: number
+    amountBank: number
     receiverName: number
     receiverPhone: number
     country: number
@@ -30665,6 +30998,8 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    amount?: true
+    amountBank?: true
     receiverName?: true
     country?: true
     city?: true
@@ -30689,6 +31024,8 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    amount?: true
+    amountBank?: true
     receiverName?: true
     country?: true
     city?: true
@@ -30713,6 +31050,8 @@ export namespace Prisma {
     discount?: true
     finalAmount?: true
     paymentMethod?: true
+    amount?: true
+    amountBank?: true
     receiverName?: true
     receiverPhone?: true
     country?: true
@@ -30825,6 +31164,8 @@ export namespace Prisma {
     discount: number
     finalAmount: number
     paymentMethod: string
+    amount: string | null
+    amountBank: string | null
     receiverName: string | null
     receiverPhone: string[]
     country: string | null
@@ -30869,6 +31210,8 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    amount?: boolean
+    amountBank?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -30899,6 +31242,8 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    amount?: boolean
+    amountBank?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -30927,6 +31272,8 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    amount?: boolean
+    amountBank?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -30955,6 +31302,8 @@ export namespace Prisma {
     discount?: boolean
     finalAmount?: boolean
     paymentMethod?: boolean
+    amount?: boolean
+    amountBank?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
     country?: boolean
@@ -30973,7 +31322,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WholesaleOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "receiverName" | "receiverPhone" | "country" | "city" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "additionalNotes" | "status" | "wholesaleCustomerId" | "userId" | "warehouseId" | "manualCreatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleOrder"]>
+  export type WholesaleOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "totalAmount" | "discount" | "finalAmount" | "paymentMethod" | "amount" | "amountBank" | "receiverName" | "receiverPhone" | "country" | "city" | "municipality" | "fullAddress" | "deliveryNotes" | "googleMapsLink" | "additionalNotes" | "status" | "wholesaleCustomerId" | "userId" | "warehouseId" | "manualCreatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["wholesaleOrder"]>
   export type WholesaleOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wholesaleCustomer?: boolean | WholesaleCustomerDefaultArgs<ExtArgs>
     user?: boolean | WholesaleOrder$userArgs<ExtArgs>
@@ -31007,6 +31356,8 @@ export namespace Prisma {
       discount: number
       finalAmount: number
       paymentMethod: string
+      amount: string | null
+      amountBank: string | null
       receiverName: string | null
       receiverPhone: string[]
       country: string | null
@@ -31456,6 +31807,8 @@ export namespace Prisma {
     readonly discount: FieldRef<"WholesaleOrder", 'Float'>
     readonly finalAmount: FieldRef<"WholesaleOrder", 'Float'>
     readonly paymentMethod: FieldRef<"WholesaleOrder", 'String'>
+    readonly amount: FieldRef<"WholesaleOrder", 'String'>
+    readonly amountBank: FieldRef<"WholesaleOrder", 'String'>
     readonly receiverName: FieldRef<"WholesaleOrder", 'String'>
     readonly receiverPhone: FieldRef<"WholesaleOrder", 'String[]'>
     readonly country: FieldRef<"WholesaleOrder", 'String'>
@@ -52170,6 +52523,1216 @@ export namespace Prisma {
 
 
   /**
+   * Model Campaign
+   */
+
+  export type AggregateCampaign = {
+    _count: CampaignCountAggregateOutputType | null
+    _avg: CampaignAvgAggregateOutputType | null
+    _sum: CampaignSumAggregateOutputType | null
+    _min: CampaignMinAggregateOutputType | null
+    _max: CampaignMaxAggregateOutputType | null
+  }
+
+  export type CampaignAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type CampaignSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type CampaignMinAggregateOutputType = {
+    id: number | null
+    title: string | null
+    type: $Enums.CampaignType | null
+    status: $Enums.CampaignStatus | null
+    subject: string | null
+    content: string | null
+    audience: $Enums.CampaignAudience | null
+    scheduledAt: Date | null
+    sentAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CampaignMaxAggregateOutputType = {
+    id: number | null
+    title: string | null
+    type: $Enums.CampaignType | null
+    status: $Enums.CampaignStatus | null
+    subject: string | null
+    content: string | null
+    audience: $Enums.CampaignAudience | null
+    scheduledAt: Date | null
+    sentAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CampaignCountAggregateOutputType = {
+    id: number
+    title: number
+    type: number
+    status: number
+    subject: number
+    content: number
+    channelDetails: number
+    audience: number
+    targetIds: number
+    scheduledAt: number
+    sentAt: number
+    metrics: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CampaignAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type CampaignSumAggregateInputType = {
+    id?: true
+  }
+
+  export type CampaignMinAggregateInputType = {
+    id?: true
+    title?: true
+    type?: true
+    status?: true
+    subject?: true
+    content?: true
+    audience?: true
+    scheduledAt?: true
+    sentAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CampaignMaxAggregateInputType = {
+    id?: true
+    title?: true
+    type?: true
+    status?: true
+    subject?: true
+    content?: true
+    audience?: true
+    scheduledAt?: true
+    sentAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CampaignCountAggregateInputType = {
+    id?: true
+    title?: true
+    type?: true
+    status?: true
+    subject?: true
+    content?: true
+    channelDetails?: true
+    audience?: true
+    targetIds?: true
+    scheduledAt?: true
+    sentAt?: true
+    metrics?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CampaignAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Campaign to aggregate.
+     */
+    where?: CampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Campaigns to fetch.
+     */
+    orderBy?: CampaignOrderByWithRelationInput | CampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Campaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Campaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Campaigns
+    **/
+    _count?: true | CampaignCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CampaignAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CampaignSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CampaignMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CampaignMaxAggregateInputType
+  }
+
+  export type GetCampaignAggregateType<T extends CampaignAggregateArgs> = {
+        [P in keyof T & keyof AggregateCampaign]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCampaign[P]>
+      : GetScalarType<T[P], AggregateCampaign[P]>
+  }
+
+
+
+
+  export type CampaignGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CampaignWhereInput
+    orderBy?: CampaignOrderByWithAggregationInput | CampaignOrderByWithAggregationInput[]
+    by: CampaignScalarFieldEnum[] | CampaignScalarFieldEnum
+    having?: CampaignScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CampaignCountAggregateInputType | true
+    _avg?: CampaignAvgAggregateInputType
+    _sum?: CampaignSumAggregateInputType
+    _min?: CampaignMinAggregateInputType
+    _max?: CampaignMaxAggregateInputType
+  }
+
+  export type CampaignGroupByOutputType = {
+    id: number
+    title: string
+    type: $Enums.CampaignType
+    status: $Enums.CampaignStatus
+    subject: string | null
+    content: string
+    channelDetails: JsonValue | null
+    audience: $Enums.CampaignAudience
+    targetIds: JsonValue | null
+    scheduledAt: Date | null
+    sentAt: Date | null
+    metrics: JsonValue | null
+    createdById: string
+    createdAt: Date
+    updatedAt: Date
+    _count: CampaignCountAggregateOutputType | null
+    _avg: CampaignAvgAggregateOutputType | null
+    _sum: CampaignSumAggregateOutputType | null
+    _min: CampaignMinAggregateOutputType | null
+    _max: CampaignMaxAggregateOutputType | null
+  }
+
+  type GetCampaignGroupByPayload<T extends CampaignGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CampaignGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CampaignGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CampaignGroupByOutputType[P]>
+            : GetScalarType<T[P], CampaignGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CampaignSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    type?: boolean
+    status?: boolean
+    subject?: boolean
+    content?: boolean
+    channelDetails?: boolean
+    audience?: boolean
+    targetIds?: boolean
+    scheduledAt?: boolean
+    sentAt?: boolean
+    metrics?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["campaign"]>
+
+  export type CampaignSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    type?: boolean
+    status?: boolean
+    subject?: boolean
+    content?: boolean
+    channelDetails?: boolean
+    audience?: boolean
+    targetIds?: boolean
+    scheduledAt?: boolean
+    sentAt?: boolean
+    metrics?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["campaign"]>
+
+  export type CampaignSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    type?: boolean
+    status?: boolean
+    subject?: boolean
+    content?: boolean
+    channelDetails?: boolean
+    audience?: boolean
+    targetIds?: boolean
+    scheduledAt?: boolean
+    sentAt?: boolean
+    metrics?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["campaign"]>
+
+  export type CampaignSelectScalar = {
+    id?: boolean
+    title?: boolean
+    type?: boolean
+    status?: boolean
+    subject?: boolean
+    content?: boolean
+    channelDetails?: boolean
+    audience?: boolean
+    targetIds?: boolean
+    scheduledAt?: boolean
+    sentAt?: boolean
+    metrics?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "type" | "status" | "subject" | "content" | "channelDetails" | "audience" | "targetIds" | "scheduledAt" | "sentAt" | "metrics" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["campaign"]>
+  export type CampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CampaignIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CampaignIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CampaignPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Campaign"
+    objects: {
+      createdBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      title: string
+      type: $Enums.CampaignType
+      status: $Enums.CampaignStatus
+      subject: string | null
+      content: string
+      channelDetails: Prisma.JsonValue | null
+      audience: $Enums.CampaignAudience
+      targetIds: Prisma.JsonValue | null
+      scheduledAt: Date | null
+      sentAt: Date | null
+      metrics: Prisma.JsonValue | null
+      createdById: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["campaign"]>
+    composites: {}
+  }
+
+  type CampaignGetPayload<S extends boolean | null | undefined | CampaignDefaultArgs> = $Result.GetResult<Prisma.$CampaignPayload, S>
+
+  type CampaignCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CampaignFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CampaignCountAggregateInputType | true
+    }
+
+  export interface CampaignDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Campaign'], meta: { name: 'Campaign' } }
+    /**
+     * Find zero or one Campaign that matches the filter.
+     * @param {CampaignFindUniqueArgs} args - Arguments to find a Campaign
+     * @example
+     * // Get one Campaign
+     * const campaign = await prisma.campaign.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CampaignFindUniqueArgs>(args: SelectSubset<T, CampaignFindUniqueArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Campaign that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CampaignFindUniqueOrThrowArgs} args - Arguments to find a Campaign
+     * @example
+     * // Get one Campaign
+     * const campaign = await prisma.campaign.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CampaignFindUniqueOrThrowArgs>(args: SelectSubset<T, CampaignFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Campaign that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignFindFirstArgs} args - Arguments to find a Campaign
+     * @example
+     * // Get one Campaign
+     * const campaign = await prisma.campaign.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CampaignFindFirstArgs>(args?: SelectSubset<T, CampaignFindFirstArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Campaign that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignFindFirstOrThrowArgs} args - Arguments to find a Campaign
+     * @example
+     * // Get one Campaign
+     * const campaign = await prisma.campaign.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CampaignFindFirstOrThrowArgs>(args?: SelectSubset<T, CampaignFindFirstOrThrowArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Campaigns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Campaigns
+     * const campaigns = await prisma.campaign.findMany()
+     * 
+     * // Get first 10 Campaigns
+     * const campaigns = await prisma.campaign.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const campaignWithIdOnly = await prisma.campaign.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CampaignFindManyArgs>(args?: SelectSubset<T, CampaignFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Campaign.
+     * @param {CampaignCreateArgs} args - Arguments to create a Campaign.
+     * @example
+     * // Create one Campaign
+     * const Campaign = await prisma.campaign.create({
+     *   data: {
+     *     // ... data to create a Campaign
+     *   }
+     * })
+     * 
+     */
+    create<T extends CampaignCreateArgs>(args: SelectSubset<T, CampaignCreateArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Campaigns.
+     * @param {CampaignCreateManyArgs} args - Arguments to create many Campaigns.
+     * @example
+     * // Create many Campaigns
+     * const campaign = await prisma.campaign.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CampaignCreateManyArgs>(args?: SelectSubset<T, CampaignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Campaigns and returns the data saved in the database.
+     * @param {CampaignCreateManyAndReturnArgs} args - Arguments to create many Campaigns.
+     * @example
+     * // Create many Campaigns
+     * const campaign = await prisma.campaign.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Campaigns and only return the `id`
+     * const campaignWithIdOnly = await prisma.campaign.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CampaignCreateManyAndReturnArgs>(args?: SelectSubset<T, CampaignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Campaign.
+     * @param {CampaignDeleteArgs} args - Arguments to delete one Campaign.
+     * @example
+     * // Delete one Campaign
+     * const Campaign = await prisma.campaign.delete({
+     *   where: {
+     *     // ... filter to delete one Campaign
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CampaignDeleteArgs>(args: SelectSubset<T, CampaignDeleteArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Campaign.
+     * @param {CampaignUpdateArgs} args - Arguments to update one Campaign.
+     * @example
+     * // Update one Campaign
+     * const campaign = await prisma.campaign.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CampaignUpdateArgs>(args: SelectSubset<T, CampaignUpdateArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Campaigns.
+     * @param {CampaignDeleteManyArgs} args - Arguments to filter Campaigns to delete.
+     * @example
+     * // Delete a few Campaigns
+     * const { count } = await prisma.campaign.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CampaignDeleteManyArgs>(args?: SelectSubset<T, CampaignDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Campaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Campaigns
+     * const campaign = await prisma.campaign.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CampaignUpdateManyArgs>(args: SelectSubset<T, CampaignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Campaigns and returns the data updated in the database.
+     * @param {CampaignUpdateManyAndReturnArgs} args - Arguments to update many Campaigns.
+     * @example
+     * // Update many Campaigns
+     * const campaign = await prisma.campaign.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Campaigns and only return the `id`
+     * const campaignWithIdOnly = await prisma.campaign.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CampaignUpdateManyAndReturnArgs>(args: SelectSubset<T, CampaignUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Campaign.
+     * @param {CampaignUpsertArgs} args - Arguments to update or create a Campaign.
+     * @example
+     * // Update or create a Campaign
+     * const campaign = await prisma.campaign.upsert({
+     *   create: {
+     *     // ... data to create a Campaign
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Campaign we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CampaignUpsertArgs>(args: SelectSubset<T, CampaignUpsertArgs<ExtArgs>>): Prisma__CampaignClient<$Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Campaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignCountArgs} args - Arguments to filter Campaigns to count.
+     * @example
+     * // Count the number of Campaigns
+     * const count = await prisma.campaign.count({
+     *   where: {
+     *     // ... the filter for the Campaigns we want to count
+     *   }
+     * })
+    **/
+    count<T extends CampaignCountArgs>(
+      args?: Subset<T, CampaignCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CampaignCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Campaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CampaignAggregateArgs>(args: Subset<T, CampaignAggregateArgs>): Prisma.PrismaPromise<GetCampaignAggregateType<T>>
+
+    /**
+     * Group by Campaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CampaignGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CampaignGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CampaignGroupByArgs['orderBy'] }
+        : { orderBy?: CampaignGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CampaignGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCampaignGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Campaign model
+   */
+  readonly fields: CampaignFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Campaign.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CampaignClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Campaign model
+   */
+  interface CampaignFieldRefs {
+    readonly id: FieldRef<"Campaign", 'Int'>
+    readonly title: FieldRef<"Campaign", 'String'>
+    readonly type: FieldRef<"Campaign", 'CampaignType'>
+    readonly status: FieldRef<"Campaign", 'CampaignStatus'>
+    readonly subject: FieldRef<"Campaign", 'String'>
+    readonly content: FieldRef<"Campaign", 'String'>
+    readonly channelDetails: FieldRef<"Campaign", 'Json'>
+    readonly audience: FieldRef<"Campaign", 'CampaignAudience'>
+    readonly targetIds: FieldRef<"Campaign", 'Json'>
+    readonly scheduledAt: FieldRef<"Campaign", 'DateTime'>
+    readonly sentAt: FieldRef<"Campaign", 'DateTime'>
+    readonly metrics: FieldRef<"Campaign", 'Json'>
+    readonly createdById: FieldRef<"Campaign", 'String'>
+    readonly createdAt: FieldRef<"Campaign", 'DateTime'>
+    readonly updatedAt: FieldRef<"Campaign", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Campaign findUnique
+   */
+  export type CampaignFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which Campaign to fetch.
+     */
+    where: CampaignWhereUniqueInput
+  }
+
+  /**
+   * Campaign findUniqueOrThrow
+   */
+  export type CampaignFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which Campaign to fetch.
+     */
+    where: CampaignWhereUniqueInput
+  }
+
+  /**
+   * Campaign findFirst
+   */
+  export type CampaignFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which Campaign to fetch.
+     */
+    where?: CampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Campaigns to fetch.
+     */
+    orderBy?: CampaignOrderByWithRelationInput | CampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Campaigns.
+     */
+    cursor?: CampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Campaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Campaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Campaigns.
+     */
+    distinct?: CampaignScalarFieldEnum | CampaignScalarFieldEnum[]
+  }
+
+  /**
+   * Campaign findFirstOrThrow
+   */
+  export type CampaignFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which Campaign to fetch.
+     */
+    where?: CampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Campaigns to fetch.
+     */
+    orderBy?: CampaignOrderByWithRelationInput | CampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Campaigns.
+     */
+    cursor?: CampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Campaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Campaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Campaigns.
+     */
+    distinct?: CampaignScalarFieldEnum | CampaignScalarFieldEnum[]
+  }
+
+  /**
+   * Campaign findMany
+   */
+  export type CampaignFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which Campaigns to fetch.
+     */
+    where?: CampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Campaigns to fetch.
+     */
+    orderBy?: CampaignOrderByWithRelationInput | CampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Campaigns.
+     */
+    cursor?: CampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Campaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Campaigns.
+     */
+    skip?: number
+    distinct?: CampaignScalarFieldEnum | CampaignScalarFieldEnum[]
+  }
+
+  /**
+   * Campaign create
+   */
+  export type CampaignCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Campaign.
+     */
+    data: XOR<CampaignCreateInput, CampaignUncheckedCreateInput>
+  }
+
+  /**
+   * Campaign createMany
+   */
+  export type CampaignCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Campaigns.
+     */
+    data: CampaignCreateManyInput | CampaignCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Campaign createManyAndReturn
+   */
+  export type CampaignCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * The data used to create many Campaigns.
+     */
+    data: CampaignCreateManyInput | CampaignCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Campaign update
+   */
+  export type CampaignUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Campaign.
+     */
+    data: XOR<CampaignUpdateInput, CampaignUncheckedUpdateInput>
+    /**
+     * Choose, which Campaign to update.
+     */
+    where: CampaignWhereUniqueInput
+  }
+
+  /**
+   * Campaign updateMany
+   */
+  export type CampaignUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Campaigns.
+     */
+    data: XOR<CampaignUpdateManyMutationInput, CampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which Campaigns to update
+     */
+    where?: CampaignWhereInput
+    /**
+     * Limit how many Campaigns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Campaign updateManyAndReturn
+   */
+  export type CampaignUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * The data used to update Campaigns.
+     */
+    data: XOR<CampaignUpdateManyMutationInput, CampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which Campaigns to update
+     */
+    where?: CampaignWhereInput
+    /**
+     * Limit how many Campaigns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Campaign upsert
+   */
+  export type CampaignUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Campaign to update in case it exists.
+     */
+    where: CampaignWhereUniqueInput
+    /**
+     * In case the Campaign found by the `where` argument doesn't exist, create a new Campaign with this data.
+     */
+    create: XOR<CampaignCreateInput, CampaignUncheckedCreateInput>
+    /**
+     * In case the Campaign was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CampaignUpdateInput, CampaignUncheckedUpdateInput>
+  }
+
+  /**
+   * Campaign delete
+   */
+  export type CampaignDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+    /**
+     * Filter which Campaign to delete.
+     */
+    where: CampaignWhereUniqueInput
+  }
+
+  /**
+   * Campaign deleteMany
+   */
+  export type CampaignDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Campaigns to delete
+     */
+    where?: CampaignWhereInput
+    /**
+     * Limit how many Campaigns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Campaign without action
+   */
+  export type CampaignDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Campaign
+     */
+    select?: CampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Campaign
+     */
+    omit?: CampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CampaignInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -52260,7 +53823,11 @@ export namespace Prisma {
     viewPages: 'viewPages',
     addPages: 'addPages',
     editPages: 'editPages',
-    deletePages: 'deletePages'
+    deletePages: 'deletePages',
+    viewMarketing: 'viewMarketing',
+    addMarketing: 'addMarketing',
+    editMarketing: 'editMarketing',
+    deleteMarketing: 'deleteMarketing'
   };
 
   export type PermissionScalarFieldEnum = (typeof PermissionScalarFieldEnum)[keyof typeof PermissionScalarFieldEnum]
@@ -52381,6 +53948,7 @@ export namespace Prisma {
     name: 'name',
     location: 'location',
     countryId: 'countryId',
+    cityId: 'cityId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -52566,6 +54134,8 @@ export namespace Prisma {
     discount: 'discount',
     finalAmount: 'finalAmount',
     paymentMethod: 'paymentMethod',
+    amount: 'amount',
+    amountBank: 'amountBank',
     receiverName: 'receiverName',
     receiverPhone: 'receiverPhone',
     country: 'country',
@@ -52875,6 +54445,27 @@ export namespace Prisma {
   };
 
   export type AffiliateWalletTransferScalarFieldEnum = (typeof AffiliateWalletTransferScalarFieldEnum)[keyof typeof AffiliateWalletTransferScalarFieldEnum]
+
+
+  export const CampaignScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    type: 'type',
+    status: 'status',
+    subject: 'subject',
+    content: 'content',
+    channelDetails: 'channelDetails',
+    audience: 'audience',
+    targetIds: 'targetIds',
+    scheduledAt: 'scheduledAt',
+    sentAt: 'sentAt',
+    metrics: 'metrics',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CampaignScalarFieldEnum = (typeof CampaignScalarFieldEnum)[keyof typeof CampaignScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -53194,6 +54785,48 @@ export namespace Prisma {
    */
   export type ListEnumWalletTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransferStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'CampaignType'
+   */
+  export type EnumCampaignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignType'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignType[]'
+   */
+  export type ListEnumCampaignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignStatus'
+   */
+  export type EnumCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignStatus[]'
+   */
+  export type ListEnumCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignAudience'
+   */
+  export type EnumCampaignAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignAudience'>
+    
+
+
+  /**
+   * Reference to a field of type 'CampaignAudience[]'
+   */
+  export type ListEnumCampaignAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CampaignAudience[]'>
+    
   /**
    * Deep Input Types
    */
@@ -53240,6 +54873,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
     wholesaleVisits?: WholesaleVisitListRelationFilter
     wholesaleOrders?: WholesaleOrderListRelationFilter
+    campaigns?: CampaignListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -53280,6 +54914,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerOrderByRelationAggregateInput
     wholesaleVisits?: WholesaleVisitOrderByRelationAggregateInput
     wholesaleOrders?: WholesaleOrderOrderByRelationAggregateInput
+    campaigns?: CampaignOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -53323,6 +54958,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerListRelationFilter
     wholesaleVisits?: WholesaleVisitListRelationFilter
     wholesaleOrders?: WholesaleOrderListRelationFilter
+    campaigns?: CampaignListRelationFilter
   }, "id" | "email" | "affiliateCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -53434,6 +55070,10 @@ export namespace Prisma {
     addPages?: BoolFilter<"Permission"> | boolean
     editPages?: BoolFilter<"Permission"> | boolean
     deletePages?: BoolFilter<"Permission"> | boolean
+    viewMarketing?: BoolFilter<"Permission"> | boolean
+    addMarketing?: BoolFilter<"Permission"> | boolean
+    editMarketing?: BoolFilter<"Permission"> | boolean
+    deleteMarketing?: BoolFilter<"Permission"> | boolean
     users?: UserListRelationFilter
   }
 
@@ -53489,6 +55129,10 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
+    viewMarketing?: SortOrder
+    addMarketing?: SortOrder
+    editMarketing?: SortOrder
+    deleteMarketing?: SortOrder
     users?: UserOrderByRelationAggregateInput
   }
 
@@ -53547,6 +55191,10 @@ export namespace Prisma {
     addPages?: BoolFilter<"Permission"> | boolean
     editPages?: BoolFilter<"Permission"> | boolean
     deletePages?: BoolFilter<"Permission"> | boolean
+    viewMarketing?: BoolFilter<"Permission"> | boolean
+    addMarketing?: BoolFilter<"Permission"> | boolean
+    editMarketing?: BoolFilter<"Permission"> | boolean
+    deleteMarketing?: BoolFilter<"Permission"> | boolean
     users?: UserListRelationFilter
   }, "id">
 
@@ -53602,6 +55250,10 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
+    viewMarketing?: SortOrder
+    addMarketing?: SortOrder
+    editMarketing?: SortOrder
+    deleteMarketing?: SortOrder
     _count?: PermissionCountOrderByAggregateInput
     _max?: PermissionMaxOrderByAggregateInput
     _min?: PermissionMinOrderByAggregateInput
@@ -53662,6 +55314,10 @@ export namespace Prisma {
     addPages?: BoolWithAggregatesFilter<"Permission"> | boolean
     editPages?: BoolWithAggregatesFilter<"Permission"> | boolean
     deletePages?: BoolWithAggregatesFilter<"Permission"> | boolean
+    viewMarketing?: BoolWithAggregatesFilter<"Permission"> | boolean
+    addMarketing?: BoolWithAggregatesFilter<"Permission"> | boolean
+    editMarketing?: BoolWithAggregatesFilter<"Permission"> | boolean
+    deleteMarketing?: BoolWithAggregatesFilter<"Permission"> | boolean
   }
 
   export type CategoryWhereInput = {
@@ -54229,6 +55885,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"City"> | Date | string
     updatedAt?: DateTimeFilter<"City"> | Date | string
     country?: XOR<CountryScalarRelationFilter, CountryWhereInput>
+    warehouses?: WarehouseListRelationFilter
   }
 
   export type CityOrderByWithRelationInput = {
@@ -54238,6 +55895,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     country?: CountryOrderByWithRelationInput
+    warehouses?: WarehouseOrderByRelationAggregateInput
   }
 
   export type CityWhereUniqueInput = Prisma.AtLeast<{
@@ -54251,6 +55909,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"City"> | Date | string
     updatedAt?: DateTimeFilter<"City"> | Date | string
     country?: XOR<CountryScalarRelationFilter, CountryWhereInput>
+    warehouses?: WarehouseListRelationFilter
   }, "id" | "name_countryId">
 
   export type CityOrderByWithAggregationInput = {
@@ -54285,9 +55944,11 @@ export namespace Prisma {
     name?: StringFilter<"Warehouse"> | string
     location?: StringFilter<"Warehouse"> | string
     countryId?: IntNullableFilter<"Warehouse"> | number | null
+    cityId?: IntNullableFilter<"Warehouse"> | number | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     country?: XOR<CountryNullableScalarRelationFilter, CountryWhereInput> | null
+    city?: XOR<CityNullableScalarRelationFilter, CityWhereInput> | null
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
     wholesaleOrders?: WholesaleOrderListRelationFilter
@@ -54300,9 +55961,11 @@ export namespace Prisma {
     name?: SortOrder
     location?: SortOrder
     countryId?: SortOrderInput | SortOrder
+    cityId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     country?: CountryOrderByWithRelationInput
+    city?: CityOrderByWithRelationInput
     stocks?: ProductStockOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     wholesaleOrders?: WholesaleOrderOrderByRelationAggregateInput
@@ -54318,9 +55981,11 @@ export namespace Prisma {
     NOT?: WarehouseWhereInput | WarehouseWhereInput[]
     location?: StringFilter<"Warehouse"> | string
     countryId?: IntNullableFilter<"Warehouse"> | number | null
+    cityId?: IntNullableFilter<"Warehouse"> | number | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     country?: XOR<CountryNullableScalarRelationFilter, CountryWhereInput> | null
+    city?: XOR<CityNullableScalarRelationFilter, CityWhereInput> | null
     stocks?: ProductStockListRelationFilter
     orders?: OrderListRelationFilter
     wholesaleOrders?: WholesaleOrderListRelationFilter
@@ -54333,6 +55998,7 @@ export namespace Prisma {
     name?: SortOrder
     location?: SortOrder
     countryId?: SortOrderInput | SortOrder
+    cityId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WarehouseCountOrderByAggregateInput
@@ -54350,6 +56016,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Warehouse"> | string
     location?: StringWithAggregatesFilter<"Warehouse"> | string
     countryId?: IntNullableWithAggregatesFilter<"Warehouse"> | number | null
+    cityId?: IntNullableWithAggregatesFilter<"Warehouse"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
   }
@@ -55275,6 +56942,8 @@ export namespace Prisma {
     discount?: FloatFilter<"WholesaleOrder"> | number
     finalAmount?: FloatFilter<"WholesaleOrder"> | number
     paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    amount?: StringNullableFilter<"WholesaleOrder"> | string | null
+    amountBank?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverPhone?: StringNullableListFilter<"WholesaleOrder">
     country?: StringNullableFilter<"WholesaleOrder"> | string | null
@@ -55304,6 +56973,8 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    amount?: SortOrderInput | SortOrder
+    amountBank?: SortOrderInput | SortOrder
     receiverName?: SortOrderInput | SortOrder
     receiverPhone?: SortOrder
     country?: SortOrderInput | SortOrder
@@ -55336,6 +57007,8 @@ export namespace Prisma {
     discount?: FloatFilter<"WholesaleOrder"> | number
     finalAmount?: FloatFilter<"WholesaleOrder"> | number
     paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    amount?: StringNullableFilter<"WholesaleOrder"> | string | null
+    amountBank?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverPhone?: StringNullableListFilter<"WholesaleOrder">
     country?: StringNullableFilter<"WholesaleOrder"> | string | null
@@ -55365,6 +57038,8 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    amount?: SortOrderInput | SortOrder
+    amountBank?: SortOrderInput | SortOrder
     receiverName?: SortOrderInput | SortOrder
     receiverPhone?: SortOrder
     country?: SortOrderInput | SortOrder
@@ -55398,6 +57073,8 @@ export namespace Prisma {
     discount?: FloatWithAggregatesFilter<"WholesaleOrder"> | number
     finalAmount?: FloatWithAggregatesFilter<"WholesaleOrder"> | number
     paymentMethod?: StringWithAggregatesFilter<"WholesaleOrder"> | string
+    amount?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
+    amountBank?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
     receiverName?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
     receiverPhone?: StringNullableListFilter<"WholesaleOrder">
     country?: StringNullableWithAggregatesFilter<"WholesaleOrder"> | string | null
@@ -56942,6 +58619,113 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"AffiliateWalletTransfer"> | Date | string
   }
 
+  export type CampaignWhereInput = {
+    AND?: CampaignWhereInput | CampaignWhereInput[]
+    OR?: CampaignWhereInput[]
+    NOT?: CampaignWhereInput | CampaignWhereInput[]
+    id?: IntFilter<"Campaign"> | number
+    title?: StringFilter<"Campaign"> | string
+    type?: EnumCampaignTypeFilter<"Campaign"> | $Enums.CampaignType
+    status?: EnumCampaignStatusFilter<"Campaign"> | $Enums.CampaignStatus
+    subject?: StringNullableFilter<"Campaign"> | string | null
+    content?: StringFilter<"Campaign"> | string
+    channelDetails?: JsonNullableFilter<"Campaign">
+    audience?: EnumCampaignAudienceFilter<"Campaign"> | $Enums.CampaignAudience
+    targetIds?: JsonNullableFilter<"Campaign">
+    scheduledAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    metrics?: JsonNullableFilter<"Campaign">
+    createdById?: StringFilter<"Campaign"> | string
+    createdAt?: DateTimeFilter<"Campaign"> | Date | string
+    updatedAt?: DateTimeFilter<"Campaign"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type CampaignOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    subject?: SortOrderInput | SortOrder
+    content?: SortOrder
+    channelDetails?: SortOrderInput | SortOrder
+    audience?: SortOrder
+    targetIds?: SortOrderInput | SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    metrics?: SortOrderInput | SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type CampaignWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: CampaignWhereInput | CampaignWhereInput[]
+    OR?: CampaignWhereInput[]
+    NOT?: CampaignWhereInput | CampaignWhereInput[]
+    title?: StringFilter<"Campaign"> | string
+    type?: EnumCampaignTypeFilter<"Campaign"> | $Enums.CampaignType
+    status?: EnumCampaignStatusFilter<"Campaign"> | $Enums.CampaignStatus
+    subject?: StringNullableFilter<"Campaign"> | string | null
+    content?: StringFilter<"Campaign"> | string
+    channelDetails?: JsonNullableFilter<"Campaign">
+    audience?: EnumCampaignAudienceFilter<"Campaign"> | $Enums.CampaignAudience
+    targetIds?: JsonNullableFilter<"Campaign">
+    scheduledAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    metrics?: JsonNullableFilter<"Campaign">
+    createdById?: StringFilter<"Campaign"> | string
+    createdAt?: DateTimeFilter<"Campaign"> | Date | string
+    updatedAt?: DateTimeFilter<"Campaign"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type CampaignOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    subject?: SortOrderInput | SortOrder
+    content?: SortOrder
+    channelDetails?: SortOrderInput | SortOrder
+    audience?: SortOrder
+    targetIds?: SortOrderInput | SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    metrics?: SortOrderInput | SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CampaignCountOrderByAggregateInput
+    _avg?: CampaignAvgOrderByAggregateInput
+    _max?: CampaignMaxOrderByAggregateInput
+    _min?: CampaignMinOrderByAggregateInput
+    _sum?: CampaignSumOrderByAggregateInput
+  }
+
+  export type CampaignScalarWhereWithAggregatesInput = {
+    AND?: CampaignScalarWhereWithAggregatesInput | CampaignScalarWhereWithAggregatesInput[]
+    OR?: CampaignScalarWhereWithAggregatesInput[]
+    NOT?: CampaignScalarWhereWithAggregatesInput | CampaignScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Campaign"> | number
+    title?: StringWithAggregatesFilter<"Campaign"> | string
+    type?: EnumCampaignTypeWithAggregatesFilter<"Campaign"> | $Enums.CampaignType
+    status?: EnumCampaignStatusWithAggregatesFilter<"Campaign"> | $Enums.CampaignStatus
+    subject?: StringNullableWithAggregatesFilter<"Campaign"> | string | null
+    content?: StringWithAggregatesFilter<"Campaign"> | string
+    channelDetails?: JsonNullableWithAggregatesFilter<"Campaign">
+    audience?: EnumCampaignAudienceWithAggregatesFilter<"Campaign"> | $Enums.CampaignAudience
+    targetIds?: JsonNullableWithAggregatesFilter<"Campaign">
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"Campaign"> | Date | string | null
+    sentAt?: DateTimeNullableWithAggregatesFilter<"Campaign"> | Date | string | null
+    metrics?: JsonNullableWithAggregatesFilter<"Campaign">
+    createdById?: StringWithAggregatesFilter<"Campaign"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -56978,6 +58762,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -57016,6 +58801,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUpdateInput = {
@@ -57054,6 +58840,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -57092,6 +58879,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -57213,6 +59001,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
     users?: UserCreateNestedManyWithoutPermissionInput
   }
 
@@ -57268,6 +59060,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
     users?: UserUncheckedCreateNestedManyWithoutPermissionInput
   }
 
@@ -57323,6 +59119,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUpdateManyWithoutPermissionNestedInput
   }
 
@@ -57378,6 +59178,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUncheckedUpdateManyWithoutPermissionNestedInput
   }
 
@@ -57433,6 +59237,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }
 
   export type PermissionUpdateManyMutationInput = {
@@ -57487,6 +59295,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PermissionUncheckedUpdateManyInput = {
@@ -57541,6 +59353,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CategoryCreateInput = {
@@ -58169,6 +59985,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country: CountryCreateNestedOneWithoutCitiesInput
+    warehouses?: WarehouseCreateNestedManyWithoutCityInput
   }
 
   export type CityUncheckedCreateInput = {
@@ -58177,6 +59994,7 @@ export namespace Prisma {
     countryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutCityInput
   }
 
   export type CityUpdateInput = {
@@ -58184,6 +60002,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneRequiredWithoutCitiesNestedInput
+    warehouses?: WarehouseUpdateManyWithoutCityNestedInput
   }
 
   export type CityUncheckedUpdateInput = {
@@ -58192,6 +60011,7 @@ export namespace Prisma {
     countryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    warehouses?: WarehouseUncheckedUpdateManyWithoutCityNestedInput
   }
 
   export type CityCreateManyInput = {
@@ -58222,6 +60042,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
@@ -58234,6 +60055,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -58249,6 +60071,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
@@ -58261,6 +60084,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -58275,6 +60099,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -58291,6 +60116,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -59296,6 +61122,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -59322,6 +61150,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -59347,6 +61177,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59373,6 +61205,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59399,6 +61233,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -59423,6 +61259,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59445,6 +61283,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61121,6 +62961,128 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CampaignCreateInput = {
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutCampaignsInput
+  }
+
+  export type CampaignUncheckedCreateInput = {
+    id?: number
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CampaignUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutCampaignsNestedInput
+  }
+
+  export type CampaignUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CampaignCreateManyInput = {
+    id?: number
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CampaignUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CampaignUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -61307,6 +63269,12 @@ export namespace Prisma {
     none?: WholesaleOrderWhereInput
   }
 
+  export type CampaignListRelationFilter = {
+    every?: CampaignWhereInput
+    some?: CampaignWhereInput
+    none?: CampaignWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -61369,6 +63337,10 @@ export namespace Prisma {
   }
 
   export type WholesaleOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CampaignOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -61617,6 +63589,10 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
+    viewMarketing?: SortOrder
+    addMarketing?: SortOrder
+    editMarketing?: SortOrder
+    deleteMarketing?: SortOrder
   }
 
   export type PermissionMaxOrderByAggregateInput = {
@@ -61671,6 +63647,10 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
+    viewMarketing?: SortOrder
+    addMarketing?: SortOrder
+    editMarketing?: SortOrder
+    deleteMarketing?: SortOrder
   }
 
   export type PermissionMinOrderByAggregateInput = {
@@ -61725,6 +63705,10 @@ export namespace Prisma {
     addPages?: SortOrder
     editPages?: SortOrder
     deletePages?: SortOrder
+    viewMarketing?: SortOrder
+    addMarketing?: SortOrder
+    editMarketing?: SortOrder
+    deleteMarketing?: SortOrder
   }
 
   export type ProductListRelationFilter = {
@@ -62313,11 +64297,17 @@ export namespace Prisma {
     isNot?: CountryWhereInput | null
   }
 
+  export type CityNullableScalarRelationFilter = {
+    is?: CityWhereInput | null
+    isNot?: CityWhereInput | null
+  }
+
   export type WarehouseCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     location?: SortOrder
     countryId?: SortOrder
+    cityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -62325,6 +64315,7 @@ export namespace Prisma {
   export type WarehouseAvgOrderByAggregateInput = {
     id?: SortOrder
     countryId?: SortOrder
+    cityId?: SortOrder
   }
 
   export type WarehouseMaxOrderByAggregateInput = {
@@ -62332,6 +64323,7 @@ export namespace Prisma {
     name?: SortOrder
     location?: SortOrder
     countryId?: SortOrder
+    cityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -62341,6 +64333,7 @@ export namespace Prisma {
     name?: SortOrder
     location?: SortOrder
     countryId?: SortOrder
+    cityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -62348,6 +64341,7 @@ export namespace Prisma {
   export type WarehouseSumOrderByAggregateInput = {
     id?: SortOrder
     countryId?: SortOrder
+    cityId?: SortOrder
   }
 
   export type WarehouseScalarRelationFilter = {
@@ -63054,6 +65048,8 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    amount?: SortOrder
+    amountBank?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
     country?: SortOrder
@@ -63087,6 +65083,8 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    amount?: SortOrder
+    amountBank?: SortOrder
     receiverName?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -63111,6 +65109,8 @@ export namespace Prisma {
     discount?: SortOrder
     finalAmount?: SortOrder
     paymentMethod?: SortOrder
+    amount?: SortOrder
+    amountBank?: SortOrder
     receiverName?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -64241,6 +66241,113 @@ export namespace Prisma {
     _max?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
   }
 
+  export type EnumCampaignTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeFilter<$PrismaModel> | $Enums.CampaignType
+  }
+
+  export type EnumCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
+  }
+
+  export type EnumCampaignAudienceFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignAudience | EnumCampaignAudienceFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignAudienceFilter<$PrismaModel> | $Enums.CampaignAudience
+  }
+
+  export type CampaignCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    subject?: SortOrder
+    content?: SortOrder
+    channelDetails?: SortOrder
+    audience?: SortOrder
+    targetIds?: SortOrder
+    scheduledAt?: SortOrder
+    sentAt?: SortOrder
+    metrics?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CampaignAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type CampaignMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    subject?: SortOrder
+    content?: SortOrder
+    audience?: SortOrder
+    scheduledAt?: SortOrder
+    sentAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CampaignMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    subject?: SortOrder
+    content?: SortOrder
+    audience?: SortOrder
+    scheduledAt?: SortOrder
+    sentAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CampaignSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumCampaignTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel> | $Enums.CampaignType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignTypeFilter<$PrismaModel>
+    _max?: NestedEnumCampaignTypeFilter<$PrismaModel>
+  }
+
+  export type EnumCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCampaignAudienceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignAudience | EnumCampaignAudienceFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignAudienceWithAggregatesFilter<$PrismaModel> | $Enums.CampaignAudience
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignAudienceFilter<$PrismaModel>
+    _max?: NestedEnumCampaignAudienceFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedOneWithoutSubordinatesInput = {
     create?: XOR<UserCreateWithoutSubordinatesInput, UserUncheckedCreateWithoutSubordinatesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSubordinatesInput
@@ -64357,6 +66464,13 @@ export namespace Prisma {
     connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
   }
 
+  export type CampaignCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput> | CampaignCreateWithoutCreatedByInput[] | CampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: CampaignCreateOrConnectWithoutCreatedByInput | CampaignCreateOrConnectWithoutCreatedByInput[]
+    createMany?: CampaignCreateManyCreatedByInputEnvelope
+    connect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutParentInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -64459,6 +66573,13 @@ export namespace Prisma {
     connectOrCreate?: WholesaleOrderCreateOrConnectWithoutUserInput | WholesaleOrderCreateOrConnectWithoutUserInput[]
     createMany?: WholesaleOrderCreateManyUserInputEnvelope
     connect?: WholesaleOrderWhereUniqueInput | WholesaleOrderWhereUniqueInput[]
+  }
+
+  export type CampaignUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput> | CampaignCreateWithoutCreatedByInput[] | CampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: CampaignCreateOrConnectWithoutCreatedByInput | CampaignCreateOrConnectWithoutCreatedByInput[]
+    createMany?: CampaignCreateManyCreatedByInputEnvelope
+    connect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -64730,6 +66851,20 @@ export namespace Prisma {
     deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
   }
 
+  export type CampaignUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput> | CampaignCreateWithoutCreatedByInput[] | CampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: CampaignCreateOrConnectWithoutCreatedByInput | CampaignCreateOrConnectWithoutCreatedByInput[]
+    upsert?: CampaignUpsertWithWhereUniqueWithoutCreatedByInput | CampaignUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: CampaignCreateManyCreatedByInputEnvelope
+    set?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    disconnect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    delete?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    connect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    update?: CampaignUpdateWithWhereUniqueWithoutCreatedByInput | CampaignUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: CampaignUpdateManyWithWhereWithoutCreatedByInput | CampaignUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: CampaignScalarWhereInput | CampaignScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutParentNestedInput = {
     create?: XOR<UserCreateWithoutParentInput, UserUncheckedCreateWithoutParentInput> | UserCreateWithoutParentInput[] | UserUncheckedCreateWithoutParentInput[]
     connectOrCreate?: UserCreateOrConnectWithoutParentInput | UserCreateOrConnectWithoutParentInput[]
@@ -64937,6 +67072,20 @@ export namespace Prisma {
     update?: WholesaleOrderUpdateWithWhereUniqueWithoutUserInput | WholesaleOrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: WholesaleOrderUpdateManyWithWhereWithoutUserInput | WholesaleOrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: WholesaleOrderScalarWhereInput | WholesaleOrderScalarWhereInput[]
+  }
+
+  export type CampaignUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput> | CampaignCreateWithoutCreatedByInput[] | CampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: CampaignCreateOrConnectWithoutCreatedByInput | CampaignCreateOrConnectWithoutCreatedByInput[]
+    upsert?: CampaignUpsertWithWhereUniqueWithoutCreatedByInput | CampaignUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: CampaignCreateManyCreatedByInputEnvelope
+    set?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    disconnect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    delete?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    connect?: CampaignWhereUniqueInput | CampaignWhereUniqueInput[]
+    update?: CampaignUpdateWithWhereUniqueWithoutCreatedByInput | CampaignUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: CampaignUpdateManyWithWhereWithoutCreatedByInput | CampaignUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: CampaignScalarWhereInput | CampaignScalarWhereInput[]
   }
 
   export type UserCreateNestedManyWithoutPermissionInput = {
@@ -65781,6 +67930,20 @@ export namespace Prisma {
     connect?: CountryWhereUniqueInput
   }
 
+  export type WarehouseCreateNestedManyWithoutCityInput = {
+    create?: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput> | WarehouseCreateWithoutCityInput[] | WarehouseUncheckedCreateWithoutCityInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutCityInput | WarehouseCreateOrConnectWithoutCityInput[]
+    createMany?: WarehouseCreateManyCityInputEnvelope
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+  }
+
+  export type WarehouseUncheckedCreateNestedManyWithoutCityInput = {
+    create?: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput> | WarehouseCreateWithoutCityInput[] | WarehouseUncheckedCreateWithoutCityInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutCityInput | WarehouseCreateOrConnectWithoutCityInput[]
+    createMany?: WarehouseCreateManyCityInputEnvelope
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+  }
+
   export type CountryUpdateOneRequiredWithoutCitiesNestedInput = {
     create?: XOR<CountryCreateWithoutCitiesInput, CountryUncheckedCreateWithoutCitiesInput>
     connectOrCreate?: CountryCreateOrConnectWithoutCitiesInput
@@ -65789,10 +67952,44 @@ export namespace Prisma {
     update?: XOR<XOR<CountryUpdateToOneWithWhereWithoutCitiesInput, CountryUpdateWithoutCitiesInput>, CountryUncheckedUpdateWithoutCitiesInput>
   }
 
+  export type WarehouseUpdateManyWithoutCityNestedInput = {
+    create?: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput> | WarehouseCreateWithoutCityInput[] | WarehouseUncheckedCreateWithoutCityInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutCityInput | WarehouseCreateOrConnectWithoutCityInput[]
+    upsert?: WarehouseUpsertWithWhereUniqueWithoutCityInput | WarehouseUpsertWithWhereUniqueWithoutCityInput[]
+    createMany?: WarehouseCreateManyCityInputEnvelope
+    set?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    disconnect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    delete?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    update?: WarehouseUpdateWithWhereUniqueWithoutCityInput | WarehouseUpdateWithWhereUniqueWithoutCityInput[]
+    updateMany?: WarehouseUpdateManyWithWhereWithoutCityInput | WarehouseUpdateManyWithWhereWithoutCityInput[]
+    deleteMany?: WarehouseScalarWhereInput | WarehouseScalarWhereInput[]
+  }
+
+  export type WarehouseUncheckedUpdateManyWithoutCityNestedInput = {
+    create?: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput> | WarehouseCreateWithoutCityInput[] | WarehouseUncheckedCreateWithoutCityInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutCityInput | WarehouseCreateOrConnectWithoutCityInput[]
+    upsert?: WarehouseUpsertWithWhereUniqueWithoutCityInput | WarehouseUpsertWithWhereUniqueWithoutCityInput[]
+    createMany?: WarehouseCreateManyCityInputEnvelope
+    set?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    disconnect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    delete?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+    update?: WarehouseUpdateWithWhereUniqueWithoutCityInput | WarehouseUpdateWithWhereUniqueWithoutCityInput[]
+    updateMany?: WarehouseUpdateManyWithWhereWithoutCityInput | WarehouseUpdateManyWithWhereWithoutCityInput[]
+    deleteMany?: WarehouseScalarWhereInput | WarehouseScalarWhereInput[]
+  }
+
   export type CountryCreateNestedOneWithoutWarehousesInput = {
     create?: XOR<CountryCreateWithoutWarehousesInput, CountryUncheckedCreateWithoutWarehousesInput>
     connectOrCreate?: CountryCreateOrConnectWithoutWarehousesInput
     connect?: CountryWhereUniqueInput
+  }
+
+  export type CityCreateNestedOneWithoutWarehousesInput = {
+    create?: XOR<CityCreateWithoutWarehousesInput, CityUncheckedCreateWithoutWarehousesInput>
+    connectOrCreate?: CityCreateOrConnectWithoutWarehousesInput
+    connect?: CityWhereUniqueInput
   }
 
   export type ProductStockCreateNestedManyWithoutWarehouseInput = {
@@ -65873,6 +68070,16 @@ export namespace Prisma {
     delete?: CountryWhereInput | boolean
     connect?: CountryWhereUniqueInput
     update?: XOR<XOR<CountryUpdateToOneWithWhereWithoutWarehousesInput, CountryUpdateWithoutWarehousesInput>, CountryUncheckedUpdateWithoutWarehousesInput>
+  }
+
+  export type CityUpdateOneWithoutWarehousesNestedInput = {
+    create?: XOR<CityCreateWithoutWarehousesInput, CityUncheckedCreateWithoutWarehousesInput>
+    connectOrCreate?: CityCreateOrConnectWithoutWarehousesInput
+    upsert?: CityUpsertWithoutWarehousesInput
+    disconnect?: CityWhereInput | boolean
+    delete?: CityWhereInput | boolean
+    connect?: CityWhereUniqueInput
+    update?: XOR<XOR<CityUpdateToOneWithWhereWithoutWarehousesInput, CityUpdateWithoutWarehousesInput>, CityUncheckedUpdateWithoutWarehousesInput>
   }
 
   export type ProductStockUpdateManyWithoutWarehouseNestedInput = {
@@ -67401,6 +69608,32 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWalletTransfersInput, UserUpdateWithoutWalletTransfersInput>, UserUncheckedUpdateWithoutWalletTransfersInput>
   }
 
+  export type UserCreateNestedOneWithoutCampaignsInput = {
+    create?: XOR<UserCreateWithoutCampaignsInput, UserUncheckedCreateWithoutCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCampaignsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumCampaignTypeFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignType
+  }
+
+  export type EnumCampaignStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignStatus
+  }
+
+  export type EnumCampaignAudienceFieldUpdateOperationsInput = {
+    set?: $Enums.CampaignAudience
+  }
+
+  export type UserUpdateOneRequiredWithoutCampaignsNestedInput = {
+    create?: XOR<UserCreateWithoutCampaignsInput, UserUncheckedCreateWithoutCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCampaignsInput
+    upsert?: UserUpsertWithoutCampaignsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCampaignsInput, UserUpdateWithoutCampaignsInput>, UserUncheckedUpdateWithoutCampaignsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -67895,6 +70128,57 @@ export namespace Prisma {
     _max?: NestedEnumWalletTransferStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumCampaignTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeFilter<$PrismaModel> | $Enums.CampaignType
+  }
+
+  export type NestedEnumCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusFilter<$PrismaModel> | $Enums.CampaignStatus
+  }
+
+  export type NestedEnumCampaignAudienceFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignAudience | EnumCampaignAudienceFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignAudienceFilter<$PrismaModel> | $Enums.CampaignAudience
+  }
+
+  export type NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignType | EnumCampaignTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignType[] | ListEnumCampaignTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignTypeWithAggregatesFilter<$PrismaModel> | $Enums.CampaignType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignTypeFilter<$PrismaModel>
+    _max?: NestedEnumCampaignTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignStatus | EnumCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignStatus[] | ListEnumCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.CampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCampaignAudienceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CampaignAudience | EnumCampaignAudienceFieldRefInput<$PrismaModel>
+    in?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CampaignAudience[] | ListEnumCampaignAudienceFieldRefInput<$PrismaModel>
+    not?: NestedEnumCampaignAudienceWithAggregatesFilter<$PrismaModel> | $Enums.CampaignAudience
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCampaignAudienceFilter<$PrismaModel>
+    _max?: NestedEnumCampaignAudienceFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutSubordinatesInput = {
     id?: string
     username: string
@@ -67930,6 +70214,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -67967,6 +70252,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -68009,6 +70295,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutParentInput = {
@@ -68046,6 +70333,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutParentInput = {
@@ -68233,6 +70521,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }
 
   export type PermissionUncheckedCreateWithoutUsersInput = {
@@ -68287,6 +70579,10 @@ export namespace Prisma {
     addPages?: boolean
     editPages?: boolean
     deletePages?: boolean
+    viewMarketing?: boolean
+    addMarketing?: boolean
+    editMarketing?: boolean
+    deleteMarketing?: boolean
   }
 
   export type PermissionCreateOrConnectWithoutUsersInput = {
@@ -68724,6 +71020,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -68749,6 +71047,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -68774,6 +71074,49 @@ export namespace Prisma {
 
   export type WholesaleOrderCreateManyUserInputEnvelope = {
     data: WholesaleOrderCreateManyUserInput | WholesaleOrderCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CampaignCreateWithoutCreatedByInput = {
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CampaignUncheckedCreateWithoutCreatedByInput = {
+    id?: number
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CampaignCreateOrConnectWithoutCreatedByInput = {
+    where: CampaignWhereUniqueInput
+    create: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type CampaignCreateManyCreatedByInputEnvelope = {
+    data: CampaignCreateManyCreatedByInput | CampaignCreateManyCreatedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -68823,6 +71166,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -68860,6 +71204,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutParentInput = {
@@ -69056,6 +71401,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PermissionUncheckedUpdateWithoutUsersInput = {
@@ -69110,6 +71459,10 @@ export namespace Prisma {
     addPages?: BoolFieldUpdateOperationsInput | boolean
     editPages?: BoolFieldUpdateOperationsInput | boolean
     deletePages?: BoolFieldUpdateOperationsInput | boolean
+    viewMarketing?: BoolFieldUpdateOperationsInput | boolean
+    addMarketing?: BoolFieldUpdateOperationsInput | boolean
+    editMarketing?: BoolFieldUpdateOperationsInput | boolean
+    deleteMarketing?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerUpsertWithWhereUniqueWithoutUsersInput = {
@@ -69509,6 +71862,8 @@ export namespace Prisma {
     discount?: FloatFilter<"WholesaleOrder"> | number
     finalAmount?: FloatFilter<"WholesaleOrder"> | number
     paymentMethod?: StringFilter<"WholesaleOrder"> | string
+    amount?: StringNullableFilter<"WholesaleOrder"> | string | null
+    amountBank?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverName?: StringNullableFilter<"WholesaleOrder"> | string | null
     receiverPhone?: StringNullableListFilter<"WholesaleOrder">
     country?: StringNullableFilter<"WholesaleOrder"> | string | null
@@ -69525,6 +71880,43 @@ export namespace Prisma {
     manualCreatedAt?: DateTimeNullableFilter<"WholesaleOrder"> | Date | string | null
     createdAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
     updatedAt?: DateTimeFilter<"WholesaleOrder"> | Date | string
+  }
+
+  export type CampaignUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: CampaignWhereUniqueInput
+    update: XOR<CampaignUpdateWithoutCreatedByInput, CampaignUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<CampaignCreateWithoutCreatedByInput, CampaignUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type CampaignUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: CampaignWhereUniqueInput
+    data: XOR<CampaignUpdateWithoutCreatedByInput, CampaignUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type CampaignUpdateManyWithWhereWithoutCreatedByInput = {
+    where: CampaignScalarWhereInput
+    data: XOR<CampaignUpdateManyMutationInput, CampaignUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type CampaignScalarWhereInput = {
+    AND?: CampaignScalarWhereInput | CampaignScalarWhereInput[]
+    OR?: CampaignScalarWhereInput[]
+    NOT?: CampaignScalarWhereInput | CampaignScalarWhereInput[]
+    id?: IntFilter<"Campaign"> | number
+    title?: StringFilter<"Campaign"> | string
+    type?: EnumCampaignTypeFilter<"Campaign"> | $Enums.CampaignType
+    status?: EnumCampaignStatusFilter<"Campaign"> | $Enums.CampaignStatus
+    subject?: StringNullableFilter<"Campaign"> | string | null
+    content?: StringFilter<"Campaign"> | string
+    channelDetails?: JsonNullableFilter<"Campaign">
+    audience?: EnumCampaignAudienceFilter<"Campaign"> | $Enums.CampaignAudience
+    targetIds?: JsonNullableFilter<"Campaign">
+    scheduledAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"Campaign"> | Date | string | null
+    metrics?: JsonNullableFilter<"Campaign">
+    createdById?: StringFilter<"Campaign"> | string
+    createdAt?: DateTimeFilter<"Campaign"> | Date | string
+    updatedAt?: DateTimeFilter<"Campaign"> | Date | string
   }
 
   export type UserCreateWithoutPermissionInput = {
@@ -69562,6 +71954,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutPermissionInput = {
@@ -69599,6 +71992,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutPermissionInput = {
@@ -71005,6 +73399,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -71042,6 +73437,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -71167,6 +73563,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -71204,12 +73601,14 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CityCreateWithoutCountryInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    warehouses?: WarehouseCreateNestedManyWithoutCityInput
   }
 
   export type CityUncheckedCreateWithoutCountryInput = {
@@ -71217,6 +73616,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutCityInput
   }
 
   export type CityCreateOrConnectWithoutCountryInput = {
@@ -71234,6 +73634,7 @@ export namespace Prisma {
     location: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
@@ -71245,6 +73646,7 @@ export namespace Prisma {
     id?: number
     name: string
     location: string
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -71315,6 +73717,7 @@ export namespace Prisma {
     name?: StringFilter<"Warehouse"> | string
     location?: StringFilter<"Warehouse"> | string
     countryId?: IntNullableFilter<"Warehouse"> | number | null
+    cityId?: IntNullableFilter<"Warehouse"> | number | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
   }
@@ -71337,6 +73740,43 @@ export namespace Prisma {
   export type CountryCreateOrConnectWithoutCitiesInput = {
     where: CountryWhereUniqueInput
     create: XOR<CountryCreateWithoutCitiesInput, CountryUncheckedCreateWithoutCitiesInput>
+  }
+
+  export type WarehouseCreateWithoutCityInput = {
+    name: string
+    location: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    country?: CountryCreateNestedOneWithoutWarehousesInput
+    stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
+    orders?: OrderCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseUncheckedCreateWithoutCityInput = {
+    id?: number
+    name: string
+    location: string
+    countryId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
+    orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    warranties?: WarrantyUncheckedCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseCreateOrConnectWithoutCityInput = {
+    where: WarehouseWhereUniqueInput
+    create: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput>
+  }
+
+  export type WarehouseCreateManyCityInputEnvelope = {
+    data: WarehouseCreateManyCityInput | WarehouseCreateManyCityInput[]
+    skipDuplicates?: boolean
   }
 
   export type CountryUpsertWithoutCitiesInput = {
@@ -71365,6 +73805,22 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutCountryNestedInput
   }
 
+  export type WarehouseUpsertWithWhereUniqueWithoutCityInput = {
+    where: WarehouseWhereUniqueInput
+    update: XOR<WarehouseUpdateWithoutCityInput, WarehouseUncheckedUpdateWithoutCityInput>
+    create: XOR<WarehouseCreateWithoutCityInput, WarehouseUncheckedCreateWithoutCityInput>
+  }
+
+  export type WarehouseUpdateWithWhereUniqueWithoutCityInput = {
+    where: WarehouseWhereUniqueInput
+    data: XOR<WarehouseUpdateWithoutCityInput, WarehouseUncheckedUpdateWithoutCityInput>
+  }
+
+  export type WarehouseUpdateManyWithWhereWithoutCityInput = {
+    where: WarehouseScalarWhereInput
+    data: XOR<WarehouseUpdateManyMutationInput, WarehouseUncheckedUpdateManyWithoutCityInput>
+  }
+
   export type CountryCreateWithoutWarehousesInput = {
     name: string
     createdAt?: Date | string
@@ -71383,6 +73839,26 @@ export namespace Prisma {
   export type CountryCreateOrConnectWithoutWarehousesInput = {
     where: CountryWhereUniqueInput
     create: XOR<CountryCreateWithoutWarehousesInput, CountryUncheckedCreateWithoutWarehousesInput>
+  }
+
+  export type CityCreateWithoutWarehousesInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    country: CountryCreateNestedOneWithoutCitiesInput
+  }
+
+  export type CityUncheckedCreateWithoutWarehousesInput = {
+    id?: number
+    name: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CityCreateOrConnectWithoutWarehousesInput = {
+    where: CityWhereUniqueInput
+    create: XOR<CityCreateWithoutWarehousesInput, CityUncheckedCreateWithoutWarehousesInput>
   }
 
   export type ProductStockCreateWithoutWarehouseInput = {
@@ -71507,6 +73983,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -71532,6 +74010,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -71652,6 +74132,32 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cities?: CityUncheckedUpdateManyWithoutCountryNestedInput
+  }
+
+  export type CityUpsertWithoutWarehousesInput = {
+    update: XOR<CityUpdateWithoutWarehousesInput, CityUncheckedUpdateWithoutWarehousesInput>
+    create: XOR<CityCreateWithoutWarehousesInput, CityUncheckedCreateWithoutWarehousesInput>
+    where?: CityWhereInput
+  }
+
+  export type CityUpdateToOneWithWhereWithoutWarehousesInput = {
+    where?: CityWhereInput
+    data: XOR<CityUpdateWithoutWarehousesInput, CityUncheckedUpdateWithoutWarehousesInput>
+  }
+
+  export type CityUpdateWithoutWarehousesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    country?: CountryUpdateOneRequiredWithoutCitiesNestedInput
+  }
+
+  export type CityUncheckedUpdateWithoutWarehousesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductStockUpsertWithWhereUniqueWithoutWarehouseInput = {
@@ -71806,6 +74312,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
@@ -71817,6 +74324,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutWarehouseInput
@@ -71919,6 +74427,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
@@ -71930,6 +74439,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -72010,6 +74520,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
@@ -72021,6 +74532,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -72069,6 +74581,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -72106,6 +74619,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -72202,6 +74716,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
@@ -72213,6 +74728,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -72267,6 +74783,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -72304,6 +74821,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutTargetsInput = {
@@ -72341,6 +74859,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTargetsInput = {
@@ -72378,6 +74897,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTargetsInput = {
@@ -72455,6 +74975,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTargetsInput = {
@@ -72492,6 +75013,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type TargetProductUpsertWithWhereUniqueWithoutTargetInput = {
@@ -72545,6 +75067,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutActivityTargetsInput = {
@@ -72582,6 +75105,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutActivityTargetsInput = {
@@ -72635,6 +75159,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityTargetsInput = {
@@ -72672,6 +75197,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserTargetCreateWithoutProductsInput = {
@@ -73134,6 +75660,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutCustomersInput = {
@@ -73171,6 +75698,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutCustomersInput = {
@@ -73341,6 +75869,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAssignedWholesaleCustomersInput = {
@@ -73378,6 +75907,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAssignedWholesaleCustomersInput = {
@@ -73441,6 +75971,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -73466,6 +75998,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -73540,6 +76074,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedWholesaleCustomersInput = {
@@ -73577,6 +76112,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type WholesaleVisitUpsertWithWhereUniqueWithoutWholesaleCustomerInput = {
@@ -73709,6 +76245,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutWholesaleVisitsInput = {
@@ -73746,6 +76283,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutWholesaleVisitsInput = {
@@ -73868,6 +76406,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWholesaleVisitsInput = {
@@ -73905,6 +76444,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductCreateWithoutWholesalePricingTiersInput = {
@@ -74143,6 +76683,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutWholesaleOrdersInput = {
@@ -74180,6 +76721,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutWholesaleOrdersInput = {
@@ -74193,6 +76735,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
@@ -74204,6 +76747,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -74357,6 +76901,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWholesaleOrdersInput = {
@@ -74394,6 +76939,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type WarehouseUpsertWithoutWholesaleOrdersInput = {
@@ -74413,6 +76959,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
@@ -74424,6 +76971,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -74454,6 +77002,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -74479,6 +77029,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -74585,6 +77137,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74610,6 +77164,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74817,6 +77373,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     orders?: OrderCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
@@ -74828,6 +77385,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -75065,6 +77623,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
@@ -75076,6 +77635,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -75254,6 +77814,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutMessageInput = {
@@ -75291,6 +77852,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutMessageInput = {
@@ -75395,6 +77957,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageInput = {
@@ -75432,6 +77995,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -75514,6 +78078,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -75551,6 +78116,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -75591,6 +78157,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     country?: CountryCreateNestedOneWithoutWarehousesInput
+    city?: CityCreateNestedOneWithoutWarehousesInput
     stocks?: ProductStockCreateNestedManyWithoutWarehouseInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
@@ -75602,6 +78169,7 @@ export namespace Prisma {
     name: string
     location: string
     countryId?: number | null
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: ProductStockUncheckedCreateNestedManyWithoutWarehouseInput
@@ -75798,6 +78366,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -75835,6 +78404,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -75870,6 +78440,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     country?: CountryUpdateOneWithoutWarehousesNestedInput
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
@@ -75881,6 +78452,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -75995,6 +78567,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutExpensesInput = {
@@ -76032,6 +78605,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutExpensesInput = {
@@ -76085,6 +78659,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -76122,6 +78697,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type OrderCreateWithoutShippingInput = {
@@ -76640,6 +79216,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
@@ -76677,6 +79254,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSalaryAdjustmentsInput = {
@@ -76730,6 +79308,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
@@ -76767,6 +79346,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutAffiliateLinksInput = {
@@ -76804,6 +79384,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateLinksInput = {
@@ -76841,6 +79422,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateLinksInput = {
@@ -77015,6 +79597,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateLinksInput = {
@@ -77052,6 +79635,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductUpsertWithoutAffiliateLinksInput = {
@@ -77771,6 +80355,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+    campaigns?: CampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutWalletTransfersInput = {
@@ -77808,6 +80393,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
     wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
     wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutWalletTransfersInput = {
@@ -77861,6 +80447,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWalletTransfersInput = {
@@ -77886,6 +80473,175 @@ export namespace Prisma {
     affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
+    message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserCreateWithoutCampaignsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    parent?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutParentInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferCreateNestedManyWithoutUserInput
+    permission?: PermissionCreateNestedOneWithoutUsersInput
+    customers?: CustomerCreateNestedManyWithoutUsersInput
+    message?: MessageCreateNestedManyWithoutUserInput
+    targets?: UserTargetCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCampaignsInput = {
+    id?: string
+    username: string
+    email: string
+    phone?: string | null
+    notes?: string | null
+    jobTitle?: string | null
+    avatar?: string | null
+    accountType?: $Enums.AccountType
+    password: string
+    salesCommissionPercent?: number
+    wage?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissionId?: string | null
+    parentId?: string | null
+    isAffiliate?: boolean
+    affiliateApproved?: boolean
+    affiliateCode?: string | null
+    affiliateRequestedAt?: Date | string | null
+    affiliateApprovedAt?: Date | string | null
+    subordinates?: UserUncheckedCreateNestedManyWithoutParentInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    walletTransfers?: AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutUsersInput
+    message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    targets?: UserTargetUncheckedCreateNestedManyWithoutUserInput
+    activityTargets?: UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    affiliateLinks?: AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    assignedWholesaleCustomers?: WholesaleCustomerUncheckedCreateNestedManyWithoutAssignedUserInput
+    wholesaleVisits?: WholesaleVisitUncheckedCreateNestedManyWithoutUserInput
+    wholesaleOrders?: WholesaleOrderUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCampaignsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCampaignsInput, UserUncheckedCreateWithoutCampaignsInput>
+  }
+
+  export type UserUpsertWithoutCampaignsInput = {
+    update: XOR<UserUpdateWithoutCampaignsInput, UserUncheckedUpdateWithoutCampaignsInput>
+    create: XOR<UserCreateWithoutCampaignsInput, UserUncheckedCreateWithoutCampaignsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCampaignsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCampaignsInput, UserUncheckedUpdateWithoutCampaignsInput>
+  }
+
+  export type UserUpdateWithoutCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    parent?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutParentNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUpdateManyWithoutUserNestedInput
+    permission?: PermissionUpdateOneWithoutUsersNestedInput
+    customers?: CustomerUpdateManyWithoutUsersNestedInput
+    message?: MessageUpdateManyWithoutUserNestedInput
+    targets?: UserTargetUpdateManyWithoutUserNestedInput
+    activityTargets?: UserActivityTargetUpdateManyWithoutUserNestedInput
+    salaryAdjustments?: EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutEmployeeNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    affiliateLinks?: AffiliateLinkUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
+    wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    accountType?: EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+    password?: StringFieldUpdateOperationsInput | string
+    salesCommissionPercent?: FloatFieldUpdateOperationsInput | number
+    wage?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissionId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isAffiliate?: BoolFieldUpdateOperationsInput | boolean
+    affiliateApproved?: BoolFieldUpdateOperationsInput | boolean
+    affiliateCode?: NullableStringFieldUpdateOperationsInput | string | null
+    affiliateRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    affiliateApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subordinates?: UserUncheckedUpdateManyWithoutParentNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    walletTransfers?: AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutUsersNestedInput
     message?: MessageUncheckedUpdateManyWithoutUserNestedInput
     targets?: UserTargetUncheckedUpdateManyWithoutUserNestedInput
@@ -78113,6 +80869,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -78126,6 +80884,23 @@ export namespace Prisma {
     wholesaleCustomerId: string
     warehouseId?: number | null
     manualCreatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CampaignCreateManyCreatedByInput = {
+    id?: number
+    title: string
+    type: $Enums.CampaignType
+    status?: $Enums.CampaignStatus
+    subject?: string | null
+    content: string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: Date | string | null
+    sentAt?: Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -78165,6 +80940,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutParentInput = {
@@ -78202,6 +80978,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutParentInput = {
@@ -78855,6 +81632,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78880,6 +81659,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78905,6 +81686,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78918,6 +81701,56 @@ export namespace Prisma {
     wholesaleCustomerId?: StringFieldUpdateOperationsInput | string
     warehouseId?: NullableIntFieldUpdateOperationsInput | number | null
     manualCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CampaignUpdateWithoutCreatedByInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CampaignUncheckedUpdateWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CampaignUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumCampaignTypeFieldUpdateOperationsInput | $Enums.CampaignType
+    status?: EnumCampaignStatusFieldUpdateOperationsInput | $Enums.CampaignStatus
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    channelDetails?: NullableJsonNullValueInput | InputJsonValue
+    audience?: EnumCampaignAudienceFieldUpdateOperationsInput | $Enums.CampaignAudience
+    targetIds?: NullableJsonNullValueInput | InputJsonValue
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metrics?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78979,6 +81812,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPermissionInput = {
@@ -79016,6 +81850,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPermissionInput = {
@@ -79708,6 +82543,7 @@ export namespace Prisma {
     id?: number
     name: string
     location: string
+    cityId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -79716,6 +82552,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    warehouses?: WarehouseUpdateManyWithoutCityNestedInput
   }
 
   export type CityUncheckedUpdateWithoutCountryInput = {
@@ -79723,6 +82560,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    warehouses?: WarehouseUncheckedUpdateManyWithoutCityNestedInput
   }
 
   export type CityUncheckedUpdateManyWithoutCountryInput = {
@@ -79737,6 +82575,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    city?: CityUpdateOneWithoutWarehousesNestedInput
     stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
     orders?: OrderUpdateManyWithoutWarehouseNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
@@ -79748,6 +82587,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
@@ -79761,6 +82601,52 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    cityId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WarehouseCreateManyCityInput = {
+    id?: number
+    name: string
+    location: string
+    countryId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WarehouseUpdateWithoutCityInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    country?: CountryUpdateOneWithoutWarehousesNestedInput
+    stocks?: ProductStockUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateWithoutCityInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    countryId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: ProductStockUncheckedUpdateManyWithoutWarehouseNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    warranties?: WarrantyUncheckedUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateManyWithoutCityInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    countryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -79818,6 +82704,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -80007,6 +82895,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80032,6 +82922,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80057,6 +82949,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80384,6 +83278,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomersInput = {
@@ -80421,6 +83316,7 @@ export namespace Prisma {
     assignedWholesaleCustomers?: WholesaleCustomerUncheckedUpdateManyWithoutAssignedUserNestedInput
     wholesaleVisits?: WholesaleVisitUncheckedUpdateManyWithoutUserNestedInput
     wholesaleOrders?: WholesaleOrderUncheckedUpdateManyWithoutUserNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCustomersInput = {
@@ -80539,6 +83435,8 @@ export namespace Prisma {
     discount?: number
     finalAmount: number
     paymentMethod: string
+    amount?: string | null
+    amountBank?: string | null
     receiverName?: string | null
     receiverPhone?: WholesaleOrderCreatereceiverPhoneInput | string[]
     country?: string | null
@@ -80622,6 +83520,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80647,6 +83547,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80672,6 +83574,8 @@ export namespace Prisma {
     discount?: FloatFieldUpdateOperationsInput | number
     finalAmount?: FloatFieldUpdateOperationsInput | number
     paymentMethod?: StringFieldUpdateOperationsInput | string
+    amount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountBank?: NullableStringFieldUpdateOperationsInput | string | null
     receiverName?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPhone?: WholesaleOrderUpdatereceiverPhoneInput | string[]
     country?: NullableStringFieldUpdateOperationsInput | string | null

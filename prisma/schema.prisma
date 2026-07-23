@@ -111,6 +111,31 @@ enum WholesaleVisitStatus {
 }
 
 // ============================================
+// Marketing Module Enums
+// ============================================
+
+enum CampaignType {
+  EMAIL
+  SOCIAL
+  SMS
+  CONTENT
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  CANCELLED
+}
+
+enum CampaignAudience {
+  ALL_CUSTOMERS
+  ALL_WHOLESALE
+  CUSTOM
+}
+
+// ============================================
 // User (Existing + New columns)
 // ============================================
 
@@ -158,6 +183,7 @@ model User {
   assignedWholesaleCustomers WholesaleCustomer[] @relation("WholesaleCustomerAssignedUser")
   wholesaleVisits           WholesaleVisit[]     @relation("WholesaleVisitUser")
   wholesaleOrders          WholesaleOrder[]     @relation("WholesaleOrderUser")
+  campaigns                Campaign[]
 }
 
 // ============================================
@@ -229,6 +255,11 @@ model Permission {
   addPages    Boolean @default(false)
   editPages   Boolean @default(false)
   deletePages Boolean @default(false)
+
+  viewMarketing   Boolean @default(false)
+  addMarketing    Boolean @default(false)
+  editMarketing   Boolean @default(false)
+  deleteMarketing Boolean @default(false)
   users        User[]
 }
 
@@ -399,6 +430,7 @@ model City {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  warehouses Warehouse[]
 
   @@unique([name, countryId])
   @@index([countryId])
@@ -413,9 +445,11 @@ model Warehouse {
   name       String          @unique
   location   String
   countryId  Int?
+  cityId     Int?
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   country    Country?        @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  city       City?           @relation(fields: [cityId], references: [id], onDelete: SetNull)
   stocks     ProductStock[]
   orders     Order[]
   wholesaleOrders WholesaleOrder[]
@@ -423,6 +457,7 @@ model Warehouse {
   warranties Warranty[]
 
   @@index([countryId])
+  @@index([cityId])
 }
 
 // ============================================
@@ -648,6 +683,8 @@ model WholesaleOrder {
   discount           Float     @default(0)
   finalAmount        Float
   paymentMethod      String
+  amount             String?
+  amountBank         String?
   receiverName       String?
   receiverPhone      String[]
   country            String?
@@ -1081,4 +1118,32 @@ model AffiliateWalletTransfer {
   @@index([status])
   @@index([transferredAt])
   @@map("affiliate_wallet_transfers")
+}
+// ============================================
+// Marketing Module
+// ============================================
+
+model Campaign {
+  id              Int              @id @default(autoincrement())
+  title           String
+  type            CampaignType
+  status          CampaignStatus @default(DRAFT)
+  subject         String?
+  content         String           @db.Text
+  channelDetails  Json?            @default("{}")
+  audience        CampaignAudience @default(ALL_CUSTOMERS)
+  targetIds       Json?            @default("[]")
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  metrics         Json?            @default("{\"sent\":0,\"opened\":0,\"clicked\":0,\"converted\":0}")
+  createdById     String
+  createdBy       User             @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([createdById])
+  @@index([scheduledAt])
+  @@map("campaigns")
 }

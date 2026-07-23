@@ -70,6 +70,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
   const [receiverName, setReceiverName] = React.useState("");
   const [receiverPhone, setReceiverPhone] = React.useState<(string | undefined)[]>([""]);
   const [stockWarehouseId, setStockWarehouseId] = React.useState("");
+  const [warehouseCityId, setWarehouseCityId] = React.useState("");
   const [warehouses, setWarehouses] = React.useState<any[]>([]);
   const [countryRows, setCountryRows] = React.useState<any[]>([]);
   const [cityRows, setCityRows] = React.useState<any[]>([]);
@@ -99,6 +100,10 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
   const isEditMode = Boolean(editId);
   const selectedWarehouse = warehouses.find((warehouse) => String(warehouse.id) === stockWarehouseId);
   const stockCountry = String(selectedWarehouse?.location || "").trim();
+  const filteredWarehousesByCity = React.useMemo(() => {
+    if (!warehouseCityId) return warehouses;
+    return warehouses.filter((warehouse) => String(warehouse.cityId) === warehouseCityId);
+  }, [warehouses, warehouseCityId]);
   const selectedCountryRow = countryRows.find((row) => row.name === country);
   const filteredCities = selectedCountryRow
     ? cityRows.filter((row) => Number(row.countryId) === Number(selectedCountryRow.id))
@@ -174,6 +179,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setReceiverName(initialData.receiverName || "");
     setReceiverPhone(initialData.receiverPhone || [""]);
     setStockWarehouseId(initialData?.warehouseId ? String(initialData.warehouseId) : "");
+    setWarehouseCityId(initialData?.warehouse?.city?.id ? String(initialData.warehouse.city.id) : "");
     setCountry(initialData.country || "");
     setCity(initialData.city || "");
     setamount(initialData?.amount)
@@ -260,6 +266,7 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
     setReceiverName("");
     setReceiverPhone([""]);
     setStockWarehouseId("");
+    setWarehouseCityId("");
     setCountry("");
     setCity("");
     setMunicipality("");
@@ -441,19 +448,45 @@ export default function OrderCustomerEdit({ initialData, customers, customerId, 
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-slate-500 mr-2">المستودع</label>
+                <label className="text-xs font-bold text-slate-500 mr-2">مدينة المستودع</label>
                 <select
-                  value={stockWarehouseId}
+                  value={warehouseCityId}
                   onChange={(e) => {
-                    setStockWarehouseId(e.target.value);
-                
+                    setWarehouseCityId(e.target.value);
+                    setStockWarehouseId("");
                     setSearchQueries({});
                     setShowDropdown({});
                   }}
                   className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold"
                 >
+                  <option value="">اختر المدينة</option>
+                  {Array.from(
+                    new Map(
+                      warehouses
+                        .filter((warehouse) => warehouse?.city)
+                        .map((warehouse) => [String(warehouse.city.id), warehouse.city])
+                    ).values()
+                  ).map((city: any) => (
+                    <option key={city.id} value={String(city.id)}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-slate-500 mr-2">المستودع</label>
+                <select
+                  value={stockWarehouseId}
+                  onChange={(e) => {
+                    setStockWarehouseId(e.target.value);
+                    setSearchQueries({});
+                    setShowDropdown({});
+                  }}
+                  disabled={!warehouseCityId}
+                  className="w-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500 font-bold disabled:opacity-50"
+                >
                   <option value="">اختر المستودع</option>
-                  {warehouses.map((warehouse) => (
+                  {filteredWarehousesByCity.map((warehouse) => (
                     <option key={warehouse.id} value={String(warehouse.id)}>
                       {warehouse.name} - {warehouse.location}
                     </option>

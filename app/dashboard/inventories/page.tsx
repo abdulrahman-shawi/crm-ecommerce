@@ -6,7 +6,7 @@ import { FormInput } from '@/components/ui/form-input';
 import { FormSelect } from '@/components/ui/select-form';
 import { useAuth } from '@/context/AuthContext';
 import { hasPermission } from '@/lib/utils';
-import { createCountry, deleteCountry, getCountries, updateCountry } from '@/server/country';
+import { createCity, deleteCity, getCities, updateCountry } from '@/server/country';
 import { createWarehouse, deleteWarehouse, getWarehouse, updateWarehouse } from '@/server/warehouse';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, Trash2 } from 'lucide-react';
@@ -18,7 +18,8 @@ interface ICategoriesLayoutProps { }
 
 const warehouseSchema = z.object({
     name: z.string().min(3, "اسم المستودع مطلوب"),
-    countryId: z.string().min(1, "بلد المستودع مطلوب")
+    countryId: z.string().min(1, "بلد المستودع مطلوب"),
+    cityId: z.string().min(1, "مدينة المستودع مطلوبة"),
 });
 
 const countrySchema = z.object({
@@ -32,6 +33,7 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
     const [warehouseFormData, setWarehouseFormData] = React.useState<any>(null);
     const [warehouses, setWarehouses] = React.useState<any[]>([]);
     const [countries, setCountries] = React.useState<any[]>([]);
+    const [cities, setCities] = React.useState<any[]>([]);
     const [isCountryOpen, setIsCountryOpen] = React.useState(false);
     const [countryEditId, setCountryEditId] = React.useState<string | null>(null);
     const [countryFormData, setCountryFormData] = React.useState<any>(null);
@@ -41,6 +43,12 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
         value: String(country.id),
         label: country.name,
     }));
+    const cityOptions = (countryId: string) => cities
+        .filter((city) => String(city.countryId) === countryId)
+        .map((city) => ({
+            value: String(city.id),
+            label: city.name,
+        }));
 
     const handleWarehouseClose = () => {
         setIsWarehouseOpen(false);
@@ -58,7 +66,8 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
         setWarehouseEditId(String(data.id));
         setWarehouseFormData({
             name: data.name,
-            countryId: data.countryId ? String(data.countryId) : ''
+            countryId: data.countryId ? String(data.countryId) : '',
+            cityId: data.cityId ? String(data.cityId) : ''
         });
         setIsWarehouseOpen(true);
     }
@@ -172,13 +181,15 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
     };
 
     const getData = async () => {
-        const [warehouseRows, countryRows] = await Promise.all([
+        const [warehouseRows, countryRows, cityRows] = await Promise.all([
             getWarehouse(),
             getCountries(),
+            getCities(),
         ]);
 
         setWarehouses(warehouseRows);
         setCountries(countryRows);
+        setCities(cityRows);
     }
 
     React.useEffect(() => { getData(); }, []);
@@ -320,23 +331,36 @@ const CategoriesLayout: React.FunctionComponent<ICategoriesLayoutProps> = (props
                         key={warehouseEditId || 'create'}
                         submitLabel={warehouseEditId ? 'تحديث البيانات' : 'إرسال البيانات'}
                     >
-                        {({ register, formState: { errors } }) => (
-                            <div className="grid gap-4">
-                                <FormInput
-                                    className='text-gray-800 dark:text-white'
-                                    label="اسم المستودع"
-                                    {...register("name")}
-                                    error={errors.name?.message as string}
-                                />
-                                <FormSelect
-                                    options={countryOptions}
-                                    className='text-gray-800 dark:text-white'
-                                    label="بلد المستودع"
-                                    {...register("countryId")}
-                                    error={errors.countryId?.message as string}
-                                />
-                            </div>
-                        )}
+                        {({ register, watch, setValue, formState: { errors } }) => {
+                            const selectedCountryId = watch('countryId');
+                            const availableCities = cityOptions(selectedCountryId);
+                            return (
+                                <div className="grid gap-4">
+                                    <FormInput
+                                        className='text-gray-800 dark:text-white'
+                                        label="اسم المستودع"
+                                        {...register("name")}
+                                        error={errors.name?.message as string}
+                                    />
+                                    <FormSelect
+                                        options={countryOptions}
+                                        className='text-gray-800 dark:text-white'
+                                        label="بلد المستودع"
+                                        {...register("countryId", {
+                                            onChange: () => setValue('cityId', ''),
+                                        })}
+                                        error={errors.countryId?.message as string}
+                                    />
+                                    <FormSelect
+                                        options={availableCities}
+                                        className='text-gray-800 dark:text-white'
+                                        label="مدينة المستودع"
+                                        {...register("cityId")}
+                                        error={errors.cityId?.message as string}
+                                    />
+                                </div>
+                            );
+                        }}
                     </DynamicForm>
                 </div>
             </AppModal>

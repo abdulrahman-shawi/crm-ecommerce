@@ -17,7 +17,11 @@ import {
   BadgePercent,
   Ticket,
   ChevronDown,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Megaphone,
+  Mail,
+  Share2,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -174,6 +178,16 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean;
         (user && isAdmin(user)) &&
         { icon: Truck, label: "شركات الشحن", href: "/dashboard/shipping" },
       ].filter(Boolean) // هذا السطر هو الأهم: يقوم بحذف أي قيمة false من المصفوفة
+    },
+    {
+      group: "التسويق",
+      collapsible: true,
+      items: [
+        (user && hasAnyPermission(user, ["viewMarketing", "addMarketing", "editMarketing", "deleteMarketing"])) &&
+        { icon: Megaphone, label: "الحملات الإعلانية", href: "/dashboard/marketing/campaigns" },
+        (user && hasAnyPermission(user, ["viewMarketing", "addMarketing", "editMarketing", "deleteMarketing"])) &&
+        { icon: BarChart2, label: "تحليلات التسويق", href: "/dashboard/marketing/analytics" },
+      ].filter(Boolean) as MenuItem[]
     },
     {
       group: "المستخدمين و الأدوار",

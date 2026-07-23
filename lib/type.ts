@@ -59,6 +59,11 @@ export interface Permission {
   editPages: boolean;
   deletePages: boolean;
 
+  viewMarketing: boolean;
+  addMarketing: boolean;
+  editMarketing: boolean;
+  deleteMarketing: boolean;
+
   users?: User[]; // optional to avoid circular reference issues
 }
 

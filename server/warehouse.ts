@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 const warehouseInclude = {
     country: true,
+    city: true,
     _count: {
         select: {
             stocks: true,
@@ -21,7 +22,12 @@ const resolveCountryId = (value: unknown) => {
     return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
 };
 
-export const getWarehouse  = async () => {
+const resolveCityId = (value: unknown) => {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+};
+
+export const getWarehouse = async () => {
     const warehouses = await prisma.warehouse.findMany({
         orderBy: { createdAt: 'desc' },
         include: warehouseInclude,
@@ -32,6 +38,7 @@ export const getWarehouse  = async () => {
 export const createWarehouse = async (data: any) => {
     try {
         const countryId = resolveCountryId(data.countryId);
+        const cityId = resolveCityId(data.cityId);
 
         if (!countryId) {
             return { success: false, error: "يرجى اختيار بلد المستودع" };
@@ -46,11 +53,27 @@ export const createWarehouse = async (data: any) => {
             return { success: false, error: "البلد المحدد غير موجود" };
         }
 
+        let cityName = country.name;
+        if (cityId) {
+            const city = await prisma.city.findUnique({
+                where: { id: cityId },
+                select: { id: true, name: true, countryId: true },
+            });
+            if (!city) {
+                return { success: false, error: "المدينة المحددة غير موجودة" };
+            }
+            if (city.countryId !== countryId) {
+                return { success: false, error: "المدينة لا تنتمي إلى البلد المحدد" };
+            }
+            cityName = city.name;
+        }
+
         const warehouse = await prisma.warehouse.create({
             data: {
                 name: data.name,
-                location: country.name,
+                location: cityName,
                 countryId: country.id,
+                cityId,
             },
             include: warehouseInclude,
         });
@@ -64,6 +87,7 @@ export const createWarehouse = async (data: any) => {
 export const updateWarehouse = async (id: string, data: any) => {
     try {
         const countryId = resolveCountryId(data.countryId);
+        const cityId = resolveCityId(data.cityId);
 
         if (!countryId) {
             return { success: false, error: "يرجى اختيار بلد المستودع" };
@@ -78,12 +102,28 @@ export const updateWarehouse = async (id: string, data: any) => {
             return { success: false, error: "البلد المحدد غير موجود" };
         }
 
+        let cityName = country.name;
+        if (cityId) {
+            const city = await prisma.city.findUnique({
+                where: { id: cityId },
+                select: { id: true, name: true, countryId: true },
+            });
+            if (!city) {
+                return { success: false, error: "المدينة المحددة غير موجودة" };
+            }
+            if (city.countryId !== countryId) {
+                return { success: false, error: "المدينة لا تنتمي إلى البلد المحدد" };
+            }
+            cityName = city.name;
+        }
+
         const warehouse = await prisma.warehouse.update({
             where: { id: Number(id) },
             data: {
                 name: data.name,
-                location: country.name,
+                location: cityName,
                 countryId: country.id,
+                cityId,
             },
             include: warehouseInclude,
         });

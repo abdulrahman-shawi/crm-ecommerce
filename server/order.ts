@@ -367,6 +367,12 @@ const orderBaseSelect = {
         select: {
             id: true,
             location: true,
+            city: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
         },
     },
     shipping: {

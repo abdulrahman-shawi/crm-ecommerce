@@ -52,6 +52,8 @@ type WholesaleOrderFormState = {
   municipality: string;
   fullAddress: string;
   paymentMethod: string;
+  amount: string;
+  amountBank: string;
   status: string;
   overallDiscount: number;
   deliveryNotes: string;
@@ -93,6 +95,8 @@ const createEmptyForm = (): WholesaleOrderFormState => ({
   municipality: "",
   fullAddress: "",
   paymentMethod: "عند الاستلام",
+  amount: "",
+  amountBank: "",
   status: "طلب جديد",
   overallDiscount: 0,
   deliveryNotes: "",
@@ -148,7 +152,9 @@ function WholesaleOrdersPageContent() {
   const [page, setPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState("");
   const deferredSearch = React.useDeferredValue(searchQuery);
-  const [warehouseLocation, setWarehouseLocation] = React.useState("");
+  const [cityId, setCityId] = React.useState("");
+  const [warehouseId, setWarehouseId] = React.useState("");
+  const [warehouseCityId, setWarehouseCityId] = React.useState("");
   const [monthFilterType, setMonthFilterType] = React.useState<"all" | "current" | "previous" | "custom">("current");
   const [customMonth, setCustomMonth] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("طلب جديد");
@@ -180,6 +186,7 @@ function WholesaleOrdersPageContent() {
     setEditingOrderId(null);
     setFormState(createEmptyForm());
     setItems([createEmptyItem()]);
+    setWarehouseCityId("");
   }, []);
 
   const openCreateModalForCustomer = React.useCallback((customerId: string) => {
@@ -195,6 +202,8 @@ function WholesaleOrdersPageContent() {
       municipality: String(customer?.area || ""),
       fullAddress: String(customer?.address || ""),
       paymentMethod: "عند الاستلام",
+      amount: "",
+      amountBank: "",
       status: "طلب جديد",
       overallDiscount: 0,
       deliveryNotes: "",
@@ -202,6 +211,7 @@ function WholesaleOrdersPageContent() {
       googleMapsLink: String(customer?.googleMapsLink || ""),
       manualCreatedAt: "",
     });
+    setWarehouseCityId("");
     setIsFormOpen(true);
   }, [customers, resetForm]);
 
@@ -247,7 +257,11 @@ function WholesaleOrdersPageContent() {
 
   React.useEffect(() => {
     setPage(1);
-  }, [deferredSearch, warehouseLocation, monthFilterType, customMonth, statusFilter]);
+  }, [deferredSearch, cityId, warehouseId, monthFilterType, customMonth, statusFilter]);
+
+  React.useEffect(() => {
+    setWarehouseId("");
+  }, [cityId]);
 
   React.useEffect(() => {
     if (!pendingCustomerId || !canAddOrder || customers.length === 0) return;
@@ -287,8 +301,9 @@ function WholesaleOrdersPageContent() {
 
       if (!matchesText) return false;
 
-      const matchesWarehouse = !warehouseLocation || String(order?.warehouse?.location || "") === warehouseLocation;
-      if (!matchesWarehouse) return false;
+      const orderCityId = order?.warehouse?.city?.id ?? order?.warehouse?.cityId;
+      if (cityId && String(orderCityId || "") !== String(cityId)) return false;
+      if (warehouseId && String(order?.warehouse?.id || order?.warehouseId || "") !== String(warehouseId)) return false;
 
       if (monthFilterType !== "all") {
         const activeMonth = monthFilterType === "current"
@@ -307,7 +322,7 @@ function WholesaleOrdersPageContent() {
 
       return true;
     });
-  }, [orders, deferredSearch, warehouseLocation, monthFilterType, customMonth, statusFilter]);
+  }, [orders, deferredSearch, cityId, warehouseId, monthFilterType, customMonth, statusFilter]);
 
   const statusCounts = React.useMemo(() => {
     const counts: Record<string, number> = { الكل: filteredOrders.length };
@@ -318,9 +333,29 @@ function WholesaleOrdersPageContent() {
     return counts;
   }, [filteredOrders]);
 
-  const warehouseOptions = React.useMemo(
-    () => Array.from(new Set(warehouses.map((warehouse) => String(warehouse?.location || "").trim()).filter(Boolean))),
+  const warehouseCityOptions = React.useMemo(
+    () => Array.from(
+      new Map(
+        warehouses
+          .filter((warehouse) => warehouse?.city)
+          .map((warehouse) => [String(warehouse.city.id), { value: String(warehouse.city.id), label: warehouse.city.name }])
+      ).values()
+    ),
     [warehouses]
+  );
+
+  const filteredWarehouseOptions = React.useMemo(
+    () => warehouses
+      .filter((warehouse) => !cityId || String(warehouse?.cityId) === cityId)
+      .map((warehouse) => ({ value: String(warehouse.id), label: `${warehouse.name} - ${warehouse.location}` })),
+    [warehouses, cityId]
+  );
+
+  const formFilteredWarehouseOptions = React.useMemo(
+    () => warehouses
+      .filter((warehouse) => !warehouseCityId || String(warehouse?.cityId) === warehouseCityId)
+      .map((warehouse) => ({ value: String(warehouse.id), label: `${warehouse.name} - ${warehouse.location}` })),
+    [warehouses, warehouseCityId]
   );
 
   const openViewModal = async (orderId: number) => {
@@ -360,6 +395,8 @@ function WholesaleOrdersPageContent() {
         municipality: String(data?.municipality || ""),
         fullAddress: String(data?.fullAddress || ""),
         paymentMethod: String(data?.paymentMethod || "عند الاستلام"),
+        amount: String(data?.amount ?? ""),
+        amountBank: String(data?.amountBank ?? ""),
         status: String(data?.status || "طلب جديد"),
         overallDiscount: Number(data?.discount || 0),
         deliveryNotes: String(data?.deliveryNotes || ""),
@@ -379,6 +416,7 @@ function WholesaleOrdersPageContent() {
       }));
 
       setItems(nextItems.length > 0 ? nextItems : [createEmptyItem()]);
+      setWarehouseCityId(data?.warehouse?.city?.id ? String(data.warehouse.city.id) : "");
       setIsFormOpen(true);
     } finally {
       toast.dismiss(loadingToast);
@@ -541,6 +579,18 @@ function WholesaleOrdersPageContent() {
       return false;
     }
 
+    if (formState.paymentMethod === "مختلطة") {
+      const amountValue = Number(formState.amount || 0);
+      if (!formState.amount || amountValue < 0) {
+        toast.error("يرجى إدخال قيمة الدفعة المستلمة");
+        return false;
+      }
+      if (amountValue > grandTotal) {
+        toast.error("قيمة الدفعة لا يمكن أن تتجاوز الإجمالي");
+        return false;
+      }
+    }
+
     const phones = normalizePhoneList(formState.receiverPhone);
     if (phones.length === 0) {
       toast.error("يرجى إدخال رقم هاتف واحد على الأقل");
@@ -557,6 +607,8 @@ function WholesaleOrdersPageContent() {
       ...formState,
       receiverPhone: normalizePhoneList(formState.receiverPhone),
       overallDiscount: Number(formState.overallDiscount || 0),
+      amount: formState.paymentMethod === "مختلطة" ? formState.amount : "",
+      amountBank: formState.paymentMethod === "مختلطة" ? String(grandTotal - Number(formState.amount || 0)) : "",
     };
 
     const normalizedItems = items
@@ -719,15 +771,18 @@ function WholesaleOrdersPageContent() {
       <SearchAndFilter
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        warehouseLocation={warehouseLocation}
-        onWarehouseChange={setWarehouseLocation}
+        cityId={cityId}
+        onCityChange={setCityId}
+        warehouseId={warehouseId}
+        onWarehouseChange={setWarehouseId}
+        cityOptions={warehouseCityOptions}
+        warehouseOptions={filteredWarehouseOptions}
         shippingCompany=""
         onShippingCompanyChange={() => undefined}
         monthFilterType={monthFilterType}
         onMonthFilterChange={(value) => setMonthFilterType(value as "all" | "current" | "previous" | "custom")}
         customMonth={customMonth}
         onCustomMonthChange={setCustomMonth}
-        warehouseOptions={warehouseOptions}
         onExport={() => void handleExportExcel()}
         isExporting={isExporting}
       />
@@ -896,15 +951,45 @@ function WholesaleOrdersPageContent() {
               </label>
 
               <label className="space-y-2">
+                <span className="text-xs font-black text-slate-600 dark:text-slate-300">مدينة المستودع</span>
+                <select
+                  value={warehouseCityId}
+                  onChange={(event) => {
+                    const nextCityId = event.target.value;
+                    setWarehouseCityId(nextCityId);
+                    setFormState((currentState) => ({ ...currentState, warehouseId: "" }));
+                    setItems((currentItems) =>
+                      currentItems.map((item) => {
+                        const product = products.find((currentProduct: any) => Number(currentProduct.id) === Number(item.productId || 0));
+                        const nextPrice = product ? resolveWholesaleUnitPrice(product, item.quantity, "") : item.price;
+                        return {
+                          ...item,
+                          price: nextPrice,
+                          total: getEffectivePrice(nextPrice, item.discount) * item.quantity,
+                        };
+                      })
+                    );
+                  }}
+                  className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                >
+                  <option value="">اختر المدينة</option>
+                  {warehouseCityOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="space-y-2">
                 <span className="text-xs font-black text-slate-600 dark:text-slate-300">المستودع</span>
                 <select
                   value={formState.warehouseId}
                   onChange={(event) => setFormField("warehouseId", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                  disabled={!warehouseCityId}
+                  className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 disabled:opacity-50"
                 >
                   <option value="">اختر المستودع</option>
-                  {warehouses.map((warehouse: any) => (
-                    <option key={warehouse.id} value={warehouse.id}>{warehouse.name} - {warehouse.location}</option>
+                  {formFilteredWarehouseOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
               </label>
@@ -1016,6 +1101,32 @@ function WholesaleOrdersPageContent() {
                   </select>
                 </label>
               </div>
+
+              {formState.paymentMethod === "مختلطة" && (
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <label className="space-y-2">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-300">المبلغ المستلم</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={formState.amount}
+                      onChange={(event) => setFormField("amount", event.target.value)}
+                      className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 text-left"
+                      dir="ltr"
+                    />
+                  </label>
+                  <label className="space-y-2">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-300">المبلغ المتبقي</span>
+                    <input
+                      type="number"
+                      value={Math.max(0, grandTotal - Number(formState.amount || 0))}
+                      readOnly
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-black text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 text-left"
+                      dir="ltr"
+                    />
+                  </label>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <label className="space-y-2">
@@ -1151,6 +1262,13 @@ function WholesaleOrdersPageContent() {
                 <div className="mt-3 space-y-2 text-sm font-bold text-slate-700 dark:text-slate-300">
                   <p>المستلم: {selectedOrder?.receiverName || "-"}</p>
                   <p>الهاتف: {Array.isArray(selectedOrder?.receiverPhone) ? selectedOrder.receiverPhone.join(" - ") : "-"}</p>
+                  <p>طريقة الدفع: {selectedOrder?.paymentMethod || "-"}</p>
+                  {selectedOrder?.paymentMethod === "مختلطة" && (
+                    <>
+                      <p>المبلغ المستلم: {Number(selectedOrder?.amount || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</p>
+                      <p>المبلغ المتبقي: {Number(selectedOrder?.amountBank || 0).toLocaleString()} {getOrderCurrencySymbol(selectedOrder)}</p>
+                    </>
+                  )}
                   <p>الحالة: {selectedOrder?.status || "-"}</p>
                   <p>تاريخ الطلب: {new Date(getOrderDisplayDate(selectedOrder)).toLocaleDateString("ar-EG")}</p>
                 </div>

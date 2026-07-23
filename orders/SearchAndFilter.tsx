@@ -5,8 +5,14 @@ import { Button } from '@/components/ui/button';
 interface SearchAndFilterProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  warehouseLocation: string;
-  onWarehouseChange: (location: string) => void;
+  cityId?: string;
+  onCityChange?: (cityId: string) => void;
+  cityOptions?: Array<{ value: string; label: string }>;
+  warehouseId?: string;
+  onWarehouseChange?: (warehouseId: string) => void;
+  warehouseOptions?: Array<{ value: string; label: string }>;
+  warehouseLocation?: string;
+  onWarehouseChangeLegacy?: (location: string) => void;
   shippingCompany: string;
   onShippingCompanyChange: (shippingCompany: string) => void;
   shippingCompanyOptions?: string[];
@@ -14,7 +20,6 @@ interface SearchAndFilterProps {
   onMonthFilterChange: (type: string) => void;
   customMonth: string;
   onCustomMonthChange: (month: string) => void;
-  warehouseOptions?: string[];
   onExport?: () => void;
   onImport?: () => void;
   isExporting?: boolean;
@@ -23,8 +28,12 @@ interface SearchAndFilterProps {
 export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   searchQuery,
   onSearchChange,
-  warehouseLocation,
+  cityId = '',
+  onCityChange,
+  cityOptions = [],
+  warehouseId = '',
   onWarehouseChange,
+  warehouseOptions = [],
   shippingCompany,
   onShippingCompanyChange,
   shippingCompanyOptions = [],
@@ -32,7 +41,6 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   onMonthFilterChange,
   customMonth,
   onCustomMonthChange,
-  warehouseOptions = [],
   onExport,
   onImport,
   isExporting = false,
@@ -52,16 +60,31 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
         />
       </div>
 
-      {warehouseOptions.length > 0 && (
+      {onCityChange && (
         <select
-          value={warehouseLocation}
+          value={cityId}
+          onChange={(e) => onCityChange(e.target.value)}
+          className="w-full md:w-48 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
+        >
+          <option value="">كل المدن</option>
+          {cityOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {onWarehouseChange && (
+        <select
+          value={warehouseId}
           onChange={(e) => onWarehouseChange(e.target.value)}
           className="w-full md:w-48 p-2 border border-gray-300 dark:border-gray-950 rounded-lg text-sm bg-white dark:bg-slate-950 dark:text-slate-100"
         >
           <option value="">كل المستودعات</option>
-          {warehouseOptions.map((location) => (
-            <option key={location} value={location}>
-              {location}
+          {warehouseOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
