@@ -32,11 +32,19 @@ type MetricTotals = {
   converted: number;
 };
 
+type CampaignMetrics = {
+  sent: number;
+  opened: number;
+  clicked: number;
+  converted: number;
+  total?: number;
+};
+
 type AnalyticsData = {
   totals: MetricTotals;
   byType: Record<string, number>;
   byStatus: Record<string, number>;
-  topCampaigns: Array<{ id: number; title: string; type: string; status: string; metrics: MetricTotals }>;
+  topCampaigns: Array<{ id: number; title: string; type: string; status: string; metrics: CampaignMetrics }>;
 };
 
 export default function MarketingAnalyticsPage() {

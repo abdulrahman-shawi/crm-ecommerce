@@ -138,7 +138,7 @@ async function getCampaignRecipients(audience: CampaignAudience, targetIds: any)
       select: { id: true, email: true, name: true },
     });
     return customers
-      .filter((c): c is typeof c & { email: string } => Boolean(c.email) && isValidEmail(c.email))
+      .filter((c): c is typeof c & { email: string } => c.email !== null && isValidEmail(c.email))
       .map((c) => ({ id: c.id, email: c.email, name: c.name, type: "customer" as const }));
   }
 
@@ -148,7 +148,7 @@ async function getCampaignRecipients(audience: CampaignAudience, targetIds: any)
       select: { id: true, email: true, name: true },
     });
     return wholesale
-      .filter((c): c is typeof c & { email: string } => Boolean(c.email) && isValidEmail(c.email))
+      .filter((c): c is typeof c & { email: string } => c.email !== null && isValidEmail(c.email))
       .map((c) => ({ id: c.id, email: c.email, name: c.name, type: "wholesale" as const }));
   }
 
