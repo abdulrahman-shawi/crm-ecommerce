@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
@@ -64,7 +64,7 @@ export async function sendCampaignEmail(
   recipient: CampaignRecipient,
   baseUrl: string
 ) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY || !resend) {
     throw new Error("RESEND_API_KEY غير مضبوط في متغيرات البيئة");
   }
 
