@@ -121,6 +121,7 @@ function CampaignsPageContent() {
     clicked: 0,
     converted: 0,
   });
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isWhatsAppOpen, setIsWhatsAppOpen] = React.useState(false);
   const [whatsAppCampaign, setWhatsAppCampaign] = React.useState<Campaign | null>(null);
   const [whatsAppPhone, setWhatsAppPhone] = React.useState("");
