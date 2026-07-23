@@ -158,6 +158,61 @@ const CustomrLayout: React.FC = () => {
     }
   }
 
+  function buildWhatsAppMessageFromCampaign(campaign: any) {
+    return `*${campaign.title || "عرض خاص"}*\n\n${campaign.content || ""}`;
+  }
+
+  function normalizePhoneForWhatsApp(rawPhone: string, countryCode?: string) {
+    const digits = String(rawPhone || "").replace(/\D/g, "");
+    if (!digits) return "";
+    const code = String(countryCode || "").replace(/\D/g, "");
+    if (digits.startsWith("+") || digits.startsWith("00") || digits.length > 10) {
+      return digits.replace(/^\+?/, "");
+    }
+    return code ? `${code}${digits}` : digits;
+  }
+
+  async function openCustomerWhatsAppModal(customer: any) {
+    setWhatsAppCustomer(customer);
+    setSelectedWhatsAppCampaignId(null);
+    setIsWhatsAppModalOpen(true);
+    setIsLoadingWhatsAppCampaigns(true);
+    try {
+      const response = await getCampaigns();
+      if (response.success && Array.isArray(response.data)) {
+        setWhatsAppCampaigns(response.data);
+      } else {
+        toast.error(response.error || "تعذر تحميل الحملات");
+      }
+    } catch (error) {
+      console.error("Load campaigns error:", error);
+      toast.error("حدث خطأ أثناء تحميل الحملات");
+    } finally {
+      setIsLoadingWhatsAppCampaigns(false);
+    }
+  }
+
+  function sendWhatsAppCampaignToCustomer() {
+    if (!whatsAppCustomer || !selectedWhatsAppCampaignId) return;
+    const campaign = whatsAppCampaigns.find((c) => c.id === selectedWhatsAppCampaignId);
+    if (!campaign) {
+      toast.error("الحملة غير موجودة");
+      return;
+    }
+    const phone = normalizePhoneForWhatsApp(
+      whatsAppCustomer.phone?.[0] || "",
+      whatsAppCustomer.countryCode || ""
+    );
+    if (!phone) {
+      toast.error("رقم واتساب غير صالح");
+      return;
+    }
+    const message = buildWhatsAppMessageFromCampaign(campaign);
+    const encoded = encodeURIComponent(message);
+    window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank", "noopener,noreferrer");
+    setIsWhatsAppModalOpen(false);
+  }
+
 
   const getData = React.useCallback(async () => {
     const res = await getCustomerList();
