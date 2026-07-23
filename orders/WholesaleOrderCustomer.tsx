@@ -6,6 +6,7 @@ import { Save, Trash2 } from "lucide-react";
 import PhoneInput from "react-phone-number-input";
 import toast from "react-hot-toast";
 import { AppModal } from "@/components/ui/app-modal";
+import { formatSiteCurrency, getCurrencySymbol, useSiteCurrency } from "@/lib/currency";
 import { getCountries } from "@/server/country";
 import { getCities } from "@/server/city";
 import { getWarehouse } from "@/server/warehouse";
@@ -115,10 +116,6 @@ function getProductAvailableStockByWarehouse(product: any, warehouseId: string) 
     .reduce((sum: number, stock: any) => sum + (Number(stock?.quantity) || 0), 0);
 }
 
-function getCurrencySymbol(location?: string) {
-  return String(location || "").trim() === "تركيا" ? "₺" : "$";
-}
-
 function normalizePhoneList(values: (string | undefined)[]) {
   return values.map((value) => String(value || "").trim()).filter(Boolean);
 }
@@ -149,9 +146,9 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
   const [googleMapsLink, setGoogleMapsLink] = React.useState("");
   const [overallDiscount, setOverallDiscount] = React.useState(0);
 
+  const { settings } = useSiteCurrency();
   const selectedWarehouse = warehouses.find((warehouse) => String(warehouse.id) === warehouseId);
-  const stockCountry = String(selectedWarehouse?.location || "").trim();
-  const currencySymbol = getCurrencySymbol(stockCountry);
+  const currencySymbol = settings?.code === "USD" ? "$" : getCurrencySymbol(settings?.code) || settings?.code || "$";
 
   const selectedCountryRow = countryRows.find((row) => row.name === country);
   const filteredCities = selectedCountryRow
@@ -399,7 +396,7 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
             <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 rounded-3xl">
               <p className="text-[10px] font-bold text-blue-600 uppercase mb-1">الإجمالي النهائي</p>
               <h3 className="text-3xl font-black font-sans text-blue-600 italic">
-                {currencySymbol}{grandTotal.toLocaleString()}
+                {formatSiteCurrency(grandTotal, settings)}
               </h3>
             </div>
           </div>
@@ -509,7 +506,7 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
                                       {currentProduct.modelNumber}
                                     </span>
                                   </div>
-                                  <div className="text-blue-500 text-xs mt-1">{currencySymbol}{getEffectivePrice(price, 0)}</div>
+                                  <div className="text-blue-500 text-xs mt-1">{formatSiteCurrency(getEffectivePrice(price, 0), settings)}</div>
                                 </div>
                               );
                             })}
@@ -529,7 +526,7 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
                   </div>
                   <div className="md:col-span-1 text-center">
                     <label className="text-[10px] font-bold text-slate-400 mb-1">السعر</label>
-                    <div className="p-3 text-sm font-bold">{currencySymbol}{getEffectivePrice(item.price, 0)}</div>
+                    <div className="p-3 text-sm font-bold">{formatSiteCurrency(getEffectivePrice(item.price, 0), settings)}</div>
                   </div>
                   <div className="md:col-span-1">
                     <label className="text-[10px] font-bold text-red-400 mb-1">الخصم</label>
@@ -552,7 +549,7 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
                     />
                   </div>
                   <div className="md:col-span-1 text-center font-black text-blue-600 italic">
-                    {currencySymbol}{item.total}
+                    {formatSiteCurrency(item.total, settings)}
                   </div>
                   <div className="md:col-span-1 flex justify-center">
                     <button
@@ -569,7 +566,7 @@ export default function WholesaleOrderCustomer({ customer, isOpen, onClose, onSu
                     شرائح الجملة: {tiers.map((tier: any) => {
                       const min = Number(tier?.minQuantity || 0);
                       const max = tier?.maxQuantity == null ? "+" : Number(tier.maxQuantity);
-                      return `${min}-${max}: ${Number(tier?.price || 0)}`;
+                      return `${min}-${max}: ${formatSiteCurrency(Number(tier?.price || 0), settings)}`;
                     }).join(" | ")}
                   </div>
                 )}
