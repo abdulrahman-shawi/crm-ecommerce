@@ -92,8 +92,12 @@ function formatDateTimeLocal(value?: Date | string | null) {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  const iso = date.toISOString();
-  return iso.slice(0, 16);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
 function CampaignsPageContent() {
@@ -229,6 +233,7 @@ function CampaignsPageContent() {
       const payload = {
         ...form,
         targetIds: form.audience === "CUSTOM" ? form.targetIds : "",
+        scheduledAt: form.scheduledAt ? new Date(form.scheduledAt).toISOString() : null,
       };
       const response = editingId
         ? await updateCampaign(editingId, payload)
