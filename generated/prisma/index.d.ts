@@ -360,7 +360,8 @@ export const CampaignType: {
   EMAIL: 'EMAIL',
   SOCIAL: 'SOCIAL',
   SMS: 'SMS',
-  CONTENT: 'CONTENT'
+  CONTENT: 'CONTENT',
+  WHATSAPP: 'WHATSAPP'
 };
 
 export type CampaignType = (typeof CampaignType)[keyof typeof CampaignType]

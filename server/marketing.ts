@@ -6,7 +6,7 @@ import { hasAnyPermission, hasPermission, isAdmin } from "@/lib/utils";
 import { getTrackingBaseUrl, isValidEmail, sendCampaignEmail } from "@/lib/email";
 import { cookies } from "next/headers";
 
-const CAMPAIGN_TYPES = ["EMAIL", "SOCIAL", "SMS", "CONTENT"] as const;
+const CAMPAIGN_TYPES = ["EMAIL", "SOCIAL", "SMS", "CONTENT", "WHATSAPP"] as const;
 const CAMPAIGN_STATUSES = ["DRAFT", "SCHEDULED", "RUNNING", "COMPLETED", "CANCELLED"] as const;
 const CAMPAIGN_AUDIENCES = ["ALL_CUSTOMERS", "ALL_WHOLESALE", "CUSTOM"] as const;
 const METRIC_KEYS = ["sent", "opened", "clicked", "converted"] as const;

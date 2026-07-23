@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   FilePlus2,
   MapPin,
+  MessageCircle,
   Pencil,
   Phone,
   Plus,
@@ -31,6 +32,7 @@ import {
   getWholesaleSalesReps,
   updateWholesaleCustomer,
 } from "@/server/wholesale-customer";
+import { getCampaigns } from "@/server/marketing";
 
 type SalesRep = {
   id: string;
@@ -532,6 +534,11 @@ export default function WholesaleCustomersPage() {
   const [selectedCustomerForOrder, setSelectedCustomerForOrder] = React.useState<WholesaleCustomer | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   const [detailCustomer, setDetailCustomer] = React.useState<WholesaleCustomer | null>(null);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = React.useState(false);
+  const [whatsAppCustomer, setWhatsAppCustomer] = React.useState<WholesaleCustomer | null>(null);
+  const [whatsAppCampaigns, setWhatsAppCampaigns] = React.useState<any[]>([]);
+  const [selectedWhatsAppCampaignId, setSelectedWhatsAppCampaignId] = React.useState<number | null>(null);
+  const [isLoadingWhatsAppCampaigns, setIsLoadingWhatsAppCampaigns] = React.useState(false);
   const [editingCustomerId, setEditingCustomerId] = React.useState<string | null>(null);
   const [customerForm, setCustomerForm] = React.useState<CustomerFormState>(createEmptyCustomerForm());
   const [visitForm, setVisitForm] = React.useState<VisitFormState>(createEmptyVisitForm());
@@ -581,6 +588,60 @@ export default function WholesaleCustomersPage() {
 
     setIsLoading(false);
   }, []);
+
+  function buildWhatsAppMessageFromCampaign(campaign: any) {
+    return `*${campaign.title || "عرض خاص"}*\n\n${campaign.content || ""}`;
+  }
+
+  function normalizePhoneForWhatsApp(rawPhone: string, country?: string) {
+    const digits = String(rawPhone || "").replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.startsWith("+") || digits.startsWith("00") || digits.length > 10) {
+      return digits.replace(/^\+?/, "");
+    }
+    const code = country === "تركيا" ? "90" : "963";
+    return `${code}${digits}`;
+  }
+
+  async function openCustomerWhatsAppModal(customer: WholesaleCustomer) {
+    setWhatsAppCustomer(customer);
+    setSelectedWhatsAppCampaignId(null);
+    setIsWhatsAppModalOpen(true);
+    setIsLoadingWhatsAppCampaigns(true);
+    try {
+      const response = await getCampaigns();
+      if (response.success && Array.isArray(response.data)) {
+        setWhatsAppCampaigns(response.data.filter((c: any) => c.type === "WHATSAPP"));
+      } else {
+        toast.error(response.error || "تعذر تحميل الحملات");
+      }
+    } catch (error) {
+      console.error("Load campaigns error:", error);
+      toast.error("حدث خطأ أثناء تحميل الحملات");
+    } finally {
+      setIsLoadingWhatsAppCampaigns(false);
+    }
+  }
+
+  function sendWhatsAppCampaignToCustomer() {
+    if (!whatsAppCustomer || !selectedWhatsAppCampaignId) return;
+    const campaign = whatsAppCampaigns.find((c) => c.id === selectedWhatsAppCampaignId);
+    if (!campaign) {
+      toast.error("الحملة غير موجودة");
+      return;
+    }
+    const phone = normalizePhoneForWhatsApp(
+      whatsAppCustomer.phone?.[0] || "",
+      whatsAppCustomer.country || ""
+    );
+    if (!phone) {
+      toast.error("رقم واتساب غير صالح");
+      return;
+    }
+    const message = buildWhatsAppMessageFromCampaign(campaign);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    setIsWhatsAppModalOpen(false);
+  }
 
   React.useEffect(() => {
     if (loading) return;
@@ -1189,6 +1250,12 @@ export default function WholesaleCustomersPage() {
       });
     }
 
+    actions.push({
+      label: "واتساب",
+      icon: <MessageCircle className="h-4 w-4" />,
+      onClick: (customer) => openCustomerWhatsAppModal(customer),
+    });
+
     if (canDeleteWholesale) {
       actions.push({
         label: "حذف",
@@ -1199,7 +1266,7 @@ export default function WholesaleCustomersPage() {
     }
 
     return actions;
-  }, [canCreateWholesaleOrder, canDeleteWholesale, canEditWholesale, canRegisterVisit, handleDeleteCustomer, openEditCustomerModal, openVisitModal]);
+  }, [canCreateWholesaleOrder, canDeleteWholesale, canEditWholesale, canRegisterVisit, handleDeleteCustomer, openCustomerWhatsAppModal, openEditCustomerModal, openVisitModal]);
 
   if (loading || isLoading) {
     return (
@@ -1803,6 +1870,61 @@ export default function WholesaleCustomersPage() {
           onSuccess={loadData}
         />
       )}
+
+      <AppModal
+        isOpen={isWhatsAppModalOpen}
+        onClose={() => setIsWhatsAppModalOpen(false)}
+        title={`إرسال حملة عبر واتساب: ${whatsAppCustomer?.name || ""}`}
+        size="md"
+        footer={
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setIsWhatsAppModalOpen(false)}
+              className="rounded-2xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+            >
+              إلغاء
+            </button>
+            <button
+              type="button"
+              disabled={!selectedWhatsAppCampaignId}
+              onClick={sendWhatsAppCampaignToCustomer}
+              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-black text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
+            >
+              <MessageCircle className="h-4 w-4" />
+              فتح واتساب
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          {isLoadingWhatsAppCampaigns ? (
+            <div className="flex justify-center p-6">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-600" />
+            </div>
+          ) : whatsAppCampaigns.length === 0 ? (
+            <p className="text-center text-sm font-bold text-slate-500">لا توجد حملات واتساب متاحة</p>
+          ) : (
+            <div className="max-h-64 space-y-2 overflow-y-auto">
+              {whatsAppCampaigns.map((campaign) => (
+                <button
+                  key={campaign.id}
+                  type="button"
+                  onClick={() => setSelectedWhatsAppCampaignId(campaign.id)}
+                  className={`w-full rounded-2xl border p-4 text-right transition-colors ${
+                    selectedWhatsAppCampaignId === campaign.id
+                      ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                      : "border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900"
+                  }`}
+                >
+                  <p className="font-black text-slate-900 dark:text-white">{campaign.title}</p>
+                  <p className="mt-1 line-clamp-2 text-xs font-bold text-slate-500">{campaign.content}</p>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </AppModal>
 
       <style jsx>{`
         .field-input {

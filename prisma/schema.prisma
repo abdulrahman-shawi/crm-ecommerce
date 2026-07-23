@@ -119,6 +119,7 @@ enum CampaignType {
   SOCIAL
   SMS
   CONTENT
+  WHATSAPP
 }
 
 enum CampaignStatus {

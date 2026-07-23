@@ -848,7 +848,8 @@ exports.CampaignType = exports.$Enums.CampaignType = {
   EMAIL: 'EMAIL',
   SOCIAL: 'SOCIAL',
   SMS: 'SMS',
-  CONTENT: 'CONTENT'
+  CONTENT: 'CONTENT',
+  WHATSAPP: 'WHATSAPP'
 };
 
 exports.CampaignStatus = exports.$Enums.CampaignStatus = {

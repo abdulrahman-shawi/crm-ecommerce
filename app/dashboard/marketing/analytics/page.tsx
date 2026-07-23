@@ -22,6 +22,7 @@ const TYPE_COLORS: Record<string, string> = {
   SOCIAL: "#8b5cf6",
   SMS: "#f59e0b",
   CONTENT: "#10b981",
+  WHATSAPP: "#25d366",
 };
 
 type MetricTotals = {
@@ -280,6 +281,7 @@ function translateType(type: string) {
     SOCIAL: "تواصل اجتماعي",
     SMS: "رسائل نصية",
     CONTENT: "محتوى",
+    WHATSAPP: "واتساب",
   };
   return map[type] || type;
 }

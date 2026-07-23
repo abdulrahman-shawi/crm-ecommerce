@@ -180,7 +180,7 @@ const CustomrLayout: React.FC = () => {
     try {
       const response = await getCampaigns();
       if (response.success && Array.isArray(response.data)) {
-        setWhatsAppCampaigns(response.data);
+        setWhatsAppCampaigns(response.data.filter((c: any) => c.type === "WHATSAPP"));
       } else {
         toast.error(response.error || "تعذر تحميل الحملات");
       }
